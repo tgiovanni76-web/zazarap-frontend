@@ -286,6 +286,77 @@ export default function Layout({ children, currentPageName }) {
           border: none;
           cursor: pointer;
         }
+
+        .zaza-filters-bar {
+          display: flex;
+          overflow-x: auto;
+          gap: 10px;
+          padding: 10px;
+        }
+
+        .zaza-filter-chip {
+          padding: 8px 14px;
+          background: #f2f2f2;
+          color: #333;
+          font-size: 14px;
+          border-radius: 20px;
+          white-space: nowrap;
+          border: 1px solid #ddd;
+          cursor: pointer;
+        }
+
+        .zaza-filter-advanced-btn {
+          padding: 8px 14px;
+          background: #e84c00;
+          color: white;
+          border-radius: 20px;
+          font-size: 14px;
+          white-space: nowrap;
+          border: none;
+          cursor: pointer;
+        }
+
+        .zaza-filter-panel {
+          background: white;
+          padding: 20px;
+          border-radius: 14px;
+          box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .zaza-filter-panel-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+
+        .zaza-filter-checkbox {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+        }
+
+        .zaza-filter-apply,
+        .zaza-filter-reset {
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          font-size: 16px;
+          text-align: center;
+          margin-top: 10px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .zaza-filter-apply {
+          background: #e84c00;
+          color: white;
+        }
+
+        .zaza-filter-reset {
+          background: #ddd;
+          color: #333;
+        }
       `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">
