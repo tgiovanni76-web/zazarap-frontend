@@ -86,25 +86,25 @@ export default function Marketplace() {
         )}
       </div>
 
-      {filteredListings.map(listing => (
-        <Card key={listing.id} className="mb-4 hover:shadow-lg transition-shadow">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-bold mb-3">{listing.title}</h3>
+      <div className="grid grid-cols-2 gap-3.5 p-2.5">
+        {filteredListings.map(listing => (
+          <Link
+            key={listing.id}
+            to={createPageUrl('ListingDetail') + '?id=' + listing.id}
+            className="bg-white rounded-[10px] overflow-hidden shadow-[0px_2px_6px_rgba(0,0,0,0.18)] hover:shadow-lg transition-shadow"
+          >
             {listing.images && listing.images.length > 0 && (
               <img 
                 src={listing.images[0]} 
                 alt={listing.title} 
-                className="w-full max-w-md mb-4 rounded"
+                className="w-full h-[135px] object-cover"
               />
             )}
-            <p className="text-slate-700 mb-3">{listing.description}</p>
-            <p className="text-lg font-bold mb-3">{listing.price} €</p>
-            <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
-              <Button variant="outline">Dettagli</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      ))}
+            <h3 className="text-sm font-bold m-1.5">{listing.title}</h3>
+            <p className="text-[15px] font-bold text-[#e84c00] m-1.5">{listing.price} €</p>
+          </Link>
+        ))}
+      </div>
 
       {filteredListings.length === 0 && (
         <p className="text-slate-500">Nessun annuncio trovato</p>
