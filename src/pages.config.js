@@ -5,6 +5,7 @@ import NewListing from './pages/NewListing';
 import Messages from './pages/Messages';
 import Favorites from './pages/Favorites';
 import Category from './pages/Category';
+import EditListing from './pages/EditListing';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "Messages": Messages,
     "Favorites": Favorites,
     "Category": Category,
+    "EditListing": EditListing,
 }
 
 export const pagesConfig = {

@@ -135,7 +135,11 @@ export default function ListingDetail() {
               <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
               {isFavorite ? 'Salvato' : 'Salva'}
             </Button>
-            {listing.created_by !== user.email && (
+            {listing.created_by === user.email ? (
+              <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
+                <Button variant="outline">Modifica annuncio</Button>
+              </Link>
+            ) : (
               <Link to={createPageUrl('Messages')}>
                 <Button variant="outline">
                   <MessageSquare className="h-4 w-4 mr-2" />
