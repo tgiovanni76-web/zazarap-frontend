@@ -54,9 +54,9 @@ export default function Marketplace() {
           const Icon = categoryIcons[cat];
           const count = listings.filter(l => l.category === cat && l.status === 'active').length;
           return (
-            <button
+            <Link
               key={cat}
-              onClick={() => setCategoryFilter(cat)}
+              to={createPageUrl('Category') + '?name=' + cat}
               className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all hover:shadow-md ${
                 categoryFilter === cat 
                   ? 'border-indigo-600 bg-indigo-50' 
@@ -66,7 +66,7 @@ export default function Marketplace() {
               <Icon className={`h-8 w-8 mb-2 ${categoryFilter === cat ? 'text-indigo-600' : 'text-slate-600'}`} />
               <p className="text-sm font-medium capitalize">{cat}</p>
               <p className="text-xs text-slate-500">{count}</p>
-            </button>
+            </Link>
           );
         })}
       </div>
