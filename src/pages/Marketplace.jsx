@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,15 +8,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package } from 'lucide-react';
+import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Marketplace() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const queryClient = useQueryClient();
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => base44.entities.Listing.list('-created_date'),
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['favorites', user?.email],
+    queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
+    enabled: !!user
+  });
+
+  const toggleFavoriteMutation = useMutation({
+    mutationFn: async ({ listingId, isFavorite }) => {
+      if (isFavorite) {
+        const fav = favorites.find(f => f.listing_id === listingId);
+        await base44.entities.Favorite.delete(fav.id);
+      } else {
+        await base44.entities.Favorite.create({
+          listing_id: listingId,
+          user_email: user.email
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+    }
   });
 
   const filteredListings = listings.filter(listing => {
@@ -86,24 +116,44 @@ export default function Marketplace() {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3.5 p-2.5">
-        {filteredListings.map(listing => (
-          <Link
-            key={listing.id}
-            to={createPageUrl('ListingDetail') + '?id=' + listing.id}
-            className="bg-white rounded-[10px] overflow-hidden shadow-[0px_2px_6px_rgba(0,0,0,0.18)] hover:shadow-lg transition-shadow"
-          >
-            {listing.images && listing.images.length > 0 && (
-              <img 
-                src={listing.images[0]} 
-                alt={listing.title} 
-                className="w-full h-[135px] object-cover"
-              />
-            )}
-            <h3 className="text-sm font-bold m-1.5">{listing.title}</h3>
-            <p className="text-[15px] font-bold text-[#e84c00] m-1.5">{listing.price} €</p>
-          </Link>
-        ))}
+      <div className="zaza-grid">
+        {filteredListings.map(listing => {
+          const isFavorite = user && favorites.some(fav => fav.listing_id === listing.id);
+          return (
+            <div key={listing.id} className="zaza-card">
+              <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
+                {listing.images && listing.images.length > 0 ? (
+                  <img 
+                    src={listing.images[0]} 
+                    alt={listing.title} 
+                    className="zaza-img"
+                  />
+                ) : (
+                  <div className="zaza-img" />
+                )}
+              </Link>
+              
+              {user && (
+                <div 
+                  className={`zaza-heart ${isFavorite ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavoriteMutation.mutate({ listingId: listing.id, isFavorite });
+                  }}
+                >
+                  <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
+                </div>
+              )}
+
+              <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
+                <div className="zaza-category">{listing.category}</div>
+                <div className="zaza-title">{listing.title}</div>
+                <div className="zaza-price">{listing.price} €</div>
+                {listing.city && <div className="zaza-location">{listing.city}</div>}
+              </Link>
+            </div>
+          );
+        })}
       </div>
 
       {filteredListings.length === 0 && (
