@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package } from 'lucide-react';
 
 export default function Marketplace() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,6 +27,16 @@ export default function Marketplace() {
 
   const categories = [...new Set(listings.map(l => l.category).filter(Boolean))];
 
+  const categoryIcons = {
+    'elettronica': Laptop,
+    'casa': Home,
+    'moda': Shirt,
+    'sport': Bike,
+    'auto': Car,
+    'animali': PawPrint,
+    'altro': Package
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -39,6 +49,28 @@ export default function Marketplace() {
     <div className="py-8">
       <h2 className="text-3xl font-bold mb-6">Annunci</h2>
 
+      <div className="mb-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        {['elettronica', 'casa', 'moda', 'sport', 'auto', 'animali', 'altro'].map(cat => {
+          const Icon = categoryIcons[cat];
+          const count = listings.filter(l => l.category === cat && l.status === 'active').length;
+          return (
+            <button
+              key={cat}
+              onClick={() => setCategoryFilter(cat)}
+              className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                categoryFilter === cat 
+                  ? 'border-indigo-600 bg-indigo-50' 
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              <Icon className={`h-8 w-8 mb-2 ${categoryFilter === cat ? 'text-indigo-600' : 'text-slate-600'}`} />
+              <p className="text-sm font-medium capitalize">{cat}</p>
+              <p className="text-xs text-slate-500">{count}</p>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="mb-6 space-y-4">
         <Input
           placeholder="Cerca annunci..."
@@ -47,17 +79,11 @@ export default function Marketplace() {
           className="max-w-md"
         />
         
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="max-w-xs">
-            <SelectValue placeholder="Tutte le categorie" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tutte le categorie</SelectItem>
-            {categories.map(cat => (
-              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {categoryFilter !== 'all' && (
+          <Button variant="outline" onClick={() => setCategoryFilter('all')}>
+            Mostra tutte le categorie
+          </Button>
+        )}
       </div>
 
       {filteredListings.map(listing => (
