@@ -82,123 +82,66 @@ export default function NewListing() {
   const isLoading = createListingMutation.isPending || isUploading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <Link to={createPageUrl('Marketplace')}>
-          <Button variant="outline" className="mb-6 gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Torna al marketplace
-          </Button>
-        </Link>
+    <div className="py-8">
+      <h2 className="text-3xl font-bold mb-6">Pubblica un nuovo annuncio</h2>
+      <form onSubmit={handleSubmit}>
+        <label className="block mb-2 font-medium">Titolo</label>
+        <Input
+          name="title"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          className="mb-4"
+        />
 
-        <Card className="shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl">Pubblica un nuovo annuncio</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <Label htmlFor="title">Titolo *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Es. iPhone 13 Pro 256GB"
-                  required
-                />
-              </div>
+        <label className="block mb-2 font-medium">Descrizione</label>
+        <Textarea
+          name="description"
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          className="mb-4"
+        />
 
-              <div>
-                <Label htmlFor="description">Descrizione</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Descrivi il tuo articolo..."
-                  rows={5}
-                />
-              </div>
+        <label className="block mb-2 font-medium">Prezzo</label>
+        <Input
+          name="price"
+          type="number"
+          value={formData.price}
+          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+          className="mb-4"
+        />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="price">Prezzo (€) *</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    step="0.01"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    placeholder="0.00"
-                    required
-                  />
-                </div>
+        <label className="block mb-2 font-medium">Categoria</label>
+        <Input
+          name="category"
+          value={formData.category}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          className="mb-4"
+        />
 
-                <div>
-                  <Label htmlFor="category">Categoria *</Label>
-                  <Input
-                    id="category"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="Es. elettronica, arredamento..."
-                    required
-                  />
-                </div>
-              </div>
+        <label className="block mb-2 font-medium">Città</label>
+        <Input
+          name="city"
+          value={formData.city}
+          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+          className="mb-4"
+        />
 
-              <div>
-                <Label htmlFor="city">Città</Label>
-                <Input
-                  id="city"
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  placeholder="Es. Milano, Roma..."
-                />
-              </div>
+        <label className="block mb-2 font-medium">Immagine</label>
+        <input 
+          type="file" 
+          name="image"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="mb-4 block"
+        />
+        {imagePreview && (
+          <img src={imagePreview} alt="Preview" className="max-w-xs mb-4" />
+        )}
 
-              <div>
-                <Label htmlFor="image">Immagine</Label>
-                <div className="mt-2">
-                  <label 
-                    htmlFor="image" 
-                    className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors"
-                  >
-                    {imagePreview ? (
-                      <img src={imagePreview} alt="Preview" className="h-full w-full object-cover rounded-lg" />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <Upload className="w-12 h-12 text-slate-400 mb-3" />
-                        <p className="text-sm text-slate-600">Clicca per caricare un'immagine</p>
-                      </div>
-                    )}
-                  </label>
-                  <input 
-                    id="image" 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-6"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    {isUploading ? 'Caricamento immagine...' : 'Pubblicazione...'}
-                  </>
-                ) : (
-                  'Pubblica annuncio'
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? 'Caricamento...' : 'Pubblica'}
+        </Button>
+      </form>
     </div>
   );
 }
