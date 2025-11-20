@@ -140,7 +140,7 @@ export default function EditListing() {
   }
 
   return (
-    <div className="py-8">
+    <div className="py-8 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
         <Link to={createPageUrl('ListingDetail') + '?id=' + listingId}>
           <Button variant="ghost" size="icon">
@@ -151,83 +151,86 @@ export default function EditListing() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <label className="block mb-2 font-medium">Titolo</label>
-        <Input
+        <label className="zaza-form-label">Titolo</label>
+        <input
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
         />
 
-        <label className="block mb-2 font-medium">Descrizione</label>
-        <Textarea
+        <label className="zaza-form-label">Descrizione</label>
+        <textarea
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
+          rows="5"
         />
 
-        <label className="block mb-2 font-medium">Prezzo</label>
-        <Input
+        <label className="zaza-form-label">Prezzo (€)</label>
+        <input
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
         />
 
-        <label className="block mb-2 font-medium">Categoria</label>
-        <Select
+        <label className="zaza-form-label">Categoria</label>
+        <select
           value={formData.category}
-          onValueChange={(value) => setFormData({ ...formData, category: value })}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          className="zaza-input"
         >
-          <SelectTrigger className="mb-4">
-            <SelectValue placeholder="Seleziona categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="elettronica">Elettronica</SelectItem>
-            <SelectItem value="casa">Casa</SelectItem>
-            <SelectItem value="moda">Moda</SelectItem>
-            <SelectItem value="sport">Sport</SelectItem>
-            <SelectItem value="auto">Auto</SelectItem>
-            <SelectItem value="animali">Animali</SelectItem>
-            <SelectItem value="altro">Altro</SelectItem>
-          </SelectContent>
-        </Select>
+          <option value="">Seleziona categoria</option>
+          <option value="elettronica">Elettronica</option>
+          <option value="casa">Casa</option>
+          <option value="moda">Moda</option>
+          <option value="sport">Sport</option>
+          <option value="auto">Auto</option>
+          <option value="animali">Animali</option>
+          <option value="altro">Altro</option>
+        </select>
 
-        <label className="block mb-2 font-medium">Città</label>
-        <Input
+        <label className="zaza-form-label">Città</label>
+        <input
           value={formData.city}
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
         />
 
-        <label className="block mb-2 font-medium">Immagini esistenti</label>
+        <label className="zaza-form-label">Immagini esistenti</label>
         {existingImages.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             {existingImages.map((img, idx) => (
               <div key={idx} className="relative">
                 <img src={img} alt={`Immagine ${idx + 1}`} className="w-full rounded" />
-                <Button
+                <button
                   type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2"
+                  className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs"
                   onClick={() => removeExistingImage(idx)}
                 >
                   Rimuovi
-                </Button>
+                </button>
               </div>
             ))}
           </div>
         )}
 
-        <label className="block mb-2 font-medium">Aggiungi nuove immagini (max {4 - existingImages.length})</label>
-        <input 
-          type="file" 
-          accept="image/*"
-          multiple
-          onChange={handleImageChange}
-          className="mb-4 block"
-          disabled={existingImages.length >= 4}
-        />
+        <label className="zaza-form-label">Aggiungi nuove immagini (max {4 - existingImages.length})</label>
+        <div className="zaza-upload">
+          <input 
+            type="file" 
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            className="hidden"
+            id="edit-file-upload"
+            disabled={existingImages.length >= 4}
+          />
+          <label htmlFor="edit-file-upload" className="cursor-pointer">
+            <Upload className="inline h-6 w-6 mr-2" />
+            Aggiungi altre foto
+          </label>
+        </div>
         {imagePreviews.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             {imagePreviews.map((preview, idx) => (
@@ -236,14 +239,14 @@ export default function EditListing() {
           </div>
         )}
 
-        <div className="flex gap-3">
-          <Button type="submit" disabled={isLoadingState}>
-            {isLoadingState ? 'Caricamento...' : 'Salva modifiche'}
-          </Button>
-          <Link to={createPageUrl('ListingDetail') + '?id=' + listingId}>
-            <Button type="button" variant="outline">Annulla</Button>
-          </Link>
-        </div>
+        <button type="submit" disabled={isLoadingState} className="zaza-submit">
+          {isLoadingState ? 'Caricamento...' : 'Salva modifiche'}
+        </button>
+        <Link to={createPageUrl('ListingDetail') + '?id=' + listingId} className="block mt-3">
+          <button type="button" className="w-full p-3 border-2 border-slate-400 rounded-lg">
+            Annulla
+          </button>
+        </Link>
       </form>
     </div>
   );

@@ -109,54 +109,50 @@ export default function ListingDetail() {
     : 0;
 
   return (
-    <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">{listing.title}</h2>
-
+    <div className="py-8 max-w-2xl mx-auto">
       {listing.images && listing.images.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 mb-4 max-w-2xl">
+        <div className="mb-4">
           {listing.images.map((img, idx) => (
             <img 
               key={idx}
               src={img} 
               alt={`${listing.title} ${idx + 1}`} 
-              className="w-full rounded"
+              className="zaza-detail-img"
             />
           ))}
         </div>
       )}
 
-      <div className="flex gap-3 mb-4">
-        {user && (
-          <>
-            <Button
-              variant={isFavorite ? "default" : "outline"}
-              onClick={() => toggleFavoriteMutation.mutate()}
-            >
-              <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-              {isFavorite ? 'Salvato' : 'Salva'}
-            </Button>
-            {listing.created_by === user.email ? (
-              <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
-                <Button variant="outline">Modifica annuncio</Button>
-              </Link>
-            ) : (
-              <Link to={createPageUrl('Messages')}>
-                <Button variant="outline">
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Contatta
-                </Button>
-              </Link>
-            )}
-          </>
-        )}
-      </div>
+      <div className="zaza-detail-category">{listing.category}</div>
+      <h2 className="zaza-detail-title">{listing.title}</h2>
+      <div className="zaza-detail-price">{listing.price} €</div>
+      {listing.city && <div className="zaza-detail-location">{listing.city}</div>}
 
-      <p className="text-slate-700 mb-4">{listing.description}</p>
-      <p className="text-2xl font-bold mb-2">{listing.price} €</p>
-      <p className="text-slate-600 mb-6 flex items-center gap-2">
-        <MapPin className="h-4 w-4" />
-        {listing.city}
-      </p>
+      <div className="zaza-detail-description">{listing.description}</div>
+
+      {user && (
+        <div className="mb-6">
+          {listing.created_by === user.email ? (
+            <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
+              <button className="zaza-contact-btn">Modifica annuncio</button>
+            </Link>
+          ) : (
+            <Link to={createPageUrl('Messages')}>
+              <button className="zaza-contact-btn">
+                <MessageSquare className="inline h-4 w-4 mr-2" />
+                Contatta venditore
+              </button>
+            </Link>
+          )}
+          <button
+            onClick={() => toggleFavoriteMutation.mutate()}
+            className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
+          >
+            <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+            {isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+          </button>
+        </div>
+      )}
 
       {reviews.length > 0 && (
         <div className="flex items-center gap-2 mb-6">

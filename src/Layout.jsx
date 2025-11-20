@@ -111,6 +111,138 @@ export default function Layout({ children, currentPageName }) {
             color: #fff;
           }
         }
+
+        .zaza-detail-img {
+          width: 100%;
+          height: 250px;
+          object-fit: cover;
+          border-radius: 12px;
+          margin-bottom: 15px;
+        }
+
+        .zaza-detail-title {
+          font-size: 20px;
+          font-weight: bold;
+          margin-bottom: 6px;
+        }
+
+        .zaza-detail-price {
+          font-size: 22px;
+          color: #e84c00;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .zaza-detail-location {
+          font-size: 13px;
+          color: #666;
+          margin-bottom: 10px;
+        }
+
+        .zaza-detail-category {
+          display: inline-block;
+          background: #ff7a00;
+          color: white;
+          padding: 4px 10px;
+          font-size: 12px;
+          border-radius: 6px;
+          margin-bottom: 15px;
+        }
+
+        .zaza-detail-description {
+          font-size: 15px;
+          line-height: 1.4em;
+          margin-bottom: 25px;
+        }
+
+        .zaza-contact-btn {
+          background-color: #e84c00;
+          color: white;
+          padding: 14px;
+          font-size: 16px;
+          text-align: center;
+          border-radius: 8px;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
+
+        .zaza-form-label {
+          font-weight: bold;
+          margin-bottom: 5px;
+          font-size: 14px;
+          display: block;
+        }
+
+        .zaza-input {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          margin-bottom: 15px;
+        }
+
+        .zaza-upload {
+          border: 2px dashed #ff7a00;
+          color: #ff7a00;
+          padding: 20px;
+          text-align: center;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          cursor: pointer;
+        }
+
+        .zaza-submit {
+          background: #e84c00;
+          color: white;
+          padding: 14px;
+          font-size: 16px;
+          border-radius: 10px;
+          text-align: center;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
+
+        .zaza-profile-pic {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin: 20px auto;
+          display: block;
+        }
+
+        .zaza-profile-name {
+          font-size: 20px;
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .zaza-profile-count {
+          font-size: 14px;
+          text-align: center;
+          color: #666;
+          margin-bottom: 20px;
+        }
+
+        .zaza-profile-btn {
+          background: #ff7a00;
+          color: white;
+          padding: 12px;
+          border-radius: 10px;
+          margin: 10px 0;
+          text-align: center;
+          font-weight: bold;
+          display: block;
+          text-decoration: none;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
       `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">

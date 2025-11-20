@@ -91,70 +91,79 @@ export default function NewListing() {
   const isLoading = createListingMutation.isPending || isUploading;
 
   return (
-    <div className="py-8">
+    <div className="py-8 max-w-2xl mx-auto">
       <h2 className="text-3xl font-bold mb-6">Pubblica un nuovo annuncio</h2>
       <form onSubmit={handleSubmit}>
-        <label className="block mb-2 font-medium">Titolo</label>
-        <Input
+        <label className="zaza-form-label">Titolo</label>
+        <input
           name="title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
+          placeholder="Es. iPhone 13 come nuovo"
         />
 
-        <label className="block mb-2 font-medium">Descrizione</label>
-        <Textarea
+        <label className="zaza-form-label">Descrizione</label>
+        <textarea
           name="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
+          rows="5"
+          placeholder="Descrivi l'oggetto in dettaglio..."
         />
 
-        <label className="block mb-2 font-medium">Prezzo</label>
-        <Input
+        <label className="zaza-form-label">Prezzo (€)</label>
+        <input
           name="price"
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
+          placeholder="0.00"
         />
 
-        <label className="block mb-2 font-medium">Categoria</label>
-        <Select
+        <label className="zaza-form-label">Categoria</label>
+        <select
           value={formData.category}
-          onValueChange={(value) => setFormData({ ...formData, category: value })}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          className="zaza-input"
         >
-          <SelectTrigger className="mb-4">
-            <SelectValue placeholder="Seleziona categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="elettronica">Elettronica</SelectItem>
-            <SelectItem value="casa">Casa</SelectItem>
-            <SelectItem value="moda">Moda</SelectItem>
-            <SelectItem value="sport">Sport</SelectItem>
-            <SelectItem value="auto">Auto</SelectItem>
-            <SelectItem value="animali">Animali</SelectItem>
-            <SelectItem value="altro">Altro</SelectItem>
-          </SelectContent>
-        </Select>
+          <option value="">Seleziona categoria</option>
+          <option value="elettronica">Elettronica</option>
+          <option value="casa">Casa</option>
+          <option value="moda">Moda</option>
+          <option value="sport">Sport</option>
+          <option value="auto">Auto</option>
+          <option value="animali">Animali</option>
+          <option value="altro">Altro</option>
+        </select>
 
-        <label className="block mb-2 font-medium">Città</label>
-        <Input
+        <label className="zaza-form-label">Città</label>
+        <input
           name="city"
           value={formData.city}
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          className="mb-4"
+          className="zaza-input"
+          placeholder="Es. Milano"
         />
 
-        <label className="block mb-2 font-medium">Immagini (max 4)</label>
-        <input 
-          type="file" 
-          name="images"
-          accept="image/*"
-          multiple
-          onChange={handleImageChange}
-          className="mb-4 block"
-        />
+        <label className="zaza-form-label">Immagini (max 4)</label>
+        <div className="zaza-upload">
+          <input 
+            type="file" 
+            name="images"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            className="hidden"
+            id="file-upload"
+          />
+          <label htmlFor="file-upload" className="cursor-pointer">
+            <Upload className="inline h-6 w-6 mr-2" />
+            Clicca per caricare le foto
+          </label>
+        </div>
         {imagePreviews.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             {imagePreviews.map((preview, idx) => (
@@ -163,10 +172,10 @@ export default function NewListing() {
           </div>
         )}
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Caricamento...' : 'Pubblica'}
-        </Button>
-      </form>
-    </div>
+        <button type="submit" disabled={isLoading} className="zaza-submit">
+          {isLoading ? 'Caricamento...' : 'Pubblica annuncio'}
+        </button>
+        </form>
+        </div>
   );
 }
