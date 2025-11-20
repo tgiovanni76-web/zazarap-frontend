@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -111,12 +112,23 @@ export default function NewListing() {
         />
 
         <label className="block mb-2 font-medium">Categoria</label>
-        <Input
-          name="category"
+        <Select
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-          className="mb-4"
-        />
+          onValueChange={(value) => setFormData({ ...formData, category: value })}
+        >
+          <SelectTrigger className="mb-4">
+            <SelectValue placeholder="Seleziona categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="elettronica">Elettronica</SelectItem>
+            <SelectItem value="casa">Casa</SelectItem>
+            <SelectItem value="moda">Moda</SelectItem>
+            <SelectItem value="sport">Sport</SelectItem>
+            <SelectItem value="auto">Auto</SelectItem>
+            <SelectItem value="animali">Animali</SelectItem>
+            <SelectItem value="altro">Altro</SelectItem>
+          </SelectContent>
+        </Select>
 
         <label className="block mb-2 font-medium">Città</label>
         <Input
