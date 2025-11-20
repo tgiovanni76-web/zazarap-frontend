@@ -90,9 +90,9 @@ export default function Marketplace() {
         <Card key={listing.id} className="mb-4 hover:shadow-lg transition-shadow">
           <CardContent className="p-6">
             <h3 className="text-xl font-bold mb-3">{listing.title}</h3>
-            {listing.image && (
+            {listing.images && listing.images.length > 0 && (
               <img 
-                src={listing.image} 
+                src={listing.images[0]} 
                 alt={listing.title} 
                 className="w-full max-w-md mb-4 rounded"
               />

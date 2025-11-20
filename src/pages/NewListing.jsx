@@ -22,24 +22,26 @@ export default function NewListing() {
     category: '',
     city: '',
   });
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
   const createListingMutation = useMutation({
     mutationFn: async (data) => {
-      let imageUrl = null;
+      let imageUrls = [];
 
-      if (imageFile) {
+      if (imageFiles.length > 0) {
         setIsUploading(true);
-        const uploadResult = await base44.integrations.Core.UploadFile({ file: imageFile });
-        imageUrl = uploadResult.file_url;
+        for (const file of imageFiles) {
+          const uploadResult = await base44.integrations.Core.UploadFile({ file });
+          imageUrls.push(uploadResult.file_url);
+        }
         setIsUploading(false);
       }
 
       return base44.entities.Listing.create({
         ...data,
-        image: imageUrl,
+        images: imageUrls,
         status: 'active'
       });
     },
@@ -55,14 +57,20 @@ export default function NewListing() {
   });
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files).slice(0, 4);
+    if (files.length > 0) {
+      setImageFiles(files);
+      const previews = [];
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          previews.push(reader.result);
+          if (previews.length === files.length) {
+            setImagePreviews(previews);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
@@ -138,16 +146,21 @@ export default function NewListing() {
           className="mb-4"
         />
 
-        <label className="block mb-2 font-medium">Immagine</label>
+        <label className="block mb-2 font-medium">Immagini (max 4)</label>
         <input 
           type="file" 
-          name="image"
+          name="images"
           accept="image/*"
+          multiple
           onChange={handleImageChange}
           className="mb-4 block"
         />
-        {imagePreview && (
-          <img src={imagePreview} alt="Preview" className="max-w-xs mb-4" />
+        {imagePreviews.length > 0 && (
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {imagePreviews.map((preview, idx) => (
+              <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
+            ))}
+          </div>
         )}
 
         <Button type="submit" disabled={isLoading}>

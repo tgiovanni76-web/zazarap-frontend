@@ -111,13 +111,18 @@ export default function ListingDetail() {
   return (
     <div className="py-8">
       <h2 className="text-3xl font-bold mb-6">{listing.title}</h2>
-      
-      {listing.image && (
-        <img 
-          src={listing.image} 
-          alt={listing.title} 
-          className="w-full max-w-md mb-4 rounded"
-        />
+
+      {listing.images && listing.images.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 mb-4 max-w-2xl">
+          {listing.images.map((img, idx) => (
+            <img 
+              key={idx}
+              src={img} 
+              alt={`${listing.title} ${idx + 1}`} 
+              className="w-full rounded"
+            />
+          ))}
+        </div>
       )}
 
       <div className="flex gap-3 mb-4">
