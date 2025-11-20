@@ -4,17 +4,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
 
-const CATEGORY_LABELS = {
-  electronics: 'Electronics',
-  furniture: 'Furniture',
-  clothing: 'Clothing',
-  vehicles: 'Vehicles',
-  real_estate: 'Real Estate',
-  services: 'Services',
-  sports: 'Sports',
-  books: 'Books',
-  toys: 'Toys',
-  other: 'Other'
+const getCategoryLabel = (category) => {
+  return category.charAt(0).toUpperCase() + category.slice(1);
 };
 
 export default function CategoryBreakdown({ listings }) {
@@ -27,7 +18,7 @@ export default function CategoryBreakdown({ listings }) {
     });
 
     return Object.entries(categoryCounts).map(([category, count]) => ({
-      name: CATEGORY_LABELS[category] || category,
+      name: getCategoryLabel(category),
       value: count
     }));
   }, [listings]);

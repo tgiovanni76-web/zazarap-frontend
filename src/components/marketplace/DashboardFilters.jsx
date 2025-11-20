@@ -30,7 +30,6 @@ export default function DashboardFilters({
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="sold">Sold</SelectItem>
                 <SelectItem value="expired">Expired</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -38,24 +37,14 @@ export default function DashboardFilters({
           <div className="flex-1 min-w-[200px]">
             <label className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
               <Filter className="w-4 h-4" />
-              Category
+              City
             </label>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder="All Cities" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="electronics">Electronics</SelectItem>
-                <SelectItem value="furniture">Furniture</SelectItem>
-                <SelectItem value="clothing">Clothing</SelectItem>
-                <SelectItem value="vehicles">Vehicles</SelectItem>
-                <SelectItem value="real_estate">Real Estate</SelectItem>
-                <SelectItem value="services">Services</SelectItem>
-                <SelectItem value="sports">Sports</SelectItem>
-                <SelectItem value="books">Books</SelectItem>
-                <SelectItem value="toys">Toys</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="all">All Cities</SelectItem>
               </SelectContent>
             </Select>
           </div>

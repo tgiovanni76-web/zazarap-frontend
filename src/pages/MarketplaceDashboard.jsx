@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Package, TrendingUp, Eye, MessageCircle } from 'lucide-react';
+import { Package, TrendingUp, DollarSign, MapPin } from 'lucide-react';
 import StatCard from '../components/marketplace/StatCard';
 import ListingsChart from '../components/marketplace/ListingsChart';
 import CategoryBreakdown from '../components/marketplace/CategoryBreakdown';
@@ -28,14 +28,16 @@ export default function MarketplaceDashboard() {
   const stats = useMemo(() => {
     const active = filteredListings.filter(l => l.status === 'active').length;
     const sold = filteredListings.filter(l => l.status === 'sold').length;
-    const totalViews = filteredListings.reduce((sum, l) => sum + (l.views || 0), 0);
-    const totalInquiries = filteredListings.reduce((sum, l) => sum + (l.inquiries || 0), 0);
+    const totalRevenue = filteredListings
+      .filter(l => l.status === 'sold')
+      .reduce((sum, l) => sum + (l.price || 0), 0);
+    const uniqueCities = [...new Set(filteredListings.map(l => l.city).filter(Boolean))].length;
 
     return {
       active,
       sold,
-      totalViews,
-      totalInquiries
+      totalRevenue,
+      uniqueCities
     };
   }, [filteredListings]);
 
@@ -111,16 +113,16 @@ export default function MarketplaceDashboard() {
             index={1}
           />
           <StatCard
-            title="Total Views"
-            value={stats.totalViews.toLocaleString()}
-            icon={Eye}
+            title="Total Revenue"
+            value={`€${stats.totalRevenue.toLocaleString()}`}
+            icon={DollarSign}
             color="bg-purple-500"
             index={2}
           />
           <StatCard
-            title="Total Inquiries"
-            value={stats.totalInquiries.toLocaleString()}
-            icon={MessageCircle}
+            title="Cities"
+            value={stats.uniqueCities}
+            icon={MapPin}
             color="bg-orange-500"
             index={3}
           />
