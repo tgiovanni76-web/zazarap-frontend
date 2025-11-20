@@ -101,18 +101,21 @@ export default function Marketplace() {
         })}
       </div>
 
-      <div className="mb-6 space-y-4">
-        <Input
-          placeholder="Cerca annunci..."
+      <div className="zaza-filters">
+        <div className="zaza-filters-title">Cerca annunci</div>
+        <input
+          placeholder="Cerca per parola chiave..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md"
+          className="zaza-filter-input"
         />
-        
-        {categoryFilter !== 'all' && (
-          <Button variant="outline" onClick={() => setCategoryFilter('all')}>
-            Mostra tutte le categorie
-          </Button>
+        {searchTerm && (
+          <button 
+            onClick={() => setSearchTerm('')}
+            className="text-sm text-[#e84c00] mt-2"
+          >
+            Cancella ricerca
+          </button>
         )}
       </div>
 

@@ -243,6 +243,49 @@ export default function Layout({ children, currentPageName }) {
           cursor: pointer;
           width: 100%;
         }
+
+        .zaza-filters {
+          background: #ffffff;
+          padding: 12px;
+          border-radius: 12px;
+          box-shadow: 0px 2px 8px rgba(0,0,0,0.12);
+          margin-bottom: 18px;
+        }
+
+        .zaza-filters-title {
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .zaza-filters-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+
+        .zaza-filter-input,
+        .zaza-filter-select {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+        }
+
+        .zaza-filter-btn {
+          margin-top: 14px;
+          width: 100%;
+          background: #e84c00;
+          color: white;
+          padding: 12px;
+          border-radius: 10px;
+          font-size: 16px;
+          font-weight: bold;
+          text-align: center;
+          border: none;
+          cursor: pointer;
+        }
       `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">
