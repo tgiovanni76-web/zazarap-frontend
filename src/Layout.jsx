@@ -412,6 +412,19 @@ export default function Layout({ children, currentPageName }) {
           color: #ff0000;
           transform: scale(1.3);
         }
+
+        .zaza-premium-box {
+          background: #fff8e5;
+          border: 1px solid #f2c94c;
+          padding: 12px;
+          border-radius: 12px;
+          margin-top: 15px;
+        }
+
+        .zaza-premium-title {
+          font-weight: bold;
+          color: #b87c00;
+        }
       `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">
