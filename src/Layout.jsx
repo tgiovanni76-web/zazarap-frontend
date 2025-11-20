@@ -357,6 +357,61 @@ export default function Layout({ children, currentPageName }) {
           background: #ddd;
           color: #333;
         }
+
+        .zaza-bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 65px;
+          background: #ffffff;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          border-top: 1px solid #ddd;
+          z-index: 999;
+          box-shadow: 0px -2px 6px rgba(0,0,0,0.18);
+        }
+
+        .zaza-nav-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 12px;
+          color: #444;
+          text-decoration: none;
+          cursor: pointer;
+        }
+
+        .zaza-nav-item-active {
+          color: #e84c00;
+        }
+
+        .zaza-nav-icon {
+          font-size: 22px;
+          margin-bottom: 3px;
+        }
+
+        .zaza-heart {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: rgba(255,255,255,0.85);
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          color: #c40000;
+          cursor: pointer;
+        }
+
+        .zaza-heart-active {
+          color: #ff0000;
+          transform: scale(1.3);
+        }
       `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">
