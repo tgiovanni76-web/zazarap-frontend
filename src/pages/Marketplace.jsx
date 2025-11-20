@@ -39,6 +39,27 @@ export default function Marketplace() {
     <div className="py-8">
       <h2 className="text-3xl font-bold mb-6">Annunci</h2>
 
+      <div className="mb-6 space-y-4">
+        <Input
+          placeholder="Cerca annunci..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="max-w-md"
+        />
+        
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="max-w-xs">
+            <SelectValue placeholder="Tutte le categorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tutte le categorie</SelectItem>
+            {categories.map(cat => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {filteredListings.map(listing => (
         <Card key={listing.id} className="mb-4 hover:shadow-lg transition-shadow">
           <CardContent className="p-6">
