@@ -21,6 +21,12 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('NewListing')} className="text-white hover:text-slate-300 transition-colors">
                 Pubblica
               </Link>
+              <Link to={createPageUrl('Favorites')} className="text-white hover:text-slate-300 transition-colors">
+                Preferiti
+              </Link>
+              <Link to={createPageUrl('Messages')} className="text-white hover:text-slate-300 transition-colors">
+                Messaggi
+              </Link>
               <Link to={createPageUrl('MarketplaceDashboard')} className="text-white hover:text-slate-300 transition-colors">
                 Dashboard
               </Link>
