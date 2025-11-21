@@ -146,11 +146,20 @@ export default function ListingDetail() {
       <div className="zaza-detail-description">{listing.description}</div>
 
       {user && (
-        <div className="mb-6">
+        <div className="mb-6 space-y-3">
           {listing.created_by === user.email ? (
-            <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
-              <button className="zaza-contact-btn">Modifica annuncio</button>
-            </Link>
+            <>
+              <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
+                <button className="zaza-contact-btn">Modifica annuncio</button>
+              </Link>
+              {!listing.featured && listing.status === 'active' && (
+                <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
+                  <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
+                    ⭐ Metti in Evidenza
+                  </button>
+                </Link>
+              )}
+            </>
           ) : (
             <Link to={createPageUrl('Messages')}>
               <button className="zaza-contact-btn">
@@ -158,8 +167,7 @@ export default function ListingDetail() {
                 Contatta venditore
               </button>
             </Link>
-          )}
-          <button
+            <button
             onClick={() => toggleFavoriteMutation.mutate()}
             className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
           >

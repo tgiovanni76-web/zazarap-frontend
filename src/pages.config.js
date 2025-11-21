@@ -8,6 +8,8 @@ import Category from './pages/Category';
 import EditListing from './pages/EditListing';
 import Notifications from './pages/Notifications';
 import Recommendations from './pages/Recommendations';
+import ManageCategories from './pages/ManageCategories';
+import PromoteListing from './pages/PromoteListing';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +24,8 @@ export const PAGES = {
     "EditListing": EditListing,
     "Notifications": Notifications,
     "Recommendations": Recommendations,
+    "ManageCategories": ManageCategories,
+    "PromoteListing": PromoteListing,
 }
 
 export const pagesConfig = {

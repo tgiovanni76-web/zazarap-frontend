@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
+import FeaturedListings from '../components/marketplace/FeaturedListings';
 
 export default function Marketplace() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -189,6 +190,8 @@ export default function Marketplace() {
           </CardContent>
         </Card>
       )}
+
+      <FeaturedListings listings={listings} />
 
       {user && (
         <div className="mb-8">

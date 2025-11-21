@@ -624,6 +624,11 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('MarketplaceDashboard')} className="text-white hover:text-slate-300 transition-colors">
                 Dashboard
               </Link>
+              {user?.role === 'admin' && (
+                <Link to={createPageUrl('ManageCategories')} className="text-white hover:text-slate-300 transition-colors">
+                  Categorie
+                </Link>
+              )}
             </nav>
           </div>
         </div>
