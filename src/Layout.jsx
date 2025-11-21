@@ -613,13 +613,16 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('Messages')} className="text-white hover:text-slate-300 transition-colors">
                 Messaggi
               </Link>
-              <Link to={createPageUrl('Notifications')} className="text-white hover:text-slate-300 transition-colors relative">
+              <Link to={createPageUrl('Notifications')} className="text-white hover:text-slate-300 transition-colors relative" title="Notifiche">
                 <Bell className="h-5 w-5 inline" />
                 {unreadCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
                     {unreadCount}
                   </Badge>
                 )}
+              </Link>
+              <Link to={createPageUrl('NotificationSettings')} className="text-white hover:text-slate-300 transition-colors" title="Impostazioni notifiche">
+                Preferenze
               </Link>
               <Link to={createPageUrl('MarketplaceDashboard')} className="text-white hover:text-slate-300 transition-colors">
                 Dashboard

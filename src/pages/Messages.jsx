@@ -64,20 +64,50 @@ export default function Messages() {
       const receiverId = selectedChat.sellerId === user.email ? selectedChat.buyerId : selectedChat.sellerId;
       const listing = listings.find(l => l.id === selectedChat.listingId);
       
-      await base44.entities.Notification.create({
-        userId: receiverId,
-        type: price ? 'offer' : 'message',
-        title: price ? 'Nuova offerta ricevuta' : 'Nuovo messaggio',
-        message: price ? `Offerta di ${price} € per "${listing?.title}"` : `Nuovo messaggio per "${listing?.title}"`,
-        linkUrl: '/Messages',
-        relatedId: selectedChat.id
-      });
+      // Controlla preferenze notifica
+      const receiverPrefs = await base44.entities.NotificationPreference.filter({ userId: receiverId });
+      const prefs = receiverPrefs[0] || { messageReplies: true, emailNotifications: true };
+      
+      if (prefs.messageReplies) {
+        await base44.entities.Notification.create({
+          userId: receiverId,
+          type: price ? 'offer' : 'message',
+          title: price ? 'Nuova offerta ricevuta' : 'Nuovo messaggio',
+          message: price ? `Offerta di ${price} € per "${listing?.title}"` : `Nuovo messaggio per "${listing?.title}"`,
+          linkUrl: '/Messages',
+          relatedId: selectedChat.id
+        });
+      }
 
-      await base44.integrations.Core.SendEmail({
-        to: receiverId,
-        subject: price ? '💰 Nuova offerta ricevuta - Zazarap' : '💬 Nuovo messaggio - Zazarap',
-        body: `Ciao!\n\n${price ? `Hai ricevuto un'offerta di ${price} € per "${listing?.title}".` : `Hai ricevuto un nuovo messaggio per "${listing?.title}".`}\n\nVisita Zazarap per rispondere: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
-      });
+      if (prefs.emailNotifications) {
+        await base44.integrations.Core.SendEmail({
+          to: receiverId,
+          subject: price ? '💰 Nuova offerta ricevuta - Zazarap' : '💬 Nuovo messaggio - Zazarap',
+          body: `Ciao!\n\n${price ? `Hai ricevuto un'offerta di ${price} € per "${listing?.title}".` : `Hai ricevuto un nuovo messaggio per "${listing?.title}".`}\n\nVisita Zazarap per rispondere: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
+        });
+      }
+
+      // Notifica utenti che hanno l'annuncio nei preferiti se è un'offerta
+      if (price) {
+        const favorites = await base44.entities.Favorite.filter({ listing_id: selectedChat.listingId });
+        for (const fav of favorites) {
+          if (fav.user_email !== user.email && fav.user_email !== receiverId) {
+            const favPrefs = await base44.entities.NotificationPreference.filter({ userId: fav.user_email });
+            const favPref = favPrefs[0] || { newOfferOnFavorite: true, emailNotifications: true };
+            
+            if (favPref.newOfferOnFavorite) {
+              await base44.entities.Notification.create({
+                userId: fav.user_email,
+                type: 'offer',
+                title: '💰 Nuova offerta su un tuo preferito',
+                message: `Offerta di ${price} € per "${listing?.title}"`,
+                linkUrl: `/ListingDetail?id=${listing.id}`,
+                relatedId: listing.id
+              });
+            }
+          }
+        }
+      }
 
       return message;
     },
@@ -109,20 +139,28 @@ export default function Messages() {
       // Notifica e email all'acquirente
       const listing = listings.find(l => l.id === selectedChat.listingId);
       
-      await base44.entities.Notification.create({
-        userId: selectedChat.buyerId,
-        type: 'status_update',
-        title: '✅ Offerta accettata!',
-        message: `Il venditore ha accettato la tua offerta di ${selectedChat.lastPrice} € per "${listing?.title}"`,
-        linkUrl: '/Messages',
-        relatedId: selectedChat.id
-      });
+      // Controlla preferenze notifica
+      const buyerPrefs = await base44.entities.NotificationPreference.filter({ userId: selectedChat.buyerId });
+      const prefs = buyerPrefs[0] || { statusUpdates: true, emailNotifications: true };
+      
+      if (prefs.statusUpdates) {
+        await base44.entities.Notification.create({
+          userId: selectedChat.buyerId,
+          type: 'status_update',
+          title: '✅ Offerta accettata!',
+          message: `Il venditore ha accettato la tua offerta di ${selectedChat.lastPrice} € per "${listing?.title}"`,
+          linkUrl: '/Messages',
+          relatedId: selectedChat.id
+        });
+      }
 
-      await base44.integrations.Core.SendEmail({
-        to: selectedChat.buyerId,
-        subject: '✅ Offerta accettata - Zazarap',
-        body: `Congratulazioni!\n\nIl venditore ha accettato la tua offerta di ${selectedChat.lastPrice} € per "${listing?.title}".\n\nPuoi ora contattare il venditore per finalizzare l'acquisto.\n\nVisita Zazarap: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
-      });
+      if (prefs.emailNotifications) {
+        await base44.integrations.Core.SendEmail({
+          to: selectedChat.buyerId,
+          subject: '✅ Offerta accettata - Zazarap',
+          body: `Congratulazioni!\n\nIl venditore ha accettato la tua offerta di ${selectedChat.lastPrice} € per "${listing?.title}".\n\nPuoi ora contattare il venditore per finalizzare l'acquisto.\n\nVisita Zazarap: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
@@ -150,20 +188,28 @@ export default function Messages() {
       // Notifica e email all'acquirente
       const listing = listings.find(l => l.id === selectedChat.listingId);
       
-      await base44.entities.Notification.create({
-        userId: selectedChat.buyerId,
-        type: 'status_update',
-        title: '❌ Offerta rifiutata',
-        message: `Il venditore ha rifiutato la tua offerta per "${listing?.title}"`,
-        linkUrl: '/Messages',
-        relatedId: selectedChat.id
-      });
+      // Controlla preferenze notifica
+      const buyerPrefs = await base44.entities.NotificationPreference.filter({ userId: selectedChat.buyerId });
+      const prefs = buyerPrefs[0] || { statusUpdates: true, emailNotifications: true };
+      
+      if (prefs.statusUpdates) {
+        await base44.entities.Notification.create({
+          userId: selectedChat.buyerId,
+          type: 'status_update',
+          title: '❌ Offerta rifiutata',
+          message: `Il venditore ha rifiutato la tua offerta per "${listing?.title}"`,
+          linkUrl: '/Messages',
+          relatedId: selectedChat.id
+        });
+      }
 
-      await base44.integrations.Core.SendEmail({
-        to: selectedChat.buyerId,
-        subject: 'Offerta rifiutata - Zazarap',
-        body: `Ciao,\n\nIl venditore ha rifiutato la tua offerta per "${listing?.title}".\n\nPuoi fare una nuova proposta contattando il venditore.\n\nVisita Zazarap: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
-      });
+      if (prefs.emailNotifications) {
+        await base44.integrations.Core.SendEmail({
+          to: selectedChat.buyerId,
+          subject: 'Offerta rifiutata - Zazarap',
+          body: `Ciao,\n\nIl venditore ha rifiutato la tua offerta per "${listing?.title}".\n\nPuoi fare una nuova proposta contattando il venditore.\n\nVisita Zazarap: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
@@ -193,20 +239,28 @@ export default function Messages() {
       // Notifica e email all'acquirente
       const listing = listings.find(l => l.id === selectedChat.listingId);
       
-      await base44.entities.Notification.create({
-        userId: selectedChat.buyerId,
-        type: 'offer',
-        title: '🔄 Controproposta ricevuta',
-        message: `Il venditore propone ${price} € per "${listing?.title}"`,
-        linkUrl: '/Messages',
-        relatedId: selectedChat.id
-      });
+      // Controlla preferenze notifica
+      const buyerPrefs = await base44.entities.NotificationPreference.filter({ userId: selectedChat.buyerId });
+      const prefs = buyerPrefs[0] || { messageReplies: true, emailNotifications: true };
+      
+      if (prefs.messageReplies) {
+        await base44.entities.Notification.create({
+          userId: selectedChat.buyerId,
+          type: 'offer',
+          title: '🔄 Controproposta ricevuta',
+          message: `Il venditore propone ${price} € per "${listing?.title}"`,
+          linkUrl: '/Messages',
+          relatedId: selectedChat.id
+        });
+      }
 
-      await base44.integrations.Core.SendEmail({
-        to: selectedChat.buyerId,
-        subject: '🔄 Controproposta ricevuta - Zazarap',
-        body: `Ciao,\n\nIl venditore ha fatto una controproposta di ${price} € per "${listing?.title}".\n\nVisita Zazarap per rispondere: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
-      });
+      if (prefs.emailNotifications) {
+        await base44.integrations.Core.SendEmail({
+          to: selectedChat.buyerId,
+          subject: '🔄 Controproposta ricevuta - Zazarap',
+          body: `Ciao,\n\nIl venditore ha fatto una controproposta di ${price} € per "${listing?.title}".\n\nVisita Zazarap per rispondere: ${window.location.origin}/Messages\n\nGrazie,\nIl team di Zazarap`
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
