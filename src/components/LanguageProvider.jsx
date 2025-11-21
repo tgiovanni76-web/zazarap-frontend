@@ -88,8 +88,54 @@ const translations = {
     testingQA: 'Testing & QA',
     recommendedImprovements: 'Empfohlene Verbesserungen',
     nextSteps: 'Nächste Schritte',
-    launch: 'Launch!'
-  },
+    launch: 'Launch!',
+
+    // Recommendations
+    aiRecommendations: 'KI-Empfehlungen für Sie',
+    generateRecommendations: 'Empfehlungen generieren',
+    generating: 'Wird generiert...',
+    suggestedCategories: 'Vorgeschlagene Kategorien:',
+    refreshRecommendations: 'Empfehlungen aktualisieren',
+    discoverRecommendations: 'KI-Empfehlungen entdecken',
+    exploreToGetSuggestions: 'Erkunden Sie einige Anzeigen, um personalisierte Vorschläge zu erhalten!',
+
+    // Sales/Purchases
+    mySales: 'Meine Verkäufe',
+    myPurchases: 'Meine Käufe',
+    totalSales: 'Verkäufe insgesamt',
+    totalRevenue: 'Gesamteinnahmen',
+    inEscrow: 'Im Treuhand',
+    toShip: 'Zu versenden',
+    buyer: 'Käufer',
+    seller: 'Verkäufer',
+    shipping: 'Versand',
+    addTracking: 'Hinzufügen',
+    goToChat: 'Zur Chat gehen',
+    noSalesYet: 'Noch keine Verkäufe',
+    totalPurchases: 'Käufe insgesamt',
+    totalSpent: 'Insgesamt ausgegeben',
+    inProgress: 'In Bearbeitung',
+    noPurchasesYet: 'Noch keine Käufe',
+    paymentStatus: 'Zahlungsstatus',
+    protectedInEscrow: '🔒 Geschützt im Treuhand',
+    completed: '✅ Abgeschlossen',
+
+    // Edit Listing
+    editListing: 'Anzeige bearbeiten',
+    existingImages: 'Vorhandene Bilder',
+    remove: 'Entfernen',
+    addNewImages: 'Neue Bilder hinzufügen',
+    addMorePhotos: 'Weitere Fotos hinzufügen',
+    saveChanges: 'Änderungen speichern',
+    selectCategory: 'Kategorie auswählen',
+    electronics: 'Elektronik',
+    home: 'Haus',
+    fashion: 'Mode',
+    sports: 'Sport',
+    auto: 'Auto',
+    animals: 'Tiere',
+    other: 'Andere'
+    },
   
   it: {
     // Header & Navigation
@@ -178,8 +224,54 @@ const translations = {
     testingQA: 'Testing & QA',
     recommendedImprovements: 'Miglioramenti Consigliati',
     nextSteps: 'Prossimi Passi',
-    launch: 'Lancia!'
-  },
+    launch: 'Lancia!',
+
+    // Recommendations
+    aiRecommendations: 'Raccomandazioni AI per te',
+    generateRecommendations: 'Genera raccomandazioni',
+    generating: 'Generazione in corso...',
+    suggestedCategories: 'Categorie suggerite:',
+    refreshRecommendations: 'Aggiorna raccomandazioni',
+    discoverRecommendations: 'Scopri le raccomandazioni AI',
+    exploreToGetSuggestions: 'Esplora alcuni annunci per ricevere suggerimenti personalizzati!',
+
+    // Sales/Purchases
+    mySales: 'Le Mie Vendite',
+    myPurchases: 'I Miei Acquisti',
+    totalSales: 'Vendite Totali',
+    totalRevenue: 'Ricavi Totali',
+    inEscrow: 'In Escrow',
+    toShip: 'Da Spedire',
+    buyer: 'Acquirente',
+    seller: 'Venditore',
+    shipping: 'Spedizione',
+    addTracking: 'Aggiungi',
+    goToChat: 'Vai alla Chat',
+    noSalesYet: 'Nessuna vendita ancora',
+    totalPurchases: 'Acquisti Totali',
+    totalSpent: 'Totale Speso',
+    inProgress: 'In Corso',
+    noPurchasesYet: 'Nessun acquisto ancora',
+    paymentStatus: 'Stato Pagamento',
+    protectedInEscrow: '🔒 Protetto in Escrow',
+    completed: '✅ Completato',
+
+    // Edit Listing
+    editListing: 'Modifica annuncio',
+    existingImages: 'Immagini esistenti',
+    remove: 'Rimuovi',
+    addNewImages: 'Aggiungi nuove immagini',
+    addMorePhotos: 'Aggiungi altre foto',
+    saveChanges: 'Salva modifiche',
+    selectCategory: 'Seleziona categoria',
+    electronics: 'Elettronica',
+    home: 'Casa',
+    fashion: 'Moda',
+    sports: 'Sport',
+    auto: 'Auto',
+    animals: 'Animali',
+    other: 'Altro'
+    },
   
   tr: {
     // Header & Navigation
@@ -268,8 +360,54 @@ const translations = {
     testingQA: 'Test & QA',
     recommendedImprovements: 'Önerilen İyileştirmeler',
     nextSteps: 'Sonraki Adımlar',
-    launch: 'Başlat!'
-  },
+    launch: 'Başlat!',
+
+    // Recommendations
+    aiRecommendations: 'Sizin için AI Önerileri',
+    generateRecommendations: 'Öneri oluştur',
+    generating: 'Oluşturuluyor...',
+    suggestedCategories: 'Önerilen Kategoriler:',
+    refreshRecommendations: 'Önerileri yenile',
+    discoverRecommendations: 'AI önerilerini keşfedin',
+    exploreToGetSuggestions: 'Kişiselleştirilmiş öneriler almak için bazı ilanları keşfedin!',
+
+    // Sales/Purchases
+    mySales: 'Satışlarım',
+    myPurchases: 'Alışlarım',
+    totalSales: 'Toplam Satış',
+    totalRevenue: 'Toplam Gelir',
+    inEscrow: 'Emanette',
+    toShip: 'Gönderilecek',
+    buyer: 'Alıcı',
+    seller: 'Satıcı',
+    shipping: 'Kargo',
+    addTracking: 'Ekle',
+    goToChat: 'Sohbete Git',
+    noSalesYet: 'Henüz satış yok',
+    totalPurchases: 'Toplam Alış',
+    totalSpent: 'Toplam Harcanan',
+    inProgress: 'Devam Ediyor',
+    noPurchasesYet: 'Henüz alış yok',
+    paymentStatus: 'Ödeme Durumu',
+    protectedInEscrow: '🔒 Emanette Korunuyor',
+    completed: '✅ Tamamlandı',
+
+    // Edit Listing
+    editListing: 'İlanı Düzenle',
+    existingImages: 'Mevcut Resimler',
+    remove: 'Kaldır',
+    addNewImages: 'Yeni resimler ekle',
+    addMorePhotos: 'Daha fazla fotoğraf ekle',
+    saveChanges: 'Değişiklikleri kaydet',
+    selectCategory: 'Kategori seçin',
+    electronics: 'Elektronik',
+    home: 'Ev',
+    fashion: 'Moda',
+    sports: 'Spor',
+    auto: 'Araba',
+    animals: 'Hayvanlar',
+    other: 'Diğer'
+    },
   
   uk: {
     // Header & Navigation
@@ -358,8 +496,54 @@ const translations = {
     testingQA: 'Тестування та QA',
     recommendedImprovements: 'Рекомендовані покращення',
     nextSteps: 'Наступні кроки',
-    launch: 'Запустити!'
-  },
+    launch: 'Запустити!',
+
+    // Recommendations
+    aiRecommendations: 'AI рекомендації для вас',
+    generateRecommendations: 'Створити рекомендації',
+    generating: 'Генерується...',
+    suggestedCategories: 'Рекомендовані категорії:',
+    refreshRecommendations: 'Оновити рекомендації',
+    discoverRecommendations: 'Відкрийте AI рекомендації',
+    exploreToGetSuggestions: 'Перегляньте кілька оголошень, щоб отримати персоналізовані пропозиції!',
+
+    // Sales/Purchases
+    mySales: 'Мої Продажі',
+    myPurchases: 'Мої Покупки',
+    totalSales: 'Всього Продажів',
+    totalRevenue: 'Загальний Дохід',
+    inEscrow: 'На Ескроу',
+    toShip: 'До Відправки',
+    buyer: 'Покупець',
+    seller: 'Продавець',
+    shipping: 'Доставка',
+    addTracking: 'Додати',
+    goToChat: 'До Чату',
+    noSalesYet: 'Ще немає продажів',
+    totalPurchases: 'Всього Покупок',
+    totalSpent: 'Всього Витрачено',
+    inProgress: 'В Процесі',
+    noPurchasesYet: 'Ще немає покупок',
+    paymentStatus: 'Статус Оплати',
+    protectedInEscrow: '🔒 Захищено Ескроу',
+    completed: '✅ Завершено',
+
+    // Edit Listing
+    editListing: 'Редагувати оголошення',
+    existingImages: 'Наявні зображення',
+    remove: 'Видалити',
+    addNewImages: 'Додати нові зображення',
+    addMorePhotos: 'Додати більше фото',
+    saveChanges: 'Зберегти зміни',
+    selectCategory: 'Виберіть категорію',
+    electronics: 'Електроніка',
+    home: 'Дім',
+    fashion: 'Мода',
+    sports: 'Спорт',
+    auto: 'Авто',
+    animals: 'Тварини',
+    other: 'Інше'
+    },
   
   en: {
     // Header & Navigation
@@ -448,8 +632,54 @@ const translations = {
     testingQA: 'Testing & QA',
     recommendedImprovements: 'Recommended Improvements',
     nextSteps: 'Next Steps',
-    launch: 'Launch!'
-  }
+    launch: 'Launch!',
+
+    // Recommendations
+    aiRecommendations: 'AI Recommendations for You',
+    generateRecommendations: 'Generate Recommendations',
+    generating: 'Generating...',
+    suggestedCategories: 'Suggested Categories:',
+    refreshRecommendations: 'Refresh Recommendations',
+    discoverRecommendations: 'Discover AI Recommendations',
+    exploreToGetSuggestions: 'Explore some listings to get personalized suggestions!',
+
+    // Sales/Purchases
+    mySales: 'My Sales',
+    myPurchases: 'My Purchases',
+    totalSales: 'Total Sales',
+    totalRevenue: 'Total Revenue',
+    inEscrow: 'In Escrow',
+    toShip: 'To Ship',
+    buyer: 'Buyer',
+    seller: 'Seller',
+    shipping: 'Shipping',
+    addTracking: 'Add',
+    goToChat: 'Go to Chat',
+    noSalesYet: 'No sales yet',
+    totalPurchases: 'Total Purchases',
+    totalSpent: 'Total Spent',
+    inProgress: 'In Progress',
+    noPurchasesYet: 'No purchases yet',
+    paymentStatus: 'Payment Status',
+    protectedInEscrow: '🔒 Protected in Escrow',
+    completed: '✅ Completed',
+
+    // Edit Listing
+    editListing: 'Edit Listing',
+    existingImages: 'Existing Images',
+    remove: 'Remove',
+    addNewImages: 'Add new images',
+    addMorePhotos: 'Add more photos',
+    saveChanges: 'Save changes',
+    selectCategory: 'Select category',
+    electronics: 'Electronics',
+    home: 'Home',
+    fashion: 'Fashion',
+    sports: 'Sports',
+    auto: 'Auto',
+    animals: 'Animals',
+    other: 'Other'
+    }
 };
 
 const LanguageContext = createContext();

@@ -104,7 +104,7 @@ export default function Marketplace() {
         <h2 className="text-3xl font-bold">{t('home')}</h2>
         <Button
           onClick={() => setShowFilters(!showFilters)}
-          variant="outline"
+          className="bg-yellow-400 text-red-600 border-2 border-red-600 hover:bg-yellow-500 hover:text-red-700"
         >
           {showFilters ? t('filters') : t('filters')}
         </Button>

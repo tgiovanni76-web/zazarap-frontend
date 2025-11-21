@@ -10,8 +10,10 @@ import { createPageUrl } from '@/utils';
 import { DollarSign, Package, TrendingUp, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function MySales() {
+  const { t } = useLanguage();
   const [trackingNumber, setTrackingNumber] = useState('');
   const [selectedChatId, setSelectedChatId] = useState(null);
   const queryClient = useQueryClient();
@@ -95,14 +97,14 @@ export default function MySales() {
 
   return (
     <div className="py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">Le Mie Vendite</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('mySales')}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Vendite Totali</p>
+                <p className="text-sm text-slate-600">{t('totalSales')}</p>
                 <p className="text-2xl font-bold">{salesStats.total}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-600" />
@@ -114,7 +116,7 @@ export default function MySales() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Ricavi Totali</p>
+                <p className="text-sm text-slate-600">{t('totalRevenue')}</p>
                 <p className="text-2xl font-bold">{salesStats.revenue.toFixed(2)}€</p>
               </div>
               <DollarSign className="h-8 w-8 text-blue-600" />
@@ -126,7 +128,7 @@ export default function MySales() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">In Escrow</p>
+                <p className="text-sm text-slate-600">{t('inEscrow')}</p>
                 <p className="text-2xl font-bold">{salesStats.inEscrow.toFixed(2)}€</p>
               </div>
               <Clock className="h-8 w-8 text-yellow-600" />
@@ -138,7 +140,7 @@ export default function MySales() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Da Spedire</p>
+                <p className="text-sm text-slate-600">{t('toShip')}</p>
                 <p className="text-2xl font-bold">{salesStats.pending}</p>
               </div>
               <Package className="h-8 w-8 text-orange-600" />
@@ -169,7 +171,7 @@ export default function MySales() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-bold text-lg">{listing?.title}</h3>
-                        <p className="text-sm text-slate-600">Acquirente: {chat.buyerId}</p>
+                        <p className="text-sm text-slate-600">{t('buyer')}: {chat.buyerId}</p>
                         <p className="text-lg font-bold text-red-600 mt-1">
                           {chat.lastPrice || listing?.price}€
                         </p>
@@ -193,7 +195,7 @@ export default function MySales() {
                     {shipping && (
                       <div className="p-3 bg-slate-50 rounded space-y-2">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium">Spedizione:</span>
+                          <span className="text-sm font-medium">{t('shipping')}:</span>
                           <Badge variant="outline">{shipping.status}</Badge>
                         </div>
                         {shipping.trackingNumber && (
@@ -217,7 +219,7 @@ export default function MySales() {
                               disabled={!trackingNumber.trim()}
                               size="sm"
                             >
-                              Aggiungi
+                              {t('addTracking')}
                             </Button>
                           </div>
                         )}
@@ -226,7 +228,7 @@ export default function MySales() {
 
                     <Link to={createPageUrl('Messages')}>
                       <Button variant="outline" size="sm">
-                        Vai alla Chat
+                        {t('goToChat')}
                       </Button>
                     </Link>
                   </div>
@@ -240,7 +242,7 @@ export default function MySales() {
           <Card>
             <CardContent className="py-12 text-center text-slate-500">
               <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Nessuna vendita ancora</p>
+              <p>{t('noSalesYet')}</p>
             </CardContent>
           </Card>
         )}

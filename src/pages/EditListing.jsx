@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function EditListing() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('id');
   const navigate = useNavigate();
@@ -147,18 +149,18 @@ export default function EditListing() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h2 className="text-3xl font-bold">Modifica annuncio</h2>
+        <h2 className="text-3xl font-bold">{t('editListing')}</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <label className="zaza-form-label">Titolo</label>
+        <label className="zaza-form-label">{t('title')}</label>
         <input
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           className="zaza-input"
         />
 
-        <label className="zaza-form-label">Descrizione</label>
+        <label className="zaza-form-label">{t('description')}</label>
         <textarea
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -166,7 +168,7 @@ export default function EditListing() {
           rows="5"
         />
 
-        <label className="zaza-form-label">Prezzo (€)</label>
+        <label className="zaza-form-label">{t('price')} (€)</label>
         <input
           type="number"
           value={formData.price}
@@ -174,30 +176,30 @@ export default function EditListing() {
           className="zaza-input"
         />
 
-        <label className="zaza-form-label">Categoria</label>
+        <label className="zaza-form-label">{t('category')}</label>
         <select
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           className="zaza-input"
         >
-          <option value="">Seleziona categoria</option>
-          <option value="elettronica">Elettronica</option>
-          <option value="casa">Casa</option>
-          <option value="moda">Moda</option>
-          <option value="sport">Sport</option>
-          <option value="auto">Auto</option>
-          <option value="animali">Animali</option>
-          <option value="altro">Altro</option>
+          <option value="">{t('selectCategory')}</option>
+          <option value="elettronica">{t('electronics')}</option>
+          <option value="casa">{t('home')}</option>
+          <option value="moda">{t('fashion')}</option>
+          <option value="sport">{t('sports')}</option>
+          <option value="auto">{t('auto')}</option>
+          <option value="animali">{t('animals')}</option>
+          <option value="altro">{t('other')}</option>
         </select>
 
-        <label className="zaza-form-label">Città</label>
+        <label className="zaza-form-label">{t('city')}</label>
         <input
           value={formData.city}
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           className="zaza-input"
         />
 
-        <label className="zaza-form-label">Immagini esistenti</label>
+        <label className="zaza-form-label">{t('existingImages')}</label>
         {existingImages.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             {existingImages.map((img, idx) => (
@@ -208,14 +210,14 @@ export default function EditListing() {
                   className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs"
                   onClick={() => removeExistingImage(idx)}
                 >
-                  Rimuovi
+                  {t('remove')}
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        <label className="zaza-form-label">Aggiungi nuove immagini (max {4 - existingImages.length})</label>
+        <label className="zaza-form-label">{t('addNewImages')} (max {4 - existingImages.length})</label>
         <div className="zaza-upload">
           <input 
             type="file" 
@@ -228,7 +230,7 @@ export default function EditListing() {
           />
           <label htmlFor="edit-file-upload" className="cursor-pointer">
             <Upload className="inline h-6 w-6 mr-2" />
-            Aggiungi altre foto
+            {t('addMorePhotos')}
           </label>
         </div>
         {imagePreviews.length > 0 && (
@@ -240,11 +242,11 @@ export default function EditListing() {
         )}
 
         <button type="submit" disabled={isLoadingState} className="zaza-submit">
-          {isLoadingState ? 'Caricamento...' : 'Salva modifiche'}
+          {isLoadingState ? t('loading') : t('saveChanges')}
         </button>
         <Link to={createPageUrl('ListingDetail') + '?id=' + listingId} className="block mt-3">
           <button type="button" className="w-full p-3 border-2 border-slate-400 rounded-lg">
-            Annulla
+            {t('cancel')}
           </button>
         </Link>
       </form>

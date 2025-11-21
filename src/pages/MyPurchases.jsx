@@ -10,8 +10,10 @@ import { ShoppingBag, Package, DollarSign, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import ShippingTracker from '../components/marketplace/ShippingTracker';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function MyPurchases() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -94,14 +96,14 @@ export default function MyPurchases() {
 
   return (
     <div className="py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">I Miei Acquisti</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('myPurchases')}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Acquisti Totali</p>
+                <p className="text-sm text-slate-600">{t('totalPurchases')}</p>
                 <p className="text-2xl font-bold">{purchasesStats.total}</p>
               </div>
               <ShoppingBag className="h-8 w-8 text-blue-600" />
@@ -113,7 +115,7 @@ export default function MyPurchases() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Totale Speso</p>
+                <p className="text-sm text-slate-600">{t('totalSpent')}</p>
                 <p className="text-2xl font-bold">{purchasesStats.spent.toFixed(2)}€</p>
               </div>
               <DollarSign className="h-8 w-8 text-green-600" />
@@ -125,7 +127,7 @@ export default function MyPurchases() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">In Corso</p>
+                <p className="text-sm text-slate-600">{t('inProgress')}</p>
                 <p className="text-2xl font-bold">{purchasesStats.inProgress}</p>
               </div>
               <Clock className="h-8 w-8 text-orange-600" />
@@ -156,7 +158,7 @@ export default function MyPurchases() {
                       
                       <div className="flex-1">
                         <h3 className="font-bold text-lg">{listing?.title}</h3>
-                        <p className="text-sm text-slate-600">Venditore: {chat.sellerId}</p>
+                        <p className="text-sm text-slate-600">{t('seller')}: {chat.sellerId}</p>
                         <p className="text-lg font-bold text-red-600 mt-1">
                           {chat.lastPrice || listing?.price}€
                         </p>
@@ -168,14 +170,14 @@ export default function MyPurchases() {
 
                     {payment && (
                       <div className="p-3 bg-slate-50 rounded">
-                        <p className="text-sm font-semibold mb-2">Stato Pagamento:</p>
+                        <p className="text-sm font-semibold mb-2">{t('paymentStatus')}:</p>
                         <Badge className={
                           payment.status === 'held_in_escrow' ? 'bg-yellow-100 text-yellow-800' :
                           payment.status === 'released_to_seller' ? 'bg-green-100 text-green-800' :
                           'bg-blue-100 text-blue-800'
                         }>
-                          {payment.status === 'held_in_escrow' ? '🔒 Protetto in Escrow' :
-                           payment.status === 'released_to_seller' ? '✅ Completato' :
+                          {payment.status === 'held_in_escrow' ? t('protectedInEscrow') :
+                           payment.status === 'released_to_seller' ? t('completed') :
                            payment.status}
                         </Badge>
                       </div>
@@ -183,7 +185,7 @@ export default function MyPurchases() {
 
                     <Link to={createPageUrl('Messages')}>
                       <Button variant="outline" size="sm" className="w-full">
-                        Vai alla Chat
+                        {t('goToChat')}
                       </Button>
                     </Link>
                   </div>
@@ -207,7 +209,7 @@ export default function MyPurchases() {
           <Card>
             <CardContent className="py-12 text-center text-slate-500">
               <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Nessun acquisto ancora</p>
+              <p>{t('noPurchasesYet')}</p>
             </CardContent>
           </Card>
         )}

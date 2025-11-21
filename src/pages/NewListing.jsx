@@ -131,14 +131,14 @@ export default function NewListing() {
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           className="zaza-input"
         >
-          <option value="">Seleziona categoria</option>
-          <option value="elettronica">Elettronica</option>
-          <option value="casa">Casa</option>
-          <option value="moda">Moda</option>
-          <option value="sport">Sport</option>
-          <option value="auto">Auto</option>
-          <option value="animali">Animali</option>
-          <option value="altro">Altro</option>
+          <option value="">{t('selectCategory')}</option>
+          <option value="elettronica">{t('electronics')}</option>
+          <option value="casa">{t('home')}</option>
+          <option value="moda">{t('fashion')}</option>
+          <option value="sport">{t('sports')}</option>
+          <option value="auto">{t('auto')}</option>
+          <option value="animali">{t('animals')}</option>
+          <option value="altro">{t('other')}</option>
         </select>
 
         <label className="zaza-form-label">{t('city')}</label>

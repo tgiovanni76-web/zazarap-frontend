@@ -6,8 +6,10 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Heart, TrendingUp } from 'lucide-react';
+import { useLanguage } from '../LanguageProvider';
 
 export default function RecommendationsWidget({ user }) {
+  const { t } = useLanguage();
   const [recommendations, setRecommendations] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -100,8 +102,8 @@ Fornisci 4-6 raccomandazioni personalizzate con ID annuncio, motivo della raccom
       <Card className="bg-gradient-to-br from-purple-50 to-blue-50">
         <CardContent className="py-8 text-center">
           <Sparkles className="h-12 w-12 mx-auto mb-4 text-purple-600" />
-          <h3 className="text-lg font-bold mb-2">Scopri le raccomandazioni AI</h3>
-          <p className="text-slate-600 mb-4">Esplora alcuni annunci per ricevere suggerimenti personalizzati!</p>
+          <h3 className="text-lg font-bold mb-2">{t('discoverRecommendations')}</h3>
+          <p className="text-slate-600 mb-4">{t('exploreToGetSuggestions')}</p>
         </CardContent>
       </Card>
     );
@@ -112,7 +114,7 @@ Fornisci 4-6 raccomandazioni personalizzate con ID annuncio, motivo della raccom
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-purple-600" />
-          Raccomandazioni AI per te
+          {t('aiRecommendations')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -121,9 +123,9 @@ Fornisci 4-6 raccomandazioni personalizzate con ID annuncio, motivo della raccom
             <Button 
               onClick={generateRecommendations} 
               disabled={isGenerating}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-yellow-400 text-red-600 border-2 border-red-600 hover:bg-yellow-500 hover:text-red-700"
             >
-              {isGenerating ? 'Generazione in corso...' : 'Genera raccomandazioni'}
+              {isGenerating ? t('generating') : t('generateRecommendations')}
             </Button>
           </div>
         ) : (
@@ -164,7 +166,7 @@ Fornisci 4-6 raccomandazioni personalizzate con ID annuncio, motivo della raccom
               <div className="mt-4 pt-4 border-t">
                 <p className="text-sm font-medium mb-2 flex items-center gap-2">
                   <TrendingUp className="h-4 w-4" />
-                  Categorie suggerite:
+                  {t('suggestedCategories')}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {recommendations.suggestedCategories.map((cat) => (
@@ -187,7 +189,7 @@ Fornisci 4-6 raccomandazioni personalizzate con ID annuncio, motivo della raccom
               size="sm"
               className="w-full"
             >
-              Aggiorna raccomandazioni
+              {t('refreshRecommendations')}
             </Button>
           </div>
         )}
