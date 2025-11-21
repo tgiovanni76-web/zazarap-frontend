@@ -161,19 +161,22 @@ export default function ListingDetail() {
               )}
             </>
           ) : (
-            <Link to={createPageUrl('Messages')}>
-              <button className="zaza-contact-btn">
-                <MessageSquare className="inline h-4 w-4 mr-2" />
-                Contatta venditore
+            <>
+              <Link to={createPageUrl('Messages')}>
+                <button className="zaza-contact-btn">
+                  <MessageSquare className="inline h-4 w-4 mr-2" />
+                  Contatta venditore
+                </button>
+              </Link>
+              <button
+                onClick={() => toggleFavoriteMutation.mutate()}
+                className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
+              >
+                <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+                {isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
               </button>
-            </Link>
-            <button
-            onClick={() => toggleFavoriteMutation.mutate()}
-            className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
-          >
-            <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-            {isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
-          </button>
+            </>
+          )}
         </div>
       )}
 
