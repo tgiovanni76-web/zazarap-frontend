@@ -17,14 +17,18 @@ export default function Layout({ children, currentPageName }) {
 
           /* HEADER */
           .zaza-header {
-            background: #ffffff;
-            color: var(--z-red);
+            background: #000000;
             padding: 16px;
-            font-size: 22px;
-            font-weight: bold;
-            border-bottom: 3px solid var(--z-red);
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-bottom: 4px solid #FFD500;
+          }
+
+          .zaza-logo {
+            font-style: italic;
+            font-weight: bold;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: #E10600;
           }
 
           /* SEARCH BAR */
