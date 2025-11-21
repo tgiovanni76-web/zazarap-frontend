@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText } from 'lucide-react';
+import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { data: user } = useQuery({
@@ -125,12 +125,20 @@ export default function AdminDashboard() {
       color: 'bg-pink-500'
     },
     {
-      title: 'Configurazione',
-      description: 'Integrazioni e secrets',
+      title: 'Konfiguration',
+      description: 'Integrationen und Secrets',
       icon: Settings,
       link: 'AdminSettings',
       count: null,
       color: 'bg-slate-500'
+    },
+    {
+      title: 'Launch Checklist',
+      description: 'Pre-Launch Überprüfung',
+      icon: CheckSquare,
+      link: 'PreLaunchChecklist',
+      count: null,
+      color: 'bg-emerald-500'
     }
   ];
 

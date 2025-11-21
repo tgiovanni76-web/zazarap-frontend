@@ -30,6 +30,7 @@ import Impressum from './pages/Impressum';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import AGB from './pages/AGB';
 import DatenschutzDE from './pages/DatenschutzDE';
+import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import __Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "AGB": AGB,
     "DatenschutzDE": DatenschutzDE,
+    "PreLaunchChecklist": PreLaunchChecklist,
 }
 
 export const pagesConfig = {

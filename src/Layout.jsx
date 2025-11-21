@@ -10,6 +10,8 @@ import CookieBanner from '@/components/CookieBanner';
 import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 import Analytics from '@/components/Analytics';
 import StructuredData from '@/components/marketplace/StructuredData';
+import { LanguageProvider } from '@/components/LanguageProvider';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
@@ -26,9 +28,10 @@ export default function Layout({ children, currentPageName }) {
   const unreadCount = notifications.length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Analytics />
-      <StructuredData type="organization" data={{}} />
+    <LanguageProvider>
+      <div className="min-h-screen bg-slate-50">
+        <Analytics />
+        <StructuredData type="organization" data={{}} />
       <style>{`
           :root {
             --z-gray-light: #F2F2F2;
@@ -603,7 +606,8 @@ export default function Layout({ children, currentPageName }) {
               <h1 className="text-2xl font-bold m-0 text-red-600">Zazarap</h1>
             </Link>
 
-            <nav className="flex items-center gap-4">
+            <nav className="flex items-center gap-3">
+              <LanguageSwitcher variant="compact" />
               <Link to={createPageUrl('Marketplace')} className="text-red-600 hover:text-red-700 transition-colors" title="Home">
                 <ShoppingBag className="h-6 w-6" />
               </Link>
@@ -680,6 +684,7 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
+      </div>
+      </LanguageProvider>
+      );
+      }
