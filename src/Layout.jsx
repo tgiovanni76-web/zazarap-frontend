@@ -653,11 +653,13 @@ export default function Layout({ children, currentPageName }) {
               <p className="text-sm text-slate-300">Il marketplace italiano sicuro e affidabile</p>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Legale</h4>
+              <h4 className="font-semibold mb-3">Rechtliches</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-300 hover:text-white">Privacy Policy</Link></li>
-                <li><Link to={createPageUrl('TermsOfService')} className="text-slate-300 hover:text-white">Termini e Condizioni</Link></li>
-                <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-300 hover:text-white">Centro Dispute</Link></li>
+                <li><Link to={createPageUrl('Impressum')} className="text-slate-300 hover:text-white">Impressum</Link></li>
+                <li><Link to={createPageUrl('AGB')} className="text-slate-300 hover:text-white">AGB</Link></li>
+                <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-300 hover:text-white">Datenschutz</Link></li>
+                <li><Link to={createPageUrl('Widerrufsrecht')} className="text-slate-300 hover:text-white">Widerrufsrecht</Link></li>
+                <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-300 hover:text-white">Streitbeilegung</Link></li>
               </ul>
             </div>
             <div>
@@ -669,7 +671,12 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           <div className="border-t border-slate-700 mt-8 pt-6 text-center text-sm text-slate-400">
-            © 2024 Zazarap. Tutti i diritti riservati.
+            © 2025 Zazarap. Alle Rechte vorbehalten.
+            <div className="mt-2">
+              <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white">
+                EU-Streitschlichtung
+              </a>
+            </div>
           </div>
         </div>
       </footer>

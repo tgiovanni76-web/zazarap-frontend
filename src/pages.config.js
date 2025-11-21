@@ -26,6 +26,10 @@ import AdminTickets from './pages/AdminTickets';
 import AdminReports from './pages/AdminReports';
 import AdminPayments from './pages/AdminPayments';
 import AdminSettings from './pages/AdminSettings';
+import Impressum from './pages/Impressum';
+import Widerrufsrecht from './pages/Widerrufsrecht';
+import AGB from './pages/AGB';
+import DatenschutzDE from './pages/DatenschutzDE';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +62,10 @@ export const PAGES = {
     "AdminReports": AdminReports,
     "AdminPayments": AdminPayments,
     "AdminSettings": AdminSettings,
+    "Impressum": Impressum,
+    "Widerrufsrecht": Widerrufsrecht,
+    "AGB": AGB,
+    "DatenschutzDE": DatenschutzDE,
 }
 
 export const pagesConfig = {
