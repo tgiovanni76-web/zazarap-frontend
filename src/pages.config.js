@@ -14,6 +14,10 @@ import ManageUsers from './pages/ManageUsers';
 import NotificationSettings from './pages/NotificationSettings';
 import MySales from './pages/MySales';
 import MyPurchases from './pages/MyPurchases';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import DisputeCenter from './pages/DisputeCenter';
+import CustomerSupport from './pages/CustomerSupport';
 import __Layout from './Layout.jsx';
 
 
@@ -34,6 +38,10 @@ export const PAGES = {
     "NotificationSettings": NotificationSettings,
     "MySales": MySales,
     "MyPurchases": MyPurchases,
+    "PrivacyPolicy": PrivacyPolicy,
+    "TermsOfService": TermsOfService,
+    "DisputeCenter": DisputeCenter,
+    "CustomerSupport": CustomerSupport,
 }
 
 export const pagesConfig = {

@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import CookieBanner from '@/components/CookieBanner';
+import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 
 export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
@@ -631,9 +633,42 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </header>
 
+      <EmailVerificationBanner />
+      
       <main className="container max-w-7xl mx-auto px-4">
         {children}
       </main>
+      
+      <CookieBanner />
+      
+      <footer className="bg-slate-900 text-white mt-20 py-8">
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="font-bold text-lg mb-3 text-yellow-400">Zazarap</h3>
+              <p className="text-sm text-slate-300">Il marketplace italiano sicuro e affidabile</p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Legale</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-300 hover:text-white">Privacy Policy</Link></li>
+                <li><Link to={createPageUrl('TermsOfService')} className="text-slate-300 hover:text-white">Termini e Condizioni</Link></li>
+                <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-300 hover:text-white">Centro Dispute</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Supporto</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to={createPageUrl('CustomerSupport')} className="text-slate-300 hover:text-white">Contattaci</Link></li>
+                <li><a href="mailto:support@zazarap.com" className="text-slate-300 hover:text-white">support@zazarap.com</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-slate-700 mt-8 pt-6 text-center text-sm text-slate-400">
+            © 2024 Zazarap. Tutti i diritti riservati.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
