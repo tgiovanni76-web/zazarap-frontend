@@ -602,15 +602,12 @@ export default function Layout({ children, currentPageName }) {
       <header className="bg-yellow-400 py-3 shadow-md border-b-4 border-red-600">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Link to={createPageUrl('Marketplace')} className="no-underline">
+            <Link to={createPageUrl('Marketplace')} className="no-underline flex items-center gap-2">
               <h1 className="text-2xl font-bold m-0 text-red-600">Zazarap</h1>
+              <span className="text-sm text-red-600 font-medium">| Home</span>
             </Link>
 
             <nav className="flex items-center gap-3">
-              <LanguageSwitcher variant="compact" />
-              <Link to={createPageUrl('Marketplace')} className="text-red-600 hover:text-red-700 transition-colors" title="Home">
-                <ShoppingBag className="h-6 w-6" />
-              </Link>
               <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
                 <Plus className="h-6 w-6" />
               </Link>
@@ -636,6 +633,7 @@ export default function Layout({ children, currentPageName }) {
                   <Settings className="h-6 w-6" />
                 </Link>
               )}
+              <LanguageSwitcher variant="dropdown" />
             </nav>
           </div>
         </div>
