@@ -5,13 +5,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MessageSquare, Languages, Zap, AlertTriangle, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [counterPrice, setCounterPrice] = useState('');
+  const [quickReplies, setQuickReplies] = useState([]);
+  const [isGeneratingReplies, setIsGeneratingReplies] = useState(false);
+  const [translatedMessages, setTranslatedMessages] = useState({});
+  const [isTranslating, setIsTranslating] = useState({});
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -217,6 +226,96 @@ export default function Messages() {
     counterOfferMutation.mutate(parseFloat(counterPrice));
   };
 
+  const generateQuickReplies = async () => {
+    if (!selectedChat || chatMessages.length === 0) return;
+    
+    setIsGeneratingReplies(true);
+    try {
+      const recentMessages = chatMessages.slice(-5).map(m => 
+        `${m.senderId === user.email ? 'Tu' : 'Altro'}: ${m.text}${m.price ? ` (${m.price}€)` : ''}`
+      ).join('\n');
+
+      const listing = listings.find(l => l.id === selectedChat.listingId);
+      const isSeller = selectedChat.sellerId === user.email;
+
+      const prompt = `Sei un assistente che suggerisce risposte rapide per una chat di marketplace.
+
+Contesto:
+- Ruolo utente: ${isSeller ? 'Venditore' : 'Acquirente'}
+- Annuncio: ${listing?.title} (${listing?.price}€)
+- Stato trattativa: ${selectedChat.status}
+- Ultimo prezzo proposto: ${selectedChat.lastPrice ? selectedChat.lastPrice + '€' : 'N/A'}
+
+Ultimi messaggi:
+${recentMessages}
+
+Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano. Considera il contesto della trattativa.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            replies: {
+              type: "array",
+              items: { type: "string" }
+            }
+          }
+        }
+      });
+
+      setQuickReplies(result.replies || []);
+    } catch (error) {
+      console.error('Error generating replies:', error);
+    } finally {
+      setIsGeneratingReplies(false);
+    }
+  };
+
+  const translateMessage = async (messageId, text) => {
+    setIsTranslating(prev => ({ ...prev, [messageId]: true }));
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Traduci questo messaggio in italiano. Se è già in italiano, lascialo invariato. Rispondi SOLO con la traduzione, nessun testo aggiuntivo.\n\nMessaggio: ${text}`,
+      });
+
+      setTranslatedMessages(prev => ({ ...prev, [messageId]: result }));
+    } catch (error) {
+      console.error('Error translating:', error);
+    } finally {
+      setIsTranslating(prev => ({ ...prev, [messageId]: false }));
+    }
+  };
+
+  const reportMutation = useMutation({
+    mutationFn: async () => {
+      const reportedUserId = selectedChat.sellerId === user.email ? selectedChat.buyerId : selectedChat.sellerId;
+      
+      await base44.entities.Report.create({
+        reporterId: user.email,
+        reportedUserId,
+        chatId: selectedChat.id,
+        reason: reportReason,
+        description: reportDescription
+      });
+
+      await base44.entities.Notification.create({
+        userId: 'admin@zazarap.com',
+        type: 'status_update',
+        title: '⚠️ Nuova segnalazione',
+        message: `${user.email} ha segnalato ${reportedUserId} per: ${reportReason}`,
+        linkUrl: '/MarketplaceDashboard',
+        relatedId: selectedChat.id
+      });
+    },
+    onSuccess: () => {
+      setShowReportDialog(false);
+      setReportReason('');
+      setReportDescription('');
+      alert('Segnalazione inviata. Il team la esaminerà al più presto.');
+    }
+  });
+
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -282,10 +381,22 @@ export default function Messages() {
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-start">
-                  <CardTitle>
-                    {listings.find(l => l.id === selectedChat.listingId)?.title}
-                  </CardTitle>
-                  <Badge className={statusColors[selectedChat.status]}>{selectedChat.status}</Badge>
+                  <div>
+                    <CardTitle>
+                      {listings.find(l => l.id === selectedChat.listingId)?.title}
+                    </CardTitle>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className={statusColors[selectedChat.status]}>{selectedChat.status}</Badge>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowReportDialog(true)}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <AlertTriangle className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -295,15 +406,34 @@ export default function Messages() {
                       key={msg.id}
                       className={msg.senderId === user.email ? 'zaza-msg-right' : 'zaza-msg-left'}
                     >
-                      <p className="text-sm">{msg.text}</p>
+                      <p className="text-sm">
+                        {translatedMessages[msg.id] || msg.text}
+                      </p>
                       {msg.price && (
                         <p className="mt-1">
                           <span className="zaza-price-tag">{msg.price} €</span>
                         </p>
                       )}
-                      <p className="text-xs opacity-70 mt-1">
-                        {format(new Date(msg.created_date), 'dd/MM/yy HH:mm')}
-                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="text-xs opacity-70">
+                          {format(new Date(msg.created_date), 'dd/MM/yy HH:mm')}
+                        </p>
+                        {msg.senderId !== user.email && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => translateMessage(msg.id, msg.text)}
+                            disabled={isTranslating[msg.id]}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <Languages className="h-3 w-3 mr-1" />
+                            {isTranslating[msg.id] ? '...' : translatedMessages[msg.id] ? 'Originale' : 'Traduci'}
+                          </Button>
+                        )}
+                      </div>
+                      {translatedMessages[msg.id] && (
+                        <p className="text-xs opacity-60 mt-1 italic">Originale: {msg.text}</p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -336,7 +466,33 @@ export default function Messages() {
                   </div>
                 )}
 
+                {quickReplies.length > 0 && (
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {quickReplies.map((reply, idx) => (
+                      <Button
+                        key={idx}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setMessageText(reply)}
+                        className="text-xs"
+                      >
+                        <Zap className="h-3 w-3 mr-1" />
+                        {reply.substring(0, 40)}...
+                      </Button>
+                    ))}
+                  </div>
+                )}
+
                 <div className="zaza-chat-inputbox">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={generateQuickReplies}
+                    disabled={isGeneratingReplies}
+                    className="mr-2"
+                  >
+                    <Zap className="h-4 w-4" />
+                  </Button>
                   <Input
                     placeholder="Scrivi un messaggio..."
                     value={messageText}
