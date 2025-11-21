@@ -123,6 +123,14 @@ export default function AdminDashboard() {
       link: 'AdminPayments',
       count: `${escrowAmount.toFixed(0)}€`,
       color: 'bg-pink-500'
+    },
+    {
+      title: 'Configurazione',
+      description: 'Integrazioni e secrets',
+      icon: Settings,
+      link: 'AdminSettings',
+      count: null,
+      color: 'bg-slate-500'
     }
   ];
 

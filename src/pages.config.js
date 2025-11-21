@@ -25,6 +25,7 @@ import AdminDisputes from './pages/AdminDisputes';
 import AdminTickets from './pages/AdminTickets';
 import AdminReports from './pages/AdminReports';
 import AdminPayments from './pages/AdminPayments';
+import AdminSettings from './pages/AdminSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -56,6 +57,7 @@ export const PAGES = {
     "AdminTickets": AdminTickets,
     "AdminReports": AdminReports,
     "AdminPayments": AdminPayments,
+    "AdminSettings": AdminSettings,
 }
 
 export const pagesConfig = {
