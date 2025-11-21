@@ -20,14 +20,16 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
     mutationFn: async () => {
       setIsProcessing(true);
 
-      // Crea pagamento
+      // Crea pagamento con escrow
       const payment = await base44.entities.Payment.create({
         chatId: chat.id,
         buyerId: chat.buyerId,
         sellerId: chat.sellerId,
         amount: chat.lastPrice || listing.price,
         method: paymentMethod,
-        status: 'completed'
+        status: paymentMethod === 'paypal' ? 'held_in_escrow' : 'completed',
+        paypalOrderId: paymentMethod === 'paypal' ? `ORDER_${Date.now()}` : undefined,
+        escrowReleaseDate: paymentMethod === 'paypal' ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() : undefined
       });
 
       // Crea spedizione
@@ -36,18 +38,22 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
         method: shippingMethod,
         address: shippingAddress,
         status: shippingMethod === 'ritiro_persona' ? 'delivered' : 'pending',
-        cost: shippingMethod === 'ritiro_persona' ? 0 : shippingMethod === 'corriere' ? 10 : 5
+        cost: shippingMethod === 'ritiro_persona' ? 0 : shippingMethod === 'corriere' ? 10 : 5,
+        carrier: shippingMethod === 'corriere' ? 'DHL' : shippingMethod === 'posta' ? 'Poste Italiane' : undefined,
+        estimatedDelivery: shippingMethod !== 'ritiro_persona' ? 
+          new Date(Date.now() + (shippingMethod === 'corriere' ? 2 : 5) * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : 
+          undefined
       });
 
-      // Aggiorna annuncio a venduto
+      // Aggiorna annuncio
       await base44.entities.Listing.update(listing.id, {
         status: 'sold'
       });
 
       // Aggiorna stato chat
       await base44.entities.Chat.update(chat.id, {
-        status: 'completata',
-        lastMessage: 'Acquisto completato',
+        status: 'pagamento_in_escrow',
+        lastMessage: paymentMethod === 'paypal' ? 'Pagamento in escrow - in attesa di spedizione' : 'Pagamento completato',
         updatedAt: new Date().toISOString()
       });
 
@@ -55,9 +61,23 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
       await base44.entities.Notification.create({
         userId: chat.sellerId,
         type: 'status_update',
-        title: '✅ Vendita completata!',
-        message: `Hai venduto "${listing.title}" per ${chat.lastPrice || listing.price}€`,
-        linkUrl: '/Messages',
+        title: paymentMethod === 'paypal' ? '💰 Fondi in Escrow' : '✅ Vendita completata!',
+        message: paymentMethod === 'paypal' ? 
+          `Fondi per "${listing.title}" trattenuti in sicurezza. Spedisci l'articolo per riceverli.` :
+          `Hai venduto "${listing.title}" per ${chat.lastPrice || listing.price}€`,
+        linkUrl: '/MySales',
+        relatedId: chat.id
+      });
+
+      // Notifica acquirente
+      await base44.entities.Notification.create({
+        userId: chat.buyerId,
+        type: 'status_update',
+        title: '🔒 Pagamento Protetto',
+        message: paymentMethod === 'paypal' ?
+          `I tuoi fondi sono trattenuti in sicurezza fino alla consegna di "${listing.title}"` :
+          `Acquisto di "${listing.title}" completato`,
+        linkUrl: '/MyPurchases',
         relatedId: chat.id
       });
 
@@ -117,8 +137,11 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
             </Select>
             {paymentMethod === 'paypal' && (
               <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
-                <p className="text-sm text-blue-800">
-                  Verrai reindirizzato a PayPal per completare il pagamento in modo sicuro.
+                <p className="text-sm text-blue-800 font-semibold mb-2">🔒 Pagamento Protetto con Escrow</p>
+                <p className="text-xs text-blue-700">
+                  • I fondi vengono trattenuti in modo sicuro<br/>
+                  • Rilasciati al venditore solo dopo la conferma di ricezione<br/>
+                  • Protezione completa per acquirente e venditore
                 </p>
               </div>
             )}

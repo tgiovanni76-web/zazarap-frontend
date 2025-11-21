@@ -12,6 +12,8 @@ import ManageCategories from './pages/ManageCategories';
 import PromoteListing from './pages/PromoteListing';
 import ManageUsers from './pages/ManageUsers';
 import NotificationSettings from './pages/NotificationSettings';
+import MySales from './pages/MySales';
+import MyPurchases from './pages/MyPurchases';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +32,8 @@ export const PAGES = {
     "PromoteListing": PromoteListing,
     "ManageUsers": ManageUsers,
     "NotificationSettings": NotificationSettings,
+    "MySales": MySales,
+    "MyPurchases": MyPurchases,
 }
 
 export const pagesConfig = {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
@@ -604,8 +604,11 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
                 <Plus className="h-6 w-6" />
               </Link>
-              <Link to={createPageUrl('Favorites')} className="text-red-600 hover:text-red-700 transition-colors" title="Preferiti">
-                <Heart className="h-6 w-6" />
+              <Link to={createPageUrl('MySales')} className="text-red-600 hover:text-red-700 transition-colors" title="Vendite">
+                <TrendingUp className="h-6 w-6" />
+              </Link>
+              <Link to={createPageUrl('MyPurchases')} className="text-red-600 hover:text-red-700 transition-colors" title="Acquisti">
+                <Package className="h-6 w-6" />
               </Link>
               <Link to={createPageUrl('Messages')} className="text-red-600 hover:text-red-700 transition-colors" title="Messaggi">
                 <MessageSquare className="h-6 w-6" />
@@ -617,9 +620,6 @@ export default function Layout({ children, currentPageName }) {
                     {unreadCount}
                   </Badge>
                 )}
-              </Link>
-              <Link to={createPageUrl('MarketplaceDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Dashboard">
-                <LayoutDashboard className="h-6 w-6" />
               </Link>
               {user?.role === 'admin' && (
                 <Link to={createPageUrl('ManageUsers')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
