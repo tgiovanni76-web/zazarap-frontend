@@ -307,6 +307,83 @@ const translations = {
     success: 'Успішно',
     confirm: 'Підтвердити',
     close: 'Закрити'
+  },
+  
+  en: {
+    // Header & Navigation
+    home: 'Home',
+    publish: 'Post',
+    sales: 'Sales',
+    purchases: 'Purchases',
+    messages: 'Messages',
+    notifications: 'Notifications',
+    admin: 'Admin',
+    
+    // Marketplace
+    searchPlaceholder: 'Search listings...',
+    filters: 'Filters',
+    category: 'Category',
+    allCategories: 'All Categories',
+    priceMin: 'Min Price (€)',
+    priceMax: 'Max Price (€)',
+    city: 'City',
+    allCities: 'All Cities',
+    sortBy: 'Sort by',
+    mostRecent: 'Most Recent',
+    leastRecent: 'Oldest',
+    priceAsc: 'Price Ascending',
+    priceDesc: 'Price Descending',
+    resetFilters: 'Reset Filters',
+    adsFound: 'ads found',
+    noAdsFound: 'No ads found',
+    
+    // Listing
+    contactSeller: 'Contact Seller',
+    addToFavorites: 'Add to Favorites',
+    removeFromFavorites: 'Remove from Favorites',
+    editListing: 'Edit Listing',
+    promote: 'Promote',
+    
+    // Forms
+    title: 'Title',
+    description: 'Description',
+    price: 'Price',
+    images: 'Images',
+    save: 'Save',
+    cancel: 'Cancel',
+    submit: 'Submit',
+    delete: 'Delete',
+    
+    // Chat
+    sendMessage: 'Send Message',
+    accept: 'Accept',
+    reject: 'Reject',
+    counterOffer: 'Counter Offer',
+    
+    // Payment
+    proceedToPayment: 'Proceed to Payment',
+    paymentMethod: 'Payment Method',
+    shippingMethod: 'Shipping Method',
+    pickupInPerson: 'Pickup in Person',
+    courier: 'Courier',
+    
+    // Footer
+    legal: 'Legal',
+    impressum: 'Imprint',
+    agb: 'Terms',
+    privacy: 'Privacy',
+    rightOfWithdrawal: 'Right of Withdrawal',
+    disputeResolution: 'Dispute Resolution',
+    support: 'Support',
+    contactUs: 'Contact Us',
+    allRightsReserved: 'All rights reserved',
+    
+    // Common
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    confirm: 'Confirm',
+    close: 'Close'
   }
 };
 
