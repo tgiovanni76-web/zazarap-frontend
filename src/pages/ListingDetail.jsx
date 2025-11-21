@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,7 @@ export default function ListingDetail() {
   const queryClient = useQueryClient();
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [activityTracked, setActivityTracked] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -82,6 +83,20 @@ export default function ListingDetail() {
       comment: reviewComment
     });
   };
+
+  // Track user activity
+  useEffect(() => {
+    if (user && listing && !activityTracked) {
+      base44.entities.UserActivity.create({
+        userId: user.email,
+        activityType: 'view',
+        listingId: listing.id,
+        category: listing.category,
+        priceRange: listing.price < 50 ? '0-50' : listing.price < 200 ? '50-200' : '200+'
+      });
+      setActivityTracked(true);
+    }
+  }, [user, listing, activityTracked]);
 
   if (isLoading) {
     return (

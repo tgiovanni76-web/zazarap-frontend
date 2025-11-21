@@ -607,6 +607,9 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('Favorites')} className="text-white hover:text-slate-300 transition-colors">
                 Preferiti
               </Link>
+              <Link to={createPageUrl('Recommendations')} className="text-white hover:text-slate-300 transition-colors">
+                Per te
+              </Link>
               <Link to={createPageUrl('Messages')} className="text-white hover:text-slate-300 transition-colors">
                 Messaggi
               </Link>

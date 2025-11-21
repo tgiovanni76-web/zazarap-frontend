@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
 
 export default function Marketplace() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,6 +113,15 @@ export default function Marketplace() {
             placeholder="Cerca annunci per parola chiave..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && user && searchTerm.trim()) {
+                base44.entities.UserActivity.create({
+                  userId: user.email,
+                  activityType: 'search',
+                  searchTerm: searchTerm.trim()
+                });
+              }
+            }}
             className="pl-10 py-6 text-lg"
           />
         </div>
@@ -178,6 +188,12 @@ export default function Marketplace() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {user && (
+        <div className="mb-8">
+          <RecommendationsWidget user={user} />
+        </div>
       )}
 
       <div className="mb-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">

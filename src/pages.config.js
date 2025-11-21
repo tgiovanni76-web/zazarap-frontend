@@ -7,6 +7,7 @@ import Favorites from './pages/Favorites';
 import Category from './pages/Category';
 import EditListing from './pages/EditListing';
 import Notifications from './pages/Notifications';
+import Recommendations from './pages/Recommendations';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +21,7 @@ export const PAGES = {
     "Category": Category,
     "EditListing": EditListing,
     "Notifications": Notifications,
+    "Recommendations": Recommendations,
 }
 
 export const pagesConfig = {
