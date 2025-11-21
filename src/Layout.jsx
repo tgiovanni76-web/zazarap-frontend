@@ -17,18 +17,14 @@ export default function Layout({ children, currentPageName }) {
 
           /* HEADER */
           .zaza-header {
-            background: #000000;
+            background: #ffffff;
+            color: var(--z-red);
             padding: 16px;
-            text-align: center;
-            border-bottom: 4px solid #FFD500;
-          }
-
-          .zaza-logo {
-            font-style: italic;
+            font-size: 22px;
             font-weight: bold;
-            font-size: 24px;
-            letter-spacing: 1px;
-            color: #E10600;
+            border-bottom: 3px solid var(--z-red);
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
           }
 
           /* SEARCH BAR */
@@ -41,44 +37,29 @@ export default function Layout({ children, currentPageName }) {
             margin: 14px;
           }
 
-          /* --- Griglia categorie --- */
+          /* CATEGORIE */
           .zaza-cat-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            padding: 14px;
+            gap: 14px;
+            padding: 10px;
           }
 
-          /* --- Card categoria --- */
           .zaza-cat-card {
-            background: #FFD500;
-            border: 3px solid #E10600;
-            color: #000000;
-            border-radius: 20px;
-            padding: 20px 10px;
+            background: var(--z-yellow);
+            color: var(--z-red);
+            border-radius: 14px;
+            padding: 20px;
             text-align: center;
             font-weight: bold;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 2px solid var(--z-red);
+            font-size: 20px;
           }
 
-          /* Hover effetto professionale */
-          .zaza-cat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
-          }
-
-          /* Icone grandi categoria */
-          .zaza-cat-icon {
-            font-size: 40px;
-            margin-bottom: 8px;
-            color: #000;
-          }
-
-          /* Testo categoria */
-          .zaza-cat-text {
-            font-size: 15px;
-            font-weight: bold;
+          .zaza-cat-card span {
+            display: block;
+            font-size: 14px;
+            margin-top: 6px;
           }
 
           /* ANNUNCI */
@@ -117,52 +98,28 @@ export default function Layout({ children, currentPageName }) {
             font-weight: bold;
           }
 
-          /* Barretta inferiore */
+          /* FOOTER */
           .zaza-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 62px;
-            background: #000;
+            background: white;
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            box-shadow: 0px -2px 8px rgba(0,0,0,0.4);
-            z-index: 999;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
           }
 
-          /* Elementi della barra */
           .zaza-footer-item {
+            color: var(--z-black);
             text-align: center;
             font-size: 12px;
-            color: #FFD500;
           }
 
-          .zaza-footer-icon {
-            font-size: 22px;
-          }
-
-          /* Elemento selezionato */
           .zaza-footer-active {
-            color: #E10600;
+            color: var(--z-red);
             font-weight: bold;
-          }
-
-          /* Pulsante PUBBLICA centrale nella barra */
-          .zaza-footer-pubblica {
-            background: #E10600;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-top: -32px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            border: 4px solid #FFD500;
-            box-shadow: 0px 0px 12px rgba(255,213,0,0.6);
           }
 
           /* Legacy styles maintained for compatibility */
