@@ -6,27 +6,33 @@ export default function Analytics() {
 
   useEffect(() => {
     // Google Analytics pageview tracking
-    if (window.gtag) {
-      window.gtag('config', 'G-XXXXXXXXXX', {
+    const GA_ID = process.env.REACT_APP_GA_ID || 'G-XXXXXXXXXX';
+    if (window.gtag && GA_ID !== 'G-XXXXXXXXXX') {
+      window.gtag('config', GA_ID, {
         page_path: location.pathname + location.search,
       });
     }
   }, [location]);
 
   useEffect(() => {
-    // Carica Google Analytics
-    const script = document.createElement('script');
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
-    script.async = true;
-    document.head.appendChild(script);
+    // Usa l'ID da variabili ambiente o placeholder
+    const GA_ID = process.env.REACT_APP_GA_ID || 'G-XXXXXXXXXX';
+    
+    // Carica Google Analytics solo se configurato
+    if (GA_ID && GA_ID !== 'G-XXXXXXXXXX') {
+      const script = document.createElement('script');
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+      script.async = true;
+      document.head.appendChild(script);
 
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){window.dataLayer.push(arguments);}
-    window.gtag = gtag;
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX', {
-      send_page_view: false // Gestito manualmente
-    });
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){window.dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', GA_ID, {
+        send_page_view: false // Gestito manualmente
+      });
+    }
   }, []);
 
   return null;
@@ -40,6 +46,8 @@ export function trackEvent(category, action, label, value) {
       event_label: label,
       value: value
     });
+  } else {
+    console.log('Analytics event:', { category, action, label, value });
   }
 }
 
@@ -52,5 +60,7 @@ export function trackPurchase(transactionId, value, items) {
       currency: 'EUR',
       items: items
     });
+  } else {
+    console.log('Analytics purchase:', { transactionId, value, items });
   }
 }
