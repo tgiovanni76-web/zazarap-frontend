@@ -12,6 +12,7 @@ import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Hear
 import { toast } from 'sonner';
 import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
+import CategoriesBar from '../components/marketplace/CategoriesBar';
 
 export default function Marketplace() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -191,6 +192,11 @@ export default function Marketplace() {
         </Card>
       )}
 
+      <CategoriesBar 
+        onCategorySelect={setCategoryFilter} 
+        selectedCategory={categoryFilter}
+      />
+
       <FeaturedListings listings={listings} />
 
       {user && (
@@ -198,28 +204,6 @@ export default function Marketplace() {
           <RecommendationsWidget user={user} />
         </div>
       )}
-
-      <div className="mb-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-        {['elettronica', 'casa', 'moda', 'sport', 'auto', 'animali', 'altro'].map(cat => {
-          const Icon = categoryIcons[cat];
-          const count = listings.filter(l => l.category === cat && l.status === 'active').length;
-          return (
-            <Link
-              key={cat}
-              to={createPageUrl('Category') + '?name=' + cat}
-              className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all hover:shadow-md ${
-                categoryFilter === cat 
-                  ? 'border-indigo-600 bg-indigo-50' 
-                  : 'border-slate-200 bg-white hover:border-slate-300'
-              }`}
-            >
-              <Icon className={`h-8 w-8 mb-2 ${categoryFilter === cat ? 'text-indigo-600' : 'text-slate-600'}`} />
-              <p className="text-sm font-medium capitalize">{cat}</p>
-              <p className="text-xs text-slate-500">{count}</p>
-            </Link>
-          );
-        })}
-      </div>
 
       <div className="zaza-grid">
         {filteredListings.map(listing => {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
@@ -590,52 +590,41 @@ export default function Layout({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-slate-800 py-4 shadow-md">
+      <header className="bg-yellow-400 py-3 shadow-md border-b-4 border-red-600">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Link to={createPageUrl('Marketplace')} className="text-white no-underline">
-              <h1 className="text-2xl font-bold m-0">Zazarap</h1>
+            <Link to={createPageUrl('Marketplace')} className="no-underline">
+              <h1 className="text-2xl font-bold m-0 text-red-600">Zazarap</h1>
             </Link>
 
-            <nav className="flex items-center gap-6">
-              <Link to={createPageUrl('Marketplace')} className="text-white hover:text-slate-300 transition-colors">
-                Home
+            <nav className="flex items-center gap-4">
+              <Link to={createPageUrl('Marketplace')} className="text-red-600 hover:text-red-700 transition-colors" title="Home">
+                <ShoppingBag className="h-6 w-6" />
               </Link>
-              <Link to={createPageUrl('NewListing')} className="text-white hover:text-slate-300 transition-colors">
-                Pubblica
+              <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
+                <Plus className="h-6 w-6" />
               </Link>
-              <Link to={createPageUrl('Favorites')} className="text-white hover:text-slate-300 transition-colors">
-                Preferiti
+              <Link to={createPageUrl('Favorites')} className="text-red-600 hover:text-red-700 transition-colors" title="Preferiti">
+                <Heart className="h-6 w-6" />
               </Link>
-              <Link to={createPageUrl('Recommendations')} className="text-white hover:text-slate-300 transition-colors">
-                Per te
+              <Link to={createPageUrl('Messages')} className="text-red-600 hover:text-red-700 transition-colors" title="Messaggi">
+                <MessageSquare className="h-6 w-6" />
               </Link>
-              <Link to={createPageUrl('Messages')} className="text-white hover:text-slate-300 transition-colors">
-                Messaggi
-              </Link>
-              <Link to={createPageUrl('Notifications')} className="text-white hover:text-slate-300 transition-colors relative" title="Notifiche">
-                <Bell className="h-5 w-5 inline" />
+              <Link to={createPageUrl('Notifications')} className="text-red-600 hover:text-red-700 transition-colors relative" title="Notifiche">
+                <Bell className="h-6 w-6" />
                 {unreadCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
                     {unreadCount}
                   </Badge>
                 )}
               </Link>
-              <Link to={createPageUrl('NotificationSettings')} className="text-white hover:text-slate-300 transition-colors" title="Impostazioni notifiche">
-                Preferenze
-              </Link>
-              <Link to={createPageUrl('MarketplaceDashboard')} className="text-white hover:text-slate-300 transition-colors">
-                Dashboard
+              <Link to={createPageUrl('MarketplaceDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Dashboard">
+                <LayoutDashboard className="h-6 w-6" />
               </Link>
               {user?.role === 'admin' && (
-                <>
-                  <Link to={createPageUrl('ManageCategories')} className="text-white hover:text-slate-300 transition-colors">
-                    Categorie
-                  </Link>
-                  <Link to={createPageUrl('ManageUsers')} className="text-white hover:text-slate-300 transition-colors">
-                    Utenti
-                  </Link>
-                </>
+                <Link to={createPageUrl('ManageUsers')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
+                  <Settings className="h-6 w-6" />
+                </Link>
               )}
             </nav>
           </div>

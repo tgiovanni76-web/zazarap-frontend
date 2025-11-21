@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Languages, Zap, AlertTriangle, X } from 'lucide-react';
+import { MessageSquare, Languages, Zap, AlertTriangle, X, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
+import PaymentShippingModal from '../components/marketplace/PaymentShippingModal';
 
 export default function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -21,6 +22,7 @@ export default function Messages() {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -517,6 +519,18 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                     >
                       Controproposta
                     </button>
+                  </div>
+                )}
+
+                {selectedChat.status === 'accettata' && selectedChat.buyerId === user.email && (
+                  <div className="mb-4">
+                    <Button
+                      onClick={() => setShowPaymentModal(true)}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg"
+                    >
+                      <CreditCard className="h-5 w-5 mr-2" />
+                      Procedi al Pagamento
+                    </Button>
                   </div>
                 )}
 
