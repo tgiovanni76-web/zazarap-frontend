@@ -495,6 +495,84 @@ export default function Layout({ children, currentPageName }) {
             font-weight: bold;
             color: var(--z-red);
           }
+
+          /* CHAT LAYOUT */
+          .zaza-chat-container {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          /* MESSAGGI SINISTRA (venditore) */
+          .zaza-msg-left {
+            max-width: 80%;
+            padding: 10px;
+            background: #e6e6e6;
+            border-radius: 10px;
+            align-self: flex-start;
+          }
+
+          /* MESSAGGI DESTRA (acquirente) */
+          .zaza-msg-right {
+            max-width: 80%;
+            padding: 10px;
+            background: #d4f6c6;
+            border-radius: 10px;
+            align-self: flex-end;
+          }
+
+          /* PREZZO NEL MESSAGGIO */
+          .zaza-price-tag {
+            font-weight: bold;
+            color: #E10600;
+          }
+
+          /* BOX INPUT */
+          .zaza-chat-inputbox {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+          }
+
+          /* PULSANTI DEL VENDITORE */
+          .zaza-offer-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+          }
+
+          .zaza-btn-accept {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+          }
+
+          .zaza-btn-reject {
+            background: #FF5252;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+          }
+
+          .zaza-btn-counter {
+            background: #FFBF00;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+          }
         `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
         <div className="container max-w-7xl mx-auto px-4">
