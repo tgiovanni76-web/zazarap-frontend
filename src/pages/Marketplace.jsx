@@ -221,24 +221,6 @@ export default function Marketplace() {
         })}
       </div>
 
-      <div className="zaza-filters">
-        <div className="zaza-filters-title">Cerca annunci</div>
-        <input
-          placeholder="Cerca per parola chiave..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="zaza-filter-input"
-        />
-        {searchTerm && (
-          <button 
-            onClick={() => setSearchTerm('')}
-            className="text-sm text-[#e84c00] mt-2"
-          >
-            Cancella ricerca
-          </button>
-        )}
-      </div>
-
       <div className="zaza-grid">
         {filteredListings.map(listing => {
           const isFavorite = user && favorites.some(fav => fav.listing_id === listing.id);
