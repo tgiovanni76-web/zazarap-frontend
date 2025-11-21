@@ -642,6 +642,14 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
           </Card>
         </div>
       )}
+
+      {showPaymentModal && selectedChat && (
+        <PaymentShippingModal
+          chat={selectedChat}
+          listing={listings.find(l => l.id === selectedChat.listingId)}
+          onClose={() => setShowPaymentModal(false)}
+        />
+      )}
     </div>
   );
 }
