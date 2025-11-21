@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe } from 'lucide-react';
 
 export default function LanguageSwitcher({ variant = 'default' }) {
   const { language, setLanguage } = useLanguage();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
     { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
