@@ -117,28 +117,52 @@ export default function Layout({ children, currentPageName }) {
             font-weight: bold;
           }
 
-          /* FOOTER */
+          /* Barretta inferiore */
           .zaza-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
+            height: 62px;
+            background: #000;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
+            align-items: center;
+            box-shadow: 0px -2px 8px rgba(0,0,0,0.4);
+            z-index: 999;
           }
 
+          /* Elementi della barra */
           .zaza-footer-item {
-            color: var(--z-black);
             text-align: center;
             font-size: 12px;
+            color: #FFD500;
           }
 
+          .zaza-footer-icon {
+            font-size: 22px;
+          }
+
+          /* Elemento selezionato */
           .zaza-footer-active {
-            color: var(--z-red);
+            color: #E10600;
             font-weight: bold;
+          }
+
+          /* Pulsante PUBBLICA centrale nella barra */
+          .zaza-footer-pubblica {
+            background: #E10600;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-top: -32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            border: 4px solid #FFD500;
+            box-shadow: 0px 0px 12px rgba(255,213,0,0.6);
           }
 
           /* Legacy styles maintained for compatibility */
