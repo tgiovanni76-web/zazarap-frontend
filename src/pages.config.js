@@ -19,6 +19,12 @@ import TermsOfService from './pages/TermsOfService';
 import DisputeCenter from './pages/DisputeCenter';
 import CustomerSupport from './pages/CustomerSupport';
 import PayPalWebhook from './pages/PayPalWebhook';
+import AdminDashboard from './pages/AdminDashboard';
+import ModerateListings from './pages/ModerateListings';
+import AdminDisputes from './pages/AdminDisputes';
+import AdminTickets from './pages/AdminTickets';
+import AdminReports from './pages/AdminReports';
+import AdminPayments from './pages/AdminPayments';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +50,12 @@ export const PAGES = {
     "DisputeCenter": DisputeCenter,
     "CustomerSupport": CustomerSupport,
     "PayPalWebhook": PayPalWebhook,
+    "AdminDashboard": AdminDashboard,
+    "ModerateListings": ModerateListings,
+    "AdminDisputes": AdminDisputes,
+    "AdminTickets": AdminTickets,
+    "AdminReports": AdminReports,
+    "AdminPayments": AdminPayments,
 }
 
 export const pagesConfig = {

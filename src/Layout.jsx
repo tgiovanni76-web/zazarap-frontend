@@ -628,7 +628,7 @@ export default function Layout({ children, currentPageName }) {
                 )}
               </Link>
               {user?.role === 'admin' && (
-                <Link to={createPageUrl('ManageUsers')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
+                <Link to={createPageUrl('AdminDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
                   <Settings className="h-6 w-6" />
                 </Link>
               )}
