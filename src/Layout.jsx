@@ -37,29 +37,44 @@ export default function Layout({ children, currentPageName }) {
             margin: 14px;
           }
 
-          /* CATEGORIE */
+          /* --- Griglia categorie --- */
           .zaza-cat-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            padding: 10px;
+            gap: 18px;
+            padding: 14px;
           }
 
+          /* --- Card categoria --- */
           .zaza-cat-card {
-            background: var(--z-yellow);
-            color: var(--z-red);
-            border-radius: 14px;
-            padding: 20px;
+            background: #FFD500;
+            border: 3px solid #E10600;
+            color: #000000;
+            border-radius: 20px;
+            padding: 20px 10px;
             text-align: center;
             font-weight: bold;
-            border: 2px solid var(--z-red);
-            font-size: 20px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
           }
 
-          .zaza-cat-card span {
-            display: block;
-            font-size: 14px;
-            margin-top: 6px;
+          /* Hover effetto professionale */
+          .zaza-cat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+          }
+
+          /* Icone grandi categoria */
+          .zaza-cat-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            color: #000;
+          }
+
+          /* Testo categoria */
+          .zaza-cat-text {
+            font-size: 15px;
+            font-weight: bold;
           }
 
           /* ANNUNCI */
