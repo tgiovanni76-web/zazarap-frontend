@@ -18,6 +18,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import DisputeCenter from './pages/DisputeCenter';
 import CustomerSupport from './pages/CustomerSupport';
+import PayPalWebhook from './pages/PayPalWebhook';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +43,7 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "DisputeCenter": DisputeCenter,
     "CustomerSupport": CustomerSupport,
+    "PayPalWebhook": PayPalWebhook,
 }
 
 export const pagesConfig = {

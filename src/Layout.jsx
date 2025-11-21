@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CookieBanner from '@/components/CookieBanner';
 import EmailVerificationBanner from '@/components/EmailVerificationBanner';
+import Analytics from '@/components/Analytics';
+import StructuredData from '@/components/marketplace/StructuredData';
 
 export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
@@ -25,6 +27,8 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Analytics />
+      <StructuredData type="organization" data={{}} />
       <style>{`
           :root {
             --z-gray-light: #F2F2F2;

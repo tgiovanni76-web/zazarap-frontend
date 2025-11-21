@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import SEOHead from '../components/SEOHead';
+import StructuredData from '../components/marketplace/StructuredData';
 
 export default function ListingDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -125,6 +127,20 @@ export default function ListingDetail() {
 
   return (
     <div className="py-8 max-w-2xl mx-auto">
+      <SEOHead 
+        title={`${listing.title} - ${listing.price}€ | Zazarap`}
+        description={listing.description}
+        image={listing.images?.[0]}
+        type="product"
+      />
+      <StructuredData 
+        type="product" 
+        data={{ 
+          listing, 
+          rating: avgRating, 
+          reviewCount: reviews.length 
+        }} 
+      />
       {listing.images && listing.images.length > 0 && (
         <div className="mb-4">
           {listing.images.map((img, idx) => (
