@@ -8,35 +8,36 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-slate-50">
       <style>{`
-          /* ------------------- COLORI ------------------- */
           :root {
+            --z-gray-light: #F2F2F2;
+            --z-red: #E10600;
             --z-yellow: #FFD500;
-            --z-red:    #E10600;
-            --z-black:  #000000;
+            --z-black: #333333;
           }
 
           /* HEADER */
           .zaza-header {
-            background: var(--z-black);
+            background: #ffffff;
             color: var(--z-red);
             padding: 16px;
             font-size: 22px;
             font-weight: bold;
-            border-bottom: 4px solid var(--z-yellow);
+            border-bottom: 3px solid var(--z-red);
             text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
           }
 
           /* SEARCH BAR */
           .zaza-search {
-            background: var(--z-yellow);
+            background: var(--z-gray-light);
             border: 2px solid var(--z-red);
             padding: 12px;
             border-radius: 12px;
             font-size: 16px;
-            margin: 12px;
+            margin: 14px;
           }
 
-          /* GRID CATEGORIE */
+          /* CATEGORIE */
           .zaza-cat-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -46,7 +47,7 @@ export default function Layout({ children, currentPageName }) {
 
           .zaza-cat-card {
             background: var(--z-yellow);
-            color: var(--z-black);
+            color: var(--z-red);
             border-radius: 14px;
             padding: 14px;
             text-align: center;
@@ -54,18 +55,18 @@ export default function Layout({ children, currentPageName }) {
             border: 2px solid var(--z-red);
           }
 
-          /* CARD ANNUNCI */
+          /* ANNUNCI */
           .zaza-card {
-            background: #0E0E0E;
+            background: #ffffff;
             border-radius: 12px;
             overflow: hidden;
             padding-bottom: 10px;
-            box-shadow: 0px 2px 6px rgba(255,213,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             position: relative;
           }
 
           .zaza-card-title {
-            color: var(--z-yellow);
+            color: var(--z-black);
             font-weight: bold;
             margin: 8px;
           }
@@ -74,15 +75,15 @@ export default function Layout({ children, currentPageName }) {
             color: var(--z-red);
             font-size: 18px;
             font-weight: bold;
-            margin: 0 8px;
+            margin: 0 8px 8px;
           }
 
-          /* PULSANTE PUBBLICA */
+          /* PUBBLICA BUTTON */
           .zaza-btn-pubblica {
             background: var(--z-red);
             color: white;
             padding: 15px;
-            margin: 14px;
+            margin: 16px;
             border-radius: 14px;
             text-align: center;
             border: 3px solid var(--z-yellow);
@@ -96,15 +97,17 @@ export default function Layout({ children, currentPageName }) {
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--z-black);
+            background: white;
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            border-top: 1px solid #ddd;
           }
 
           .zaza-footer-item {
-            color: var(--z-yellow);
+            color: var(--z-black);
             text-align: center;
+            font-size: 12px;
           }
 
           .zaza-footer-active {
@@ -130,14 +133,14 @@ export default function Layout({ children, currentPageName }) {
             width: 100%;
             height: 150px;
             object-fit: cover;
-            background: #0E0E0E;
+            background: var(--z-gray-light);
           }
 
           .zaza-heart {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255,213,0,0.9);
+            background: rgba(255,255,255,0.9);
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -161,7 +164,7 @@ export default function Layout({ children, currentPageName }) {
             font-weight: bold;
             margin: 6px;
             line-height: 1.2em;
-            color: var(--z-yellow);
+            color: var(--z-black);
           }
 
           .zaza-price {
@@ -173,19 +176,19 @@ export default function Layout({ children, currentPageName }) {
 
           .zaza-location {
             font-size: 12px;
-            color: var(--z-yellow);
+            color: #666;
             margin: 0 6px 6px 6px;
           }
 
           .zaza-category {
             display: inline-block;
-            background: var(--z-red);
-            color: var(--z-yellow);
+            background: var(--z-yellow);
+            color: var(--z-red);
             padding: 2px 8px;
             font-size: 11px;
             border-radius: 6px;
             margin: 4px 6px;
-            border: 1px solid var(--z-yellow);
+            border: 1px solid var(--z-red);
           }
 
           .zaza-detail-img {
@@ -194,7 +197,6 @@ export default function Layout({ children, currentPageName }) {
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 15px;
-            border: 3px solid var(--z-yellow);
           }
 
           .zaza-detail-title {
@@ -218,13 +220,13 @@ export default function Layout({ children, currentPageName }) {
 
           .zaza-detail-category {
             display: inline-block;
-            background: var(--z-red);
-            color: var(--z-yellow);
+            background: var(--z-yellow);
+            color: var(--z-red);
             padding: 4px 10px;
             font-size: 12px;
             border-radius: 6px;
             margin-bottom: 15px;
-            border: 2px solid var(--z-yellow);
+            border: 2px solid var(--z-red);
           }
 
           .zaza-detail-description {
@@ -257,14 +259,14 @@ export default function Layout({ children, currentPageName }) {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
-            border: 2px solid var(--z-yellow);
+            border: 1px solid #ccc;
             margin-bottom: 15px;
           }
 
           .zaza-upload {
             border: 2px dashed var(--z-red);
             color: var(--z-red);
-            background: var(--z-yellow);
+            background: var(--z-gray-light);
             padding: 20px;
             text-align: center;
             border-radius: 12px;
@@ -293,7 +295,6 @@ export default function Layout({ children, currentPageName }) {
             object-fit: cover;
             margin: 20px auto;
             display: block;
-            border: 3px solid var(--z-yellow);
           }
 
           .zaza-profile-name {
@@ -326,12 +327,12 @@ export default function Layout({ children, currentPageName }) {
           }
 
           .zaza-filters {
-            background: var(--z-yellow);
+            background: white;
             padding: 12px;
             border-radius: 12px;
-            box-shadow: 0px 2px 8px rgba(0,0,0,0.12);
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 18px;
-            border: 2px solid var(--z-red);
+            border: 1px solid #ddd;
           }
 
           .zaza-filters-title {
@@ -352,7 +353,7 @@ export default function Layout({ children, currentPageName }) {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
-            border: 2px solid var(--z-red);
+            border: 1px solid #ccc;
             font-size: 14px;
           }
 
@@ -366,7 +367,7 @@ export default function Layout({ children, currentPageName }) {
             font-size: 16px;
             font-weight: bold;
             text-align: center;
-            border: 2px solid var(--z-black);
+            border: none;
             cursor: pointer;
           }
 
@@ -379,12 +380,12 @@ export default function Layout({ children, currentPageName }) {
 
           .zaza-filter-chip {
             padding: 8px 14px;
-            background: var(--z-yellow);
+            background: var(--z-gray-light);
             color: var(--z-black);
             font-size: 14px;
             border-radius: 20px;
             white-space: nowrap;
-            border: 2px solid var(--z-red);
+            border: 1px solid #ccc;
             cursor: pointer;
           }
 
@@ -395,7 +396,7 @@ export default function Layout({ children, currentPageName }) {
             border-radius: 20px;
             font-size: 14px;
             white-space: nowrap;
-            border: 2px solid var(--z-yellow);
+            border: none;
             cursor: pointer;
           }
 
@@ -404,7 +405,6 @@ export default function Layout({ children, currentPageName }) {
             padding: 20px;
             border-radius: 14px;
             box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-            border: 3px solid var(--z-yellow);
           }
 
           .zaza-filter-panel-grid {
@@ -428,7 +428,7 @@ export default function Layout({ children, currentPageName }) {
             font-size: 16px;
             text-align: center;
             margin-top: 10px;
-            border: 2px solid var(--z-black);
+            border: none;
             cursor: pointer;
           }
 
@@ -438,7 +438,7 @@ export default function Layout({ children, currentPageName }) {
           }
 
           .zaza-filter-reset {
-            background: var(--z-yellow);
+            background: var(--z-gray-light);
             color: var(--z-black);
           }
 
@@ -448,13 +448,13 @@ export default function Layout({ children, currentPageName }) {
             left: 0;
             right: 0;
             height: 65px;
-            background: var(--z-black);
+            background: white;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 4px solid var(--z-yellow);
+            border-top: 1px solid #ddd;
             z-index: 999;
-            box-shadow: 0px -2px 6px rgba(255,213,0,0.3);
+            box-shadow: 0px -2px 6px rgba(0,0,0,0.08);
           }
 
           .zaza-nav-item {
@@ -462,7 +462,7 @@ export default function Layout({ children, currentPageName }) {
             flex-direction: column;
             align-items: center;
             font-size: 12px;
-            color: var(--z-yellow);
+            color: var(--z-black);
             text-decoration: none;
             cursor: pointer;
           }
@@ -477,8 +477,8 @@ export default function Layout({ children, currentPageName }) {
           }
 
           .zaza-premium-box {
-            background: var(--z-yellow);
-            border: 3px solid var(--z-red);
+            background: #fff8e5;
+            border: 2px solid var(--z-yellow);
             padding: 12px;
             border-radius: 12px;
             margin-top: 15px;
@@ -486,7 +486,7 @@ export default function Layout({ children, currentPageName }) {
 
           .zaza-premium-title {
             font-weight: bold;
-            color: var(--z-black);
+            color: var(--z-red);
           }
         `}</style>
       <header className="bg-slate-800 py-4 shadow-md">
