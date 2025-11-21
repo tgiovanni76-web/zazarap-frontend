@@ -1,24 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CreditCard, Truck, X } from 'lucide-react';
+import { CreditCard, Truck, X, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { checkAntifraud, checkRateLimit } from './AntifraudCheck';
+import { trackPurchase } from '@/components/Analytics';
 
 export default function PaymentShippingModal({ chat, listing, onClose }) {
   const [paymentMethod, setPaymentMethod] = useState('paypal');
   const [shippingMethod, setShippingMethod] = useState('ritiro_persona');
   const [shippingAddress, setShippingAddress] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [fraudCheck, setFraudCheck] = useState(null);
   const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
 
   const completePurchaseMutation = useMutation({
     mutationFn: async () => {
       setIsProcessing(true);
+
+      // Anti-fraud checks
+      const rateLimit = checkRateLimit(user.email, 'purchase', 3, 60000);
+      if (!rateLimit.allowed) {
+        throw new Error(rateLimit.message);
+      }
+
+      const antifraud = await checkAntifraud(user, { 
+        amount: totalAmount 
+      });
+      
+      setFraudCheck(antifraud);
+      
+      if (!antifraud.passed) {
+        throw new Error(antifraud.errors[0]?.message || 'Controllo antifrode fallito');
+      }
 
       // Crea pagamento con escrow
       const payment = await base44.entities.Payment.create({
@@ -83,9 +107,18 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
 
       return { payment, shipping };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
       queryClient.invalidateQueries({ queryKey: ['listings'] });
+      
+      // Track purchase in analytics
+      trackPurchase(data.payment.id, totalAmount, [{
+        item_id: listing.id,
+        item_name: listing.title,
+        price: listing.price,
+        quantity: 1
+      }]);
+      
       toast.success('Acquisto completato con successo!');
       onClose();
     },
@@ -191,6 +224,20 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
               <span>{totalAmount}€</span>
             </div>
           </div>
+
+          {fraudCheck?.warnings.length > 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-yellow-800 mb-1">Avvisi:</p>
+                  {fraudCheck.warnings.map((w, i) => (
+                    <p key={i} className="text-sm text-yellow-700">{w.message}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           <Button
             onClick={() => completePurchaseMutation.mutate()}
