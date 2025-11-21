@@ -2,9 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, ShoppingBag, Plus } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { LayoutDashboard, ShoppingBag, Plus, Bell } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 export default function Layout({ children, currentPageName }) {
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me().catch(() => null),
+  });
+
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['notifications', user?.email],
+    queryFn: () => base44.entities.Notification.filter({ userId: user.email, read: false }),
+    enabled: !!user,
+  });
+
+  const unreadCount = notifications.length;
+
   return (
     <div className="min-h-screen bg-slate-50">
       <style>{`
@@ -593,6 +609,14 @@ export default function Layout({ children, currentPageName }) {
               </Link>
               <Link to={createPageUrl('Messages')} className="text-white hover:text-slate-300 transition-colors">
                 Messaggi
+              </Link>
+              <Link to={createPageUrl('Notifications')} className="text-white hover:text-slate-300 transition-colors relative">
+                <Bell className="h-5 w-5 inline" />
+                {unreadCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
+                    {unreadCount}
+                  </Badge>
+                )}
               </Link>
               <Link to={createPageUrl('MarketplaceDashboard')} className="text-white hover:text-slate-300 transition-colors">
                 Dashboard
