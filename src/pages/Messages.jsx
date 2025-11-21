@@ -516,6 +516,64 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
           )}
         </div>
       </div>
+
+      {showReportDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-md mx-4">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>Segnala utente</CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => setShowReportDialog(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Motivo</label>
+                  <Select value={reportReason} onValueChange={setReportReason}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleziona motivo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="spam">Spam</SelectItem>
+                      <SelectItem value="inappropriate">Contenuto inappropriato</SelectItem>
+                      <SelectItem value="scam">Truffa</SelectItem>
+                      <SelectItem value="harassment">Molestie</SelectItem>
+                      <SelectItem value="other">Altro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Descrizione</label>
+                  <Textarea
+                    placeholder="Descrivi il problema..."
+                    value={reportDescription}
+                    onChange={(e) => setReportDescription(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => reportMutation.mutate()}
+                    disabled={!reportReason || !reportDescription}
+                    className="flex-1 bg-red-600 hover:bg-red-700"
+                  >
+                    Invia segnalazione
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowReportDialog(false)}
+                  >
+                    Annulla
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
