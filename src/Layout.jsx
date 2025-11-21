@@ -10,10 +10,30 @@ import CookieBanner from '@/components/CookieBanner';
 import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 import Analytics from '@/components/Analytics';
 import StructuredData from '@/components/marketplace/StructuredData';
-import { LanguageProvider } from '@/components/LanguageProvider';
+import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
+function LayoutContent({ children, currentPageName, user, unreadCount }) {
+  const { t } = useLanguage();
+  
+  return (
+    <>
+      {/* ... content with t() ... */}
+    </>
+  );
+}
+
 export default function Layout({ children, currentPageName }) {
+  return (
+    <LanguageProvider>
+      <LayoutInner children={children} currentPageName={currentPageName} />
+    </LanguageProvider>
+  );
+}
+
+function LayoutInner({ children, currentPageName }) {
+  const { t } = useLanguage();
+  
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me().catch(() => null),
@@ -28,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
   const unreadCount = notifications.length;
 
   return (
-    <LanguageProvider>
+    <>
       <div className="min-h-screen bg-slate-50">
         <Analytics />
         <StructuredData type="organization" data={{}} />
@@ -652,7 +672,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-bold text-lg mb-3 text-yellow-400">Zazarap</h3>
-              <p className="text-sm text-slate-300">Il marketplace italiano sicuro e affidabile</p>
+              <p className="text-sm text-slate-300">{t('tagline')}</p>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Rechtliches</h4>
@@ -683,6 +703,6 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
       </div>
-      </LanguageProvider>
+      </>
       );
       }

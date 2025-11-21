@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function PreLaunchChecklist() {
+  const { t } = useLanguage();
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -221,8 +223,8 @@ export default function PreLaunchChecklist() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-2">Pre-Launch Checkliste</h2>
-      <p className="text-slate-600 mb-6">Überprüfen Sie alle Punkte vor dem Go-Live</p>
+      <h2 className="text-3xl font-bold mb-2">{t('preLaunchChecklist')}</h2>
+      <p className="text-slate-600 mb-6">{t('checkBeforeLaunch')}</p>
 
       <Card className="mb-6 bg-red-50 border-red-200">
         <CardContent className="pt-6">
@@ -239,26 +241,26 @@ export default function PreLaunchChecklist() {
         </CardContent>
       </Card>
 
-      {renderChecklist('🔴 Kritische Konfiguration', checks.critical, 'critical')}
-      {renderChecklist('⚖️ Rechtliche Anforderungen (Deutschland)', checks.legal)}
-      {renderChecklist('🌍 Mehrsprachigkeit', checks.languages)}
-      {renderChecklist('🧪 Testing & QA', checks.testing)}
-      {renderChecklist('💡 Empfohlene Verbesserungen', checks.recommended)}
+      {renderChecklist('🔴 ' + t('criticalConfig'), checks.critical, 'critical')}
+      {renderChecklist('⚖️ ' + t('legalRequirements'), checks.legal)}
+      {renderChecklist('🌍 Multilingual', checks.languages)}
+      {renderChecklist('🧪 ' + t('testingQA'), checks.testing)}
+      {renderChecklist('💡 ' + t('recommendedImprovements'), checks.recommended)}
 
       <Card className="bg-green-50 border-green-200">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
             <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-bold text-green-900 mb-2">Nächste Schritte</h3>
+              <h3 className="font-bold text-green-900 mb-2">{t('nextSteps')}</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm text-green-800">
-                <li>Gehen Sie zu Base44 Dashboard → Settings</li>
-                <li>Aktivieren Sie Backend Functions</li>
-                <li>Tragen Sie alle PayPal Secrets ein</li>
-                <li>Füllen Sie das Impressum mit Ihren echten Firmendaten aus</li>
-                <li>Führen Sie alle Tests durch</li>
-                <li>Verbinden Sie Ihre Custom Domain</li>
-                <li>🚀 Launch!</li>
+                <li>Base44 Dashboard → Settings</li>
+                <li>Backend Functions</li>
+                <li>PayPal Secrets</li>
+                <li>Impressum</li>
+                <li>Tests</li>
+                <li>Custom Domain</li>
+                <li>🚀 {t('launch')}</li>
               </ol>
             </div>
           </div>

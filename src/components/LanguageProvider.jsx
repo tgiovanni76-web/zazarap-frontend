@@ -75,7 +75,20 @@ const translations = {
     error: 'Fehler',
     success: 'Erfolg',
     confirm: 'Bestätigen',
-    close: 'Schließen'
+    close: 'Schließen',
+    
+    // Footer
+    tagline: 'Der sichere und zuverlässige deutsche Marktplatz',
+    
+    // Admin
+    preLaunchChecklist: 'Pre-Launch Checkliste',
+    checkBeforeLaunch: 'Überprüfen Sie alle Punkte vor dem Go-Live',
+    criticalConfig: 'Kritische Konfiguration',
+    legalRequirements: 'Rechtliche Anforderungen',
+    testingQA: 'Testing & QA',
+    recommendedImprovements: 'Empfohlene Verbesserungen',
+    nextSteps: 'Nächste Schritte',
+    launch: 'Launch!'
   },
   
   it: {
@@ -152,7 +165,20 @@ const translations = {
     error: 'Errore',
     success: 'Successo',
     confirm: 'Conferma',
-    close: 'Chiudi'
+    close: 'Chiudi',
+    
+    // Footer
+    tagline: 'Il marketplace italiano sicuro e affidabile',
+    
+    // Admin
+    preLaunchChecklist: 'Checklist Pre-Lancio',
+    checkBeforeLaunch: 'Controlla tutti i punti prima del lancio',
+    criticalConfig: 'Configurazione Critica',
+    legalRequirements: 'Requisiti Legali',
+    testingQA: 'Testing & QA',
+    recommendedImprovements: 'Miglioramenti Consigliati',
+    nextSteps: 'Prossimi Passi',
+    launch: 'Lancia!'
   },
   
   tr: {
@@ -229,7 +255,20 @@ const translations = {
     error: 'Hata',
     success: 'Başarılı',
     confirm: 'Onayla',
-    close: 'Kapat'
+    close: 'Kapat',
+    
+    // Footer
+    tagline: 'Güvenli ve güvenilir Alman pazaryeri',
+    
+    // Admin
+    preLaunchChecklist: 'Lansman Öncesi Kontrol Listesi',
+    checkBeforeLaunch: 'Yayına geçmeden önce tüm noktaları kontrol edin',
+    criticalConfig: 'Kritik Yapılandırma',
+    legalRequirements: 'Yasal Gereksinimler',
+    testingQA: 'Test & QA',
+    recommendedImprovements: 'Önerilen İyileştirmeler',
+    nextSteps: 'Sonraki Adımlar',
+    launch: 'Başlat!'
   },
   
   uk: {
@@ -306,7 +345,20 @@ const translations = {
     error: 'Помилка',
     success: 'Успішно',
     confirm: 'Підтвердити',
-    close: 'Закрити'
+    close: 'Закрити',
+    
+    // Footer
+    tagline: 'Безпечна та надійна німецька торговельна платформа',
+    
+    // Admin
+    preLaunchChecklist: 'Контрольний список перед запуском',
+    checkBeforeLaunch: 'Перевірте всі пункти перед запуском',
+    criticalConfig: 'Критична конфігурація',
+    legalRequirements: 'Юридичні вимоги',
+    testingQA: 'Тестування та QA',
+    recommendedImprovements: 'Рекомендовані покращення',
+    nextSteps: 'Наступні кроки',
+    launch: 'Запустити!'
   },
   
   en: {
@@ -383,7 +435,20 @@ const translations = {
     error: 'Error',
     success: 'Success',
     confirm: 'Confirm',
-    close: 'Close'
+    close: 'Close',
+    
+    // Footer
+    tagline: 'The secure and reliable German marketplace',
+    
+    // Admin
+    preLaunchChecklist: 'Pre-Launch Checklist',
+    checkBeforeLaunch: 'Check all points before going live',
+    criticalConfig: 'Critical Configuration',
+    legalRequirements: 'Legal Requirements',
+    testingQA: 'Testing & QA',
+    recommendedImprovements: 'Recommended Improvements',
+    nextSteps: 'Next Steps',
+    launch: 'Launch!'
   }
 };
 
