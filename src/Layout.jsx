@@ -49,10 +49,17 @@ export default function Layout({ children, currentPageName }) {
             background: var(--z-yellow);
             color: var(--z-red);
             border-radius: 14px;
-            padding: 14px;
+            padding: 20px;
             text-align: center;
             font-weight: bold;
             border: 2px solid var(--z-red);
+            font-size: 20px;
+          }
+
+          .zaza-cat-card span {
+            display: block;
+            font-size: 14px;
+            margin-top: 6px;
           }
 
           /* ANNUNCI */
