@@ -3,14 +3,15 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Send } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function Messages() {
-  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
+  const [counterPrice, setCounterPrice] = useState('');
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -18,10 +19,16 @@ export default function Messages() {
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: messages = [], isLoading } = useQuery({
-    queryKey: ['messages'],
-    queryFn: () => base44.entities.Message.list('-created_date'),
+  const { data: chats = [], isLoading } = useQuery({
+    queryKey: ['chats'],
+    queryFn: () => base44.entities.Chat.list('-updatedAt'),
     enabled: !!user,
+  });
+
+  const { data: chatMessages = [] } = useQuery({
+    queryKey: ['chatMessages', selectedChat?.id],
+    queryFn: () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, '-created_date'),
+    enabled: !!selectedChat,
   });
 
   const { data: listings = [] } = useQuery({
@@ -30,12 +37,108 @@ export default function Messages() {
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: (data) => base44.entities.Message.create(data),
+    mutationFn: async ({ text, price }) => {
+      const message = await base44.entities.ChatMessage.create({
+        chatId: selectedChat.id,
+        senderId: user.email,
+        text,
+        price: price || undefined
+      });
+
+      await base44.entities.Chat.update(selectedChat.id, {
+        lastMessage: text,
+        lastPrice: price || selectedChat.lastPrice,
+        updatedAt: new Date().toISOString()
+      });
+
+      return message;
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
       setMessageText('');
     },
   });
+
+  const acceptOfferMutation = useMutation({
+    mutationFn: async () => {
+      const text = `Accetto la tua offerta di ${selectedChat.lastPrice} €.`;
+      
+      await base44.entities.ChatMessage.create({
+        chatId: selectedChat.id,
+        senderId: user.email,
+        text,
+        price: selectedChat.lastPrice
+      });
+
+      await base44.entities.Chat.update(selectedChat.id, {
+        status: 'accettata',
+        lastMessage: text,
+        updatedAt: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+    },
+  });
+
+  const rejectOfferMutation = useMutation({
+    mutationFn: async () => {
+      const text = 'Mi dispiace, non posso accettare questa offerta.';
+      
+      await base44.entities.ChatMessage.create({
+        chatId: selectedChat.id,
+        senderId: user.email,
+        text
+      });
+
+      await base44.entities.Chat.update(selectedChat.id, {
+        status: 'rifiutata',
+        lastMessage: text,
+        updatedAt: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+    },
+  });
+
+  const counterOfferMutation = useMutation({
+    mutationFn: async (price) => {
+      const text = `La mia controproposta è di ${price} €.`;
+      
+      await base44.entities.ChatMessage.create({
+        chatId: selectedChat.id,
+        senderId: user.email,
+        text,
+        price
+      });
+
+      await base44.entities.Chat.update(selectedChat.id, {
+        lastPrice: price,
+        status: 'in_attesa',
+        lastMessage: text,
+        updatedAt: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+      setCounterPrice('');
+    },
+  });
+
+  const handleSendMessage = () => {
+    if (!messageText.trim()) return;
+    sendMessageMutation.mutate({ text: messageText });
+  };
+
+  const handleCounterOffer = () => {
+    if (!counterPrice || counterPrice <= 0) return;
+    counterOfferMutation.mutate(parseFloat(counterPrice));
+  };
 
   if (isLoading || !user) {
     return (
@@ -45,119 +148,127 @@ export default function Messages() {
     );
   }
 
-  const myMessages = messages.filter(
-    m => m.sender_email === user.email || m.receiver_email === user.email
+  const myChats = chats.filter(
+    c => c.buyerId === user.email || c.sellerId === user.email
   );
 
-  const conversations = {};
-  myMessages.forEach(msg => {
-    const otherUser = msg.sender_email === user.email ? msg.receiver_email : msg.sender_email;
-    const key = `${msg.listing_id}-${otherUser}`;
-    if (!conversations[key]) {
-      conversations[key] = {
-        listing_id: msg.listing_id,
-        other_user: otherUser,
-        messages: [],
-        unread: 0
-      };
-    }
-    conversations[key].messages.push(msg);
-    if (!msg.read && msg.receiver_email === user.email) {
-      conversations[key].unread++;
-    }
-  });
-
-  const handleSendMessage = () => {
-    if (!messageText.trim() || !selectedConversation) return;
-
-    sendMessageMutation.mutate({
-      listing_id: selectedConversation.listing_id,
-      sender_email: user.email,
-      receiver_email: selectedConversation.other_user,
-      content: messageText,
-      read: false
-    });
+  const statusColors = {
+    'in_attesa': 'bg-yellow-100 text-yellow-800',
+    'accettata': 'bg-green-100 text-green-800',
+    'rifiutata': 'bg-red-100 text-red-800'
   };
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Messaggi</h2>
+      <h2 className="text-3xl font-bold mb-6">Messaggi e Trattative</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Conversazioni</CardTitle>
+              <CardTitle>Chat</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {Object.values(conversations).map((conv, idx) => {
-                const listing = listings.find(l => l.id === conv.listing_id);
+              {myChats.map((chat) => {
+                const listing = listings.find(l => l.id === chat.listingId);
+                const isSeller = chat.sellerId === user.email;
                 return (
                   <button
-                    key={idx}
-                    onClick={() => setSelectedConversation(conv)}
-                    className="w-full text-left p-3 rounded hover:bg-slate-100 transition-colors"
+                    key={chat.id}
+                    onClick={() => setSelectedChat(chat)}
+                    className={`w-full text-left p-3 rounded transition-colors ${
+                      selectedChat?.id === chat.id ? 'bg-indigo-50 border-2 border-indigo-600' : 'hover:bg-slate-100 border-2 border-transparent'
+                    }`}
                   >
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-medium text-sm">{listing?.title || 'Annuncio'}</p>
-                        <p className="text-xs text-slate-600">{conv.other_user}</p>
+                        <p className="text-xs text-slate-600">{isSeller ? 'Acquirente' : 'Venditore'}: {isSeller ? chat.buyerId : chat.sellerId}</p>
+                        {chat.lastPrice && (
+                          <p className="text-xs font-bold text-red-600">Ultima offerta: {chat.lastPrice} €</p>
+                        )}
                       </div>
-                      {conv.unread > 0 && (
-                        <Badge variant="destructive" className="text-xs">{conv.unread}</Badge>
-                      )}
+                      <Badge className={statusColors[chat.status]}>{chat.status}</Badge>
                     </div>
                   </button>
                 );
               })}
-              {Object.keys(conversations).length === 0 && (
-                <p className="text-slate-500 text-sm">Nessun messaggio</p>
+              {myChats.length === 0 && (
+                <p className="text-slate-500 text-sm">Nessuna chat</p>
               )}
             </CardContent>
           </Card>
         </div>
 
         <div className="md:col-span-2">
-          {selectedConversation ? (
+          {selectedChat ? (
             <Card>
               <CardHeader>
-                <CardTitle>
-                  {listings.find(l => l.id === selectedConversation.listing_id)?.title}
-                </CardTitle>
+                <div className="flex justify-between items-start">
+                  <CardTitle>
+                    {listings.find(l => l.id === selectedChat.listingId)?.title}
+                  </CardTitle>
+                  <Badge className={statusColors[selectedChat.status]}>{selectedChat.status}</Badge>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
-                  {selectedConversation.messages.map((msg, idx) => (
+                <div className="zaza-chat-container mb-20">
+                  {chatMessages.map((msg) => (
                     <div
-                      key={idx}
-                      className={`flex ${msg.sender_email === user.email ? 'justify-end' : 'justify-start'}`}
+                      key={msg.id}
+                      className={msg.senderId === user.email ? 'zaza-msg-right' : 'zaza-msg-left'}
                     >
-                      <div
-                        className={`max-w-xs p-3 rounded-lg ${
-                          msg.sender_email === user.email
-                            ? 'bg-indigo-600 text-white'
-                            : 'bg-slate-100'
-                        }`}
-                      >
-                        <p className="text-sm">{msg.content}</p>
-                        <p className="text-xs opacity-70 mt-1">
-                          {format(new Date(msg.created_date), 'dd/MM/yy HH:mm')}
+                      <p className="text-sm">{msg.text}</p>
+                      {msg.price && (
+                        <p className="mt-1">
+                          <span className="zaza-price-tag">{msg.price} €</span>
                         </p>
-                      </div>
+                      )}
+                      <p className="text-xs opacity-70 mt-1">
+                        {format(new Date(msg.created_date), 'dd/MM/yy HH:mm')}
+                      </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex gap-2">
-                  <Textarea
+                {selectedChat.status === 'in_attesa' && selectedChat.sellerId === user.email && selectedChat.lastPrice && (
+                  <div className="zaza-offer-buttons mb-4">
+                    <button
+                      onClick={() => acceptOfferMutation.mutate()}
+                      className="zaza-btn-accept"
+                    >
+                      Accetta
+                    </button>
+                    <button
+                      onClick={() => rejectOfferMutation.mutate()}
+                      className="zaza-btn-reject"
+                    >
+                      Rifiuta
+                    </button>
+                    <button
+                      onClick={() => {
+                        const price = prompt('Inserisci controproposta (€):');
+                        if (price && !isNaN(price) && price > 0) {
+                          counterOfferMutation.mutate(parseFloat(price));
+                        }
+                      }}
+                      className="zaza-btn-counter"
+                    >
+                      Controproposta
+                    </button>
+                  </div>
+                )}
+
+                <div className="zaza-chat-inputbox">
+                  <Input
                     placeholder="Scrivi un messaggio..."
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     className="flex-1"
-                    rows={2}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   />
                   <Button onClick={handleSendMessage} disabled={!messageText.trim()}>
-                    <Send className="h-4 w-4" />
+                    Invia
                   </Button>
                 </div>
               </CardContent>
@@ -166,7 +277,7 @@ export default function Messages() {
             <Card>
               <CardContent className="py-12 text-center text-slate-500">
                 <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Seleziona una conversazione</p>
+                <p>Seleziona una chat</p>
               </CardContent>
             </Card>
           )}
