@@ -10,8 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MessageSquare, Languages, Zap, AlertTriangle, X, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
 import PaymentShippingModal from '../components/marketplace/PaymentShippingModal';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function Messages() {
+  const { t } = useLanguage();
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [counterPrice, setCounterPrice] = useState('');
@@ -392,7 +394,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Messaggi e Trattative</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('messages')}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
@@ -500,24 +502,24 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                       onClick={() => acceptOfferMutation.mutate()}
                       className="zaza-btn-accept"
                     >
-                      Accetta
+                      {t('accept')}
                     </button>
                     <button
                       onClick={() => rejectOfferMutation.mutate()}
                       className="zaza-btn-reject"
                     >
-                      Rifiuta
+                      {t('reject')}
                     </button>
                     <button
                       onClick={() => {
-                        const price = prompt('Inserisci controproposta (€):');
+                        const price = prompt('€:');
                         if (price && !isNaN(price) && price > 0) {
                           counterOfferMutation.mutate(parseFloat(price));
                         }
                       }}
                       className="zaza-btn-counter"
                     >
-                      Controproposta
+                      {t('counterOffer')}
                     </button>
                   </div>
                 )}
@@ -529,7 +531,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                       className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg"
                     >
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Procedi al Pagamento
+                      {t('proceedToPayment')}
                     </Button>
                   </div>
                 )}
@@ -562,14 +564,14 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                     <Zap className="h-4 w-4" />
                   </Button>
                   <Input
-                    placeholder="Scrivi un messaggio..."
+                    placeholder={t('sendMessage')}
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     className="flex-1"
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   />
                   <Button onClick={handleSendMessage} disabled={!messageText.trim()}>
-                    Invia
+                    {t('sendMessage')}
                   </Button>
                 </div>
               </CardContent>

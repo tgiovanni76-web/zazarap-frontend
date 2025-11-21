@@ -13,8 +13,10 @@ import { toast } from 'sonner';
 import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import CategoriesBar from '../components/marketplace/CategoriesBar';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function Marketplace() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [minPrice, setMinPrice] = useState('');
@@ -99,12 +101,12 @@ export default function Marketplace() {
   return (
     <div className="py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Annunci</h2>
+        <h2 className="text-3xl font-bold">{t('home')}</h2>
         <Button
           onClick={() => setShowFilters(!showFilters)}
           variant="outline"
         >
-          {showFilters ? 'Nascondi filtri' : 'Filtri avanzati'}
+          {showFilters ? t('filters') : t('filters')}
         </Button>
       </div>
 
@@ -112,7 +114,7 @@ export default function Marketplace() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
           <Input
-            placeholder="Cerca annunci per parola chiave..."
+            placeholder={t('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={(e) => {
@@ -134,7 +136,7 @@ export default function Marketplace() {
           <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Prezzo minimo (€)</label>
+                <label className="text-sm font-medium mb-2 block">{t('priceMin')}</label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -143,22 +145,22 @@ export default function Marketplace() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Prezzo massimo (€)</label>
+                <label className="text-sm font-medium mb-2 block">{t('priceMax')}</label>
                 <Input
                   type="number"
-                  placeholder="Illimitato"
+                  placeholder=""
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Città</label>
+                <label className="text-sm font-medium mb-2 block">{t('city')}</label>
                 <Select value={cityFilter} onValueChange={setCityFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Tutte le città" />
+                    <SelectValue placeholder={t('allCities')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Tutte le città</SelectItem>
+                    <SelectItem value={null}>{t('allCities')}</SelectItem>
                     {uniqueCities.map(city => (
                       <SelectItem key={city} value={city}>{city}</SelectItem>
                     ))}
@@ -166,26 +168,26 @@ export default function Marketplace() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Ordina per</label>
+                <label className="text-sm font-medium mb-2 block">{t('sortBy')}</label>
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="-created_date">Più recenti</SelectItem>
-                    <SelectItem value="created_date">Meno recenti</SelectItem>
-                    <SelectItem value="price">Prezzo crescente</SelectItem>
-                    <SelectItem value="-price">Prezzo decrescente</SelectItem>
+                    <SelectItem value="-created_date">{t('mostRecent')}</SelectItem>
+                    <SelectItem value="created_date">{t('leastRecent')}</SelectItem>
+                    <SelectItem value="price">{t('priceAsc')}</SelectItem>
+                    <SelectItem value="-price">{t('priceDesc')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="mt-4 flex gap-3">
               <Button onClick={handleResetFilters} variant="outline" className="flex-1">
-                Resetta filtri
+                {t('resetFilters')}
               </Button>
               <Badge variant="secondary" className="py-2 px-4">
-                {filteredListings.length} annunci trovati
+                {filteredListings.length} {t('adsFound')}
               </Badge>
             </div>
           </CardContent>
@@ -247,9 +249,9 @@ export default function Marketplace() {
 
       {filteredListings.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-slate-500 text-lg mb-4">Nessun annuncio trovato</p>
+          <p className="text-slate-500 text-lg mb-4">{t('noAdsFound')}</p>
           <Button onClick={handleResetFilters} variant="outline">
-            Resetta filtri
+            {t('resetFilters')}
           </Button>
         </div>
       )}

@@ -11,8 +11,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function NewListing() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
@@ -92,28 +94,28 @@ export default function NewListing() {
 
   return (
     <div className="py-8 max-w-2xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">Pubblica un nuovo annuncio</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('publish')}</h2>
       <form onSubmit={handleSubmit}>
-        <label className="zaza-form-label">Titolo</label>
+        <label className="zaza-form-label">{t('title')}</label>
         <input
           name="title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           className="zaza-input"
-          placeholder="Es. iPhone 13 come nuovo"
+          placeholder=""
         />
 
-        <label className="zaza-form-label">Descrizione</label>
+        <label className="zaza-form-label">{t('description')}</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           className="zaza-input"
           rows="5"
-          placeholder="Descrivi l'oggetto in dettaglio..."
+          placeholder=""
         />
 
-        <label className="zaza-form-label">Prezzo (€)</label>
+        <label className="zaza-form-label">{t('price')} (€)</label>
         <input
           name="price"
           type="number"
@@ -123,7 +125,7 @@ export default function NewListing() {
           placeholder="0.00"
         />
 
-        <label className="zaza-form-label">Categoria</label>
+        <label className="zaza-form-label">{t('category')}</label>
         <select
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -139,16 +141,16 @@ export default function NewListing() {
           <option value="altro">Altro</option>
         </select>
 
-        <label className="zaza-form-label">Città</label>
+        <label className="zaza-form-label">{t('city')}</label>
         <input
           name="city"
           value={formData.city}
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           className="zaza-input"
-          placeholder="Es. Milano"
+          placeholder=""
         />
 
-        <label className="zaza-form-label">Immagini (max 4)</label>
+        <label className="zaza-form-label">{t('images')} (max 4)</label>
         <div className="zaza-upload">
           <input 
             type="file" 
@@ -161,7 +163,7 @@ export default function NewListing() {
           />
           <label htmlFor="file-upload" className="cursor-pointer">
             <Upload className="inline h-6 w-6 mr-2" />
-            Clicca per caricare le foto
+            {t('images')}
           </label>
         </div>
         {imagePreviews.length > 0 && (
@@ -173,7 +175,7 @@ export default function NewListing() {
         )}
 
         <button type="submit" disabled={isLoading} className="zaza-submit">
-          {isLoading ? 'Caricamento...' : 'Pubblica annuncio'}
+          {isLoading ? t('loading') : t('submit')}
         </button>
         </form>
         </div>

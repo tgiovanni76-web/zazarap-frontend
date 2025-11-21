@@ -12,8 +12,10 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function ListingDetail() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('id');
   const queryClient = useQueryClient();
@@ -181,7 +183,7 @@ export default function ListingDetail() {
               <Link to={createPageUrl('Messages')}>
                 <button className="zaza-contact-btn">
                   <MessageSquare className="inline h-4 w-4 mr-2" />
-                  Contatta venditore
+                  {t('contactSeller')}
                 </button>
               </Link>
               <button
@@ -189,7 +191,7 @@ export default function ListingDetail() {
                 className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
               >
                 <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-                {isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
               </button>
             </>
           )}
