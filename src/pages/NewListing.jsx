@@ -132,13 +132,11 @@ export default function NewListing() {
           className="zaza-input"
         >
           <option value="">{t('selectCategory')}</option>
-          <option value="elettronica">{t('electronics')}</option>
-          <option value="casa">{t('home')}</option>
-          <option value="moda">{t('fashion')}</option>
-          <option value="sport">{t('sports')}</option>
-          <option value="auto">{t('auto')}</option>
-          <option value="animali">{t('animals')}</option>
-          <option value="altro">{t('other')}</option>
+          <option value="Motori">🚗 Motori</option>
+          <option value="Immobili">🏠 Immobili</option>
+          <option value="Mercato">🛍️ Mercato</option>
+          <option value="Lavoro">💼 Lavoro</option>
+          <option value="Animali">🐾 Animali</option>
         </select>
 
         <label className="zaza-form-label">{t('city')}</label>
