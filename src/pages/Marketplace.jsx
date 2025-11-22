@@ -208,6 +208,8 @@ export default function Marketplace() {
         </Card>
       )}
 
+      <CategoriesBar onCategorySelect={setCategoryFilter} />
+      
       <FeaturedListings listings={listings} />
 
       {user && (
