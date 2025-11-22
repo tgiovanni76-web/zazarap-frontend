@@ -37,14 +37,21 @@ export default function DashboardFilters({
           <div className="flex-1 min-w-[200px]">
             <label className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
               <Filter className="w-4 h-4" />
-              City
+              Category
             </label>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Cities" />
+                <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Cities</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="elettronica">Elettronica</SelectItem>
+                <SelectItem value="casa">Casa</SelectItem>
+                <SelectItem value="moda">Moda</SelectItem>
+                <SelectItem value="sport">Sport</SelectItem>
+                <SelectItem value="auto">Auto</SelectItem>
+                <SelectItem value="animali">Animali</SelectItem>
+                <SelectItem value="altro">Altro</SelectItem>
               </SelectContent>
             </Select>
           </div>

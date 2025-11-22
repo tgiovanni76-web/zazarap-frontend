@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
@@ -7,11 +6,7 @@ export default function StatCard({ title, value, icon: Icon, color, trend, index
   const isPositive = trend?.value > 0;
   
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-    >
+    <div>
       <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -29,6 +24,6 @@ export default function StatCard({ title, value, icon: Icon, color, trend, index
           <h3 className="text-3xl font-bold text-slate-900">{value}</h3>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }

@@ -26,8 +26,8 @@ export default function RecentListings({ listings }) {
               className="flex items-center gap-4 p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
             >
               <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
-                {listing.image ? (
-                  <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
+                {listing.images?.[0] ? (
+                  <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-2xl text-slate-400">📦</span>
                 )}
@@ -45,8 +45,8 @@ export default function RecentListings({ listings }) {
               </div>
 
               <div className="text-right">
-                <p className="text-lg font-bold text-slate-900">€{listing.price.toFixed(2)}</p>
-                <Badge className={`${statusColors[listing.status]} border mt-1`}>
+                <p className="text-lg font-bold text-slate-900">€{listing.price}</p>
+                <Badge className={`${statusColors[listing.status] || statusColors.active} border mt-1`}>
                   {listing.status}
                 </Badge>
               </div>
