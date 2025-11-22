@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,11 @@ export default function NewListing() {
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => base44.entities.Category.list('order'),
+  });
 
   const createListingMutation = useMutation({
     mutationFn: async (data) => {
@@ -132,11 +137,23 @@ export default function NewListing() {
           className="zaza-input"
         >
           <option value="">{t('selectCategory')}</option>
-          <option value="Motori">🚗 Motori</option>
-          <option value="Immobili">🏠 Immobili</option>
-          <option value="Mercato">🛍️ Mercato</option>
-          <option value="Lavoro">💼 Lavoro</option>
-          <option value="Animali">🐾 Animali</option>
+          {categories
+            .filter(c => !c.parentId && c.active)
+            .map(mainCat => {
+              const subs = categories.filter(c => c.parentId === mainCat.id && c.active);
+              return (
+                <React.Fragment key={mainCat.id}>
+                  <option value={mainCat.name} style={{fontWeight: 'bold'}}>
+                    {mainCat.name}
+                  </option>
+                  {subs.map(sub => (
+                    <option key={sub.id} value={sub.name} style={{paddingLeft: '20px'}}>
+                      ↳ {sub.name}
+                    </option>
+                  ))}
+                </React.Fragment>
+              );
+            })}
         </select>
 
         <label className="zaza-form-label">{t('city')}</label>
