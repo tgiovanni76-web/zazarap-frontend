@@ -12,7 +12,6 @@ import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Hear
 import { toast } from 'sonner';
 import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
-import CategoriesBar from '../components/marketplace/CategoriesBar';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function Marketplace() {
@@ -40,6 +39,11 @@ export default function Marketplace() {
     queryKey: ['favorites', user?.email],
     queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
     enabled: !!user
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => base44.entities.Category.list('order'),
   });
 
   const toggleFavoriteMutation = useMutation({
@@ -134,13 +138,25 @@ export default function Marketplace() {
           <SelectTrigger className="md:w-64 h-12 bg-yellow-400 text-red-600 border-2 border-red-600 font-bold hover:bg-yellow-500">
             <SelectValue placeholder={t('allCategories')} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-96 overflow-y-auto">
             <SelectItem value="all">{t('allCategories')}</SelectItem>
-            <SelectItem value="Motori">🚗 Motori</SelectItem>
-            <SelectItem value="Immobili">🏠 Immobili</SelectItem>
-            <SelectItem value="Mercato">🛍️ Mercato</SelectItem>
-            <SelectItem value="Lavoro">💼 Lavoro</SelectItem>
-            <SelectItem value="Animali">🐾 Animali</SelectItem>
+            {categories
+              .filter(c => !c.parentId && c.active)
+              .map(mainCat => {
+                const subs = categories.filter(c => c.parentId === mainCat.id && c.active);
+                return (
+                  <React.Fragment key={mainCat.id}>
+                    <SelectItem value={mainCat.name} className="font-bold">
+                      {mainCat.name}
+                    </SelectItem>
+                    {subs.map(sub => (
+                      <SelectItem key={sub.id} value={sub.name} className="pl-6">
+                        ↳ {sub.name}
+                      </SelectItem>
+                    ))}
+                  </React.Fragment>
+                );
+              })}
           </SelectContent>
         </Select>
       </div>
@@ -208,8 +224,6 @@ export default function Marketplace() {
         </Card>
       )}
 
-      <CategoriesBar onCategorySelect={setCategoryFilter} />
-      
       <FeaturedListings listings={listings} />
 
       {user && (
