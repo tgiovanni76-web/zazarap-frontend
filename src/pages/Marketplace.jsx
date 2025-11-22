@@ -110,8 +110,8 @@ export default function Marketplace() {
         </Button>
       </div>
 
-      <div className="mb-6">
-        <div className="relative">
+      <div className="mb-6 flex flex-col md:flex-row gap-4 items-stretch">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
           <Input
             placeholder={t('searchPlaceholder')}
@@ -126,9 +126,23 @@ export default function Marketplace() {
                 });
               }
             }}
-            className="pl-10 py-6 text-lg"
+            className="pl-10 h-12 text-lg border-2 border-red-600"
           />
         </div>
+
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="md:w-64 h-12 bg-yellow-400 text-red-600 border-2 border-red-600 font-bold hover:bg-yellow-500">
+            <SelectValue placeholder={t('allCategories')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t('allCategories')}</SelectItem>
+            <SelectItem value="Motori">🚗 Motori</SelectItem>
+            <SelectItem value="Immobili">🏠 Immobili</SelectItem>
+            <SelectItem value="Mercato">🛍️ Mercato</SelectItem>
+            <SelectItem value="Lavoro">💼 Lavoro</SelectItem>
+            <SelectItem value="Animali">🐾 Animali</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {showFilters && (
@@ -193,11 +207,6 @@ export default function Marketplace() {
           </CardContent>
         </Card>
       )}
-
-      <CategoriesBar 
-        onCategorySelect={setCategoryFilter} 
-        selectedCategory={categoryFilter}
-      />
 
       <FeaturedListings listings={listings} />
 
