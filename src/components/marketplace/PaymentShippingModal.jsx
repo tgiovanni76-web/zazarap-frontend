@@ -10,6 +10,7 @@ import { CreditCard, Truck, X, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { checkAntifraud, checkRateLimit } from './AntifraudCheck';
 import { trackPurchase } from '@/components/Analytics';
+import PayPalButton from './PayPalButton';
 
 export default function PaymentShippingModal({ chat, listing, onClose }) {
   const [paymentMethod, setPaymentMethod] = useState('paypal');
@@ -25,7 +26,7 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
   });
 
   const completePurchaseMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (paypalData = null) => {
       setIsProcessing(true);
 
       // Anti-fraud checks
@@ -52,7 +53,8 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
         amount: chat.lastPrice || listing.price,
         method: paymentMethod,
         status: paymentMethod === 'paypal' ? 'held_in_escrow' : 'completed',
-        paypalOrderId: paymentMethod === 'paypal' ? `ORDER_${Date.now()}` : undefined,
+        paypalOrderId: paypalData?.orderId || undefined,
+        paypalTransactionId: paypalData?.transactionId || undefined,
         escrowReleaseDate: paymentMethod === 'paypal' ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() : undefined
       });
 
@@ -169,14 +171,29 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
               </SelectContent>
             </Select>
             {paymentMethod === 'paypal' && (
-              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
-                <p className="text-sm text-blue-800 font-semibold mb-2">🔒 Pagamento Protetto con Escrow</p>
-                <p className="text-xs text-blue-700">
-                  • I fondi vengono trattenuti in modo sicuro<br/>
-                  • Rilasciati al venditore solo dopo la conferma di ricezione<br/>
-                  • Protezione completa per acquirente e venditore
-                </p>
-              </div>
+              <>
+                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-sm text-blue-800 font-semibold mb-2">🔒 Pagamento Protetto con Escrow</p>
+                  <p className="text-xs text-blue-700">
+                    • I fondi vengono trattenuti in modo sicuro<br/>
+                    • Rilasciati al venditore solo dopo la conferma di ricezione<br/>
+                    • Protezione completa per acquirente e venditore
+                  </p>
+                </div>
+                <div className="mt-4">
+                  <PayPalButton
+                    amount={totalAmount}
+                    chatId={chat.id}
+                    onSuccess={(paypalData) => {
+                      completePurchaseMutation.mutate(paypalData);
+                    }}
+                    onError={(error) => {
+                      toast.error('Errore PayPal: ' + error.message);
+                      setIsProcessing(false);
+                    }}
+                  />
+                </div>
+              </>
             )}
           </div>
 
@@ -239,17 +256,21 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
             </div>
           )}
 
-          <Button
-            onClick={() => completePurchaseMutation.mutate()}
-            disabled={isProcessing || (shippingMethod !== 'ritiro_persona' && !shippingAddress)}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-6 text-lg font-bold"
-          >
-            {isProcessing ? 'Elaborazione...' : `Paga ${totalAmount}€ con ${paymentMethod === 'paypal' ? 'PayPal' : paymentMethod}`}
-          </Button>
+          {paymentMethod !== 'paypal' && (
+            <>
+              <Button
+                onClick={() => completePurchaseMutation.mutate()}
+                disabled={isProcessing || (shippingMethod !== 'ritiro_persona' && !shippingAddress)}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-6 text-lg font-bold"
+              >
+                {isProcessing ? 'Elaborazione...' : `Paga ${totalAmount}€ con ${paymentMethod === 'contanti' ? 'Contanti' : 'Bonifico'}`}
+              </Button>
 
-          <p className="text-xs text-center text-slate-500">
-            Simulazione pagamento - In produzione verrai reindirizzato al gateway di pagamento.
-          </p>
+              <p className="text-xs text-center text-slate-500">
+                Simulazione pagamento - In produzione verrai reindirizzato al gateway di pagamento.
+              </p>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
