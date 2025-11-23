@@ -6,8 +6,8 @@ export default function Analytics() {
 
   useEffect(() => {
     // Google Analytics pageview tracking
-    const GA_ID = process.env.REACT_APP_GA_ID || 'G-XXXXXXXXXX';
-    if (window.gtag && GA_ID !== 'G-XXXXXXXXXX') {
+    const GA_ID = process.env.REACT_APP_GA_ID || 'G-6EWH70JRLD';
+    if (window.gtag && GA_ID !== 'G-6EWH70JRLD') {
       window.gtag('config', GA_ID, {
         page_path: location.pathname + location.search,
       });
@@ -16,10 +16,10 @@ export default function Analytics() {
 
   useEffect(() => {
     // Usa l'ID da variabili ambiente o placeholder
-    const GA_ID = process.env.REACT_APP_GA_ID || 'G-XXXXXXXXXX';
+    const GA_ID = process.env.REACT_APP_GA_ID || 'G-6EWH70JRLD';
     
     // Carica Google Analytics solo se configurato
-    if (GA_ID && GA_ID !== 'G-XXXXXXXXXX') {
+    if (GA_ID && GA_ID !== 'G-6EWH70JRLD') {
       const script = document.createElement('script');
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
       script.async = true;
