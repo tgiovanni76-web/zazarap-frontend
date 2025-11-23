@@ -111,15 +111,15 @@ export default function PayPalWebhook() {
               </p>
             </div>
           </div>
-          </CardContent>
-          </Card>
+        </CardContent>
+      </Card>
 
-          <Card className="mb-6 border-blue-500">
-          <CardHeader className="bg-blue-50">
+      <Card className="mb-6 border-blue-500">
+        <CardHeader className="bg-blue-50">
           <CardTitle className="text-blue-800">🎯 Come Funziona l'Escrow</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 font-bold text-blue-700">1</div>
                 <div>
@@ -149,34 +149,32 @@ export default function PayPalWebhook() {
                 </div>
               </div>
             </div>
-          </CardContent>
-          </Card>
+        </CardContent>
+      </Card>
 
-          <Card>
-          <CardHeader>
+      <Card>
+        <CardHeader>
           <CardTitle>🚀 Prossimi Passi</CardTitle>
-          </CardHeader>
-          <CardContent>
+        </CardHeader>
+        <CardContent>
           <ul className="space-y-2">
-          <li className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
-          <span>Vai a <strong>Messages</strong> e completa una trattativa</span>
-          </li>
-          <li className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
-          <span>Testa il pagamento PayPal in modalità Sandbox</span>
-          </li>
-          <li className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
-          <span>Verifica che le notifiche vengano inviate correttamente</span>
-          </li>
-          <li className="flex items-center gap-2">
-          <span className="text-orange-600">⚠️</span>
-          <span><strong>IMPORTANTE:</strong> Prima di andare live, passa da Sandbox a Live su PayPal e aggiorna i secrets</span>
-          </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span>
+              <span>Vai a <strong>Messages</strong> e completa una trattativa</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span>
+              <span>Testa il pagamento PayPal in modalità Sandbox</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span>
+              <span>Verifica che le notifiche vengano inviate correttamente</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-orange-600">⚠️</span>
+              <span><strong>IMPORTANTE:</strong> Prima di andare live, passa da Sandbox a Live su PayPal e aggiorna i secrets</span>
+            </li>
           </ul>
-          </CardContent>
-          </Card>
         </CardContent>
       </Card>
     </div>
