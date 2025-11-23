@@ -11,87 +11,59 @@ export default function PayPalWebhook() {
           <CardTitle>Setup Instructions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
-          <div>
-            <h3 className="font-bold mb-2">1. Abilita Backend Functions</h3>
-            <p>Dashboard → Settings → Enable Backend Functions</p>
+          <div className="p-4 bg-green-50 border border-green-200 rounded mb-4">
+            <p className="text-green-800">
+              <strong>✅ Backend Functions attive!</strong> Il webhook è stato creato.
+            </p>
           </div>
 
           <div>
-            <h3 className="font-bold mb-2">2. Crea Webhook Endpoint</h3>
-            <p>Crea file <code className="bg-slate-100 px-2 py-1 rounded">functions/paypalWebhook.js</code>:</p>
-            <pre className="bg-slate-900 text-slate-100 p-4 rounded mt-2 overflow-x-auto text-xs">
-{`export default async function handler(req, context) {
-  const { event_type, resource } = req.body;
-  
-  // Verifica signature PayPal
-  const isValid = await verifyWebhookSignature(req);
-  if (!isValid) return { status: 401, body: 'Invalid signature' };
-  
-  switch (event_type) {
-    case 'PAYMENT.CAPTURE.COMPLETED':
-      await handlePaymentCompleted(resource);
-      break;
-    case 'PAYMENT.CAPTURE.REFUNDED':
-      await handleRefund(resource);
-      break;
-    case 'CHECKOUT.ORDER.APPROVED':
-      await handleOrderApproved(resource);
-      break;
-  }
-  
-  return { status: 200, body: 'OK' };
-}
-
-async function handlePaymentCompleted(resource) {
-  const { id, amount } = resource;
-  
-  // Update payment record
-  const payments = await context.entities.Payment.filter({
-    paypalTransactionId: id
-  });
-  
-  if (payments[0]) {
-    await context.entities.Payment.update(payments[0].id, {
-      status: 'held_in_escrow',
-      escrowReleaseDate: new Date(Date.now() + 14*24*60*60*1000)
-    });
-  }
-}`}
-            </pre>
+            <h3 className="font-bold mb-2">1. URL Webhook</h3>
+            <p className="mb-2">Usa questo URL per configurare PayPal:</p>
+            <code className="bg-slate-900 text-slate-100 px-3 py-2 rounded block">
+              {window.location.origin}/api/functions/paypalWebhook
+            </code>
           </div>
 
           <div>
-            <h3 className="font-bold mb-2">3. Configura PayPal Dashboard</h3>
+            <h3 className="font-bold mb-2">2. Configura PayPal Dashboard</h3>
             <ol className="list-decimal pl-6 space-y-2">
-              <li>Vai su developer.paypal.com</li>
-              <li>Webhooks → Create Webhook</li>
-              <li>URL: <code>https://tuodominio.com/api/functions/paypalWebhook</code></li>
-              <li>Eventi da ascoltare:
+              <li>Vai su <a href="https://developer.paypal.com" target="_blank" className="text-blue-600 underline">developer.paypal.com</a></li>
+              <li>Dashboard → Apps & Credentials → Sandbox/Live</li>
+              <li>Seleziona la tua app → Webhooks → Add Webhook</li>
+              <li>Incolla l'URL sopra nel campo "Webhook URL"</li>
+              <li>Seleziona questi eventi:
                 <ul className="list-disc pl-6 mt-1">
-                  <li>PAYMENT.CAPTURE.COMPLETED</li>
-                  <li>PAYMENT.CAPTURE.REFUNDED</li>
-                  <li>CHECKOUT.ORDER.APPROVED</li>
-                  <li>CUSTOMER.DISPUTE.CREATED</li>
+                  <li><strong>PAYMENT.CAPTURE.COMPLETED</strong> - Pagamento completato</li>
+                  <li><strong>PAYMENT.CAPTURE.REFUNDED</strong> - Rimborso</li>
+                  <li><strong>CHECKOUT.ORDER.APPROVED</strong> - Ordine approvato</li>
+                  <li><strong>CUSTOMER.DISPUTE.CREATED</strong> - Disputa aperta</li>
                 </ul>
               </li>
+              <li>Salva e copia il <strong>Webhook ID</strong></li>
             </ol>
           </div>
 
           <div>
-            <h3 className="font-bold mb-2">4. Environment Variables</h3>
-            <p>Settings → Secrets:</p>
-            <ul className="list-disc pl-6">
-              <li>PAYPAL_CLIENT_ID</li>
-              <li>PAYPAL_CLIENT_SECRET</li>
-              <li>PAYPAL_WEBHOOK_ID</li>
-            </ul>
+            <h3 className="font-bold mb-2">3. Testa il Webhook</h3>
+            <ol className="list-decimal pl-6 space-y-2">
+              <li>Su PayPal Dashboard, vai alla sezione del webhook appena creato</li>
+              <li>Clicca "Send Test Notification"</li>
+              <li>Seleziona un evento (es. PAYMENT.CAPTURE.COMPLETED)</li>
+              <li>Verifica che lo stato sia "Success" (200)</li>
+            </ol>
           </div>
 
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-            <p className="text-yellow-800">
-              <strong>⚠️ Importante:</strong> Questa configurazione richiede backend functions abilitate. 
-              Contatta il supporto Base44 per attivarle.
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+            <p className="text-blue-800">
+              <strong>ℹ️ Funzionalità Webhook:</strong>
             </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1 text-sm">
+              <li>Pagamenti messi in <strong>escrow</strong> per 14 giorni</li>
+              <li>Rilascio automatico fondi al venditore dopo conferma acquirente</li>
+              <li>Gestione rimborsi e dispute</li>
+              <li>Notifiche automatiche acquirente/venditore</li>
+            </ul>
           </div>
         </CardContent>
       </Card>
