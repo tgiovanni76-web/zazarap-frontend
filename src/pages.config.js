@@ -32,6 +32,7 @@ import AGB from './pages/AGB';
 import DatenschutzDE from './pages/DatenschutzDE';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
 import __Layout from './Layout.jsx';
 
 
@@ -70,6 +71,7 @@ export const PAGES = {
     "DatenschutzDE": DatenschutzDE,
     "PreLaunchChecklist": PreLaunchChecklist,
     "Contact": Contact,
+    "FAQ": FAQ,
 }
 
 export const pagesConfig = {
