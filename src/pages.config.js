@@ -33,6 +33,7 @@ import DatenschutzDE from './pages/DatenschutzDE';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
+import SystemCheckup from './pages/SystemCheckup';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +73,7 @@ export const PAGES = {
     "PreLaunchChecklist": PreLaunchChecklist,
     "Contact": Contact,
     "FAQ": FAQ,
+    "SystemCheckup": SystemCheckup,
 }
 
 export const pagesConfig = {

@@ -139,6 +139,14 @@ export default function AdminDashboard() {
       link: 'PreLaunchChecklist',
       count: null,
       color: 'bg-emerald-500'
+    },
+    {
+      title: 'System Checkup',
+      description: 'Analisi completa sistema',
+      icon: CheckSquare,
+      link: 'SystemCheckup',
+      count: null,
+      color: 'bg-cyan-500'
     }
   ];
 
