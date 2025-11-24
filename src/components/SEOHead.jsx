@@ -5,14 +5,16 @@ export default function SEOHead({
   description = "Compra e vendi in sicurezza con sistema escrow PayPal. Marketplace italiano affidabile con protezione acquirente e venditore.",
   image = "https://zazarap.com/og-image.jpg",
   url = typeof window !== 'undefined' ? window.location.href : '',
-  type = "website"
+  type = "website",
+  keywords = ''
 }) {
   useEffect(() => {
     document.title = title;
     
     // Meta tags standard
     setMetaTag('description', description);
-    setMetaTag('keywords', 'marketplace, compravendita, usato, sicuro, escrow, paypal, italia');
+    const finalKeywords = keywords || 'marketplace, compravendita, usato, sicuro, escrow, paypal, italia';
+    setMetaTag('keywords', finalKeywords);
     
     // Open Graph
     setMetaTag('og:title', title, 'property');
@@ -27,7 +29,7 @@ export default function SEOHead({
     setMetaTag('twitter:title', title);
     setMetaTag('twitter:description', description);
     setMetaTag('twitter:image', image);
-  }, [title, description, image, url, type]);
+  }, [title, description, image, url, type, keywords]);
 
   return null;
 }

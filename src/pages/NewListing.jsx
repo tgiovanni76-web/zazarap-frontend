@@ -23,6 +23,9 @@ export default function NewListing() {
     price: '',
     category: '',
     city: '',
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: ''
   });
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -164,6 +167,39 @@ export default function NewListing() {
           className="zaza-input"
           placeholder=""
         />
+
+        <div className="border-t pt-6 mt-6">
+          <h3 className="text-lg font-semibold mb-4 text-slate-700">SEO Optimization (Opzionale)</h3>
+          
+          <label className="zaza-form-label">Meta Title (max 60 caratteri)</label>
+          <input
+            value={formData.seo_title}
+            onChange={(e) => setFormData({...formData, seo_title: e.target.value.slice(0, 60)})}
+            className="zaza-input"
+            placeholder="Es: Vendo iPhone 13 Pro Usato - Milano €500"
+            maxLength={60}
+          />
+          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_title.length}/60 caratteri</p>
+
+          <label className="zaza-form-label">Meta Description (max 160 caratteri)</label>
+          <textarea
+            value={formData.seo_description}
+            onChange={(e) => setFormData({...formData, seo_description: e.target.value.slice(0, 160)})}
+            className="zaza-input"
+            placeholder="Descrizione breve per i motori di ricerca..."
+            maxLength={160}
+            rows="3"
+          />
+          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_description.length}/160 caratteri</p>
+
+          <label className="zaza-form-label">Keywords SEO (separate da virgola)</label>
+          <input
+            value={formData.seo_keywords}
+            onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
+            className="zaza-input"
+            placeholder="Es: iphone, smartphone, usato, milano"
+          />
+        </div>
 
         <label className="zaza-form-label">{t('images')} (max 4)</label>
         <div className="zaza-upload">
