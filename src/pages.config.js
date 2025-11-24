@@ -31,8 +31,6 @@ import Widerrufsrecht from './pages/Widerrufsrecht';
 import AGB from './pages/AGB';
 import DatenschutzDE from './pages/DatenschutzDE';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
-import PayPalSuccess from './pages/PayPalSuccess';
-import ConfigTest from './pages/ConfigTest';
 import __Layout from './Layout.jsx';
 
 
@@ -70,12 +68,10 @@ export const PAGES = {
     "AGB": AGB,
     "DatenschutzDE": DatenschutzDE,
     "PreLaunchChecklist": PreLaunchChecklist,
-    "PayPalSuccess": PayPalSuccess,
-    "ConfigTest": ConfigTest,
 }
 
 export const pagesConfig = {
-    mainPage: "Marketplace",
+    mainPage: "MarketplaceDashboard",
     Pages: PAGES,
     Layout: __Layout,
 };
