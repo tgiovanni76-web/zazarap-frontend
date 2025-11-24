@@ -87,23 +87,30 @@ Deno.serve(async (req) => {
           undefined
       });
 
-      // Update listing
-      const listings = await base44.asServiceRole.entities.Listing.filter({ id: listingId });
-      if (listings.length > 0) {
+      // Get listing details
+      const allListings = await base44.asServiceRole.entities.Listing.list();
+      const listing = allListings.find(l => l.id === listingId);
+      
+      if (listing) {
         await base44.asServiceRole.entities.Listing.update(listingId, {
           status: 'sold'
         });
       }
 
       // Update chat
-      await base44.asServiceRole.entities.Chat.update(chatId, {
-        status: 'pagamento_in_escrow',
-        lastMessage: 'Pagamento in escrow - in attesa di spedizione',
-        updatedAt: new Date().toISOString()
-      });
+      const allChats = await base44.asServiceRole.entities.Chat.list();
+      const chat = allChats.find(c => c.id === chatId);
+      
+      if (chat) {
+        await base44.asServiceRole.entities.Chat.update(chatId, {
+          status: 'pagamento_in_escrow',
+          lastMessage: 'Pagamento in escrow - in attesa di spedizione',
+          updatedAt: new Date().toISOString()
+        });
+      }
 
       // Notify seller
-      const listingTitle = listings.length > 0 ? listings[0].title : 'l\'articolo';
+      const listingTitle = listing ? listing.title : 'l\'articolo';
       await base44.asServiceRole.entities.Notification.create({
         userId: sellerId,
         type: 'status_update',
