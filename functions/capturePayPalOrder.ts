@@ -88,8 +88,8 @@ Deno.serve(async (req) => {
       });
 
       // Update listing
-      const listing = await base44.asServiceRole.entities.Listing.get(listingId);
-      if (listing) {
+      const listings = await base44.asServiceRole.entities.Listing.filter({ id: listingId });
+      if (listings.length > 0) {
         await base44.asServiceRole.entities.Listing.update(listingId, {
           status: 'sold'
         });
@@ -103,11 +103,12 @@ Deno.serve(async (req) => {
       });
 
       // Notify seller
+      const listingTitle = listings.length > 0 ? listings[0].title : 'l\'articolo';
       await base44.asServiceRole.entities.Notification.create({
         userId: sellerId,
         type: 'status_update',
         title: '💰 Fondi in Escrow',
-        message: `Fondi per "${listing.title}" trattenuti in sicurezza. Spedisci l'articolo per riceverli.`,
+        message: `Fondi per "${listingTitle}" trattenuti in sicurezza. Spedisci l'articolo per riceverli.`,
         linkUrl: '/MySales',
         relatedId: chatId
       });
@@ -117,7 +118,7 @@ Deno.serve(async (req) => {
         userId: user.email,
         type: 'status_update',
         title: '🔒 Pagamento Protetto',
-        message: `I tuoi fondi sono trattenuti in sicurezza fino alla consegna di "${listing.title}"`,
+        message: `I tuoi fondi sono trattenuti in sicurezza fino alla consegna di "${listingTitle}"`,
         linkUrl: '/MyPurchases',
         relatedId: chatId
       });

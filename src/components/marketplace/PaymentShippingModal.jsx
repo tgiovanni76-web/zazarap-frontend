@@ -45,6 +45,15 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
       }
 
       if (paymentMethod === 'paypal') {
+        // Store payment details in sessionStorage for later use
+        sessionStorage.setItem('paypal_payment_details', JSON.stringify({
+          chatId: chat.id,
+          listingId: listing.id,
+          sellerId: chat.sellerId,
+          shippingMethod: shippingMethod,
+          shippingAddress: shippingAddress || ''
+        }));
+
         // Create PayPal order
         const { data: orderData } = await base44.functions.invoke('createPayPalOrder', {
           amount: totalAmount,
@@ -56,16 +65,8 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
           throw new Error('Errore nella creazione dell\'ordine PayPal');
         }
 
-        // Build return URL with parameters
-        const returnUrl = orderData.approveUrl + 
-          `&chatId=${chat.id}` +
-          `&listingId=${listing.id}` +
-          `&sellerId=${chat.sellerId}` +
-          `&shippingMethod=${shippingMethod}` +
-          `&shippingAddress=${encodeURIComponent(shippingAddress || '')}`;
-
         // Redirect to PayPal for approval
-        window.location.href = returnUrl;
+        window.location.href = orderData.approveUrl;
         return { redirecting: true };
       } else {
         // Non-PayPal payment (contanti, bonifico)

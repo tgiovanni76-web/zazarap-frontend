@@ -27,6 +27,9 @@ Deno.serve(async (req) => {
 
     const { access_token } = await authResponse.json();
 
+    // Get app URL for return
+    const appUrl = req.headers.get('origin') || 'https://your-app-url.com';
+    
     // Create PayPal order
     const orderResponse = await fetch(`${PAYPAL_API}/v2/checkout/orders`, {
       method: 'POST',
@@ -43,7 +46,11 @@ Deno.serve(async (req) => {
           },
           description: `Zazarap - Acquisto articolo`,
           custom_id: `${chatId}_${listingId}`
-        }]
+        }],
+        application_context: {
+          return_url: `${appUrl}/PayPalSuccess?chatId=${chatId}&listingId=${listingId}`,
+          cancel_url: `${appUrl}/Messages`
+        }
       })
     });
 

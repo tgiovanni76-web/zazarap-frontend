@@ -16,11 +16,17 @@ export default function PayPalSuccess() {
         const orderId = urlParams.get('token');
         const chatId = urlParams.get('chatId');
         const listingId = urlParams.get('listingId');
-        const sellerId = urlParams.get('sellerId');
-        const shippingMethod = urlParams.get('shippingMethod');
-        const shippingAddress = urlParams.get('shippingAddress');
 
-        if (!orderId || !chatId || !listingId || !sellerId) {
+        // Retrieve stored payment details
+        const storedDetails = sessionStorage.getItem('paypal_payment_details');
+        let paymentDetails = null;
+        
+        if (storedDetails) {
+          paymentDetails = JSON.parse(storedDetails);
+          sessionStorage.removeItem('paypal_payment_details');
+        }
+
+        if (!orderId || !chatId || !listingId) {
           setStatus('error');
           return;
         }
@@ -28,11 +34,11 @@ export default function PayPalSuccess() {
         // Capture PayPal payment
         const { data } = await base44.functions.invoke('capturePayPalOrder', {
           orderId,
-          chatId,
-          listingId,
-          sellerId,
-          shippingMethod: shippingMethod || 'ritiro_persona',
-          shippingAddress: shippingAddress || ''
+          chatId: paymentDetails?.chatId || chatId,
+          listingId: paymentDetails?.listingId || listingId,
+          sellerId: paymentDetails?.sellerId || '',
+          shippingMethod: paymentDetails?.shippingMethod || 'ritiro_persona',
+          shippingAddress: paymentDetails?.shippingAddress || ''
         });
 
         if (data.success) {
