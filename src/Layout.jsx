@@ -12,6 +12,7 @@ import Analytics from '@/components/Analytics';
 import StructuredData from '@/components/marketplace/StructuredData';
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import NewsletterForm from '@/components/NewsletterForm';
 
 function LayoutContent({ children, currentPageName, user, unreadCount }) {
   const { t } = useLanguage();
@@ -672,7 +673,12 @@ function LayoutInner({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-bold text-lg mb-3 text-yellow-400">Zazarap</h3>
-              <p className="text-sm text-slate-300">{t('tagline')}</p>
+              <p className="text-sm text-slate-300 mb-4">{t('tagline')}</p>
+              <div>
+                <h4 className="font-semibold mb-2 text-sm">Newsletter</h4>
+                <p className="text-xs text-slate-400 mb-3">Ricevi aggiornamenti e offerte esclusive</p>
+                <NewsletterForm source="footer" />
+              </div>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Rechtliches</h4>
