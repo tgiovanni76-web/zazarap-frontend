@@ -21,6 +21,8 @@ export default function Marketplace() {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [cityFilter, setCityFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [sortBy, setSortBy] = useState('-created_date');
   const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
@@ -70,7 +72,28 @@ export default function Marketplace() {
     const matchesMinPrice = !minPrice || listing.price >= parseFloat(minPrice);
     const matchesMaxPrice = !maxPrice || listing.price <= parseFloat(maxPrice);
     const matchesCity = !cityFilter || listing.city?.toLowerCase().includes(cityFilter.toLowerCase());
-    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && listing.status === 'active';
+    
+    // Status filter - only show active by default to users, or filter by specific status
+    const matchesStatus = statusFilter === 'all' 
+      ? (user?.role === 'admin' ? true : listing.status === 'active')
+      : listing.status === statusFilter;
+    
+    // Date filter
+    const now = new Date();
+    let matchesDate = true;
+    if (dateFilter !== 'all') {
+      const createdDate = new Date(listing.created_date);
+      const daysDiff = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
+      
+      if (dateFilter === 'today') matchesDate = daysDiff === 0;
+      else if (dateFilter === 'week') matchesDate = daysDiff <= 7;
+      else if (dateFilter === 'month') matchesDate = daysDiff <= 30;
+    }
+    
+    // Only show approved listings to non-admin users
+    const matchesModeration = user?.role === 'admin' || listing.moderationStatus === 'approved';
+    
+    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesStatus && matchesDate && matchesModeration;
   });
 
   const uniqueCities = [...new Set(listings.map(l => l.city).filter(Boolean))].sort();
@@ -81,6 +104,8 @@ export default function Marketplace() {
     setMinPrice('');
     setMaxPrice('');
     setCityFilter('');
+    setStatusFilter('all');
+    setDateFilter('all');
     setSortBy('-created_date');
   };
 
@@ -164,7 +189,7 @@ export default function Marketplace() {
       {showFilters && (
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">{t('priceMin')}</label>
                 <Input
@@ -211,7 +236,38 @@ export default function Marketplace() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+              {user?.role === 'admin' && (
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Stato Annuncio</label>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tutti" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Tutti gli stati</SelectItem>
+                      <SelectItem value="active">Attivi</SelectItem>
+                      <SelectItem value="sold">Venduti</SelectItem>
+                      <SelectItem value="expired">Scaduti</SelectItem>
+                      <SelectItem value="archived">Archiviati</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div>
+                <label className="text-sm font-medium mb-2 block">Data Pubblicazione</label>
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tutte" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tutte le date</SelectItem>
+                    <SelectItem value="today">Oggi</SelectItem>
+                    <SelectItem value="week">Ultima settimana</SelectItem>
+                    <SelectItem value="month">Ultimo mese</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              </div>
             <div className="mt-4 flex gap-3">
               <Button onClick={handleResetFilters} variant="outline" className="flex-1">
                 {t('resetFilters')}

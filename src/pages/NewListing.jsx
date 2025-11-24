@@ -52,12 +52,13 @@ export default function NewListing() {
       return base44.entities.Listing.create({
         ...data,
         images: imageUrls,
-        status: 'active'
+        status: 'active',
+        moderationStatus: 'pending'
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      toast.success('Annuncio pubblicato con successo!');
+      toast.success('Annuncio inviato per moderazione! Sarà pubblicato dopo la revisione.');
       navigate(createPageUrl('Marketplace'));
     },
     onError: () => {
