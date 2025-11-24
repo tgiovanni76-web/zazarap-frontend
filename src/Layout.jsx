@@ -53,6 +53,27 @@ function LayoutInner({ children, currentPageName }) {
         <Analytics />
         <StructuredData type="organization" data={{}} />
       <style>{`
+          * {
+            box-sizing: border-box;
+          }
+
+          html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            margin: 0;
+            padding: 0;
+          }
+
+          body {
+            position: relative;
+          }
+
+          #root {
+            overflow-x: hidden;
+            width: 100%;
+          }
+
           :root {
             --z-gray-light: #F2F2F2;
             --z-red: #E10600;
@@ -178,6 +199,29 @@ function LayoutInner({ children, currentPageName }) {
           @media (min-width: 680px) {
             .zaza-grid {
               grid-template-columns: repeat(3, 1fr);
+            }
+          }
+
+          /* Mobile responsiveness fixes */
+          @media (max-width: 768px) {
+            .container {
+              max-width: 100%;
+              padding-left: 1rem;
+              padding-right: 1rem;
+            }
+
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+
+            .zaza-grid {
+              width: 100%;
+              overflow-x: hidden;
+            }
+
+            .zaza-card {
+              max-width: 100%;
             }
           }
 
