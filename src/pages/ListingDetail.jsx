@@ -7,12 +7,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
 import { useLanguage } from '../components/LanguageProvider';
+import SocialShareButtons from '../components/SocialShareButtons';
 
 export default function ListingDetail() {
   const { t } = useLanguage();
@@ -49,7 +50,15 @@ export default function ListingDetail() {
     enabled: !!user
   });
 
+  const { data: likes = [] } = useQuery({
+    queryKey: ['likes', listingId],
+    queryFn: () => base44.entities.ListingLike.filter({ listing_id: listingId }),
+    enabled: !!listingId
+  });
+
   const isFavorite = favorites.some(fav => fav.listing_id === listingId);
+  const isLiked = user && likes.some(like => like.user_email === user.email);
+  const likesCount = likes.length;
 
   const toggleFavoriteMutation = useMutation({
     mutationFn: async () => {
@@ -75,6 +84,24 @@ export default function ListingDetail() {
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
       setReviewComment('');
       toast.success('Recensione aggiunta');
+    }
+  });
+
+  const toggleLikeMutation = useMutation({
+    mutationFn: async () => {
+      if (isLiked) {
+        const like = likes.find(l => l.user_email === user.email);
+        await base44.entities.ListingLike.delete(like.id);
+      } else {
+        await base44.entities.ListingLike.create({
+          listing_id: listingId,
+          user_email: user.email
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['likes'] });
+      toast.success(isLiked ? 'Mi piace rimosso' : 'Mi piace aggiunto');
     }
   });
 
@@ -160,6 +187,36 @@ export default function ListingDetail() {
       <h2 className="zaza-detail-title">{listing.title}</h2>
       <div className="zaza-detail-price">{listing.price} €</div>
       {listing.city && <div className="zaza-detail-location">{listing.city}</div>}
+
+      <div className="flex items-center gap-4 mb-4">
+        {user && (
+          <button
+            onClick={() => toggleLikeMutation.mutate()}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+              isLiked 
+                ? 'bg-red-600 text-white' 
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+          >
+            <ThumbsUp className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+            <span>{likesCount}</span>
+          </button>
+        )}
+        {!user && likesCount > 0 && (
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg">
+            <ThumbsUp className="h-4 w-4 text-slate-600" />
+            <span className="font-medium text-slate-700">{likesCount}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <SocialShareButtons 
+          url={window.location.href}
+          title={listing.title}
+          description={listing.description}
+        />
+      </div>
 
       <div className="zaza-detail-description">{listing.description}</div>
 

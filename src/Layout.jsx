@@ -693,7 +693,8 @@ function LayoutInner({ children, currentPageName }) {
             <div>
               <h4 className="font-semibold mb-3">Supporto</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link to={createPageUrl('CustomerSupport')} className="text-slate-300 hover:text-white">Contattaci</Link></li>
+                <li><Link to={createPageUrl('FAQ')} className="text-slate-300 hover:text-white">FAQ</Link></li>
+                <li><Link to={createPageUrl('Contact')} className="text-slate-300 hover:text-white">Contattaci</Link></li>
                 <li><a href="mailto:support@zazarap.com" className="text-slate-300 hover:text-white">support@zazarap.com</a></li>
               </ul>
             </div>
