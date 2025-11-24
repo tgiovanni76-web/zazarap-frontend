@@ -13,7 +13,14 @@ Deno.serve(async (req) => {
 
     const PAYPAL_CLIENT_ID = Deno.env.get("PAYPAL_CLIENT_ID");
     const PAYPAL_CLIENT_SECRET = Deno.env.get("PAYPAL_CLIENT_SECRET");
-    const PAYPAL_API = "https://api-m.paypal.com"; // Usa https://api-m.sandbox.paypal.com per test
+    
+    if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+      return Response.json({ 
+        error: 'PayPal credentials not configured' 
+      }, { status: 500 });
+    }
+
+    const PAYPAL_API = "https://api-m.sandbox.paypal.com"; // Sandbox per test - cambia a https://api-m.paypal.com per produzione
 
     // Get PayPal access token
     const authResponse = await fetch(`${PAYPAL_API}/v1/oauth2/token`, {
@@ -25,7 +32,17 @@ Deno.serve(async (req) => {
       body: 'grant_type=client_credentials'
     });
 
-    const { access_token } = await authResponse.json();
+    const authData = await authResponse.json();
+    
+    if (!authResponse.ok) {
+      console.error('PayPal auth error:', authData);
+      return Response.json({ 
+        error: 'PayPal authentication failed',
+        details: authData.error_description 
+      }, { status: 500 });
+    }
+
+    const { access_token } = authData;
 
     // Capture PayPal order
     const captureResponse = await fetch(`${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`, {
@@ -37,6 +54,14 @@ Deno.serve(async (req) => {
     });
 
     const capture = await captureResponse.json();
+
+    if (!captureResponse.ok) {
+      console.error('PayPal capture error:', capture);
+      return Response.json({ 
+        error: 'Failed to capture payment',
+        details: capture.message || capture.error_description || 'Errore sconosciuto'
+      }, { status: 500 });
+    }
 
     if (capture.status === 'COMPLETED') {
       const transactionId = capture.purchase_units[0].payments.captures[0].id;
