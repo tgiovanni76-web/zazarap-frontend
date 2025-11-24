@@ -44,68 +44,88 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
         throw new Error(antifraud.errors[0]?.message || 'Controllo antifrode fallito');
       }
 
-      // Crea pagamento con escrow
-      const payment = await base44.entities.Payment.create({
-        chatId: chat.id,
-        buyerId: chat.buyerId,
-        sellerId: chat.sellerId,
-        amount: chat.lastPrice || listing.price,
-        method: paymentMethod,
-        status: paymentMethod === 'paypal' ? 'held_in_escrow' : 'completed',
-        paypalOrderId: paymentMethod === 'paypal' ? `ORDER_${Date.now()}` : undefined,
-        escrowReleaseDate: paymentMethod === 'paypal' ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() : undefined
-      });
+      if (paymentMethod === 'paypal') {
+        // Create PayPal order
+        const { data: orderData } = await base44.functions.invoke('createPayPalOrder', {
+          amount: totalAmount,
+          chatId: chat.id,
+          listingId: listing.id
+        });
 
-      // Crea spedizione
-      const shipping = await base44.entities.Shipping.create({
-        chatId: chat.id,
-        method: shippingMethod,
-        address: shippingAddress,
-        status: shippingMethod === 'ritiro_persona' ? 'delivered' : 'pending',
-        cost: shippingMethod === 'ritiro_persona' ? 0 : shippingMethod === 'corriere' ? 10 : 5,
-        carrier: shippingMethod === 'corriere' ? 'DHL' : shippingMethod === 'posta' ? 'Poste Italiane' : undefined,
-        estimatedDelivery: shippingMethod !== 'ritiro_persona' ? 
-          new Date(Date.now() + (shippingMethod === 'corriere' ? 2 : 5) * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : 
-          undefined
-      });
+        if (!orderData.orderId) {
+          throw new Error('Errore nella creazione dell\'ordine PayPal');
+        }
 
-      // Aggiorna annuncio
-      await base44.entities.Listing.update(listing.id, {
-        status: 'sold'
-      });
+        // Build return URL with parameters
+        const returnUrl = orderData.approveUrl + 
+          `&chatId=${chat.id}` +
+          `&listingId=${listing.id}` +
+          `&sellerId=${chat.sellerId}` +
+          `&shippingMethod=${shippingMethod}` +
+          `&shippingAddress=${encodeURIComponent(shippingAddress || '')}`;
 
-      // Aggiorna stato chat
-      await base44.entities.Chat.update(chat.id, {
-        status: 'pagamento_in_escrow',
-        lastMessage: paymentMethod === 'paypal' ? 'Pagamento in escrow - in attesa di spedizione' : 'Pagamento completato',
-        updatedAt: new Date().toISOString()
-      });
+        // Redirect to PayPal for approval
+        window.location.href = returnUrl;
+        return { redirecting: true };
+      } else {
+        // Non-PayPal payment (contanti, bonifico)
+        const payment = await base44.entities.Payment.create({
+          chatId: chat.id,
+          buyerId: chat.buyerId,
+          sellerId: chat.sellerId,
+          amount: chat.lastPrice || listing.price,
+          method: paymentMethod,
+          status: 'completed'
+        });
 
-      // Notifica venditore
-      await base44.entities.Notification.create({
-        userId: chat.sellerId,
-        type: 'status_update',
-        title: paymentMethod === 'paypal' ? '💰 Fondi in Escrow' : '✅ Vendita completata!',
-        message: paymentMethod === 'paypal' ? 
-          `Fondi per "${listing.title}" trattenuti in sicurezza. Spedisci l'articolo per riceverli.` :
-          `Hai venduto "${listing.title}" per ${chat.lastPrice || listing.price}€`,
-        linkUrl: '/MySales',
-        relatedId: chat.id
-      });
+        const shippingCosts = {
+          ritiro_persona: 0,
+          corriere: 10,
+          posta: 5
+        };
 
-      // Notifica acquirente
-      await base44.entities.Notification.create({
-        userId: chat.buyerId,
-        type: 'status_update',
-        title: '🔒 Pagamento Protetto',
-        message: paymentMethod === 'paypal' ?
-          `I tuoi fondi sono trattenuti in sicurezza fino alla consegna di "${listing.title}"` :
-          `Acquisto di "${listing.title}" completato`,
-        linkUrl: '/MyPurchases',
-        relatedId: chat.id
-      });
+        const shipping = await base44.entities.Shipping.create({
+          chatId: chat.id,
+          method: shippingMethod,
+          address: shippingAddress,
+          status: shippingMethod === 'ritiro_persona' ? 'delivered' : 'pending',
+          cost: shippingCosts[shippingMethod] || 0,
+          carrier: shippingMethod === 'corriere' ? 'DHL' : shippingMethod === 'posta' ? 'Poste Italiane' : undefined,
+          estimatedDelivery: shippingMethod !== 'ritiro_persona' ? 
+            new Date(Date.now() + (shippingMethod === 'corriere' ? 2 : 5) * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : 
+            undefined
+        });
 
-      return { payment, shipping };
+        await base44.entities.Listing.update(listing.id, {
+          status: 'sold'
+        });
+
+        await base44.entities.Chat.update(chat.id, {
+          status: 'completato',
+          lastMessage: 'Pagamento completato',
+          updatedAt: new Date().toISOString()
+        });
+
+        await base44.entities.Notification.create({
+          userId: chat.sellerId,
+          type: 'status_update',
+          title: '✅ Vendita completata!',
+          message: `Hai venduto "${listing.title}" per ${chat.lastPrice || listing.price}€`,
+          linkUrl: '/MySales',
+          relatedId: chat.id
+        });
+
+        await base44.entities.Notification.create({
+          userId: chat.buyerId,
+          type: 'status_update',
+          title: '✅ Acquisto completato',
+          message: `Acquisto di "${listing.title}" completato`,
+          linkUrl: '/MyPurchases',
+          relatedId: chat.id
+        });
+
+        return { payment, shipping };
+      }
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
