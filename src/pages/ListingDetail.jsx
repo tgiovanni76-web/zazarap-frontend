@@ -157,9 +157,10 @@ export default function ListingDetail() {
   return (
     <div className="py-8 max-w-2xl mx-auto">
       <SEOHead 
-        title={`${listing.title} - ${listing.price}€ | Zazarap`}
-        description={listing.description}
+        title={listing.seo_title || `${listing.title} - ${listing.price}€ | Zazarap`}
+        description={listing.seo_description || listing.description}
         image={listing.images?.[0]}
+        keywords={listing.seo_keywords}
         type="product"
       />
       <StructuredData 
