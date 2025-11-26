@@ -34,6 +34,9 @@ import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import SystemCheckup from './pages/SystemCheckup';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import AdminBlog from './pages/AdminBlog';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +77,9 @@ export const PAGES = {
     "Contact": Contact,
     "FAQ": FAQ,
     "SystemCheckup": SystemCheckup,
+    "Blog": Blog,
+    "BlogPost": BlogPost,
+    "AdminBlog": AdminBlog,
 }
 
 export const pagesConfig = {
