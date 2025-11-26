@@ -77,7 +77,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "MarketplaceDashboard",
+    mainPage: "SystemCheckup",
     Pages: PAGES,
     Layout: __Layout,
 };
