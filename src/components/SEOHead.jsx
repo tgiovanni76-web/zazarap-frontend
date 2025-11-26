@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 
 export default function SEOHead({ 
-  title = "Zazarap – Marketplace",
-  description = "Zazarap è un marketplace sicuro con pagamenti escrow PayPal, recensioni, raccomandazioni AI e moderazione avanzata.",
-  image = "https://zazarap.de/og-default.jpg",
+  title = "Zazarap - Marketplace Italiano Sicuro",
+  description = "Compra e vendi in sicurezza con sistema escrow PayPal. Marketplace italiano affidabile con protezione acquirente e venditore.",
+  image = "https://zazarap.com/og-image.jpg",
   url = typeof window !== 'undefined' ? window.location.href : '',
   type = "website",
-  keywords = '',
-  locale = "de_DE"
+  keywords = ''
 }) {
   useEffect(() => {
     document.title = title;
@@ -24,7 +23,6 @@ export default function SEOHead({
     setMetaTag('og:url', url, 'property');
     setMetaTag('og:type', type, 'property');
     setMetaTag('og:site_name', 'Zazarap', 'property');
-    setMetaTag('og:locale', locale, 'property');
     
     // Twitter Card
     setMetaTag('twitter:card', 'summary_large_image');
