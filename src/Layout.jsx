@@ -629,9 +629,19 @@ function LayoutInner({ children, currentPageName }) {
             </Link>
 
             <nav className="flex items-center gap-3">
-              <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
-                <Plus className="h-6 w-6" />
-              </Link>
+                {!user && (
+                  <Button 
+                    onClick={() => base44.auth.redirectToLogin()}
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2"
+                  >
+                    Accedi / Registrati
+                  </Button>
+                )}
+                {user && (
+                  <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
+                    <Plus className="h-6 w-6" />
+                  </Link>
+                )}
               <Link to={createPageUrl('MySales')} className="text-red-600 hover:text-red-700 transition-colors" title="Vendite">
                 <TrendingUp className="h-6 w-6" />
               </Link>
