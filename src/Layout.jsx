@@ -642,27 +642,31 @@ function LayoutInner({ children, currentPageName }) {
                     <Plus className="h-6 w-6" />
                   </Link>
                 )}
-              <Link to={createPageUrl('MySales')} className="text-red-600 hover:text-red-700 transition-colors" title="Vendite">
-                <TrendingUp className="h-6 w-6" />
-              </Link>
-              <Link to={createPageUrl('MyPurchases')} className="text-red-600 hover:text-red-700 transition-colors" title="Acquisti">
-                <Package className="h-6 w-6" />
-              </Link>
-              <Link to={createPageUrl('Messages')} className="text-red-600 hover:text-red-700 transition-colors" title="Messaggi">
-                <MessageSquare className="h-6 w-6" />
-              </Link>
-              <Link to={createPageUrl('Notifications')} className="text-red-600 hover:text-red-700 transition-colors relative" title="Notifiche">
-                <Bell className="h-6 w-6" />
-                {unreadCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
-                    {unreadCount}
-                  </Badge>
-                )}
-              </Link>
-              {user?.role === 'admin' && (
-                <Link to={createPageUrl('AdminDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
-                  <Settings className="h-6 w-6" />
-                </Link>
+              {user && (
+                <>
+                  <Link to={createPageUrl('MySales')} className="text-red-600 hover:text-red-700 transition-colors" title="Vendite">
+                    <TrendingUp className="h-6 w-6" />
+                  </Link>
+                  <Link to={createPageUrl('MyPurchases')} className="text-red-600 hover:text-red-700 transition-colors" title="Acquisti">
+                    <Package className="h-6 w-6" />
+                  </Link>
+                  <Link to={createPageUrl('Messages')} className="text-red-600 hover:text-red-700 transition-colors" title="Messaggi">
+                    <MessageSquare className="h-6 w-6" />
+                  </Link>
+                  <Link to={createPageUrl('Notifications')} className="text-red-600 hover:text-red-700 transition-colors relative" title="Notifiche">
+                    <Bell className="h-6 w-6" />
+                    {unreadCount > 0 && (
+                      <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
+                        {unreadCount}
+                      </Badge>
+                    )}
+                  </Link>
+                  {user?.role === 'admin' && (
+                    <Link to={createPageUrl('AdminDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
+                      <Settings className="h-6 w-6" />
+                    </Link>
+                  )}
+                </>
               )}
               <LanguageSwitcher variant="dropdown" />
             </nav>
