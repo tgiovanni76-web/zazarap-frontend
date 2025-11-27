@@ -182,9 +182,9 @@ export default function MySales() {
                           payment?.status === 'released_to_seller' ? 'bg-green-100 text-green-800' :
                           'bg-blue-100 text-blue-800'
                         }>
-                          {payment?.status === 'held_in_escrow' ? '🔒 In Escrow' :
-                           payment?.status === 'released_to_seller' ? '✅ Fondi Ricevuti' :
-                           payment?.status || 'In attesa'}
+                          {payment?.status === 'held_in_escrow' ? `🔒 ${t('inEscrow')}` :
+                           payment?.status === 'released_to_seller' ? `✅ ${t('fundsReceived')}` :
+                           payment?.status || t('pending')}
                         </Badge>
                         <p className="text-xs text-slate-500 mt-1">
                           {format(new Date(chat.created_date), 'dd/MM/yyyy')}
@@ -200,13 +200,13 @@ export default function MySales() {
                         </div>
                         {shipping.trackingNumber && (
                           <p className="text-sm">
-                            Tracking: <span className="font-mono font-bold">{shipping.trackingNumber}</span>
+                            {t('tracking')}: <span className="font-mono font-bold">{shipping.trackingNumber}</span>
                           </p>
                         )}
                         {shipping.method !== 'ritiro_persona' && !shipping.trackingNumber && (
                           <div className="flex gap-2 mt-2">
                             <Input
-                              placeholder="Numero tracking..."
+                              placeholder={`${t('tracking')}...`}
                               value={selectedChatId === chat.id ? trackingNumber : ''}
                               onChange={(e) => {
                                 setSelectedChatId(chat.id);
@@ -219,7 +219,7 @@ export default function MySales() {
                               disabled={!trackingNumber.trim()}
                               size="sm"
                             >
-                              {t('addTracking')}
+                              {t('add')}
                             </Button>
                           </div>
                         )}

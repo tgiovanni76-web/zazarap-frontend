@@ -200,7 +200,13 @@ const translations = {
     metaTitle: 'Meta Titel (max 60 Zeichen)',
     metaDesc: 'Meta Beschreibung (max 160 Zeichen)',
     keywords: 'SEO Keywords (kommagetrennt)',
-    chars: 'Zeichen'
+    chars: 'Zeichen',
+    reportUser: 'Benutzer melden',
+    fundsReceived: 'Gelder erhalten',
+    pending: 'Ausstehend',
+    tracking: 'Sendungsverfolgung',
+    add: 'Hinzufügen',
+    lastOffer: 'Letztes Angebot'
     },
   
   it: {
@@ -402,7 +408,13 @@ const translations = {
     metaTitle: 'Meta Title (max 60 caratteri)',
     metaDesc: 'Meta Description (max 160 caratteri)',
     keywords: 'Keywords SEO (separate da virgola)',
-    chars: 'caratteri'
+    chars: 'caratteri',
+    reportUser: 'Segnala utente',
+    fundsReceived: 'Fondi Ricevuti',
+    pending: 'In attesa',
+    tracking: 'Tracking',
+    add: 'Aggiungi',
+    lastOffer: 'Ultima offerta'
     },
   
   tr: {
@@ -604,7 +616,13 @@ const translations = {
     metaTitle: 'Meta Başlık (maks 60 karakter)',
     metaDesc: 'Meta Açıklama (maks 160 karakter)',
     keywords: 'SEO Anahtar Kelimeler (virgülle ayrılmış)',
-    chars: 'karakter'
+    chars: 'karakter',
+    reportUser: 'Kullanıcıyı Bildir',
+    fundsReceived: 'Fonlar Alındı',
+    pending: 'Beklemede',
+    tracking: 'Takip',
+    add: 'Ekle',
+    lastOffer: 'Son Teklif'
     },
   
   uk: {
@@ -806,7 +824,13 @@ const translations = {
     metaTitle: 'Meta Title (макс 60 символів)',
     metaDesc: 'Meta Description (макс 160 символів)',
     keywords: 'SEO Ключові слова (через кому)',
-    chars: 'символів'
+    chars: 'символів',
+    reportUser: 'Поскаржитися на користувача',
+    fundsReceived: 'Кошти отримано',
+    pending: 'В очікуванні',
+    tracking: 'Відстеження',
+    add: 'Додати',
+    lastOffer: 'Остання пропозиція'
     },
   
   en: {
@@ -1008,9 +1032,15 @@ const translations = {
     metaTitle: 'Meta Title (max 60 chars)',
     metaDesc: 'Meta Description (max 160 chars)',
     keywords: 'SEO Keywords (comma separated)',
-    chars: 'chars'
+    chars: 'chars',
+    reportUser: 'Report User',
+    fundsReceived: 'Funds Received',
+    pending: 'Pending',
+    tracking: 'Tracking',
+    add: 'Add',
+    lastOffer: 'Last Offer'
     }
-};
+    };
 
 const LanguageContext = createContext();
 

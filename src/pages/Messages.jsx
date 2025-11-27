@@ -419,7 +419,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                         <p className="font-medium text-sm">{listing?.title || t('listing')}</p>
                         <p className="text-xs text-slate-600">{isSeller ? t('buyer') : t('seller')}: {isSeller ? chat.buyerId : chat.sellerId}</p>
                         {chat.lastPrice && (
-                          <p className="text-xs font-bold text-red-600">Ultima offerta: {chat.lastPrice} €</p>
+                          <p className="text-xs font-bold text-red-600">{t('lastOffer')}: {chat.lastPrice} €</p>
                         )}
                       </div>
                       <Badge className={statusColors[chat.status]}>{chat.status}</Badge>
@@ -485,12 +485,12 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                             className="h-6 px-2 text-xs"
                           >
                             <Languages className="h-3 w-3 mr-1" />
-                            {isTranslating[msg.id] ? '...' : translatedMessages[msg.id] ? 'Originale' : 'Traduci'}
+                            {isTranslating[msg.id] ? '...' : translatedMessages[msg.id] ? t('original') : t('translate')}
                           </Button>
                         )}
                       </div>
                       {translatedMessages[msg.id] && (
-                        <p className="text-xs opacity-60 mt-1 italic">Originale: {msg.text}</p>
+                        <p className="text-xs opacity-60 mt-1 italic">{t('original')}: {msg.text}</p>
                       )}
                     </div>
                   ))}
