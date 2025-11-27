@@ -58,8 +58,6 @@ export default function Notifications() {
     );
   }
 
-  const { t } = useLanguage();
-
   const typeIcons = {
     offer: DollarSign,
     message: MessageSquare,
