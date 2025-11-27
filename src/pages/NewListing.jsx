@@ -148,11 +148,11 @@ export default function NewListing() {
               return (
                 <React.Fragment key={mainCat.id}>
                   <option value={mainCat.name} style={{fontWeight: 'bold'}}>
-                    {mainCat.name}
+                    {t(mainCat.name)}
                   </option>
                   {subs.map(sub => (
                     <option key={sub.id} value={sub.name} style={{paddingLeft: '20px'}}>
-                      ↳ {sub.name}
+                      ↳ {t(sub.name)}
                     </option>
                   ))}
                 </React.Fragment>
@@ -170,35 +170,35 @@ export default function NewListing() {
         />
 
         <div className="border-t pt-6 mt-6">
-          <h3 className="text-lg font-semibold mb-4 text-slate-700">SEO Optimization (Opzionale)</h3>
+          <h3 className="text-lg font-semibold mb-4 text-slate-700">{t('seoOptimization')}</h3>
           
-          <label className="zaza-form-label">Meta Title (max 60 caratteri)</label>
+          <label className="zaza-form-label">{t('metaTitle')}</label>
           <input
             value={formData.seo_title}
             onChange={(e) => setFormData({...formData, seo_title: e.target.value.slice(0, 60)})}
             className="zaza-input"
-            placeholder="Es: Vendo iPhone 13 Pro Usato - Milano €500"
+            placeholder=""
             maxLength={60}
           />
-          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_title.length}/60 caratteri</p>
+          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_title.length}/60 {t('chars')}</p>
 
-          <label className="zaza-form-label">Meta Description (max 160 caratteri)</label>
+          <label className="zaza-form-label">{t('metaDesc')}</label>
           <textarea
             value={formData.seo_description}
             onChange={(e) => setFormData({...formData, seo_description: e.target.value.slice(0, 160)})}
             className="zaza-input"
-            placeholder="Descrizione breve per i motori di ricerca..."
+            placeholder=""
             maxLength={160}
             rows="3"
           />
-          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_description.length}/160 caratteri</p>
+          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_description.length}/160 {t('chars')}</p>
 
-          <label className="zaza-form-label">Keywords SEO (separate da virgola)</label>
+          <label className="zaza-form-label">{t('keywords')}</label>
           <input
             value={formData.seo_keywords}
             onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
             className="zaza-input"
-            placeholder="Es: iphone, smartphone, usato, milano"
+            placeholder=""
           />
         </div>
 
