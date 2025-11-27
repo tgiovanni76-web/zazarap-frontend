@@ -70,19 +70,19 @@ Data: ${new Date().toLocaleString('it-IT')}
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 items-center">
+    <form onSubmit={handleSubmit} className="max-w-[360px] mt-2">
       <input
         type="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Ihre E-Mail-Adresse"
-        className="px-3 py-2.5 w-[250px] border border-white/25 rounded-md bg-[#0c1526] text-white placeholder:text-slate-400 focus:outline-none focus:border-white/50"
+        className="block w-full px-3 py-2.5 rounded-[5px] border border-white/30 bg-[#0c1526] text-white placeholder:text-slate-400 focus:outline-none focus:border-white/50 mb-2.5"
       />
       <button 
         type="submit" 
         disabled={subscribeMutation.isPending}
-        className="px-5 py-2.5 bg-[#d62828] text-white border-none rounded-md cursor-pointer hover:bg-[#b82020] disabled:opacity-50"
+        className="inline-block px-5 py-2.5 rounded-[5px] border-none bg-[#d62828] text-white cursor-pointer hover:bg-[#b82020] disabled:opacity-50"
       >
         {subscribeMutation.isPending ? '...' : 'Abonnieren'}
       </button>
