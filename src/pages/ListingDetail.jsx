@@ -141,9 +141,9 @@ export default function ListingDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Annuncio non trovato</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">{t('listingNotFound')}</h2>
           <Link to={createPageUrl('Marketplace')}>
-            <Button>Torna al marketplace</Button>
+            <Button>{t('backToMarketplace')}</Button>
           </Link>
         </div>
       </div>
@@ -184,7 +184,7 @@ export default function ListingDetail() {
         </div>
       )}
 
-      <div className="zaza-detail-category">{listing.category}</div>
+      <div className="zaza-detail-category">{t(listing.category)}</div>
       <h2 className="zaza-detail-title">{listing.title}</h2>
       <div className="zaza-detail-price">{listing.price} €</div>
       {listing.city && <div className="zaza-detail-location">{listing.city}</div>}
@@ -226,12 +226,12 @@ export default function ListingDetail() {
           {listing.created_by === user.email ? (
             <>
               <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
-                <button className="zaza-contact-btn">Modifica annuncio</button>
+                <button className="zaza-contact-btn">{t('editListing')}</button>
               </Link>
               {!listing.featured && listing.status === 'active' && (
                 <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
                   <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
-                    ⭐ Metti in Evidenza
+                    ⭐ {t('promote')}
                   </button>
                 </Link>
               )}
@@ -260,36 +260,36 @@ export default function ListingDetail() {
         <div className="flex items-center gap-2 mb-6">
           <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
           <span className="font-bold">{avgRating}</span>
-          <span className="text-slate-600">({reviews.length} recensioni)</span>
+          <span className="text-slate-600">({reviews.length} {t('reviews')})</span>
         </div>
       )}
 
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <h3 className="text-xl font-bold mb-4">Recensioni</h3>
+          <h3 className="text-xl font-bold mb-4">{t('reviews')}</h3>
           
           {user && (
-            <div className="mb-6 p-4 bg-slate-50 rounded">
+                <div className="mb-6 p-4 bg-slate-50 rounded">
               <div className="flex items-center gap-2 mb-3">
-                <label className="font-medium">Valutazione:</label>
+                <label className="font-medium">{t('rating')}:</label>
                 <select
                   value={reviewRating}
                   onChange={(e) => setReviewRating(Number(e.target.value))}
                   className="px-3 py-1 border rounded"
                 >
                   {[1,2,3,4,5].map(n => (
-                    <option key={n} value={n}>{n} stelle</option>
+                    <option key={n} value={n}>{n} {t('stars')}</option>
                   ))}
                 </select>
               </div>
               <Textarea
-                placeholder="Scrivi una recensione..."
+                placeholder=""
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 className="mb-3"
               />
               <Button onClick={handleAddReview} disabled={!reviewComment.trim()}>
-                Aggiungi recensione
+                {t('addReview')}
               </Button>
             </div>
           )}
@@ -319,7 +319,7 @@ export default function ListingDetail() {
       </Card>
 
       <Link to={createPageUrl('Marketplace')} className="text-indigo-600 hover:underline">
-        Torna indietro
+        {t('back')}
       </Link>
     </div>
   );
