@@ -134,7 +134,21 @@ const translations = {
     sports: 'Sport',
     auto: 'Auto',
     animals: 'Tiere',
-    other: 'Andere'
+    other: 'Andere',
+
+    // Filters & Status
+    listingStatus: 'Anzeigenstatus',
+    allStatuses: 'Alle Status',
+    active: 'Aktiv',
+    sold: 'Verkauft',
+    expired: 'Abgelaufen',
+    archived: 'Archiviert',
+    
+    publishDate: 'Veröffentlichungsdatum',
+    allDates: 'Alle Daten',
+    today: 'Heute',
+    thisWeek: 'Diese Woche',
+    thisMonth: 'Diesen Monat'
     },
   
   it: {
@@ -270,7 +284,21 @@ const translations = {
     sports: 'Sport',
     auto: 'Auto',
     animals: 'Animali',
-    other: 'Altro'
+    other: 'Altro',
+
+    // Filters & Status
+    listingStatus: 'Stato Annuncio',
+    allStatuses: 'Tutti gli stati',
+    active: 'Attivi',
+    sold: 'Venduti',
+    expired: 'Scaduti',
+    archived: 'Archiviati',
+    
+    publishDate: 'Data Pubblicazione',
+    allDates: 'Tutte le date',
+    today: 'Oggi',
+    thisWeek: 'Ultima settimana',
+    thisMonth: 'Ultimo mese'
     },
   
   tr: {
@@ -406,7 +434,21 @@ const translations = {
     sports: 'Spor',
     auto: 'Araba',
     animals: 'Hayvanlar',
-    other: 'Diğer'
+    other: 'Diğer',
+
+    // Filters & Status
+    listingStatus: 'İlan Durumu',
+    allStatuses: 'Tüm Durumlar',
+    active: 'Aktif',
+    sold: 'Satıldı',
+    expired: 'Süresi Doldu',
+    archived: 'Arşivlendi',
+    
+    publishDate: 'Yayınlanma Tarihi',
+    allDates: 'Tüm Tarihler',
+    today: 'Bugün',
+    thisWeek: 'Bu Hafta',
+    thisMonth: 'Bu Ay'
     },
   
   uk: {
@@ -542,7 +584,21 @@ const translations = {
     sports: 'Спорт',
     auto: 'Авто',
     animals: 'Тварини',
-    other: 'Інше'
+    other: 'Інше',
+
+    // Filters & Status
+    listingStatus: 'Статус оголошення',
+    allStatuses: 'Всі статуси',
+    active: 'Активні',
+    sold: 'Продані',
+    expired: 'Минули',
+    archived: 'Архівовані',
+    
+    publishDate: 'Дата публікації',
+    allDates: 'Всі дати',
+    today: 'Сьогодні',
+    thisWeek: 'Цей тиждень',
+    thisMonth: 'Цей місяць'
     },
   
   en: {
@@ -678,7 +734,21 @@ const translations = {
     sports: 'Sports',
     auto: 'Auto',
     animals: 'Animals',
-    other: 'Other'
+    other: 'Other',
+
+    // Filters & Status
+    listingStatus: 'Listing Status',
+    allStatuses: 'All Statuses',
+    active: 'Active',
+    sold: 'Sold',
+    expired: 'Expired',
+    archived: 'Archived',
+    
+    publishDate: 'Publish Date',
+    allDates: 'All Dates',
+    today: 'Today',
+    thisWeek: 'This Week',
+    thisMonth: 'This Month'
     }
 };
 
@@ -704,7 +774,35 @@ export function LanguageProvider({ children }) {
   }, [language]);
 
   const t = (key) => {
-    return translations[language]?.[key] || translations['de'][key] || key;
+    // Try to translate the key directly
+    const translated = translations[language]?.[key] || translations['de'][key];
+    if (translated) return translated;
+
+    // If key matches a known category (case-insensitive check), try to translate it
+    if (typeof key === 'string') {
+      const lowerKey = key.toLowerCase();
+      // Check if we have a translation for this category in the current language
+      // We look for keys that match the category name in lowercase
+      // e.g. "Elettronica" -> check for "electronics" or "elettronica" key in translation map
+      
+      // Common category mappings to translation keys
+      const categoryMap = {
+        'elektronik': 'electronics', 'elettronica': 'electronics', 'electronics': 'electronics',
+        'haus': 'home', 'casa': 'home', 'home': 'home',
+        'mode': 'fashion', 'moda': 'fashion', 'fashion': 'fashion',
+        'sport': 'sports', 'sports': 'sports',
+        'auto': 'auto',
+        'tiere': 'animals', 'animali': 'animals', 'animals': 'animals',
+        'andere': 'other', 'altro': 'other', 'other': 'other'
+      };
+
+      const mappedKey = categoryMap[lowerKey];
+      if (mappedKey) {
+         return translations[language]?.[mappedKey] || translations['de'][mappedKey] || key;
+      }
+    }
+
+    return key;
   };
 
   return (

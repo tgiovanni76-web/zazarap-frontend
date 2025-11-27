@@ -166,22 +166,22 @@ export default function Marketplace() {
           <SelectContent className="max-h-96 overflow-y-auto">
             <SelectItem value="all">{t('allCategories')}</SelectItem>
             {categories
-              .filter(c => !c.parentId && c.active)
-              .map(mainCat => {
-                const subs = categories.filter(c => c.parentId === mainCat.id && c.active);
-                return (
-                  <React.Fragment key={mainCat.id}>
-                    <SelectItem value={mainCat.name} className="font-bold">
-                      {mainCat.name}
-                    </SelectItem>
-                    {subs.map(sub => (
-                      <SelectItem key={sub.id} value={sub.name} className="pl-6">
-                        ↳ {sub.name}
-                      </SelectItem>
-                    ))}
-                  </React.Fragment>
-                );
-              })}
+            .filter(c => !c.parentId && c.active)
+            .map(mainCat => {
+            const subs = categories.filter(c => c.parentId === mainCat.id && c.active);
+            return (
+            <React.Fragment key={mainCat.id}>
+            <SelectItem value={mainCat.name} className="font-bold">
+              {t(mainCat.name)}
+            </SelectItem>
+            {subs.map(sub => (
+              <SelectItem key={sub.id} value={sub.name} className="pl-6">
+                ↳ {t(sub.name)}
+              </SelectItem>
+            ))}
+            </React.Fragment>
+            );
+            })}
           </SelectContent>
         </Select>
       </div>
@@ -238,32 +238,32 @@ export default function Marketplace() {
               </div>
               {user?.role === 'admin' && (
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Stato Annuncio</label>
+                  <label className="text-sm font-medium mb-2 block">{t('listingStatus')}</label>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Tutti" />
+                      <SelectValue placeholder={t('allStatuses')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Tutti gli stati</SelectItem>
-                      <SelectItem value="active">Attivi</SelectItem>
-                      <SelectItem value="sold">Venduti</SelectItem>
-                      <SelectItem value="expired">Scaduti</SelectItem>
-                      <SelectItem value="archived">Archiviati</SelectItem>
+                      <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                      <SelectItem value="active">{t('active')}</SelectItem>
+                      <SelectItem value="sold">{t('sold')}</SelectItem>
+                      <SelectItem value="expired">{t('expired')}</SelectItem>
+                      <SelectItem value="archived">{t('archived')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               )}
               <div>
-                <label className="text-sm font-medium mb-2 block">Data Pubblicazione</label>
+                <label className="text-sm font-medium mb-2 block">{t('publishDate')}</label>
                 <Select value={dateFilter} onValueChange={setDateFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Tutte" />
+                    <SelectValue placeholder={t('allDates')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tutte le date</SelectItem>
-                    <SelectItem value="today">Oggi</SelectItem>
-                    <SelectItem value="week">Ultima settimana</SelectItem>
-                    <SelectItem value="month">Ultimo mese</SelectItem>
+                    <SelectItem value="all">{t('allDates')}</SelectItem>
+                    <SelectItem value="today">{t('today')}</SelectItem>
+                    <SelectItem value="week">{t('thisWeek')}</SelectItem>
+                    <SelectItem value="month">{t('thisMonth')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -318,7 +318,7 @@ export default function Marketplace() {
               )}
 
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
-                <div className="zaza-category">{listing.category}</div>
+                <div className="zaza-category">{t(listing.category)}</div>
                 <div className="zaza-title">{listing.title}</div>
                 <div className="zaza-price">{listing.price} €</div>
                 {listing.city && <div className="zaza-location">{listing.city}</div>}
