@@ -623,14 +623,13 @@ function LayoutInner({ children, currentPageName }) {
       <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
                     <div className="flex items-center justify-between text-[#f9d65c]">
                       {/* Logo + Slogan */}
-                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col">
-                        <span className="text-2xl font-bold text-[#f9d65c]">Zazarap</span>
-                        <span className="text-xs -mt-1 text-[#f9d65c]">kleinanzeigen</span>
+                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
+                        <span className="text-[26px] font-extrabold text-[#f9d65c]">Zazarap</span>
+                        <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
                       </Link>
 
-                      {/* Menu */}
-                      <nav className="flex items-center gap-5 text-base">
-                        <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white no-underline">Home</Link>
+                      {/* Menu Icons */}
+                      <nav className="flex items-center gap-4">
                         {!user && (
                           <Button 
                             onClick={() => base44.auth.redirectToLogin()}
@@ -641,11 +640,17 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <>
-                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white no-underline text-xl" title="Inserieren">+</Link>
-                            <Link to={createPageUrl('Messages')} className="text-[#f9d65c] hover:text-white no-underline" title="Nachrichten">💬</Link>
-                            <Link to={createPageUrl('Favorites')} className="text-[#f9d65c] hover:text-white no-underline" title="Favoriten">❤️</Link>
-                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white no-underline relative" title="Benachrichtigungen">
-                              🔔
+                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white" title="Inserieren">
+                              <Plus className="h-5 w-5" />
+                            </Link>
+                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white" title="Verkäufe">
+                              <TrendingUp className="h-5 w-5" />
+                            </Link>
+                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white" title="Käufe">
+                              <Package className="h-5 w-5" />
+                            </Link>
+                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative" title="Benachrichtigungen">
+                              <Bell className="h-5 w-5" />
                               {unreadCount > 0 && (
                                 <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs">
                                   {unreadCount}
@@ -653,11 +658,13 @@ function LayoutInner({ children, currentPageName }) {
                               )}
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white no-underline" title="Admin">⚙️</Link>
+                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white" title="Admin">
+                                <Settings className="h-5 w-5" />
+                              </Link>
                             )}
                           </>
                         )}
-                        <LanguageSwitcher variant="dropdown" />
+                        <LanguageSwitcher />
                       </nav>
                     </div>
                   </header>
