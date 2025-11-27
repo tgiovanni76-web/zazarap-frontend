@@ -622,11 +622,16 @@ function LayoutInner({ children, currentPageName }) {
         `}</style>
       <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
                     <div className="flex items-center justify-between text-[#f9d65c]">
-                      {/* Logo + Slogan */}
-                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
-                        <span className="text-[26px] font-extrabold text-[#f9d65c]">Zazarap</span>
-                        <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
-                      </Link>
+                      {/* Logo + Slogan + Home */}
+                                      <div className="flex items-center gap-4">
+                                        <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
+                                          <span className="text-[26px] font-extrabold text-[#f9d65c]">Zazarap</span>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
+                                        </Link>
+                                        <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white font-medium text-sm">
+                                          Home
+                                        </Link>
+                                      </div>
 
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-4">
