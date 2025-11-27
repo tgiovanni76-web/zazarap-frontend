@@ -312,7 +312,7 @@ export default function ListingDetail() {
               </div>
             ))}
             {reviews.length === 0 && (
-              <p className="text-slate-500">Nessuna recensione</p>
+              <p className="text-slate-500">{t('noReviews')}</p>
             )}
           </div>
         </CardContent>

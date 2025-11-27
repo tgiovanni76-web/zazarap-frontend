@@ -206,7 +206,8 @@ const translations = {
     pending: 'Ausstehend',
     tracking: 'Sendungsverfolgung',
     add: 'Hinzufügen',
-    lastOffer: 'Letztes Angebot'
+    lastOffer: 'Letztes Angebot',
+    noReviews: 'Keine Bewertungen'
     },
   
   it: {
@@ -414,7 +415,8 @@ const translations = {
     pending: 'In attesa',
     tracking: 'Tracking',
     add: 'Aggiungi',
-    lastOffer: 'Ultima offerta'
+    lastOffer: 'Ultima offerta',
+    noReviews: 'Nessuna recensione'
     },
   
   tr: {
@@ -622,7 +624,8 @@ const translations = {
     pending: 'Beklemede',
     tracking: 'Takip',
     add: 'Ekle',
-    lastOffer: 'Son Teklif'
+    lastOffer: 'Son Teklif',
+    noReviews: 'Değerlendirme yok'
     },
   
   uk: {
@@ -830,7 +833,8 @@ const translations = {
     pending: 'В очікуванні',
     tracking: 'Відстеження',
     add: 'Додати',
-    lastOffer: 'Остання пропозиція'
+    lastOffer: 'Остання пропозиція',
+    noReviews: 'Немає відгуків'
     },
   
   en: {
@@ -1038,7 +1042,8 @@ const translations = {
     pending: 'Pending',
     tracking: 'Tracking',
     add: 'Add',
-    lastOffer: 'Last Offer'
+    lastOffer: 'Last Offer',
+    noReviews: 'No reviews'
     }
     };
 
