@@ -35,6 +35,7 @@ const translations = {
     removeFromFavorites: 'Aus Favoriten entfernen',
     editListing: 'Anzeige bearbeiten',
     promote: 'Hervorheben',
+    featuredListings: 'Anzeigen im Fokus',
     
     // Forms
     title: 'Titel',
@@ -235,6 +236,7 @@ const translations = {
     removeFromFavorites: 'Rimuovi dai preferiti',
     editListing: 'Modifica annuncio',
     promote: 'Metti in evidenza',
+    featuredListings: 'Annunci in Evidenza',
     
     // Forms
     title: 'Titolo',
@@ -435,6 +437,7 @@ const translations = {
     removeFromFavorites: 'Favorilerden Çıkar',
     editListing: 'İlanı Düzenle',
     promote: 'Öne Çıkar',
+    featuredListings: 'Öne Çıkan İlanlar',
     
     // Forms
     title: 'Başlık',
@@ -635,6 +638,7 @@ const translations = {
     removeFromFavorites: 'Видалити з обраного',
     editListing: 'Редагувати оголошення',
     promote: 'Виділити',
+    featuredListings: 'Рекомендовані оголошення',
     
     // Forms
     title: 'Назва',
@@ -835,6 +839,7 @@ const translations = {
     removeFromFavorites: 'Remove from Favorites',
     editListing: 'Edit Listing',
     promote: 'Promote',
+    featuredListings: 'Featured Listings',
     
     // Forms
     title: 'Title',
