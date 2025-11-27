@@ -62,33 +62,30 @@ Data: ${new Date().toLocaleString('it-IT')}
 
   if (subscribed) {
     return (
-      <div className="flex items-center gap-2 text-green-600">
+      <div className="flex items-center gap-2 text-green-400">
         <CheckCircle className="w-5 h-5" />
-        <span className="text-sm font-medium">Grazie per esserti iscritto!</span>
+        <span className="text-sm font-medium">Danke für Ihre Anmeldung!</span>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 max-w-md">
-      <div className="flex-1 relative">
-        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-        <Input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="La tua email"
-          className="pl-10"
-        />
-      </div>
-      <Button 
+    <form onSubmit={handleSubmit} className="flex gap-2 items-center">
+      <input
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Ihre E-Mail-Adresse"
+        className="px-3 py-2.5 w-[250px] border border-white/25 rounded-md bg-[#0c1526] text-white placeholder:text-slate-400 focus:outline-none focus:border-white/50"
+      />
+      <button 
         type="submit" 
         disabled={subscribeMutation.isPending}
-        className="bg-red-600 hover:bg-red-700"
+        className="px-5 py-2.5 bg-[#d62828] text-white border-none rounded-md cursor-pointer hover:bg-[#b82020] disabled:opacity-50"
       >
-        {subscribeMutation.isPending ? 'Invio...' : 'Iscriviti'}
-      </Button>
+        {subscribeMutation.isPending ? '...' : 'Abonnieren'}
+      </button>
     </form>
   );
 }
