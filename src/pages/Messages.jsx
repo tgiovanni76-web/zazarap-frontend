@@ -592,7 +592,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Segnala utente</CardTitle>
+                <CardTitle>{t('reportUser')}</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setShowReportDialog(false)}>
                   <X className="h-4 w-4" />
                 </Button>
@@ -601,24 +601,24 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Motivo</label>
+                  <label className="text-sm font-medium mb-2 block">{t('reason')}</label>
                   <Select value={reportReason} onValueChange={setReportReason}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleziona motivo" />
+                      <SelectValue placeholder={t('selectReason')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="spam">Spam</SelectItem>
-                      <SelectItem value="inappropriate">Contenuto inappropriato</SelectItem>
-                      <SelectItem value="scam">Truffa</SelectItem>
-                      <SelectItem value="harassment">Molestie</SelectItem>
-                      <SelectItem value="other">Altro</SelectItem>
+                      <SelectItem value="spam">{t('spam')}</SelectItem>
+                      <SelectItem value="inappropriate">{t('inappropriate')}</SelectItem>
+                      <SelectItem value="scam">{t('scam')}</SelectItem>
+                      <SelectItem value="harassment">{t('harassment')}</SelectItem>
+                      <SelectItem value="other">{t('other')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Descrizione</label>
+                  <label className="text-sm font-medium mb-2 block">{t('description')}</label>
                   <Textarea
-                    placeholder="Descrivi il problema..."
+                    placeholder={t('description')}
                     value={reportDescription}
                     onChange={(e) => setReportDescription(e.target.value)}
                     rows={4}
@@ -630,13 +630,13 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                     disabled={!reportReason || !reportDescription}
                     className="flex-1 bg-red-600 hover:bg-red-700"
                   >
-                    Invia segnalazione
+                    {t('sendReport')}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowReportDialog(false)}
                   >
-                    Annulla
+                    {t('cancel')}
                   </Button>
                 </div>
               </div>
