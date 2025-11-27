@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, MessageSquare, DollarSign, AlertCircle, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function Notifications() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -56,6 +58,8 @@ export default function Notifications() {
     );
   }
 
+  const { t } = useLanguage();
+
   const typeIcons = {
     offer: DollarSign,
     message: MessageSquare,
@@ -76,14 +80,14 @@ export default function Notifications() {
     <div className="py-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-3xl font-bold">Notifiche</h2>
+          <h2 className="text-3xl font-bold">{t('notifications')}</h2>
           {unreadCount > 0 && (
-            <p className="text-slate-600 mt-1">{unreadCount} non lette</p>
+            <p className="text-slate-600 mt-1">{unreadCount} {t('unread')}</p>
           )}
         </div>
         {unreadCount > 0 && (
           <Button onClick={() => markAllAsReadMutation.mutate()} variant="outline">
-            Segna tutte come lette
+            {t('markAllRead')}
           </Button>
         )}
       </div>
@@ -107,7 +111,7 @@ export default function Notifications() {
                     <div className="flex justify-between items-start mb-1">
                       <h3 className="font-bold">{notification.title}</h3>
                       {!notification.read && (
-                        <Badge variant="default" className="bg-blue-600">Nuova</Badge>
+                        <Badge variant="default" className="bg-blue-600">{t('new')}</Badge>
                       )}
                     </div>
                     <p className="text-slate-700 mb-2">{notification.message}</p>
@@ -121,7 +125,7 @@ export default function Notifications() {
                             size="sm" 
                             onClick={() => !notification.read && markAsReadMutation.mutate(notification.id)}
                           >
-                            Visualizza
+                            {t('view')}
                           </Button>
                         </Link>
                       )}
@@ -132,7 +136,7 @@ export default function Notifications() {
                           onClick={() => markAsReadMutation.mutate(notification.id)}
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          Segna come letta
+                          {t('markAsRead')}
                         </Button>
                       )}
                       <Button 
@@ -140,7 +144,7 @@ export default function Notifications() {
                         variant="ghost"
                         onClick={() => deleteNotificationMutation.mutate(notification.id)}
                       >
-                        Elimina
+                        {t('delete')}
                       </Button>
                     </div>
                   </div>
@@ -154,7 +158,7 @@ export default function Notifications() {
           <Card>
             <CardContent className="py-12 text-center text-slate-500">
               <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Nessuna notifica</p>
+              <p>{t('noNotifications')}</p>
             </CardContent>
           </Card>
         )}
