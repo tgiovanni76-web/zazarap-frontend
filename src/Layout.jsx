@@ -620,59 +620,47 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-yellow-400 py-3 shadow-md border-b-4 border-red-600">
-        <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <Link to={createPageUrl('Marketplace')} className="no-underline flex items-center gap-2">
-              <h1 className="text-2xl font-bold m-0 text-red-600">Zazarap</h1>
-              <span className="text-sm text-red-600 font-medium">| Home</span>
-            </Link>
+      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
+                    <div className="flex items-center justify-between text-[#f9d65c]">
+                      {/* Logo + Slogan */}
+                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col">
+                        <span className="text-2xl font-bold text-[#f9d65c]">Zazarap</span>
+                        <span className="text-xs -mt-1 text-[#f9d65c]">kleinanzeigen</span>
+                      </Link>
 
-            <nav className="flex items-center gap-3">
-                {!user && (
-                  <Button 
-                    onClick={() => base44.auth.redirectToLogin()}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2"
-                  >
-                    Accedi / Registrati
-                  </Button>
-                )}
-                {user && (
-                  <Link to={createPageUrl('NewListing')} className="text-red-600 hover:text-red-700 transition-colors" title="Pubblica">
-                    <Plus className="h-6 w-6" />
-                  </Link>
-                )}
-              {user && (
-                <>
-                  <Link to={createPageUrl('MySales')} className="text-red-600 hover:text-red-700 transition-colors" title="Vendite">
-                    <TrendingUp className="h-6 w-6" />
-                  </Link>
-                  <Link to={createPageUrl('MyPurchases')} className="text-red-600 hover:text-red-700 transition-colors" title="Acquisti">
-                    <Package className="h-6 w-6" />
-                  </Link>
-                  <Link to={createPageUrl('Messages')} className="text-red-600 hover:text-red-700 transition-colors" title="Messaggi">
-                    <MessageSquare className="h-6 w-6" />
-                  </Link>
-                  <Link to={createPageUrl('Notifications')} className="text-red-600 hover:text-red-700 transition-colors relative" title="Notifiche">
-                    <Bell className="h-6 w-6" />
-                    {unreadCount > 0 && (
-                      <Badge className="absolute -top-2 -right-2 bg-red-600 text-white px-1.5 py-0.5 text-xs">
-                        {unreadCount}
-                      </Badge>
-                    )}
-                  </Link>
-                  {user?.role === 'admin' && (
-                    <Link to={createPageUrl('AdminDashboard')} className="text-red-600 hover:text-red-700 transition-colors" title="Admin">
-                      <Settings className="h-6 w-6" />
-                    </Link>
-                  )}
-                </>
-              )}
-              <LanguageSwitcher variant="dropdown" />
-            </nav>
-          </div>
-        </div>
-      </header>
+                      {/* Menu */}
+                      <nav className="flex items-center gap-5 text-base">
+                        <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white no-underline">Home</Link>
+                        {!user && (
+                          <Button 
+                            onClick={() => base44.auth.redirectToLogin()}
+                            className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
+                          >
+                            Anmelden
+                          </Button>
+                        )}
+                        {user && (
+                          <>
+                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white no-underline text-xl" title="Inserieren">+</Link>
+                            <Link to={createPageUrl('Messages')} className="text-[#f9d65c] hover:text-white no-underline" title="Nachrichten">💬</Link>
+                            <Link to={createPageUrl('Favorites')} className="text-[#f9d65c] hover:text-white no-underline" title="Favoriten">❤️</Link>
+                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white no-underline relative" title="Benachrichtigungen">
+                              🔔
+                              {unreadCount > 0 && (
+                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs">
+                                  {unreadCount}
+                                </Badge>
+                              )}
+                            </Link>
+                            {user?.role === 'admin' && (
+                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white no-underline" title="Admin">⚙️</Link>
+                            )}
+                          </>
+                        )}
+                        <LanguageSwitcher variant="dropdown" />
+                      </nav>
+                    </div>
+                  </header>
 
       <EmailVerificationBanner />
       
