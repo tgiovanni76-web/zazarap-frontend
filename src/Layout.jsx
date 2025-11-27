@@ -709,7 +709,7 @@ function LayoutInner({ children, currentPageName }) {
               <ul className="space-y-2 text-sm">
                 <li><Link to={createPageUrl('FAQ')} className="text-slate-300 hover:text-white">FAQ</Link></li>
                 <li><Link to={createPageUrl('Contact')} className="text-slate-300 hover:text-white">Contattaci</Link></li>
-                <li><a href="mailto:infozazarap@gmail.com" className="text-slate-300 hover:text-white">infozazarap@gmail.com</a></li>
+                <li><a href="mailto:info@zazarap.com" className="text-slate-300 hover:text-white">info@zazarap.com</a></li>
               </ul>
             </div>
           </div>

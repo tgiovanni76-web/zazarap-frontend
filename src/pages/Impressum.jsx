@@ -29,7 +29,7 @@ export default function Impressum() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p><strong>Telefon:</strong> +49 (0) XXX XXXXXXX</p>
-          <p><strong>E-Mail:</strong> <a href="mailto:infozazarap@gmail.com" className="text-blue-600 hover:underline">infozazarap@gmail.com</a></p>
+          <p><strong>E-Mail:</strong> <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
           <p><strong>Website:</strong> www.zazarap.de</p>
         </CardContent>
       </Card>
