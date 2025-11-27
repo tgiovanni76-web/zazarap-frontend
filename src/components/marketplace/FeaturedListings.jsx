@@ -4,8 +4,10 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin } from 'lucide-react';
+import { useLanguage } from '../LanguageProvider';
 
 export default function FeaturedListings({ listings }) {
+  const { t } = useLanguage();
   const now = new Date();
   const featuredListings = listings.filter(l => 
     l.featured && 
@@ -19,7 +21,7 @@ export default function FeaturedListings({ listings }) {
     <div className="mb-8">
       <div className="flex items-center gap-2 mb-4">
         <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
-        <h3 className="text-2xl font-bold">Annunci in Evidenza</h3>
+        <h3 className="text-2xl font-bold">{t('featuredListings')}</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {featuredListings.map(listing => (
@@ -35,7 +37,7 @@ export default function FeaturedListings({ listings }) {
                     />
                     <Badge className="absolute top-2 right-2 bg-yellow-500 text-black">
                       <Star className="h-3 w-3 mr-1 fill-current" />
-                      In Evidenza
+                      {t('featured')}
                     </Badge>
                   </div>
                 )}

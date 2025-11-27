@@ -36,6 +36,7 @@ const translations = {
     editListing: 'Anzeige bearbeiten',
     promote: 'Hervorheben',
     featuredListings: 'Anzeigen im Fokus',
+    featured: 'Im Fokus',
     
     // Forms
     title: 'Titel',
@@ -237,6 +238,7 @@ const translations = {
     editListing: 'Modifica annuncio',
     promote: 'Metti in evidenza',
     featuredListings: 'Annunci in Evidenza',
+    featured: 'In Evidenza',
     
     // Forms
     title: 'Titolo',
@@ -438,6 +440,7 @@ const translations = {
     editListing: 'İlanı Düzenle',
     promote: 'Öne Çıkar',
     featuredListings: 'Öne Çıkan İlanlar',
+    featured: 'Öne Çıkan',
     
     // Forms
     title: 'Başlık',
@@ -639,6 +642,7 @@ const translations = {
     editListing: 'Редагувати оголошення',
     promote: 'Виділити',
     featuredListings: 'Рекомендовані оголошення',
+    featured: 'Рекомендоване',
     
     // Forms
     title: 'Назва',
@@ -840,6 +844,7 @@ const translations = {
     editListing: 'Edit Listing',
     promote: 'Promote',
     featuredListings: 'Featured Listings',
+    featured: 'Featured',
     
     // Forms
     title: 'Title',

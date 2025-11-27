@@ -400,7 +400,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Chat</CardTitle>
+              <CardTitle>{t('chats')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {myChats.map((chat) => {
@@ -416,8 +416,8 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-sm">{listing?.title || 'Annuncio'}</p>
-                        <p className="text-xs text-slate-600">{isSeller ? 'Acquirente' : 'Venditore'}: {isSeller ? chat.buyerId : chat.sellerId}</p>
+                        <p className="font-medium text-sm">{listing?.title || t('listing')}</p>
+                        <p className="text-xs text-slate-600">{isSeller ? t('buyer') : t('seller')}: {isSeller ? chat.buyerId : chat.sellerId}</p>
                         {chat.lastPrice && (
                           <p className="text-xs font-bold text-red-600">Ultima offerta: {chat.lastPrice} €</p>
                         )}
@@ -428,7 +428,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
                 );
               })}
               {myChats.length === 0 && (
-                <p className="text-slate-500 text-sm">Nessuna chat</p>
+                <p className="text-slate-500 text-sm">{t('noChats')}</p>
               )}
             </CardContent>
           </Card>
@@ -580,7 +580,7 @@ Suggerisci 3-4 risposte rapide appropriate, cortesi e professionali in italiano.
             <Card>
               <CardContent className="py-12 text-center text-slate-500">
                 <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Seleziona una chat</p>
+                <p>{t('selectChat')}</p>
               </CardContent>
             </Card>
           )}
