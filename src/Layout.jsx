@@ -620,52 +620,47 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
-                    <div className="flex items-center justify-between text-[#f9d65c]">
+      <header className="bg-[#cc0000] px-5 py-2.5 border-b-[3px] border-[#ffcc00] rounded-b-[10px]">
+                    <div className="flex items-center justify-between text-[#ffcc00]">
                       {/* Logo + Slogan */}
-                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
-                        <span className="text-[26px] font-extrabold text-[#f9d65c]">Zazarap</span>
-                        <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
+                      <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col">
+                        <span className="text-[28px] font-bold tracking-wide text-[#ffcc00]">Zazarap</span>
+                        <span className="text-xs font-semibold -mt-0.5 text-[#ffcc00]">kleinanzeigen</span>
                       </Link>
 
-                      {/* Menu Icons */}
-                      <nav className="flex items-center gap-4">
+                      {/* Menu */}
+                      <nav className="flex items-center gap-4 text-base font-semibold">
+                        <Link to={createPageUrl('Marketplace')} className="text-[#ffcc00] hover:text-white no-underline">Home</Link>
                         {!user && (
                           <Button 
                             onClick={() => base44.auth.redirectToLogin()}
-                            className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
+                            className="bg-[#ffcc00] hover:bg-yellow-300 text-[#cc0000] font-bold px-4 py-1.5 text-sm"
                           >
                             Anmelden
                           </Button>
                         )}
                         {user && (
                           <>
-                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white" title="Inserieren">
-                              <Plus className="h-5 w-5" />
-                            </Link>
-                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white" title="Verkäufe">
-                              <TrendingUp className="h-5 w-5" />
-                            </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white" title="Käufe">
-                              <Package className="h-5 w-5" />
-                            </Link>
-                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative" title="Benachrichtigungen">
-                              <Bell className="h-5 w-5" />
+                            <Link to={createPageUrl('NewListing')} className="text-[#ffcc00] hover:text-white text-lg no-underline" title="Inserieren">➕</Link>
+                            <Link to={createPageUrl('Messages')} className="text-[#ffcc00] hover:text-white text-lg no-underline" title="Nachrichten">💬</Link>
+                            <Link to={createPageUrl('Favorites')} className="text-[#ffcc00] hover:text-white text-lg no-underline" title="Favoriten">❤️</Link>
+                            <Link to={createPageUrl('Notifications')} className="text-[#ffcc00] hover:text-white text-lg no-underline relative" title="Benachrichtigungen">
+                              🔔
                               {unreadCount > 0 && (
-                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs">
+                                <Badge className="absolute -top-2 -right-2 bg-white text-[#cc0000] px-1.5 py-0.5 text-xs">
                                   {unreadCount}
                                 </Badge>
                               )}
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white" title="Admin">
-                                <Settings className="h-5 w-5" />
-                              </Link>
+                              <Link to={createPageUrl('AdminDashboard')} className="text-[#ffcc00] hover:text-white text-lg no-underline" title="Admin">⚙️</Link>
                             )}
                           </>
                         )}
-                        <LanguageSwitcher />
                       </nav>
+
+                      {/* Lingua */}
+                      <LanguageSwitcher />
                     </div>
                   </header>
 
