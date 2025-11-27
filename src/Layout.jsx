@@ -682,55 +682,52 @@ function LayoutInner({ children, currentPageName }) {
       
       <CookieBanner />
       
-      <footer className="bg-[#0c1526] text-white mt-20 py-12">
-                    <div className="container max-w-7xl mx-auto px-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                        {/* Logo + Newsletter */}
-                        <div>
-                          <h2 className="font-bold text-2xl mb-2 text-yellow-400">Zazarap</h2>
-                          <p className="text-slate-300 mb-6">Der sichere und zuverlässige deutsche Marktplatz</p>
-                          <div>
-                            <h3 className="font-semibold mb-2">Newsletter</h3>
-                            <p className="text-sm text-slate-400 mb-3">Erhalten Sie exklusive Angebote und Neuigkeiten</p>
-                            <NewsletterForm source="footer" />
-                          </div>
-                        </div>
+      <footer className="bg-[#0c1526] text-white mt-20 py-10">
+                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
+                      {/* Logo + Newsletter */}
+                      <div className="flex-1 min-w-[260px]">
+                        <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap</h2>
+                        <p>Der sichere und zuverlässige deutsche Marktplatz</p>
 
-                        {/* Rechtliches */}
-                        <div>
-                          <h3 className="font-semibold mb-4">Rechtliches</h3>
-                          <ul className="space-y-2 text-sm">
-                            <li><Link to={createPageUrl('Impressum')} className="text-slate-300 hover:text-white">Impressum</Link></li>
-                            <li><Link to={createPageUrl('AGB')} className="text-slate-300 hover:text-white">AGB</Link></li>
-                            <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-300 hover:text-white">Datenschutz</Link></li>
-                            <li><Link to={createPageUrl('Widerrufsrecht')} className="text-slate-300 hover:text-white">Widerrufsrecht</Link></li>
-                            <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-300 hover:text-white">Streitbeilegung</Link></li>
-                          </ul>
-                        </div>
-
-                        {/* Support */}
-                        <div>
-                          <h3 className="font-semibold mb-4">Support</h3>
-                          <ul className="space-y-2 text-sm">
-                            <li><Link to={createPageUrl('FAQ')} className="text-slate-300 hover:text-white">FAQ</Link></li>
-                            <li><Link to={createPageUrl('Contact')} className="text-slate-300 hover:text-white">Kontakt</Link></li>
-                          </ul>
-                          <p className="mt-4 text-slate-300">
-                            <a href="mailto:info@zazarap.com" className="hover:text-white">info@zazarap.com</a>
-                          </p>
-                        </div>
+                        <h3 className="font-semibold mt-6 mb-1">Newsletter</h3>
+                        <p className="text-sm text-slate-300 mb-3">Erhalten Sie exklusive Angebote und Neuigkeiten</p>
+                        <NewsletterForm source="footer" />
                       </div>
 
-                      <hr className="border-[#233044] my-10" />
+                      {/* Rechtliches */}
+                      <div className="flex-1 min-w-[200px]">
+                        <h3 className="font-semibold mb-3">Rechtliches</h3>
+                        <ul className="space-y-2">
+                          <li><Link to={createPageUrl('Impressum')} className="text-white hover:text-slate-300">Impressum</Link></li>
+                          <li><Link to={createPageUrl('AGB')} className="text-white hover:text-slate-300">AGB</Link></li>
+                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">Datenschutz</Link></li>
+                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">Widerrufsrecht</Link></li>
+                          <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">Streitbeilegung</Link></li>
+                        </ul>
+                      </div>
 
-                      <div className="text-center text-sm text-slate-400">
-                        <p>© 2025 Zazarap. Alle Rechte vorbehalten.</p>
-                        <p className="mt-2">
-                          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
-                            EU-Streitschlichtung
-                          </a>
+                      {/* Support */}
+                      <div className="flex-1 min-w-[200px]">
+                        <h3 className="font-semibold mb-3">Support</h3>
+                        <ul className="space-y-2">
+                          <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
+                          <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">Kontakt</Link></li>
+                        </ul>
+                        <p className="mt-3">
+                          <a href="mailto:info@zazarap.com" className="text-white hover:text-slate-300">info@zazarap.com</a>
                         </p>
                       </div>
+                    </div>
+
+                    <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
+
+                    <div className="text-center">
+                      <p>© 2025 Zazarap. Alle Rechte vorbehalten.</p>
+                      <p className="mt-1">
+                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
+                          EU-Streitschlichtung
+                        </a>
+                      </p>
                     </div>
                   </footer>
       </div>
