@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CookieBanner from '@/components/CookieBanner';
@@ -663,6 +663,9 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <>
+                            <Link to={createPageUrl('Werbung')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Werbung & Premium" aria-label="Advertising & Premium">
+                              <Megaphone className="h-5 w-5" aria-hidden="true" />
+                            </Link>
                             <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Inserieren" aria-label="Create new listing">
                               <Plus className="h-5 w-5" aria-hidden="true" />
                             </Link>
