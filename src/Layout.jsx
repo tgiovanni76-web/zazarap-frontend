@@ -95,12 +95,12 @@ function LayoutInner({ children, currentPageName }) {
 
           .zaza-cat-card {
             background: var(--z-yellow);
-            color: var(--z-red);
+            color: #b91c1c; /* Darker red for better contrast */
             border-radius: 14px;
             padding: 20px;
             text-align: center;
             font-weight: bold;
-            border: 2px solid var(--z-red);
+            border: 2px solid #b91c1c;
             font-size: 20px;
           }
 
@@ -636,37 +636,38 @@ function LayoutInner({ children, currentPageName }) {
                                       </div>
 
                       {/* Menu Icons */}
-                      <nav className="flex items-center gap-4">
+                      <nav className="flex items-center gap-4" aria-label="Main navigation">
                         {!user && (
                           <Button 
                             onClick={() => base44.auth.redirectToLogin()}
                             className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
+                            aria-label="Login"
                           >
                             Anmelden
                           </Button>
                         )}
                         {user && (
                           <>
-                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white" title="Inserieren">
-                              <Plus className="h-5 w-5" />
+                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Inserieren" aria-label="Create new listing">
+                              <Plus className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white" title="Verkäufe">
-                              <TrendingUp className="h-5 w-5" />
+                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Verkäufe" aria-label="My sales">
+                              <TrendingUp className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white" title="Käufe">
-                              <Package className="h-5 w-5" />
+                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Käufe" aria-label="My purchases">
+                              <Package className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative" title="Benachrichtigungen">
-                              <Bell className="h-5 w-5" />
+                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative focus:ring-2 focus:ring-white rounded p-1" title="Benachrichtigungen" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
+                              <Bell className="h-5 w-5" aria-hidden="true" />
                               {unreadCount > 0 && (
-                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs">
+                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
                                   {unreadCount}
                                 </Badge>
                               )}
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white" title="Admin">
-                                <Settings className="h-5 w-5" />
+                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Admin" aria-label="Admin Dashboard">
+                                <Settings className="h-5 w-5" aria-hidden="true" />
                               </Link>
                             )}
                           </>

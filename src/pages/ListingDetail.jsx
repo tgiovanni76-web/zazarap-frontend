@@ -193,13 +193,15 @@ export default function ListingDetail() {
         {user && (
           <button
             onClick={() => toggleLikeMutation.mutate()}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-red-600 ${
               isLiked 
                 ? 'bg-red-600 text-white' 
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
+            aria-label={`Like listing, ${likesCount} likes`}
+            aria-pressed={isLiked}
           >
-            <ThumbsUp className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+            <ThumbsUp className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} aria-hidden="true" />
             <span>{likesCount}</span>
           </button>
         )}
@@ -246,9 +248,10 @@ export default function ListingDetail() {
               </Link>
               <button
                 onClick={() => toggleFavoriteMutation.mutate()}
-                className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold"
+                className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold focus:ring-2 focus:ring-[#e84c00]"
+                aria-pressed={isFavorite}
               >
-                <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+                <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
                 {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
               </button>
             </>

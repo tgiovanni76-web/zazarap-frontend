@@ -146,8 +146,10 @@ export default function Marketplace() {
 
       <div className="mb-6 flex flex-col md:flex-row gap-4 items-stretch">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" aria-hidden="true" />
           <Input
+            type="search"
+            aria-label={t('searchPlaceholder')}
             placeholder={t('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -165,7 +167,10 @@ export default function Marketplace() {
         </div>
 
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="md:w-64 h-12 bg-yellow-400 text-red-600 border-2 border-red-600 font-bold hover:bg-yellow-500">
+          <SelectTrigger 
+            className="md:w-64 h-12 bg-yellow-400 text-red-600 border-2 border-red-600 font-bold hover:bg-yellow-500 focus:ring-2 focus:ring-red-600"
+            aria-label={t('category')}
+          >
             <SelectValue placeholder={t('allCategories')} />
           </SelectTrigger>
           <SelectContent className="max-h-96 overflow-y-auto">
@@ -311,15 +316,18 @@ export default function Marketplace() {
               </Link>
               
               {user && (
-                <div 
-                  className={`zaza-heart ${isFavorite ? 'active' : ''}`}
+                <button 
+                  type="button"
+                  className={`zaza-heart ${isFavorite ? 'active' : ''} border-none focus:outline-none focus:ring-2 focus:ring-red-500`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleFavoriteMutation.mutate({ listingId: listing.id, isFavorite });
                   }}
+                  aria-label={isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
+                  aria-pressed={isFavorite}
                 >
-                  <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
-                </div>
+                  <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
+                </button>
               )}
 
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
