@@ -21,33 +21,42 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="relative">
-      <div 
-        className="flex items-center cursor-pointer"
+      <button 
+        className="flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#f9d65c] rounded-full"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={`Select language, current is ${currentLang.name}`}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
       >
         <img 
           src={currentLang.flag} 
-          alt={currentLang.code.toUpperCase()}
+          alt={currentLang.name}
           className="w-[22px] h-[22px] rounded-full border-2 border-[#f9d65c]"
         />
-      </div>
+      </button>
 
       {isOpen && (
         <>
           <div 
             className="fixed inset-0 z-40" 
             onClick={() => setIsOpen(false)}
+            aria-hidden="true"
           />
-          <div className="absolute top-8 right-0 z-50 bg-[#d62828] p-2.5 rounded-lg border-2 border-[#f9d65c] min-w-[140px]">
+          <div 
+            className="absolute top-8 right-0 z-50 bg-[#d62828] p-2.5 rounded-lg border-2 border-[#f9d65c] min-w-[140px]"
+            role="menu"
+            aria-orientation="vertical"
+          >
             {languages.map(lang => (
-              <div 
+              <button 
                 key={lang.code}
                 onClick={() => handleSelect(lang.code)}
-                className="flex items-center gap-2 cursor-pointer py-1.5 px-2 rounded hover:bg-[#b82020] text-[#f9d65c]"
+                className="flex items-center gap-2 cursor-pointer py-1.5 px-2 rounded hover:bg-[#b82020] text-[#f9d65c] w-full text-left focus:outline-none focus:bg-[#b82020]"
+                role="menuitem"
               >
-                <img src={lang.flag} alt={lang.name} className="w-5 h-5 rounded-sm" />
+                <img src={lang.flag} alt="" className="w-5 h-5 rounded-sm" />
                 <span className="text-sm">{lang.name}</span>
-              </div>
+              </button>
             ))}
           </div>
         </>
