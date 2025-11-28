@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,11 +35,18 @@ export default function Layout({ children, currentPageName }) {
 
 function LayoutInner({ children, currentPageName }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me().catch(() => null),
   });
+
+  useEffect(() => {
+    if (user && (!user.birthDate || !user.privacyAccepted) && currentPageName !== 'CompleteProfile') {
+      navigate(createPageUrl('CompleteProfile'));
+    }
+  }, [user, currentPageName, navigate]);
 
   const { data: seoSettings } = useQuery({
     queryKey: ['seoSettings'],

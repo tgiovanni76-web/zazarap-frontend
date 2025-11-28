@@ -35,6 +35,7 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import SystemCheckup from './pages/SystemCheckup';
 import AdminSEO from './pages/AdminSEO';
+import CompleteProfile from './pages/CompleteProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -76,6 +77,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "SystemCheckup": SystemCheckup,
     "AdminSEO": AdminSEO,
+    "CompleteProfile": CompleteProfile,
 }
 
 export const pagesConfig = {
