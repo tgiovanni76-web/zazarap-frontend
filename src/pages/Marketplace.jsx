@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import { useLanguage } from '../components/LanguageProvider';
+import SEOHead from '../components/SEOHead';
 
 export default function Marketplace() {
   const { t } = useLanguage();
@@ -129,6 +130,10 @@ export default function Marketplace() {
 
   return (
     <div className="py-8">
+      <SEOHead 
+        title="Zazarap - Marketplace Italiano Sicuro | Compra e Vendi Usato"
+        description="Il miglior marketplace per comprare e vendere usato in sicurezza con protezione acquisti PayPal ed Escrow. Abbigliamento, Elettronica, Auto e altro."
+      />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">{t('home')}</h2>
         <Button

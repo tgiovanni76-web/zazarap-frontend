@@ -10,6 +10,7 @@ import CookieBanner from '@/components/CookieBanner';
 import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 import Analytics from '@/components/Analytics';
 import StructuredData from '@/components/marketplace/StructuredData';
+import SEOHead from '@/components/SEOHead';
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import NewsletterForm from '@/components/NewsletterForm';
@@ -52,6 +53,7 @@ function LayoutInner({ children, currentPageName }) {
     <>
       <div className="min-h-screen bg-slate-50">
         <Analytics />
+        <SEOHead googleVerification="INSERISCI_QUI_IL_TUO_CODICE_GSC" />
         <StructuredData type="organization" data={{}} />
       <style>{`
           :root {
