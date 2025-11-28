@@ -8,7 +8,9 @@ Deno.serve(async (req) => {
     const listings = await base44.asServiceRole.entities.Listing.filter({ status: 'active' });
     
     // Base URL of the site
-    const baseUrl = 'https://your-domain.com'; // Replace with actual domain
+    const host = req.headers.get('host') || 'zazarap.com';
+    const protocol = host.includes('localhost') ? 'http' : 'https';
+    const baseUrl = `${protocol}://${host}`;
     
     // Generate sitemap XML
     let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';

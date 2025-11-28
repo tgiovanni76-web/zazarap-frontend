@@ -6,7 +6,8 @@ export default function SEOHead({
   image = "https://zazarap.com/og-image.jpg",
   url = typeof window !== 'undefined' ? window.location.href : '',
   type = "website",
-  keywords = ''
+  keywords = '',
+  googleVerification = ''
 }) {
   useEffect(() => {
     document.title = title;
@@ -29,7 +30,11 @@ export default function SEOHead({
     setMetaTag('twitter:title', title);
     setMetaTag('twitter:description', description);
     setMetaTag('twitter:image', image);
-  }, [title, description, image, url, type, keywords]);
+
+    if (googleVerification) {
+      setMetaTag('google-site-verification', googleVerification);
+    }
+  }, [title, description, image, url, type, keywords, googleVerification]);
 
   return null;
 }
