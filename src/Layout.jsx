@@ -162,6 +162,69 @@ function LayoutInner({ children, currentPageName }) {
           }
 
           /* FOOTER */
+          .footer-wrapper {
+            background: #f8f8f8;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 40px;
+          }
+          .footer-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: auto;
+          }
+          .footer-column {
+            min-width: 180px;
+          }
+          .footer-column h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+          }
+          .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+          .footer-column ul li {
+            margin-bottom: 10px;
+          }
+          .footer-column ul li a {
+            text-decoration: none;
+            color: #555;
+            transition: 0.2s;
+            font-size: 14px;
+          }
+          .footer-column ul li a:hover {
+            color: var(--z-red);
+          }
+          .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5;
+            color: #999;
+            font-size: 14px;
+          }
+          .social-icons a {
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+          }
+          .social-icons a:hover {
+              color: var(--z-red);
+          }
+
+          /* Legacy mobile nav footer styles */
           .zaza-footer {
             position: fixed;
             bottom: 0;
@@ -700,54 +763,55 @@ function LayoutInner({ children, currentPageName }) {
       
       <CookieBanner />
       
-      <footer className="bg-[#0c1526] text-white mt-20 py-10">
-                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
-                      {/* Logo + Newsletter */}
-                      <div className="flex-1 min-w-[260px]">
-                        <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap</h2>
-                        <p>Der sichere und zuverlässige deutsche Marktplatz</p>
+      <footer className="footer-wrapper">
+        <div className="footer-columns">
 
-                        <h3 className="font-semibold mt-6 mb-1">Newsletter</h3>
-                        <p className="text-sm text-slate-300 mb-3">Erhalten Sie exklusive Angebote und Neuigkeiten</p>
-                        <NewsletterForm source="footer" />
-                      </div>
+          <div className="footer-column">
+            <h4>Zazarap</h4>
+            <ul>
+              <li><Link to={createPageUrl('FAQ')}>Hilfe & Support</Link></li>
+              <li><Link to={createPageUrl('AGB')}>Regeln</Link></li>
+              <li><Link to={createPageUrl('PrivacyPolicy')}>Sicherheit</Link></li>
+              <li><Link to={createPageUrl('PrivacyPolicy')}>Datenschutz</Link></li>
+              <li><Link to={createPageUrl('PrivacyPolicy')}>Cookie-Einstellungen</Link></li>
+              <li><Link to={createPageUrl('Contact')}>Kontakt</Link></li>
+            </ul>
+          </div>
 
-                      {/* Rechtliches */}
-                      <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">Rechtliches</h3>
-                        <ul className="space-y-2">
-                          <li><Link to={createPageUrl('Impressum')} className="text-white hover:text-slate-300">Impressum</Link></li>
-                          <li><Link to={createPageUrl('AGB')} className="text-white hover:text-slate-300">AGB</Link></li>
-                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">Datenschutz</Link></li>
-                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">Widerrufsrecht</Link></li>
-                          <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">Streitbeilegung</Link></li>
-                        </ul>
-                      </div>
+          <div className="footer-column">
+            <h4>Dienste</h4>
+            <ul>
+              <li><Link to={createPageUrl('NewListing')}>Anzeige erstellen</Link></li>
+              <li><Link to={createPageUrl('Marketplace')}>Geschäfte & Unternehmen</Link></li>
+              <li><Link to={createPageUrl('Marketplace')}>Service für Profis</Link></li>
+              <li><Link to={createPageUrl('NewListing')}>Anzeige bewerben</Link></li>
+            </ul>
+          </div>
 
-                      {/* Support */}
-                      <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">Support</h3>
-                        <ul className="space-y-2">
-                          <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
-                          <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">Kontakt</Link></li>
-                        </ul>
-                        <p className="mt-3">
-                          <a href="mailto:info@zazarap.com" className="text-white hover:text-slate-300">info@zazarap.com</a>
-                        </p>
-                      </div>
-                    </div>
+          <div className="footer-column">
+            <h4>Folge uns</h4>
+            <div className="social-icons">
+              <a href="#" onClick={(e) => e.preventDefault()}>Facebook</a>
+              <a href="#" onClick={(e) => e.preventDefault()}>Instagram</a>
+              <a href="#" onClick={(e) => e.preventDefault()}>TikTok</a>
+              <a href="#" onClick={(e) => e.preventDefault()}>YouTube</a>
+            </div>
+          </div>
 
-                    <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
+          <div className="footer-column">
+            <h4>App herunterladen</h4>
+            <ul>
+              <li><a href="#" onClick={(e) => e.preventDefault()}>📱 Android</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()}>🍎 iOS</a></li>
+            </ul>
+          </div>
 
-                    <div className="text-center">
-                      <p>© 2025 Zazarap. Alle Rechte vorbehalten.</p>
-                      <p className="mt-1">
-                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
-                          EU-Streitschlichtung
-                        </a>
-                      </p>
-                    </div>
-                  </footer>
+        </div>
+
+        <div className="footer-bottom">
+          © 2025 Zazarap • Alle Rechte vorbehalten
+        </div>
+      </footer>
       </div>
       </>
       );
