@@ -26,11 +26,14 @@ Deno.serve(async (req) => {
     
     // Static pages
     const staticPages = [
-      { path: '/marketplace', priority: '0.9' },
-      { path: '/faq', priority: '0.7' },
-      { path: '/contact', priority: '0.7' },
-      { path: '/privacy-policy', priority: '0.5' },
-      { path: '/terms-of-service', priority: '0.5' }
+      { path: '/Marketplace', priority: '1.0' },
+      { path: '/FAQ', priority: '0.8' },
+      { path: '/Contact', priority: '0.8' },
+      { path: '/PrivacyPolicy', priority: '0.5' },
+      { path: '/AGB', priority: '0.5' },
+      { path: '/Impressum', priority: '0.5' },
+      { path: '/Widerrufsrecht', priority: '0.5' },
+      { path: '/DisputeCenter', priority: '0.6' }
     ];
     
     staticPages.forEach(page => {
@@ -45,7 +48,7 @@ Deno.serve(async (req) => {
     // Listing pages
     listings.forEach(listing => {
       sitemap += '  <url>\n';
-      sitemap += `    <loc>${baseUrl}/listing-detail?id=${listing.id}</loc>\n`;
+      sitemap += `    <loc>${baseUrl}/ListingDetail?id=${listing.id}</loc>\n`;
       const lastmod = listing.updated_date || listing.created_date;
       sitemap += `    <lastmod>${new Date(lastmod).toISOString().split('T')[0]}</lastmod>\n`;
       sitemap += '    <changefreq>weekly</changefreq>\n';
