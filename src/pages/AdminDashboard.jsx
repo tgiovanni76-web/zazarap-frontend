@@ -147,6 +147,14 @@ export default function AdminDashboard() {
       link: 'SystemCheckup',
       count: null,
       color: 'bg-cyan-500'
+    },
+    {
+      title: 'SEO & Sitemap',
+      description: 'GSC Verification e Sitemap',
+      icon: Settings, // Using Settings instead of Search since Search is not imported in the original file
+      link: 'AdminSEO',
+      count: null,
+      color: 'bg-purple-600'
     }
   ];
 
