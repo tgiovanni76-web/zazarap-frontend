@@ -721,6 +721,7 @@ function LayoutInner({ children, currentPageName }) {
                           <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">Datenschutz</Link></li>
                           <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">Widerrufsrecht</Link></li>
                           <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">Streitbeilegung</Link></li>
+                          <li><Link to={createPageUrl('Werbung')} className="text-[#f9d65c] font-bold hover:text-white">Werbung & Premium</Link></li>
                         </ul>
                       </div>
 
