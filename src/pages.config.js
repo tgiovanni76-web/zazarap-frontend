@@ -34,6 +34,7 @@ import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import SystemCheckup from './pages/SystemCheckup';
+import AdminSEO from './pages/AdminSEO';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +75,7 @@ export const PAGES = {
     "Contact": Contact,
     "FAQ": FAQ,
     "SystemCheckup": SystemCheckup,
+    "AdminSEO": AdminSEO,
 }
 
 export const pagesConfig = {

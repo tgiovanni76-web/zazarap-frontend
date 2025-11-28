@@ -35,10 +35,18 @@ export default function Layout({ children, currentPageName }) {
 
 function LayoutInner({ children, currentPageName }) {
   const { t } = useLanguage();
-  
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me().catch(() => null),
+  });
+
+  const { data: seoSettings } = useQuery({
+    queryKey: ['seoSettings'],
+    queryFn: async () => {
+      const res = await base44.entities.SEOSettings.list();
+      return res[0] || {};
+    }
   });
 
   const { data: notifications = [] } = useQuery({
@@ -53,7 +61,7 @@ function LayoutInner({ children, currentPageName }) {
     <>
       <div className="min-h-screen bg-slate-50">
         <Analytics />
-        <SEOHead googleVerification="INSERISCI_QUI_IL_TUO_CODICE_GSC" />
+        <SEOHead googleVerification={seoSettings?.googleSiteVerification} />
         <StructuredData type="organization" data={{}} />
       <style>{`
           :root {
