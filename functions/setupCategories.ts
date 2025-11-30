@@ -2,7 +2,12 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 export default Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
     
+    if (!user || user.role !== 'admin') {
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         // 1. Delete all existing categories
         const existing = await base44.entities.Category.list(1000); // Fetch plenty
@@ -89,23 +94,14 @@ export default Deno.serve(async (req) => {
         // 3. Create new categories
         let order = 0;
         for (const [key, data] of Object.entries(structure)) {
-            // Create parent
             const parent = await base44.entities.Category.create({
-                name: key, // Using key as name ID for internal logic, but display name is separate in translations usually, but here we store the German name or key?
-                // Let's store the key as 'name' for consistent translation lookup, and description as the display name
-                // Actually existing code uses 'name' for display in some places, but translation uses keys.
-                // Best approach: name = key (e.g. 'motoren'), then add a description or rely on translation.
-                // But wait, the provided JSON has "name": "Motoren". 
-                // If I save name="Motoren", translation lookup for "Motoren" might fail if I use lowercase keys.
-                // I'll save name="motoren" (the key) to be safe for translation, and use the display name in the translation file.
-                name: key, 
+                name: key,
                 icon: data.icon,
                 description: data.name,
                 order: order++,
                 active: true
             });
 
-            // Create children
             let subOrder = 0;
             for (const [subKey, subName] of Object.entries(data.children)) {
                 await base44.entities.Category.create({

@@ -110,6 +110,35 @@ export default function AdminSettings() {
         </CardContent>
       </Card>
 
+      <Card className="mb-8 border-red-200">
+        <CardHeader>
+            <CardTitle className="text-red-600">Gestione Categorie</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <p className="mb-4 text-sm text-gray-600">
+                Attenzione: questa azione cancellerà tutte le categorie esistenti e le sostituirà con la struttura predefinita (Motoren, Markt, Immobilien, Arbeit).
+                I prodotti esistenti potrebbero perdere la loro associazione di categoria.
+            </p>
+            <Button 
+                variant="destructive"
+                onClick={async () => {
+                    if(confirm('Sei sicuro di voler resettare tutte le categorie?')) {
+                        const toastId = toast.loading('Resetting categories...');
+                        try {
+                            await base44.functions.invoke('setupCategories');
+                            toast.success('Categorie resettate con successo', { id: toastId });
+                            // Reload page to reflect changes if needed or just let user know
+                        } catch (e) {
+                            toast.error('Errore durante il reset: ' + e.message, { id: toastId });
+                        }
+                    }
+                }}
+            >
+                Reset Categorie Default (Tedesco)
+            </Button>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {integrations.map(integration => {
           const Icon = integration.icon;

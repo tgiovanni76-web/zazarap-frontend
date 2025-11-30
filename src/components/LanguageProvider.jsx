@@ -1366,13 +1366,12 @@ export function LanguageProvider({ children }) {
       
       // Common category mappings to translation keys
       const categoryMap = {
-        'elektronik': 'electronics', 'elettronica': 'electronics', 'electronics': 'electronics',
-        'haus': 'home', 'casa': 'home', 'home': 'home',
-        'mode': 'fashion', 'moda': 'fashion', 'fashion': 'fashion',
-        'sport': 'sports', 'sports': 'sports',
-        'auto': 'auto',
-        'tiere': 'animals', 'animali': 'animals', 'animals': 'animals',
-        'andere': 'other', 'altro': 'other', 'other': 'other'
+        // Since we now use keys directly in DB, mapping might be redundant if we store keys, 
+        // but for backwards compat or safety:
+        'motoren': 'motoren',
+        'markt': 'markt', 
+        'immobilien': 'immobilien',
+        'arbeit': 'arbeit'
       };
 
       const mappedKey = categoryMap[lowerKey];
