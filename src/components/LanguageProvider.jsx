@@ -3,6 +3,20 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const translations = {
   de: {
     // Header & Navigation
+    loginOrRegister: 'Anmelden oder Registrieren',
+    firstName: 'Vorname',
+    lastName: 'Nachname',
+    address: 'Adresse',
+    country: 'Land',
+    province: 'Provinz',
+    region: 'Region',
+    birthDate: 'Geburtsdatum',
+    completeProfile: 'Profil vervollständigen',
+    completeProfileDesc: 'Vervollständigen Sie Ihr Profil, um loszulegen.',
+    welcome: 'Willkommen',
+    acceptPrivacy: 'Ich akzeptiere die Datenschutzbestimmungen und AGB',
+    marketingConsent: '(Optional) Ich möchte Angebote per E-Mail erhalten',
+    
     home: 'Startseite',
     publish: 'Inserieren',
     sales: 'Verkäufe',
@@ -212,6 +226,20 @@ const translations = {
   
   it: {
     // Header & Navigation
+    loginOrRegister: 'Accedi o Registrati',
+    firstName: 'Nome',
+    lastName: 'Cognome',
+    address: 'Indirizzo',
+    country: 'Paese',
+    province: 'Provincia',
+    region: 'Regione',
+    birthDate: 'Data di Nascita',
+    completeProfile: 'Completa Profilo',
+    completeProfileDesc: 'Completa il tuo profilo per iniziare.',
+    welcome: 'Benvenuto',
+    acceptPrivacy: 'Accetto la Privacy Policy e i Termini di Servizio',
+    marketingConsent: '(Opzionale) Voglio ricevere offerte via email',
+    
     home: 'Home',
     publish: 'Pubblica',
     sales: 'Vendite',
@@ -421,6 +449,20 @@ const translations = {
   
   tr: {
     // Header & Navigation
+    loginOrRegister: 'Giriş Yap veya Kayıt Ol',
+    firstName: 'Ad',
+    lastName: 'Soyad',
+    address: 'Adres',
+    country: 'Ülke',
+    province: 'İl',
+    region: 'Bölge',
+    birthDate: 'Doğum Tarihi',
+    completeProfile: 'Profili Tamamla',
+    completeProfileDesc: 'Başlamak için profilinizi tamamlayın.',
+    welcome: 'Hoşgeldiniz',
+    acceptPrivacy: 'Gizlilik Politikasını ve Şartları kabul ediyorum',
+    marketingConsent: '(İsteğe bağlı) E-posta ile teklif almak istiyorum',
+    
     home: 'Ana Sayfa',
     publish: 'İlan Ver',
     sales: 'Satışlar',
@@ -630,6 +672,20 @@ const translations = {
   
   uk: {
     // Header & Navigation
+    loginOrRegister: 'Увійти або Зареєструватися',
+    firstName: "Ім'я",
+    lastName: 'Прізвище',
+    address: 'Адреса',
+    country: 'Країна',
+    province: 'Область',
+    region: 'Регіон',
+    birthDate: 'Дата народження',
+    completeProfile: 'Заповнити профіль',
+    completeProfileDesc: 'Заповніть свій профіль, щоб почати.',
+    welcome: 'Ласкаво просимо',
+    acceptPrivacy: 'Я приймаю Політику конфіденційності та Умови',
+    marketingConsent: '(Необов’язково) Я хочу отримувати пропозиції електронною поштою',
+    
     home: 'Головна',
     publish: 'Розмістити',
     sales: 'Продажі',
@@ -839,6 +895,20 @@ const translations = {
   
   en: {
     // Header & Navigation
+    loginOrRegister: 'Login or Register',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    address: 'Address',
+    country: 'Country',
+    province: 'Province',
+    region: 'Region',
+    birthDate: 'Date of Birth',
+    completeProfile: 'Complete Profile',
+    completeProfileDesc: 'Complete your profile to get started.',
+    welcome: 'Welcome',
+    acceptPrivacy: 'I accept the Privacy Policy and Terms',
+    marketingConsent: '(Optional) I want to receive offers via email',
+    
     home: 'Home',
     publish: 'Post',
     sales: 'Sales',

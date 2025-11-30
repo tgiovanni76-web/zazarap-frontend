@@ -657,9 +657,9 @@ function LayoutInner({ children, currentPageName }) {
                             onClick={() => base44.auth.redirectToLogin()}
                             className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
                             aria-label="Login"
-                          >
-                            Anmelden
-                          </Button>
+                            >
+                            {t('loginOrRegister')}
+                            </Button>
                         )}
                         {user && (
                           <>
@@ -695,7 +695,7 @@ function LayoutInner({ children, currentPageName }) {
                     </div>
                   </header>
 
-      <EmailVerificationBanner />
+      {/* EmailVerificationBanner removed as requested */}
       
       <main className="container max-w-7xl mx-auto px-4">
         {children}

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function CompleteProfile() {
   const { t } = useLanguage();
@@ -17,7 +18,13 @@ export default function CompleteProfile() {
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     birthDate: '',
+    address: '',
+    country: '',
+    province: '',
+    region: '',
     privacyAccepted: false,
     marketingAccepted: false
   });
@@ -42,9 +49,13 @@ export default function CompleteProfile() {
     e.preventDefault();
     const newErrors = {};
     
-    if (!formData.birthDate) {
-      newErrors.birthDate = 'La data di nascita è obbligatoria';
-    }
+    if (!formData.firstName) newErrors.firstName = t('error');
+    if (!formData.lastName) newErrors.lastName = t('error');
+    if (!formData.address) newErrors.address = t('error');
+    if (!formData.country) newErrors.country = t('error');
+    if (!formData.province) newErrors.province = t('error');
+    if (!formData.region) newErrors.region = t('error');
+    if (!formData.birthDate) newErrors.birthDate = t('error');
     
     // Check age (e.g., at least 16 years old)
     if (formData.birthDate) {
@@ -61,7 +72,7 @@ export default function CompleteProfile() {
     }
 
     if (!formData.privacyAccepted) {
-      newErrors.privacyAccepted = 'Devi accettare la privacy policy';
+      newErrors.privacyAccepted = t('error');
     }
 
     setErrors(newErrors);
@@ -74,16 +85,40 @@ export default function CompleteProfile() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
+        <div className="absolute top-4 right-4">
+            <LanguageSwitcher />
+        </div>
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold text-[#d62828]">Benvenuto in Zazarap!</CardTitle>
+          <CardTitle className="text-2xl font-bold text-[#d62828]">{t('welcome')} Zazarap!</CardTitle>
           <CardDescription>
-            Completa il tuo profilo per iniziare a comprare e vendere.
+            {t('completeProfileDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">{t('firstName')}</Label>
+                <Input
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className={errors.firstName ? "border-red-500" : ""}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">{t('lastName')}</Label>
+                <Input
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className={errors.lastName ? "border-red-500" : ""}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="birthDate">Data di Nascita</Label>
+              <Label htmlFor="birthDate">{t('birthDate')}</Label>
               <Input
                 id="birthDate"
                 type="date"
@@ -91,12 +126,51 @@ export default function CompleteProfile() {
                 onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
                 className={errors.birthDate ? "border-red-500" : ""}
               />
-              {errors.birthDate && (
-                <p className="text-sm text-red-500">{errors.birthDate}</p>
-              )}
+              {errors.birthDate && <p className="text-sm text-red-500">{errors.birthDate}</p>}
             </div>
 
-            <div className="items-top flex space-x-2">
+            <div className="space-y-2">
+              <Label htmlFor="address">{t('address')}</Label>
+              <Input
+                id="address"
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className={errors.address ? "border-red-500" : ""}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="country">{t('country')}</Label>
+                <Input
+                  id="country"
+                  value={formData.country}
+                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                  className={errors.country ? "border-red-500" : ""}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="region">{t('region')}</Label>
+                <Input
+                  id="region"
+                  value={formData.region}
+                  onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                  className={errors.region ? "border-red-500" : ""}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="province">{t('province')}</Label>
+              <Input
+                id="province"
+                value={formData.province}
+                onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                className={errors.province ? "border-red-500" : ""}
+              />
+            </div>
+
+            <div className="items-top flex space-x-2 mt-4">
               <Checkbox 
                 id="privacy" 
                 checked={formData.privacyAccepted}
@@ -107,7 +181,7 @@ export default function CompleteProfile() {
                   htmlFor="privacy"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Accetto la <a href="/PrivacyPolicy" target="_blank" className="underline text-blue-600">Privacy Policy</a> e i <a href="/AGB" target="_blank" className="underline text-blue-600">Termini di Servizio</a>
+                  {t('acceptPrivacy')}
                 </Label>
                 {errors.privacyAccepted && (
                   <p className="text-sm text-red-500">{errors.privacyAccepted}</p>
@@ -126,7 +200,7 @@ export default function CompleteProfile() {
                   htmlFor="marketing"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  (Opzionale) Voglio ricevere offerte e novità via email
+                  {t('marketingConsent')}
                 </Label>
               </div>
             </div>
@@ -136,7 +210,7 @@ export default function CompleteProfile() {
               className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               disabled={updateProfileMutation.isPending}
             >
-              {updateProfileMutation.isPending ? 'Salvataggio...' : 'Completa Registrazione'}
+              {updateProfileMutation.isPending ? t('loading') : t('completeProfile')}
             </Button>
           </form>
         </CardContent>
