@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
-import { Heart, Search } from 'lucide-react';
+import { Heart, Search, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Marketplace() {
