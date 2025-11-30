@@ -14,6 +14,7 @@ const translations = {
     completeProfile: 'Profil vervollständigen',
     completeProfileDesc: 'Vervollständigen Sie Ihr Profil, um loszulegen.',
     welcome: 'Willkommen',
+    welcomeBack: 'Willkommen, {name}! Schön, dass Sie wieder da sind.',
     acceptPrivacy: 'Ich akzeptiere die Datenschutzbestimmungen und AGB',
     marketingConsent: '(Optional) Ich möchte Angebote per E-Mail erhalten',
     
@@ -237,6 +238,7 @@ const translations = {
     completeProfile: 'Completa Profilo',
     completeProfileDesc: 'Completa il tuo profilo per iniziare.',
     welcome: 'Benvenuto',
+    welcomeBack: 'Benvenuto, {name}! Bello rivederti.',
     acceptPrivacy: 'Accetto la Privacy Policy e i Termini di Servizio',
     marketingConsent: '(Opzionale) Voglio ricevere offerte via email',
     
@@ -460,6 +462,7 @@ const translations = {
     completeProfile: 'Profili Tamamla',
     completeProfileDesc: 'Başlamak için profilinizi tamamlayın.',
     welcome: 'Hoşgeldiniz',
+    welcomeBack: 'Hoş geldiniz, {name}! Sizi tekrar görmek güzel.',
     acceptPrivacy: 'Gizlilik Politikasını ve Şartları kabul ediyorum',
     marketingConsent: '(İsteğe bağlı) E-posta ile teklif almak istiyorum',
     
@@ -683,6 +686,7 @@ const translations = {
     completeProfile: 'Заповнити профіль',
     completeProfileDesc: 'Заповніть свій профіль, щоб почати.',
     welcome: 'Ласкаво просимо',
+    welcomeBack: 'Ласкаво просимо, {name}! Раді вас знову бачити.',
     acceptPrivacy: 'Я приймаю Політику конфіденційності та Умови',
     marketingConsent: '(Необов’язково) Я хочу отримувати пропозиції електронною поштою',
     
@@ -906,6 +910,7 @@ const translations = {
     completeProfile: 'Complete Profile',
     completeProfileDesc: 'Complete your profile to get started.',
     welcome: 'Welcome',
+    welcomeBack: 'Welcome, {name}! Nice to see you again.',
     acceptPrivacy: 'I accept the Privacy Policy and Terms',
     marketingConsent: '(Optional) I want to receive offers via email',
     

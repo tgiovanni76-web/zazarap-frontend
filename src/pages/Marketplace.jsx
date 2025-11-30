@@ -134,6 +134,15 @@ export default function Marketplace() {
         title="Zazarap - Marketplace Italiano Sicuro | Compra e Vendi Usato"
         description="Il miglior marketplace per comprare e vendere usato in sicurezza con protezione acquisti PayPal ed Escrow. Abbigliamento, Elettronica, Auto e altro."
       />
+
+      {user && (user.firstName || user.lastName) && (
+        <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6 shadow-sm">
+          <p className="text-lg font-medium">
+            {t('welcomeBack').replace('{name}', `${user.firstName || ''} ${user.lastName || ''}`.trim())}
+          </p>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">{t('home')}</h2>
         <Button
