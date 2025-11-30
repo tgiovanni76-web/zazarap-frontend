@@ -643,11 +643,11 @@ function LayoutInner({ children, currentPageName }) {
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
                                           <span className="text-[26px] font-extrabold text-[#f9d65c]">Zazarap</span>
-                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
-                                        </Link>
-                                        <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white font-medium text-sm">
-                                          Home
-                                        </Link>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">{t('slogan')}</span>
+                                          </Link>
+                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white font-medium text-sm">
+                                          {t('home')}
+                                          </Link>
                                       </div>
 
                       {/* Menu Icons */}
@@ -708,50 +708,50 @@ function LayoutInner({ children, currentPageName }) {
                       {/* Logo + Newsletter */}
                       <div className="flex-1 min-w-[260px]">
                         <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap</h2>
-                        <p>Der sichere und zuverlässige deutsche Marktplatz</p>
+                        <p>{t('tagline')}</p>
 
-                        <h3 className="font-semibold mt-6 mb-1">Newsletter</h3>
-                        <p className="text-sm text-slate-300 mb-3">Erhalten Sie exklusive Angebote und Neuigkeiten</p>
+                        <h3 className="font-semibold mt-6 mb-1">{t('newsletter')}</h3>
+                        <p className="text-sm text-slate-300 mb-3">{t('newsletterDesc')}</p>
                         <NewsletterForm source="footer" />
                       </div>
 
                       {/* Rechtliches */}
                       <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">Rechtliches</h3>
+                        <h3 className="font-semibold mb-3">{t('legal')}</h3>
                         <ul className="space-y-2">
-                          <li><Link to={createPageUrl('Impressum')} className="text-white hover:text-slate-300">Impressum</Link></li>
-                          <li><Link to={createPageUrl('AGB')} className="text-white hover:text-slate-300">AGB</Link></li>
-                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">Datenschutz</Link></li>
-                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">Widerrufsrecht</Link></li>
-                          <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">Streitbeilegung</Link></li>
+                          <li><Link to={createPageUrl('Impressum')} className="text-white hover:text-slate-300">{t('impressum')}</Link></li>
+                          <li><Link to={createPageUrl('AGB')} className="text-white hover:text-slate-300">{t('agb')}</Link></li>
+                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">{t('privacy')}</Link></li>
+                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">{t('rightOfWithdrawal')}</Link></li>
+                          <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">{t('disputeResolution')}</Link></li>
                           <li><Link to={createPageUrl('Werbung')} className="text-[#f9d65c] font-bold hover:text-white">Werbung & Premium</Link></li>
                         </ul>
                       </div>
 
                       {/* Support */}
                       <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">Support</h3>
+                        <h3 className="font-semibold mb-3">{t('support')}</h3>
                         <ul className="space-y-2">
                           <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
-                          <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">Kontakt</Link></li>
-                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">Anteprima Profilo (Test)</Link></li>
+                          <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">{t('contactUs')}</Link></li>
+                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">{t('completeProfile')}</Link></li>
                           </ul>
                           <p className="mt-3">
                           <a href="mailto:info@zazarap.com" className="text-white hover:text-slate-300">info@zazarap.com</a>
                           </p>
                       </div>
-                    </div>
+                      </div>
 
-                    <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
+                      <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
 
-                    <div className="text-center">
-                      <p>© 2025 Zazarap. Alle Rechte vorbehalten.</p>
+                      <div className="text-center">
+                      <p>© 2025 Zazarap. {t('allRightsReserved')}.</p>
                       <p className="mt-1">
                         <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
-                          EU-Streitschlichtung
+                          {t('euDispute')}
                         </a>
                       </p>
-                    </div>
+                      </div>
                   </footer>
       </div>
       </>

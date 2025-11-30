@@ -96,7 +96,11 @@ const translations = {
     
     // Footer
     tagline: 'Der sichere und zuverlässige deutsche Marktplatz',
-    
+    slogan: 'kleinanzeigen',
+    newsletter: 'Newsletter',
+    newsletterDesc: 'Erhalten Sie exklusive Angebote und Neuigkeiten',
+    euDispute: 'EU-Streitschlichtung',
+
     // Admin
     preLaunchChecklist: 'Pre-Launch Checkliste',
     checkBeforeLaunch: 'Überprüfen Sie alle Punkte vor dem Go-Live',
@@ -320,7 +324,11 @@ const translations = {
     
     // Footer
     tagline: 'Il marketplace italiano sicuro e affidabile',
-    
+    slogan: 'annunci',
+    newsletter: 'Newsletter',
+    newsletterDesc: 'Ricevi offerte esclusive e novità',
+    euDispute: 'Risoluzione controversie UE',
+
     // Admin
     preLaunchChecklist: 'Checklist Pre-Lancio',
     checkBeforeLaunch: 'Controlla tutti i punti prima del lancio',
@@ -544,7 +552,11 @@ const translations = {
     
     // Footer
     tagline: 'Güvenli ve güvenilir Alman pazaryeri',
-    
+    slogan: 'küçük ilanlar',
+    newsletter: 'Bülten',
+    newsletterDesc: 'Özel teklifler ve haberler alın',
+    euDispute: 'AB Uyuşmazlık Çözümü',
+
     // Admin
     preLaunchChecklist: 'Lansman Öncesi Kontrol Listesi',
     checkBeforeLaunch: 'Yayına geçmeden önce tüm noktaları kontrol edin',
@@ -768,7 +780,11 @@ const translations = {
     
     // Footer
     tagline: 'Безпечна та надійна німецька торговельна платформа',
-    
+    slogan: 'оголошення',
+    newsletter: 'Розсилка',
+    newsletterDesc: 'Отримуйте ексклюзивні пропозиції та новини',
+    euDispute: 'Вирішення спорів ЄС',
+
     // Admin
     preLaunchChecklist: 'Контрольний список перед запуском',
     checkBeforeLaunch: 'Перевірте всі пункти перед запуском',
@@ -992,7 +1008,11 @@ const translations = {
     
     // Footer
     tagline: 'The secure and reliable German marketplace',
-    
+    slogan: 'classifieds',
+    newsletter: 'Newsletter',
+    newsletterDesc: 'Receive exclusive offers and news',
+    euDispute: 'EU Dispute Resolution',
+
     // Admin
     preLaunchChecklist: 'Pre-Launch Checklist',
     checkBeforeLaunch: 'Check all points before going live',
@@ -1140,24 +1160,24 @@ export function LanguageProvider({ children }) {
     // Auto-detect browser language
     if (typeof navigator !== 'undefined') {
       const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      if (browserLang.startsWith('de')) return 'de';
       if (browserLang.startsWith('it')) return 'it';
+      if (browserLang.startsWith('de')) return 'de';
       if (browserLang.startsWith('en')) return 'en';
       if (browserLang.startsWith('tr')) return 'tr';
       if (browserLang.startsWith('uk')) return 'uk';
     }
 
-    return 'de'; // Default to German
-  });
+    return 'it'; // Default to Italian
+    });
 
-  useEffect(() => {
+    useEffect(() => {
     localStorage.setItem('zazarap_language', language);
     document.documentElement.lang = language;
-  }, [language]);
+    }, [language]);
 
-  const t = (key) => {
+    const t = (key) => {
     // Try to translate the key directly
-    const translated = translations[language]?.[key] || translations['de'][key];
+    const translated = translations[language]?.[key] || translations['it'][key];
     if (translated) return translated;
 
     // If key matches a known category (case-insensitive check), try to translate it
