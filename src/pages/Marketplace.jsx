@@ -136,11 +136,30 @@ export default function Marketplace() {
       />
 
       {user && (user.firstName || user.lastName) && (
-        <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6 shadow-sm">
-          <p className="text-lg font-medium">
-            {t('welcomeBack').replace('{name}', `${user.firstName || ''} ${user.lastName || ''}`.trim())}
-          </p>
-        </div>
+        <>
+          <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(-6px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
+          <div style={{
+            background: 'linear-gradient(90deg, #ffcc00 0%, #ffdd44 100%)',
+            padding: '18px',
+            borderRadius: '10px',
+            fontSize: '20px',
+            fontWeight: 600,
+            color: '#8a0000',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+            animation: 'fadeIn 0.6s ease-out'
+          }} className="mb-6">
+            <span style={{fontSize: '26px'}}>👋</span>
+            <span>{t('welcomeBack').replace('{name}', `${user.firstName || ''} ${user.lastName || ''}`.trim())}</span>
+          </div>
+        </>
       )}
 
       <div className="flex justify-between items-center mb-6">
