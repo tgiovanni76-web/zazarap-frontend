@@ -734,10 +734,11 @@ function LayoutInner({ children, currentPageName }) {
                         <ul className="space-y-2">
                           <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
                           <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">Kontakt</Link></li>
-                        </ul>
-                        <p className="mt-3">
+                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">Anteprima Profilo (Test)</Link></li>
+                          </ul>
+                          <p className="mt-3">
                           <a href="mailto:info@zazarap.com" className="text-white hover:text-slate-300">info@zazarap.com</a>
-                        </p>
+                          </p>
                       </div>
                     </div>
 
