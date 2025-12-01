@@ -49,7 +49,10 @@ const i18n = {
   "auth.login.password": { de: "Passwort", it: "Password", en: "Password", uk: "Пароль", tr: "Şifre", fr: "Mot de passe", pl: "Hasło" },
   "auth.login.submit": { de: "Einloggen", it: "Accedi", en: "Log in", uk: "Увійти", tr: "Giriş yap", fr: "Se connecter", pl: "Zaloguj się" },
   "auth.register.title": { de: "Konto erstellen", it: "Crea un account", en: "Create an account", uk: "Створити акаунт", tr: "Hesap oluştur", fr: "Créer un compte", pl: "Utwórz konto" },
-  "auth.register.submit": { de: "Registrieren", it: "Registrati", en: "Sign up", uk: "Зареєструватися", tr: "Kayıt ol", fr: "S'inscrire", pl: "Zarejestruj się" }
+  "auth.register.submit": { de: "Registrieren", it: "Registrati", en: "Sign up", uk: "Зареєструватися", tr: "Kayıt ol", fr: "S'inscrire", pl: "Zarejestruj się" },
+
+    // Errors
+    "error.illegal": { de: "Dieses Angebot ist auf Zazarap nicht erlaubt.", it: "Questo annuncio non è permesso su Zazarap.", en: "This listing is not allowed on Zazarap.", fr: "Cette annonce n'est pas autorisée sur Zazarap.", pl: "To ogłoszenie nie jest dozwolone na Zazarap.", tr: "Bu ilan Zazarap'ta yasaktır.", uk: "Це оголошення заборонене на Zazarap." }
 };
 
 // Legacy flat translations (kept for backward compatibility)
