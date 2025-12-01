@@ -20,7 +20,7 @@ const languages = [
 ];
 
 export default function AdminDashboard() {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -60,8 +60,8 @@ export default function AdminDashboard() {
   if (user?.role !== 'admin') {
     return (
       <div className="py-8 text-center">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h2>
-        <p>Solo gli amministratori possono accedere a questa pagina.</p>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">{t('accessDenied') || 'Accesso Negato'}</h2>
+        <p>{t('adminOnly') || 'Solo gli amministratori possono accedere a questa pagina.'}</p>
       </div>
     );
   }
@@ -75,88 +75,88 @@ export default function AdminDashboard() {
 
   const adminTools = [
     {
-      title: 'Gestione Utenti',
-      description: 'Gestisci utenti, ruoli e ban',
+      titleKey: 'admin.userManagement',
+      descKey: 'admin.userManagementDesc',
       icon: Users,
       link: 'ManageUsers',
       count: activeUsers,
       color: 'bg-blue-500'
     },
     {
-      title: 'Moderazione Annunci',
-      description: 'Approva, rifiuta o elimina annunci',
+      titleKey: 'admin.listingModeration',
+      descKey: 'admin.listingModerationDesc',
       icon: Package,
       link: 'ModerateListings',
       count: pendingListings,
       color: 'bg-green-500'
     },
     {
-      title: 'Gestione Dispute',
-      description: 'Risolvi controversie tra utenti',
+      titleKey: 'admin.disputeManagement',
+      descKey: 'admin.disputeManagementDesc',
       icon: AlertTriangle,
       link: 'AdminDisputes',
       count: openDisputes,
       color: 'bg-red-500'
     },
     {
-      title: 'Ticket Supporto',
-      description: 'Rispondi alle richieste utenti',
+      titleKey: 'admin.supportTickets',
+      descKey: 'admin.supportTicketsDesc',
       icon: MessageSquare,
       link: 'AdminTickets',
       count: openTickets,
       color: 'bg-yellow-500'
     },
     {
-      title: 'Segnalazioni',
-      description: 'Gestisci segnalazioni utenti',
+      titleKey: 'admin.reports',
+      descKey: 'admin.reportsDesc',
       icon: AlertTriangle,
       link: 'AdminReports',
       count: pendingReports,
       color: 'bg-orange-500'
     },
     {
-      title: 'Analytics',
-      description: 'Statistiche e metriche piattaforma',
+      titleKey: 'admin.analytics',
+      descKey: 'admin.analyticsDesc',
       icon: TrendingUp,
       link: 'MarketplaceDashboard',
       count: null,
       color: 'bg-purple-500'
     },
     {
-      title: 'Gestione Categorie',
-      description: 'Crea e modifica categorie',
+      titleKey: 'admin.categoryManagement',
+      descKey: 'admin.categoryManagementDesc',
       icon: Settings,
       link: 'ManageCategories',
       count: null,
       color: 'bg-indigo-500'
     },
     {
-      title: 'Pagamenti & Escrow',
-      description: 'Monitora transazioni e fondi',
+      titleKey: 'admin.paymentsEscrow',
+      descKey: 'admin.paymentsEscrowDesc',
       icon: ShoppingBag,
       link: 'AdminPayments',
       count: `${escrowAmount.toFixed(0)}€`,
       color: 'bg-pink-500'
     },
     {
-      title: 'Konfiguration',
-      description: 'Integrationen und Secrets',
+      titleKey: 'admin.configuration',
+      descKey: 'admin.configurationDesc',
       icon: Settings,
       link: 'AdminSettings',
       count: null,
       color: 'bg-slate-500'
     },
     {
-      title: 'Launch Checklist',
-      description: 'Pre-Launch Überprüfung',
+      titleKey: 'admin.launchChecklist',
+      descKey: 'admin.launchChecklistDesc',
       icon: CheckSquare,
       link: 'PreLaunchChecklist',
       count: null,
       color: 'bg-emerald-500'
     },
     {
-      title: 'System Checkup',
-      description: 'Analisi completa sistema',
+      titleKey: 'admin.systemCheckup',
+      descKey: 'admin.systemCheckupDesc',
       icon: CheckSquare,
       link: 'SystemCheckup',
       count: null,
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
   return (
     <div className="py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Pannello Amministratore</h2>
+        <h2 className="text-3xl font-bold">{t('admin.panel') || 'Pannello Amministratore'}</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-slate-500" />
@@ -193,25 +193,25 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Utenti Attivi</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.activeUsers') || 'Utenti Attivi'}</div>
             <div className="text-3xl font-bold">{activeUsers}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Annunci Attivi</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.activeListings') || 'Annunci Attivi'}</div>
             <div className="text-3xl font-bold">{pendingListings}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Dispute Aperte</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.openDisputes') || 'Dispute Aperte'}</div>
             <div className="text-3xl font-bold text-red-600">{openDisputes}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Fondi in Escrow</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.fundsInEscrow') || 'Fondi in Escrow'}</div>
             <div className="text-3xl font-bold text-green-600">{escrowAmount.toFixed(0)}€</div>
           </CardContent>
         </Card>
@@ -232,8 +232,8 @@ export default function AdminDashboard() {
                       <span className="text-2xl font-bold text-slate-700">{tool.count}</span>
                     )}
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{tool.title}</h3>
-                  <p className="text-sm text-slate-600">{tool.description}</p>
+                  <h3 className="font-bold text-lg mb-2">{t(tool.titleKey) || tool.titleKey}</h3>
+                  <p className="text-sm text-slate-600">{t(tool.descKey) || tool.descKey}</p>
                 </CardContent>
               </Card>
             </Link>
