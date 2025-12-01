@@ -1,5 +1,37 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+const SUPPORTED_LANGS = ["de", "it", "en", "fr", "pl", "tr", "uk"];
+const DEFAULT_LANG = "de";
+
+// Namespace-based translations (new format)
+const i18n = {
+  "header.brand": { de: "Zazarap", it: "Zazarap", en: "Zazarap", uk: "Zazarap", tr: "Zazarap", fr: "Zazarap", pl: "Zazarap" },
+  "header.nav.home": { de: "Startseite", it: "Homepage", en: "Home", uk: "Головна", tr: "Ana sayfa", fr: "Accueil", pl: "Strona główna" },
+  "header.nav.categories": { de: "Kategorien", it: "Categorie", en: "Categories", uk: "Категорії", tr: "Kategoriler", fr: "Catégories", pl: "Kategorie" },
+  "header.nav.login": { de: "Anmelden", it: "Accedi", en: "Log in", uk: "Увійти", tr: "Giriş yap", fr: "Se connecter", pl: "Zaloguj się" },
+  "header.nav.register": { de: "Registrieren", it: "Registrati", en: "Sign up", uk: "Зареєструватися", tr: "Kayıt ol", fr: "S'inscrire", pl: "Załóż konto" },
+  "header.nav.postAd": { de: "Anzeige aufgeben", it: "Pubblica annuncio", en: "Post an ad", uk: "Створити оголошення", tr: "İlan ver", fr: "Déposer une annonce", pl: "Dodaj ogłoszenie" },
+  "home.hero.title": { de: "Finde, was du suchst – mit Zazarap", it: "Trova quello che cerchi con Zazarap", en: "Find what you need with Zazarap", uk: "Знайди те, що шукаєш, з Zazarap", tr: "Aradığını Zazarap ile bul", fr: "Trouvez ce dont vous avez besoin avec Zazarap", pl: "Znajdź to, czego szukasz z Zazarap" },
+  "home.hero.subtitle": { de: "Durchsuche Tausende von Kleinanzeigen in ganz Deutschland – sicher und schnell.", it: "Cerca tra migliaia di annunci in tutta la Germania – in modo sicuro e veloce.", en: "Browse thousands of classifieds across Germany – safely and quickly.", uk: "Переглядай тисячі оголошень по всій Німеччині – швидко та безпечно.", tr: "Tüm Almanya'daki binlerce ilanı güvenli ve hızlı bir şekilde keşfet.", fr: "Parcourez des milliers d'annonces partout en Allemagne – rapidement et en toute sécurité.", pl: "Przeglądaj tysiące ogłoszeń w całych Niemczech – szybko i bezpiecznie." },
+  "home.search.placeholder.query": { de: "Auto, Wohnung, Smartphone, Fahrrad …", it: "Auto, casa, smartphone, bicicletta…", en: "Car, flat, smartphone, bike…", uk: "Авто, квартира, смартфон, велосипед…", tr: "Araba, daire, telefon, bisiklet…", fr: "Voiture, appartement, smartphone, vélo…", pl: "Samochód, mieszkanie, telefon, rower…" },
+  "home.search.placeholder.location": { de: "Ganz Deutschland", it: "Tutta la Germania", en: "All of Germany", uk: "Вся Німеччина", tr: "Tüm Almanya", fr: "Toute l'Allemagne", pl: "Całe Niemcy" },
+  "home.search.button": { de: "Suchen", it: "Cerca", en: "Search", uk: "Пошук", tr: "Ara", fr: "Rechercher", pl: "Szukaj" },
+  "home.section.categories": { de: "Kategorien entdecken", it: "Scopri le categorie", en: "Discover categories", uk: "Переглянути категорії", tr: "Kategorileri keşfet", fr: "Découvrir les catégories", pl: "Odkryj kategorie" },
+  "home.section.focusAds": { de: "Anzeigen im Fokus", it: "Annunci in evidenza", en: "Featured ads", uk: "Оголошення у фокусі", tr: "Öne çıkan ilanlar", fr: "Annonces à la une", pl: "Oferty wyróżnione" },
+  "home.section.discoverMore": { de: "Mehr auf Zazarap entdecken", it: "Scopri di più su Zazarap", en: "Discover more on Zazarap", uk: "Відкрий більше на Zazarap", tr: "Zazarap'ta daha fazlasını keşfet", fr: "Découvrez-en plus sur Zazarap", pl: "Odkryj więcej na Zazarap" },
+  "footer.legal": { de: "Rechtliches", it: "Note legali", en: "Legal", uk: "Правова інформація", tr: "Yasal bilgiler", fr: "Mentions légales", pl: "Informacje prawne" },
+  "footer.privacy": { de: "Datenschutz", it: "Privacy", en: "Privacy policy", uk: "Політика конфіденційності", tr: "Gizlilik politikası", fr: "Politique de confidentialité", pl: "Polityka prywatności" },
+  "footer.terms": { de: "AGB", it: "Termini e condizioni", en: "Terms & conditions", uk: "Умови користування", tr: "Kullanım şartları", fr: "Conditions générales", pl: "Regulamin" },
+  "footer.imprint": { de: "Impressum", it: "Impressum", en: "Imprint", uk: "Impressum", tr: "Künye", fr: "Impressum", pl: "Impressum" },
+  "auth.login.title": { de: "Bei Zazarap anmelden", it: "Accedi a Zazarap", en: "Log in to Zazarap", uk: "Увійти в Zazarap", tr: "Zazarap'a giriş yap", fr: "Se connecter à Zazarap", pl: "Zaloguj się do Zazarap" },
+  "auth.login.email": { de: "E-Mail-Adresse", it: "Indirizzo e-mail", en: "Email address", uk: "Електронна пошта", tr: "E-posta adresi", fr: "Adresse e-mail", pl: "Adres e-mail" },
+  "auth.login.password": { de: "Passwort", it: "Password", en: "Password", uk: "Пароль", tr: "Şifre", fr: "Mot de passe", pl: "Hasło" },
+  "auth.login.submit": { de: "Einloggen", it: "Accedi", en: "Log in", uk: "Увійти", tr: "Giriş yap", fr: "Se connecter", pl: "Zaloguj się" },
+  "auth.register.title": { de: "Konto erstellen", it: "Crea un account", en: "Create an account", uk: "Створити акаунт", tr: "Hesap oluştur", fr: "Créer un compte", pl: "Utwórz konto" },
+  "auth.register.submit": { de: "Registrieren", it: "Registrati", en: "Sign up", uk: "Зареєструватися", tr: "Kayıt ol", fr: "S'inscrire", pl: "Zarejestruj się" }
+};
+
+// Legacy flat translations (kept for backward compatibility)
 const translations = {
   de: {
     // Categories
@@ -1651,33 +1683,16 @@ export function LanguageProvider({ children }) {
     }, [language]);
 
     const t = (key) => {
-    // Try to translate the key directly
-    const translated = translations[language]?.[key] || translations['it'][key];
-    if (translated) return translated;
-
-    // If key matches a known category (case-insensitive check), try to translate it
-    if (typeof key === 'string') {
-      const lowerKey = key.toLowerCase();
-      // Check if we have a translation for this category in the current language
-      // We look for keys that match the category name in lowercase
-      // e.g. "Elettronica" -> check for "electronics" or "elettronica" key in translation map
-      
-      // Common category mappings to translation keys
-      const categoryMap = {
-        // Since we now use keys directly in DB, mapping might be redundant if we store keys, 
-        // but for backwards compat or safety:
-        'motoren': 'motoren',
-        'markt': 'markt', 
-        'immobilien': 'immobilien',
-        'arbeit': 'arbeit'
-      };
-
-      const mappedKey = categoryMap[lowerKey];
-      if (mappedKey) {
-         return translations[language]?.[mappedKey] || translations['de'][mappedKey] || key;
-      }
+    // 1. Check namespace-based i18n first (new format: "home.hero.title")
+    if (i18n[key]) {
+      return i18n[key][language] || i18n[key][DEFAULT_LANG] || key;
     }
 
+    // 2. Try legacy flat translations
+    const translated = translations[language]?.[key] || translations['de']?.[key];
+    if (translated) return translated;
+
+    // 3. Return key as fallback
     return key;
   };
 
