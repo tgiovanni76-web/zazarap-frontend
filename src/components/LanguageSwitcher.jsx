@@ -5,6 +5,8 @@ const languages = [
   { code: 'de', name: 'Deutsch', flag: 'https://flagcdn.com/w20/de.png' },
   { code: 'it', name: 'Italiano', flag: 'https://flagcdn.com/w20/it.png' },
   { code: 'en', name: 'English', flag: 'https://flagcdn.com/w20/gb.png' },
+  { code: 'fr', name: 'Français', flag: 'https://flagcdn.com/w20/fr.png' },
+  { code: 'pl', name: 'Polski', flag: 'https://flagcdn.com/w20/pl.png' },
   { code: 'tr', name: 'Türkçe', flag: 'https://flagcdn.com/w20/tr.png' },
   { code: 'uk', name: 'Українська', flag: 'https://flagcdn.com/w20/ua.png' },
 ];
