@@ -6,49 +6,52 @@ Deno.serve(async (req) => {
         const user = await base44.auth.me();
 
         if (!user) {
-            return Response.json({ allowed: false, error: 'Unauthorized' }, { status: 401 });
+            return Response.json({ allowed: false, decision: 'block', error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { title, description } = await req.json();
+        const { title, description, category } = await req.json();
+        const browserLanguage = req.headers.get("accept-language") || "unknown";
 
-        // LISTA PAROLE VIETATE (DE + altre lingue)
+        // 1) PAROLE TOTALMENTE VIETATE (blocco immediato)
         const forbidden = [
             // ARMI
             "waffe", "pistole", "munition", "gewehr", "messer", "schusswaffe",
             "kaliber", "revolver", "armbrust", "munitionen", "waffen",
 
             // DROGHE
-            "kokain", "cannabis", "gras", "weed", "mdma", "ecstasy",
-            "heroin", "meth", "lsd", "pilze", "magic mushrooms", "marihuana",
-            "amphetamin", "crystal", "crack", "opium",
+            "kokain", "cocaina", "cannabis", "gras", "weed", "mdma", "ecstasy",
+            "heroin", "heroina", "eroina", "meth", "lsd", "pilze", "magic mushrooms", 
+            "marihuana", "amphetamin", "amfetamina", "anfetamina", "crystal", "crack", 
+            "opium", "haschisch",
 
             // FARMACI / MEDICALI
-            "arznei", "medizin", "antibiotikum", "verschreibungspflichtig",
-            "viagra", "oxycodon", "tramadol", "rezeptpflichtig",
+            "verschreibungspflichtig", "rezeptpflichtig", "viagra", "oxycodon", 
+            "tramadol", "anabolika", "steroidi",
 
             // PORNOGRAFIA
-            "porno", "pornografisch", "xxx", "sexfilm", "erotik", "nackt",
-
-            // ANIMALI PROTETTI
-            "geschützte art", "papagei", "exotisches tier", "tiger", "affe",
-            "elfenbein", "schildkröte", "schlangenleder",
+            "porno", "pornografisch", "xxx", "sexfilm", "erotik", "hardcore",
 
             // SIMBOLI POLITICI ILLEGALI
-            "nazi", "hitler", "hakenkreuz", "reichsadler", "swastika",
-
-            // TABACCO/ALCOL
-            "zigaretten", "tabak", "alkohol", "vodka", "whisky", "schnaps",
+            "nazi", "nazis", "hitler", "hakenkreuz", "reichsadler", "swastika", "ss uniform",
 
             // GIOCO D'AZZARDO
-            "casino", "wetten", "sportwetten", "glücksspiel",
+            "casino", "kasino", "wetten", "sportwetten", "glücksspiel", "roulette", "slotmaschine",
 
             // SERVIZI ILLEGALI
-            "hack", "hacking", "falscher ausweis", "geldwäsche", "fälschung",
-            "betrug", "darknet", "schwarzmarkt",
+            "hack", "hacking", "ddos", "falscher ausweis", "gefälschter ausweis", 
+            "fake ausweis", "geldwäsche", "fälschung", "betrug", "darknet", "schwarzmarkt",
 
             // ALTRE LINGUE
-            "droghe", "arma", "pistola", "cocaina", "heroina", "droga",
-            "weapon", "gun", "drugs", "cocaine", "heroine"
+            "droghe", "droga", "arma", "pistola", "weapon", "gun", "drugs", "cocaine"
+        ];
+
+        // 2) PAROLE SOSPETTE → revisione manuale
+        const suspicious = [
+            "kredit", "loan", "darlehen", "gewinngarantie",
+            "medizinische beratung", "medizinische dienstleistung",
+            "exotisches tier", "geschützte art", "papagei", "schlange",
+            "escort", "begleitservice", "elfenbein", "schildkröte", "schlangenleder",
+            "tiger", "affe", "nackt", "tabak", "zigaretten", "alkohol", "vodka", "whisky", "schnaps"
         ];
 
         // Normalizza il testo: rimuove caratteri speciali, sostituzioni comuni
@@ -70,119 +73,151 @@ Deno.serve(async (req) => {
                 'ü': 'u', 'ú': 'u', 'ù': 'u', 'û': 'u',
                 'ñ': 'n',
                 'ç': 'c',
-                'ph': 'f',
-                'kk': 'k', 'ck': 'k',
-                'ff': 'f',
-                'ss': 's',
-                'nn': 'n',
-                'mm': 'm',
-                'tt': 't',
-                'pp': 'p',
-                'cc': 'c',
-                'xx': 'x',
-                'vv': 'v', 'w': 'v'  // w come variante di v
+                'ph': 'f'
             };
             
-            // Applica sostituzioni
             for (const [from, to] of Object.entries(substitutions)) {
                 normalized = normalized.split(from).join(to);
             }
             
-            // Rimuovi spazi, trattini, underscore, punti tra lettere (p.i.s.t.o.l.a)
+            // Rimuovi spazi, trattini, underscore, punti tra lettere
             normalized = normalized.replace(/[\s\-_\.,:;!?'"()[\]{}]/g, '');
-            
-            // Rimuovi numeri ripetuti usati come separatori
-            normalized = normalized.replace(/(\d)\1+/g, '$1');
             
             return normalized;
         };
 
-        // Genera varianti della parola vietata
-        const generateVariants = (word) => {
-            const variants = [word];
-            
-            // Versione senza spazi
-            variants.push(word.replace(/\s/g, ''));
-            
-            // Versione con raddoppi rimossi
-            variants.push(word.replace(/(.)\1+/g, '$1'));
-            
-            return variants;
-        };
-
         const originalText = `${title || ''} ${description || ''}`;
         const normalizedText = normalizeText(originalText);
-        
-        // Check anche sul testo originale (lowercase)
         const lowerOriginal = originalText.toLowerCase();
 
+        let decision = "allow";
+        let reason = null;
+        let matchedWord = null;
+
+        // Controllo FORBIDDEN (blocco immediato)
         for (const word of forbidden) {
-            const variants = generateVariants(word);
+            const normalizedWord = normalizeText(word);
             
-            for (const variant of variants) {
-                const normalizedVariant = normalizeText(variant);
-                
-                // Check su testo normalizzato
-                if (normalizedText.includes(normalizedVariant)) {
-                    console.log("Bloccato annuncio illegale:", {
-                        title,
-                        wordBlocked: word,
-                        matchedVariant: variant,
-                        language: req.headers.get("accept-language") || "unknown",
-                        normalized: true
-                    });
-                    return Response.json({
-                        allowed: false,
-                        reason: `Dieses Angebot ist auf Zazarap nicht erlaubt.`
-                    });
-                }
-                
-                // Check su testo originale
-                if (lowerOriginal.includes(variant)) {
-                    console.log("Bloccato annuncio illegale:", {
-                        title,
-                        wordBlocked: word,
-                        language: req.headers.get("accept-language") || "unknown",
-                        normalized: false
-                    });
-                    return Response.json({
-                        allowed: false,
-                        reason: `Dieses Angebot ist auf Zazarap nicht erlaubt.`
-                    });
+            if (normalizedText.includes(normalizedWord) || lowerOriginal.includes(word)) {
+                decision = "block";
+                reason = "FORBIDDEN_KEYWORD";
+                matchedWord = word;
+                break;
+            }
+        }
+
+        // Pattern regex sospetti (blocco immediato)
+        if (decision === "allow") {
+            const suspiciousPatterns = [
+                { pattern: /w[\W_]*a[\W_]*f[\W_]*f[\W_]*e/i, name: "waffe" },
+                { pattern: /p[\W_]*i[\W_]*s[\W_]*t[\W_]*o[\W_]*l/i, name: "pistol" },
+                { pattern: /d[\W_]*r[\W_]*o[\W_]*g/i, name: "drog" },
+                { pattern: /k[\W_]*o[\W_]*k[\W_]*a[\W_]*i[\W_]*n/i, name: "kokain" },
+                { pattern: /h[\W_]*e[\W_]*r[\W_]*o[\W_]*i[\W_]*n/i, name: "heroin" },
+                { pattern: /c[\W_]*a[\W_]*n[\W_]*n[\W_]*a[\W_]*b/i, name: "cannabis" },
+                { pattern: /p[\W_]*o[\W_]*r[\W_]*n[\W_]*o/i, name: "porno" },
+                { pattern: /n[\W_]*a[\W_]*z[\W_]*i/i, name: "nazi" },
+                { pattern: /h[\W_]*i[\W_]*t[\W_]*l[\W_]*e[\W_]*r/i, name: "hitler" },
+            ];
+
+            for (const { pattern, name } of suspiciousPatterns) {
+                if (pattern.test(originalText)) {
+                    decision = "block";
+                    reason = "SUSPICIOUS_PATTERN";
+                    matchedWord = name;
+                    break;
                 }
             }
         }
 
-        // Pattern sospetti aggiuntivi (regex)
-        const suspiciousPatterns = [
-            /w[\W_]*a[\W_]*f[\W_]*f[\W_]*e/i,      // w.a.f.f.e
-            /p[\W_]*i[\W_]*s[\W_]*t[\W_]*o[\W_]*l/i, // p.i.s.t.o.l
-            /d[\W_]*r[\W_]*o[\W_]*g/i,              // d.r.o.g
-            /k[\W_]*o[\W_]*k[\W_]*a[\W_]*i[\W_]*n/i, // k.o.k.a.i.n
-            /h[\W_]*e[\W_]*r[\W_]*o[\W_]*i[\W_]*n/i, // h.e.r.o.i.n
-            /c[\W_]*a[\W_]*n[\W_]*n[\W_]*a[\W_]*b/i, // c.a.n.n.a.b
-            /p[\W_]*o[\W_]*r[\W_]*n[\W_]*o/i,       // p.o.r.n.o
-            /n[\W_]*a[\W_]*z[\W_]*i/i,              // n.a.z.i
-            /h[\W_]*i[\W_]*t[\W_]*l[\W_]*e[\W_]*r/i, // h.i.t.l.e.r
-        ];
-
-        for (const pattern of suspiciousPatterns) {
-            if (pattern.test(originalText)) {
-                console.log("Bloccato annuncio per pattern sospetto:", {
-                    title,
-                    pattern: pattern.toString(),
-                    language: req.headers.get("accept-language") || "unknown"
-                });
-                return Response.json({
-                    allowed: false,
-                    reason: `Dieses Angebot ist auf Zazarap nicht erlaubt.`
-                });
+        // Controllo SUSPICIOUS (revisione manuale)
+        if (decision === "allow") {
+            for (const word of suspicious) {
+                const normalizedWord = normalizeText(word);
+                
+                if (normalizedText.includes(normalizedWord) || lowerOriginal.includes(word)) {
+                    decision = "pending_review";
+                    reason = "SUSPICIOUS_KEYWORD";
+                    matchedWord = word;
+                    break;
+                }
             }
         }
 
-        return Response.json({ allowed: true });
+        // Regole extra per categoria
+        if (decision === "allow" && category === "Tiere") {
+            const protectedTerms = ["geschützt", "exotisch", "selten", "wild"];
+            for (const term of protectedTerms) {
+                if (lowerOriginal.includes(term)) {
+                    decision = "pending_review";
+                    reason = "PROTECTED_ANIMAL";
+                    matchedWord = term;
+                    break;
+                }
+            }
+        }
+
+        // Log evento moderazione
+        try {
+            await base44.asServiceRole.entities.ModerationEvent.create({
+                title: title || '',
+                description: (description || '').substring(0, 500),
+                category: category || '',
+                decision,
+                reason,
+                matchedWord,
+                userEmail: user.email,
+                browserLanguage
+            });
+        } catch (logError) {
+            console.error("Failed to log moderation event:", logError.message);
+        }
+
+        // Log console per debug
+        if (decision !== "allow") {
+            console.log("Moderazione annuncio:", {
+                title,
+                decision,
+                reason,
+                matchedWord,
+                userEmail: user.email,
+                browserLanguage
+            });
+        }
+
+        // Risposta
+        if (decision === "block") {
+            return Response.json({
+                allowed: false,
+                decision,
+                reason,
+                matchedWord,
+                message: "Dieses Angebot ist auf Zazarap nicht erlaubt."
+            });
+        }
+
+        if (decision === "pending_review") {
+            return Response.json({
+                allowed: true,
+                decision,
+                reason,
+                matchedWord,
+                message: "Ihr Angebot wird manuell überprüft."
+            });
+        }
+
+        return Response.json({ 
+            allowed: true, 
+            decision: "allow" 
+        });
 
     } catch (error) {
-        return Response.json({ allowed: false, error: error.message }, { status: 500 });
+        console.error("Validation error:", error.message);
+        return Response.json({ 
+            allowed: false, 
+            decision: "pending_review",
+            reason: "ERROR",
+            error: error.message 
+        }, { status: 500 });
     }
 });
