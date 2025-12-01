@@ -5,9 +5,23 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare } from 'lucide-react';
+import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageProvider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const languages = [
+  { code: 'de', name: 'Deutsch' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'en', name: 'English' },
+  { code: 'fr', name: 'Français' },
+  { code: 'pl', name: 'Polski' },
+  { code: 'tr', name: 'Türkçe' },
+  { code: 'uk', name: 'Українська' }
+];
 
 export default function AdminDashboard() {
+  const { language, setLanguage } = useLanguage();
+  
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -147,14 +161,6 @@ export default function AdminDashboard() {
       link: 'SystemCheckup',
       count: null,
       color: 'bg-cyan-500'
-    },
-    {
-      title: 'SEO & Sitemap',
-      description: 'GSC Verification e Sitemap',
-      icon: Settings, // Using Settings instead of Search since Search is not imported in the original file
-      link: 'AdminSEO',
-      count: null,
-      color: 'bg-purple-600'
     }
   ];
 
@@ -162,9 +168,26 @@ export default function AdminDashboard() {
     <div className="py-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Pannello Amministratore</h2>
-        <Button onClick={() => base44.auth.logout()} variant="outline">
-          Logout
-        </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Globe className="h-5 w-5 text-slate-500" />
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map(lang => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button onClick={() => base44.auth.logout()} variant="outline">
+            Logout
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
