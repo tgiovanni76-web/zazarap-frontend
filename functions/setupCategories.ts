@@ -10,111 +10,73 @@ export default Deno.serve(async (req) => {
 
     try {
         // 1. Delete all existing categories
-        const existing = await base44.entities.Category.list(1000); // Fetch plenty
-        await Promise.all(existing.map(c => base44.entities.Category.delete(c.id)));
-        
-        // 2. Define new categories
-        const structure = {
-            "motoren": {
-                "name": "Motoren",
-                "icon": "Car",
-                "children": {
-                    "gebrauchtwagen": "Gebrauchtwagen",
-                    "kleinwagen": "Kleinwagen",
-                    "suvs": "SUVs",
-                    "kombis": "Kombis",
-                    "limousinen": "Limousinen",
-                    "transporter": "Transporter",
-                    "elektroautos": "Elektroautos",
-                    "hybridfahrzeuge": "Hybridfahrzeuge",
-                    "oldtimer": "Oldtimer",
-                    "nutzfahrzeuge": "Nutzfahrzeuge",
-                    "motorräder": "Motorräder",
-                    "motorroller": "Motorroller",
-                    "enduro": "Enduro",
-                    "chopper": "Chopper",
-                    "elektroroller": "Elektroroller",
-                    "autoteile": "Autoteile",
-                    "motorradteile": "Motorradteile",
-                    "reifen_felgen": "Reifen & Felgen",
-                    "zubehör_tuning": "Zubehör & Tuning"
-                }
-            },
-            "markt": {
-                "name": "Markt",
-                "icon": "ShoppingBag",
-                "children": {
-                    "smartphones": "Smartphones",
-                    "computer_laptops": "Computer & Laptops",
-                    "fernseher_audio": "Fernseher & Audio",
-                    "tablets": "Tablets",
-                    "kameras": "Kameras",
-                    "spielekonsolen": "Spielekonsolen",
-                    "möbel": "Möbel",
-                    "haushaltsgeräte": "Haushaltsgeräte",
-                    "garten_werkzeuge": "Garten & Werkzeuge",
-                    "lampen_deko": "Lampen & Deko",
-                    "fahrräder": "Fahrräder",
-                    "sportgeräte": "Sportgeräte",
-                    "spiele_spielzeug": "Spiele & Spielzeug",
-                    "musikinstrumente": "Musikinstrumente",
-                    "damenmode": "Damenmode",
-                    "herrenmode": "Herrenmode",
-                    "schuhe": "Schuhe",
-                    "taschen_accessoires": "Taschen & Accessoires",
-                    "hunde": "Hunde",
-                    "katzen": "Katzen",
-                    "kleintiere": "Kleintiere",
-                    "tierzubehör": "Tierzubehör"
-                }
-            },
-            "immobilien": {
-                "name": "Immobilien",
-                "icon": "Home",
-                "children": {
-                    "wohnungen_mieten": "Wohnungen mieten",
-                    "häuser_mieten": "Häuser mieten",
-                    "wohnungen_kaufen": "Wohnungen kaufen",
-                    "häuser_kaufen": "Häuser kaufen"
-                }
-            },
-            "arbeit": {
-                "name": "Arbeit",
-                "icon": "Briefcase",
-                "children": {
-                    "vollzeitjobs": "Vollzeitjobs",
-                    "teilzeitjobs": "Teilzeitjobs",
-                    "minijobs": "Minijobs",
-                    "homeoffice": "Homeoffice",
-                    "ausbildung": "Ausbildung & Lehrstellen"
-                }
-            }
-        };
-
-        // 3. Create new categories
-        let order = 0;
-        for (const [key, data] of Object.entries(structure)) {
-            const parent = await base44.entities.Category.create({
-                name: key,
-                icon: data.icon,
-                description: data.name,
-                order: order++,
-                active: true
-            });
-
-            let subOrder = 0;
-            for (const [subKey, subName] of Object.entries(data.children)) {
-                await base44.entities.Category.create({
-                    name: subKey,
-                    description: subName,
-                    parentId: parent.id,
-                    order: subOrder++,
-                    active: true
-                });
-            }
+        const existing = await base44.asServiceRole.entities.Category.list();
+        for (const cat of existing) {
+            await base44.asServiceRole.entities.Category.delete(cat.id);
         }
 
-        return Response.json({ success: true });
+        // 2. NEW CATEGORY LIST (German)
+        const categories = [
+            { name: "Fahrzeuge", icon: "Car", order: 1 },
+            { name: "Autos", icon: "Car", order: 2 },
+            { name: "Motorräder", icon: "Bike", order: 3 },
+            { name: "Roller", icon: "Bike", order: 4 },
+            { name: "Nutzfahrzeuge", icon: "Truck", order: 5 },
+            { name: "E-Scooter", icon: "Bike", order: 6 },
+
+            { name: "Immobilien", icon: "Home", order: 7 },
+            { name: "Wohnungen & Häuser", icon: "Home", order: 8 },
+            { name: "Mietobjekte", icon: "Home", order: 9 },
+            { name: "Zimmer", icon: "Home", order: 10 },
+
+            { name: "Marktplatz", icon: "ShoppingBag", order: 11 },
+            { name: "Elektronik", icon: "Laptop", order: 12 },
+            { name: "Sport & Freizeit", icon: "Bike", order: 13 },
+            { name: "Möbel", icon: "Home", order: 14 },
+            { name: "Haushalt & Küche", icon: "Home", order: 15 },
+            { name: "Videospiele", icon: "Gamepad2", order: 16 },
+            { name: "Bücher", icon: "Book", order: 17 },
+            { name: "Musik & Filme", icon: "Music", order: 18 },
+            { name: "Kleidung", icon: "Shirt", order: 19 },
+            { name: "Kinder", icon: "Baby", order: 20 },
+            { name: "Garten", icon: "Flower2", order: 21 },
+            { name: "Heimwerken", icon: "Wrench", order: 22 },
+            { name: "Beauty & Pflege", icon: "Sparkles", order: 23 },
+
+            { name: "Tiere", icon: "PawPrint", order: 24 },
+            { name: "Hunde", icon: "PawPrint", order: 25 },
+            { name: "Katzen", icon: "PawPrint", order: 26 },
+            { name: "Vögel", icon: "PawPrint", order: 27 },
+            { name: "Fische", icon: "PawPrint", order: 28 },
+            { name: "Nagetiere", icon: "PawPrint", order: 29 },
+            { name: "Reptilien (legal)", icon: "PawPrint", order: 30 },
+            { name: "Tierzubehör", icon: "PawPrint", order: 31 },
+
+            { name: "Jobs", icon: "Briefcase", order: 32 },
+            { name: "Stellenangebote", icon: "Briefcase", order: 33 },
+            { name: "Lebenslauf", icon: "FileText", order: 34 },
+
+            { name: "Dienstleistungen", icon: "HandHelping", order: 35 },
+            { name: "Nachhilfe", icon: "GraduationCap", order: 36 },
+            { name: "Reinigungsservice", icon: "Sparkles", order: 37 },
+            { name: "Transport & Umzüge", icon: "Truck", order: 38 },
+            { name: "Reparaturen", icon: "Wrench", order: 39 }
+        ];
+
+        // 3. INSERT THEM INTO DATABASE
+        for (const c of categories) {
+            await base44.asServiceRole.entities.Category.create({
+                name: c.name,
+                icon: c.icon,
+                description: null,
+                parentId: null,
+                subcategories: [],
+                active: true,
+                order: c.order
+            });
+        }
+
+        return Response.json({ success: true, message: "German categories installed successfully" });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
