@@ -613,6 +613,57 @@ const translations = {
     },
   
   tr: {
+    // Categories - Fahrzeuge
+    'Fahrzeuge': 'Araçlar',
+    'Autos': 'Arabalar',
+    'Motorräder': 'Motosikletler',
+    'Roller': 'Scooterlar',
+    'Nutzfahrzeuge': 'Ticari Araçlar',
+    'E-Scooter': 'Elektrikli Scooter',
+
+    // Categories - Immobilien
+    'Immobilien': 'Emlak',
+    'Wohnungen & Häuser': 'Daireler ve Evler',
+    'Mietobjekte': 'Kiralık',
+    'Zimmer': 'Odalar',
+
+    // Categories - Marktplatz
+    'Marktplatz': 'Pazar Yeri',
+    'Elektronik': 'Elektronik',
+    'Sport & Freizeit': 'Spor ve Eğlence',
+    'Möbel': 'Mobilya',
+    'Haushalt & Küche': 'Ev ve Mutfak',
+    'Videospiele': 'Video Oyunları',
+    'Bücher': 'Kitaplar',
+    'Musik & Filme': 'Müzik ve Filmler',
+    'Kleidung': 'Giyim',
+    'Kinder': 'Çocuk',
+    'Garten': 'Bahçe',
+    'Heimwerken': 'Kendin Yap',
+    'Beauty & Pflege': 'Güzellik ve Bakım',
+
+    // Categories - Tiere
+    'Tiere': 'Hayvanlar',
+    'Hunde': 'Köpekler',
+    'Katzen': 'Kediler',
+    'Vögel': 'Kuşlar',
+    'Fische': 'Balıklar',
+    'Nagetiere': 'Kemirgenler',
+    'Reptilien (legal)': 'Sürüngenler (yasal)',
+    'Tierzubehör': 'Evcil Hayvan Malzemeleri',
+
+    // Categories - Jobs
+    'Jobs': 'İş İlanları',
+    'Stellenangebote': 'İş Teklifleri',
+    'Lebenslauf': 'Özgeçmiş',
+
+    // Categories - Dienstleistungen
+    'Dienstleistungen': 'Hizmetler',
+    'Nachhilfe': 'Özel Ders',
+    'Reinigungsservice': 'Temizlik Hizmeti',
+    'Transport & Umzüge': 'Taşıma ve Nakliyat',
+    'Reparaturen': 'Tamirler',
+
     // Header & Navigation
     loginOrRegister: 'Giriş Yap veya Kayıt Ol',
     firstName: 'Ad',
@@ -841,6 +892,57 @@ const translations = {
     },
   
   uk: {
+    // Categories - Fahrzeuge
+    'Fahrzeuge': 'Транспорт',
+    'Autos': 'Автомобілі',
+    'Motorräder': 'Мотоцикли',
+    'Roller': 'Скутери',
+    'Nutzfahrzeuge': 'Комерційний транспорт',
+    'E-Scooter': 'Електросамокати',
+
+    // Categories - Immobilien
+    'Immobilien': 'Нерухомість',
+    'Wohnungen & Häuser': 'Квартири та Будинки',
+    'Mietobjekte': 'Оренда',
+    'Zimmer': 'Кімнати',
+
+    // Categories - Marktplatz
+    'Marktplatz': 'Маркетплейс',
+    'Elektronik': 'Електроніка',
+    'Sport & Freizeit': 'Спорт та Відпочинок',
+    'Möbel': 'Меблі',
+    'Haushalt & Küche': 'Дім та Кухня',
+    'Videospiele': 'Відеоігри',
+    'Bücher': 'Книги',
+    'Musik & Filme': 'Музика та Фільми',
+    'Kleidung': 'Одяг',
+    'Kinder': 'Діти',
+    'Garten': 'Сад',
+    'Heimwerken': 'Зроби сам',
+    'Beauty & Pflege': 'Краса та Догляд',
+
+    // Categories - Tiere
+    'Tiere': 'Тварини',
+    'Hunde': 'Собаки',
+    'Katzen': 'Коти',
+    'Vögel': 'Птахи',
+    'Fische': 'Риби',
+    'Nagetiere': 'Гризуни',
+    'Reptilien (legal)': 'Рептилії (легальні)',
+    'Tierzubehör': 'Товари для тварин',
+
+    // Categories - Jobs
+    'Jobs': 'Робота',
+    'Stellenangebote': 'Вакансії',
+    'Lebenslauf': 'Резюме',
+
+    // Categories - Dienstleistungen
+    'Dienstleistungen': 'Послуги',
+    'Nachhilfe': 'Репетиторство',
+    'Reinigungsservice': 'Прибирання',
+    'Transport & Umzüge': 'Транспорт та Переїзд',
+    'Reparaturen': 'Ремонт',
+
     // Header & Navigation
     loginOrRegister: 'Увійти або Зареєструватися',
     firstName: "Ім'я",
