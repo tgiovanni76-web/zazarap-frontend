@@ -7,8 +7,10 @@ import ListingsChart from '../components/marketplace/ListingsChart';
 import CategoryBreakdown from '../components/marketplace/CategoryBreakdown';
 import RecentListings from '../components/marketplace/RecentListings';
 import DashboardFilters from '../components/marketplace/DashboardFilters';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function MarketplaceDashboard() {
+  const { t } = useLanguage();
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
@@ -83,7 +85,7 @@ export default function MarketplaceDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Zazarap Dashboard</h1>
-          <p className="text-slate-600">Monitor your marketplace performance and listings</p>
+          <p className="text-slate-600">{t('dashboardSubtitle') || 'Monitora le performance del tuo marketplace'}</p>
         </div>
 
         {/* Filters */}
@@ -99,28 +101,28 @@ export default function MarketplaceDashboard() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            title="Active Listings"
+            title={t('activeListings') || 'Annunci attivi'}
             value={stats.active}
             icon={Package}
             color="bg-blue-500"
             index={0}
           />
           <StatCard
-            title="Sold Items"
+            title={t('soldItems') || 'Venduti'}
             value={stats.sold}
             icon={TrendingUp}
             color="bg-green-500"
             index={1}
           />
           <StatCard
-            title="Total Revenue"
+            title={t('totalRevenue')}
             value={`€${stats.totalRevenue.toLocaleString()}`}
             icon={DollarSign}
             color="bg-purple-500"
             index={2}
           />
           <StatCard
-            title="Cities"
+            title={t('city') || 'Città'}
             value={stats.uniqueCities}
             icon={MapPin}
             color="bg-orange-500"
