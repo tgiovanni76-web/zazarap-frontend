@@ -1,6 +1,16 @@
 import React from 'react';
 import { useLanguage } from './LanguageProvider';
 
+const flags = {
+  de: '🇩🇪',
+  it: '🇮🇹',
+  en: '🇬🇧',
+  fr: '🇫🇷',
+  pl: '🇵🇱',
+  tr: '🇹🇷',
+  uk: '🇺🇦'
+};
+
 const languages = ['de', 'it', 'en', 'fr', 'pl', 'tr', 'uk'];
 
 export default function LanguageSwitcher() {
@@ -12,15 +22,15 @@ export default function LanguageSwitcher() {
         <button 
           key={code}
           onClick={() => setLanguage(code)}
-          className={`px-2 py-1 text-xs font-bold rounded transition-colors ${
+          className={`text-lg p-1 rounded transition-all ${
             language === code 
-              ? 'bg-[#f9d65c] text-[#d62828]' 
-              : 'text-[#f9d65c] hover:bg-[#b82020]'
+              ? 'bg-white/20 scale-125' 
+              : 'opacity-70 hover:opacity-100 hover:scale-110'
           }`}
           aria-label={`Switch to ${code.toUpperCase()}`}
           aria-pressed={language === code}
         >
-          {code === 'uk' ? 'UA' : code.toUpperCase()}
+          {flags[code]}
         </button>
       ))}
     </div>
