@@ -3,13 +3,13 @@ import { useLanguage } from './LanguageProvider';
 import { ChevronDown } from 'lucide-react';
 
 const flags = {
-  de: '🇩🇪',
-  it: '🇮🇹',
-  en: '🇬🇧',
-  fr: '🇫🇷',
-  pl: '🇵🇱',
-  tr: '🇹🇷',
-  uk: '🇺🇦'
+  de: 'https://flagcdn.com/w40/de.png',
+  it: 'https://flagcdn.com/w40/it.png',
+  en: 'https://flagcdn.com/w40/gb.png',
+  fr: 'https://flagcdn.com/w40/fr.png',
+  pl: 'https://flagcdn.com/w40/pl.png',
+  tr: 'https://flagcdn.com/w40/tr.png',
+  uk: 'https://flagcdn.com/w40/ua.png'
 };
 
 const languages = ['de', 'it', 'en', 'fr', 'pl', 'tr', 'uk'];
@@ -22,10 +22,14 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 text-lg p-1 rounded hover:bg-white/20 transition-all"
+        className="flex items-center gap-1 p-1 rounded hover:bg-white/20 transition-all"
         aria-label="Seleziona lingua"
       >
-        {flags[language]}
+        <img 
+          src={flags[language]} 
+          alt={language.toUpperCase()} 
+          className="w-6 h-4 object-cover rounded-sm"
+        />
         <ChevronDown className={`h-3 w-3 text-[#f9d65c] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
@@ -44,7 +48,11 @@ export default function LanguageSwitcher() {
                   language === code ? 'bg-slate-50 font-semibold' : ''
                 }`}
               >
-                <span className="text-lg">{flags[code]}</span>
+                <img 
+                  src={flags[code]} 
+                  alt={code.toUpperCase()} 
+                  className="w-6 h-4 object-cover rounded-sm"
+                />
                 <span className="text-slate-700">{code.toUpperCase()}</span>
               </button>
             ))}
