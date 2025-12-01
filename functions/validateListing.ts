@@ -51,6 +51,11 @@ Deno.serve(async (req) => {
 
         for (const word of forbidden) {
             if (text.includes(word)) {
+                console.log("Bloccato annuncio illegale:", {
+                    title,
+                    wordBlocked: word,
+                    language: req.headers.get("accept-language") || "unknown"
+                });
                 return Response.json({
                     allowed: false,
                     reason: `Dieses Angebot ist auf Zazarap nicht erlaubt.`
