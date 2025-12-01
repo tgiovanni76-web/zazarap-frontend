@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
             if (text.includes(word)) {
                 return Response.json({
                     allowed: false,
-                    reason: `Contenuto vietato rilevato: '${word}'`
+                    reason: `Dieses Angebot ist auf Zazarap nicht erlaubt.`
                 });
             }
         }
