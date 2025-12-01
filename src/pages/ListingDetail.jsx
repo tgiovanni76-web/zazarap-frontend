@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp, Flag } from 'lucide-react';
+import ReportListingModal from '../components/ReportListingModal';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import SEOHead from '../components/SEOHead';
@@ -23,6 +24,7 @@ export default function ListingDetail() {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [activityTracked, setActivityTracked] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -254,10 +256,26 @@ export default function ListingDetail() {
                 <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
                 {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
               </button>
+              <button
+                onClick={() => setShowReportModal(true)}
+                className="w-full mt-3 p-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-bold focus:ring-2 focus:ring-red-500"
+              >
+                <Flag className="inline h-4 w-4 mr-2" aria-hidden="true" />
+                {t('report.listing') || 'Segnala annuncio'}
+              </button>
             </>
           )}
         </div>
       )}
+
+      <ReportListingModal
+        open={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        listingId={listingId}
+        listingTitle={listing.title}
+        sellerEmail={listing.created_by}
+        user={user}
+      />
 
       {reviews.length > 0 && (
         <div className="flex items-center gap-2 mb-6">

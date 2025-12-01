@@ -52,7 +52,16 @@ const i18n = {
   "auth.register.submit": { de: "Registrieren", it: "Registrati", en: "Sign up", uk: "Зареєструватися", tr: "Kayıt ol", fr: "S'inscrire", pl: "Zarejestruj się" },
 
     // Errors
-    "error.illegal": { de: "Dieses Angebot ist auf Zazarap nicht erlaubt.", it: "Questo annuncio non è permesso su Zazarap.", en: "This listing is not allowed on Zazarap.", fr: "Cette annonce n'est pas autorisée sur Zazarap.", pl: "To ogłoszenie nie jest dozwolone na Zazarap.", tr: "Bu ilan Zazarap'ta yasaktır.", uk: "Це оголошення заборонене на Zazarap." }
+    "error.illegal": { de: "Dieses Angebot ist auf Zazarap nicht erlaubt.", it: "Questo annuncio non è permesso su Zazarap.", en: "This listing is not allowed on Zazarap.", fr: "Cette annonce n'est pas autorisée sur Zazarap.", pl: "To ogłoszenie nie jest dozwolone na Zazarap.", tr: "Bu ilan Zazarap'ta yasaktır.", uk: "Це оголошення заборонене на Zazarap." },
+
+    // Report
+    "report.listing": { de: "Anzeige melden", it: "Segnala annuncio", en: "Report listing", fr: "Signaler l'annonce", pl: "Zgłoś ogłoszenie", tr: "İlanı bildir", uk: "Поскаржитись на оголошення" },
+    "report.listingDesc": { de: "Melden Sie diese Anzeige, wenn sie gegen unsere Regeln verstößt", it: "Segnala questo annuncio se viola le nostre regole", en: "Report this listing if it violates our rules", fr: "Signalez cette annonce si elle enfreint nos règles", pl: "Zgłoś to ogłoszenie, jeśli narusza nasze zasady", tr: "Kurallarımızı ihlal ediyorsa bu ilanı bildirin", uk: "Поскаржтеся на це оголошення, якщо воно порушує наші правила" },
+    "report.illegalContent": { de: "Illegaler Inhalt", it: "Contenuto illegale", en: "Illegal content", fr: "Contenu illégal", pl: "Nielegalna treść", tr: "Yasadışı içerik", uk: "Незаконний вміст" },
+    "report.wrongCategory": { de: "Falsche Kategorie", it: "Categoria sbagliata", en: "Wrong category", fr: "Mauvaise catégorie", pl: "Błędna kategoria", tr: "Yanlış kategori", uk: "Неправильна категорія" },
+    "report.fakeListing": { de: "Gefälschte Anzeige", it: "Annuncio falso", en: "Fake listing", fr: "Annonce fausse", pl: "Fałszywe ogłoszenie", tr: "Sahte ilan", uk: "Фейкове оголошення" },
+    "report.descPlaceholder": { de: "Beschreiben Sie das Problem...", it: "Descrivi il problema...", en: "Describe the issue...", fr: "Décrivez le problème...", pl: "Opisz problem...", tr: "Sorunu açıklayın...", uk: "Опишіть проблему..." },
+    "report.success": { de: "Meldung gesendet", it: "Segnalazione inviata", en: "Report submitted", fr: "Signalement envoyé", pl: "Zgłoszenie wysłane", tr: "Bildirim gönderildi", uk: "Скаргу надіслано" }
 };
 
 // Legacy flat translations (kept for backward compatibility)
