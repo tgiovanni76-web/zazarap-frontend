@@ -47,6 +47,16 @@ export default function Messages() {
     refetchInterval: 1500, // Poll every 1.5 seconds for real-time messages
   });
 
+  const { data: listings = [] } = useQuery({
+    queryKey: ['listings'],
+    queryFn: () => base44.entities.Listing.list(),
+  });
+
+  // Filter chats where user is buyer or seller
+  const myChats = chats.filter(
+    c => c.buyerId === user?.email || c.sellerId === user?.email
+  );
+
   // Real-time notification for new messages
   useEffect(() => {
     if (!user || !myChats.length) return;
@@ -84,16 +94,6 @@ export default function Messages() {
     }
     setPreviousMessageCount(chatMessages.length);
   }, [chatMessages, previousMessageCount, user]);
-
-  const { data: listings = [] } = useQuery({
-    queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.list(),
-  });
-
-  // Filter chats where user is buyer or seller
-  const myChats = chats.filter(
-    c => c.buyerId === user?.email || c.sellerId === user?.email
-  );
 
   // Get current listing
   const currentListing = listings.find(l => l.id === selectedChat?.listingId);
