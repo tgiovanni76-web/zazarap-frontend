@@ -76,7 +76,7 @@ const offerTranslations = {
     askingPrice: 'Запитувана ціна',
     amount: 'Сума (€)',
     enterAmount: 'Введіть суму',
-    messageOptional: 'Повідомлення (необов'язково)',
+    messageOptional: "Повідомлення (необов'язково)",
     messagePlaceholder: 'Додайте повідомлення до вашої пропозиції...',
     yourOffer: 'Ваша пропозиція:',
     savings: 'Економія',
