@@ -204,7 +204,8 @@ export default function ChatWindow({
   onOpenPayment,
   onReport
 }) {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const ct = chatTranslations[language] || chatTranslations.de;
   const [messageText, setMessageText] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(null);
@@ -214,6 +215,8 @@ export default function ChatWindow({
   const [showOfferHistory, setShowOfferHistory] = useState(false);
   const [isCounterOffer, setIsCounterOffer] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [translatedMessages, setTranslatedMessages] = useState({});
+  const [translatingId, setTranslatingId] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -221,6 +224,37 @@ export default function ChatWindow({
 
   const isSeller = chat?.sellerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+
+  // Translate message function
+  const handleTranslateMessage = async (msgId, text) => {
+    if (translatedMessages[msgId]) {
+      // Toggle back to original
+      setTranslatedMessages(prev => {
+        const copy = { ...prev };
+        delete copy[msgId];
+        return copy;
+      });
+      return;
+    }
+
+    setTranslatingId(msgId);
+    try {
+      const targetLang = language === 'de' ? 'German' : language === 'en' ? 'English' : language === 'it' ? 'Italian' : language === 'tr' ? 'Turkish' : language === 'uk' ? 'Ukrainian' : language === 'fr' ? 'French' : language === 'pl' ? 'Polish' : 'German';
+      
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Translate the following text to ${targetLang}. Only return the translation, nothing else:\n\n${text}`,
+      });
+      
+      setTranslatedMessages(prev => ({
+        ...prev,
+        [msgId]: result
+      }));
+    } catch (err) {
+      toast.error('Übersetzung fehlgeschlagen');
+    } finally {
+      setTranslatingId(null);
+    }
+  };
 
   // Fetch offers for this chat
   const { data: offers = [] } = useQuery({
