@@ -186,13 +186,13 @@ export default function OfferModal({
 
           {/* Amount Input */}
           <div>
-            <Label>Importo (€)</Label>
+            <Label>{ot.amount}</Label>
             <div className="relative">
               <Input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                placeholder="Inserisci importo"
+                placeholder={ot.enterAmount}
                 className="text-lg font-bold pr-20"
                 min="1"
                 step="0.01"
