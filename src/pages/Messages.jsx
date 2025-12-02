@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Bell } from 'lucide-react';
 import ChatSidebar from '../components/chat/ChatSidebar';
 import ChatWindow from '../components/chat/ChatWindow';
 import PaymentShippingModal from '../components/marketplace/PaymentShippingModal';
 import ReportListingModal from '../components/ReportListingModal';
 import { useLanguage } from '../components/LanguageProvider';
+import { toast } from 'sonner';
 
 export default function Messages() {
   const { t } = useLanguage();
@@ -29,19 +30,60 @@ export default function Messages() {
     queryFn: () => base44.auth.me(),
   });
 
+  const [previousMessageCount, setPreviousMessageCount] = useState(0);
+  const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
+
   const { data: chats = [], isLoading: chatsLoading } = useQuery({
     queryKey: ['chats'],
     queryFn: () => base44.entities.Chat.list('-updatedAt'),
     enabled: !!user,
-    refetchInterval: 5000, // Poll every 5 seconds for real-time updates
+    refetchInterval: 2000, // Poll every 2 seconds for real-time updates
   });
 
   const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id],
     queryFn: () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date'),
     enabled: !!selectedChat,
-    refetchInterval: 3000, // Poll every 3 seconds for real-time messages
+    refetchInterval: 1500, // Poll every 1.5 seconds for real-time messages
   });
+
+  // Real-time notification for new messages
+  useEffect(() => {
+    if (!user || !myChats.length) return;
+    
+    const totalUnread = myChats.reduce((sum, chat) => {
+      const unread = chat.sellerId === user.email ? chat.unreadSeller : chat.unreadBuyer;
+      return sum + (unread || 0);
+    }, 0);
+
+    if (totalUnread > previousUnreadCount && previousUnreadCount > 0) {
+      // Play notification sound
+      try {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleQsAGIrZ7d+TTAAAFoje7t+PQgAAGYri8eCQPwAAHYjc7t+PPwAAJo/g8uCXRwUYKYnf8uKdSwcZKYrf8uKdSwYYJ4jd7+CaRwQQG4HW6tuPOwAAE4HU59iJNQAAFYPV59iKNgAAGovc8N+URQghL5Pj8uSiVQ4hL5Pj8+OiVQ0gLZHg8N+dUA0XJYHW6deIPwAAD3vO4dF+MgAAD3vO4dB+MQAAEHzP4tGAMwQYJYfb7dyLQgQYJYfa7NyKQQMWI4TW6NaCOwAADnrM3857LwAADnrM3817LwAAD3vN3897MAMRHHzO39B/MQMRHHzO4NB/MgQUIIPU5dV+NgQUIIPU5dZ/NwUYJovc7t2MQgUYJovc7t2MQgUYJYrb7NyKQAMVIoLT5NR7NAISH4HT5NZ9NgUYJ4zd7t6NQwUZJo3f7+CORAUVJY3e7t+MQQUUJ4vb7NuIPwMRHYPV5tV8MgQUIYXX6NeBOQUYJ47f7+GOQwUYJ4/g7+KPRAUZKJHi8eSSRwwkM5Pk8+WlWRAtOJro9OuwYxc1QaXz+fK8bx49Sq/4+vbEdiRFVLn+/PrMfylLXsAA/v3UhS5RY8kE/v7ZijRYas4J/v/dkDlecc0M/v/fkztkds8Q//');
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
+      } catch (e) {}
+      
+      toast.info('Nuovo messaggio ricevuto!', {
+        icon: <Bell className="h-4 w-4" />,
+        duration: 3000,
+      });
+    }
+    
+    setPreviousUnreadCount(totalUnread);
+  }, [myChats, user, previousUnreadCount]);
+
+  // Notification for new messages in current chat
+  useEffect(() => {
+    if (chatMessages.length > previousMessageCount && previousMessageCount > 0) {
+      const lastMessage = chatMessages[chatMessages.length - 1];
+      if (lastMessage && lastMessage.senderId !== user?.email) {
+        // Scroll to bottom for new message
+        document.querySelector('[data-scroll-anchor]')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setPreviousMessageCount(chatMessages.length);
+  }, [chatMessages, previousMessageCount, user]);
 
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],

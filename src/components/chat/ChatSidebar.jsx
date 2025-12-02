@@ -12,6 +12,13 @@ const statusColors = {
   'completata': 'bg-blue-100 text-blue-800'
 };
 
+const statusEmoji = {
+  'in_attesa': '⏳',
+  'accettata': '✅',
+  'rifiutata': '❌',
+  'completata': '🎉'
+};
+
 function formatChatTime(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
@@ -123,7 +130,7 @@ export default function ChatSidebar({
                     </p>
                     <div className="flex items-center justify-between">
                       <p className={`text-xs truncate flex-1 ${unreadCount > 0 ? 'font-semibold text-slate-700' : 'text-slate-400'}`}>
-                        {chat.lastMessage || 'Inizia la conversazione...'}
+                        {statusEmoji[chat.status]} {chat.lastMessage || 'Inizia la conversazione...'}
                       </p>
                       {chat.lastPrice && (
                         <span className="text-xs font-bold text-green-600 ml-2">
