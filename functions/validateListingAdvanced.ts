@@ -20,6 +20,10 @@ Deno.serve(async (req) => {
       { pattern: "gewehr", severity: "high" },
       { pattern: "munition", severity: "high" },
       { pattern: "schusswaffe", severity: "high" },
+      { pattern: "armbrust", severity: "high" },
+      { pattern: "elektroschocker", severity: "high" },
+      { pattern: "schlagstock", severity: "high" },
+      { pattern: "pfefferspray", severity: "medium" },
 
       // DROGHE
       { pattern: "kokain", severity: "high" },
@@ -27,26 +31,48 @@ Deno.serve(async (req) => {
       { pattern: "heroin", severity: "high" },
       { pattern: "mdma", severity: "high" },
       { pattern: "ecstasy", severity: "high" },
+      { pattern: "gras", severity: "high" },
+      { pattern: "weed", severity: "high" },
+      { pattern: "lsd", severity: "high" },
+      { pattern: "marihuana", severity: "high" },
 
       // FARMACI
       { pattern: "viagra", severity: "medium" },
       { pattern: "arzneimittel", severity: "medium" },
       { pattern: "verschreibungspflichtig", severity: "medium" },
+      { pattern: "oxycodon", severity: "high" },
+      { pattern: "tramadol", severity: "high" },
+      { pattern: "morphin", severity: "high" },
 
       // PORNO / CONTENUTI 18+
       { pattern: "porno", severity: "high" },
       { pattern: "pornografisch", severity: "high" },
       { pattern: "xxx", severity: "high" },
+      { pattern: "erotik", severity: "medium" },
 
       // GIOCO D'AZZARDO
       { pattern: "casino", severity: "medium" },
       { pattern: "sportwetten", severity: "medium" },
       { pattern: "wetten", severity: "medium" },
+      { pattern: "glücksspiel", severity: "medium" },
 
       // DOCUMENTI / ILLEGALE
       { pattern: "falscher ausweis", severity: "high" },
       { pattern: "geldwäsche", severity: "high" },
       { pattern: "hacking", severity: "high" },
+      { pattern: "hack", severity: "high" },
+      { pattern: "gefälschte", severity: "medium" },
+      { pattern: "fälschung", severity: "medium" },
+
+      // SOSTANZE CHIMICHE
+      { pattern: "radioaktiv", severity: "high" },
+      { pattern: "explosiv", severity: "high" },
+      { pattern: "gift", severity: "medium" },
+      { pattern: "säure", severity: "medium" },
+
+      // ANIMALI PROTETTI
+      { pattern: "elfenbein", severity: "high" },
+      { pattern: "geschützte tierart", severity: "high" },
 
       // ALCUNE PAROLE IN ITALIANO
       { pattern: "cocaina", severity: "high" },
