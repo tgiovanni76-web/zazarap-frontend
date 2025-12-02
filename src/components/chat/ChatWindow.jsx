@@ -796,10 +796,10 @@ export default function ChatWindow({
         <div className="p-3 bg-green-50 border-t animate-pulse">
           <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
             <CreditCard className="h-5 w-5 mr-2" />
-            💳 PAGA ORA - {chat.lastPrice}€
+            💳 {ct.payNow} - {chat.lastPrice}€
           </Button>
           <p className="text-center text-xs text-green-700 mt-2">
-            L'offerta è stata accettata! Completa il pagamento per procedere.
+            {ct.offerAcceptedDesc}
           </p>
         </div>
       )}
@@ -809,7 +809,7 @@ export default function ChatWindow({
         <div className="p-3 bg-orange-50 border-t">
           <Button onClick={handleMakeOffer} className="w-full bg-orange-500 hover:bg-orange-600">
             <DollarSign className="h-4 w-4 mr-2" />
-            Fai una nuova offerta
+            {ct.makeNewOffer}
           </Button>
         </div>
       )}
@@ -822,10 +822,10 @@ export default function ChatWindow({
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
           >
             <Star className="h-4 w-4 mr-2" />
-            Lascia una recensione
+            {ct.leaveReview}
           </Button>
           <p className="text-center text-xs text-yellow-700 mt-2">
-            La tua opinione è importante! Valuta {isSeller ? "l'acquirente" : "il venditore"}
+            {ct.reviewPrompt} {isSeller ? ct.buyer : ct.seller}
           </p>
         </div>
       )}
@@ -835,7 +835,7 @@ export default function ChatWindow({
         <div className="p-3 bg-green-50 border-t text-center">
           <p className="text-sm text-green-700 flex items-center justify-center gap-2">
             <Check className="h-4 w-4" />
-            Hai già lasciato una recensione per questa transazione
+            {ct.reviewLeft}
           </p>
         </div>
       )}
