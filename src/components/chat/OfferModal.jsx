@@ -8,6 +8,114 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Send, TrendingDown, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
 
+const offerTranslations = {
+  de: {
+    makeOffer: 'Ein Angebot machen',
+    makeCounterOffer: 'Gegenangebot machen',
+    lastOffer: 'Letztes Angebot',
+    askingPrice: 'Preis',
+    amount: 'Betrag (€)',
+    enterAmount: 'Betrag eingeben',
+    messageOptional: 'Nachricht (optional)',
+    messagePlaceholder: 'Fügen Sie Ihrem Angebot eine Nachricht hinzu...',
+    yourOffer: 'Ihr Angebot:',
+    savings: 'Ersparnis',
+    cancel: 'Abbrechen',
+    sendOffer: 'Angebot senden',
+    price: 'Preis'
+  },
+  en: {
+    makeOffer: 'Make an offer',
+    makeCounterOffer: 'Make a counter offer',
+    lastOffer: 'Last offer',
+    askingPrice: 'Asking price',
+    amount: 'Amount (€)',
+    enterAmount: 'Enter amount',
+    messageOptional: 'Message (optional)',
+    messagePlaceholder: 'Add a message to your offer...',
+    yourOffer: 'Your offer:',
+    savings: 'Savings',
+    cancel: 'Cancel',
+    sendOffer: 'Send offer',
+    price: 'Price'
+  },
+  it: {
+    makeOffer: "Fai un'offerta",
+    makeCounterOffer: 'Fai una contro-offerta',
+    lastOffer: 'Ultima offerta',
+    askingPrice: 'Prezzo richiesto',
+    amount: 'Importo (€)',
+    enterAmount: 'Inserisci importo',
+    messageOptional: 'Messaggio (opzionale)',
+    messagePlaceholder: 'Aggiungi un messaggio alla tua offerta...',
+    yourOffer: 'La tua offerta:',
+    savings: 'Risparmio',
+    cancel: 'Annulla',
+    sendOffer: 'Invia offerta',
+    price: 'Prezzo'
+  },
+  tr: {
+    makeOffer: 'Teklif ver',
+    makeCounterOffer: 'Karşı teklif ver',
+    lastOffer: 'Son teklif',
+    askingPrice: 'İstenen fiyat',
+    amount: 'Tutar (€)',
+    enterAmount: 'Tutar girin',
+    messageOptional: 'Mesaj (isteğe bağlı)',
+    messagePlaceholder: 'Teklifinize bir mesaj ekleyin...',
+    yourOffer: 'Teklifiniz:',
+    savings: 'Tasarruf',
+    cancel: 'İptal',
+    sendOffer: 'Teklif gönder',
+    price: 'Fiyat'
+  },
+  uk: {
+    makeOffer: 'Зробити пропозицію',
+    makeCounterOffer: 'Зробити контрпропозицію',
+    lastOffer: 'Остання пропозиція',
+    askingPrice: 'Запитувана ціна',
+    amount: 'Сума (€)',
+    enterAmount: 'Введіть суму',
+    messageOptional: 'Повідомлення (необов'язково)',
+    messagePlaceholder: 'Додайте повідомлення до вашої пропозиції...',
+    yourOffer: 'Ваша пропозиція:',
+    savings: 'Економія',
+    cancel: 'Скасувати',
+    sendOffer: 'Надіслати пропозицію',
+    price: 'Ціна'
+  },
+  fr: {
+    makeOffer: 'Faire une offre',
+    makeCounterOffer: 'Faire une contre-offre',
+    lastOffer: 'Dernière offre',
+    askingPrice: 'Prix demandé',
+    amount: 'Montant (€)',
+    enterAmount: 'Entrez le montant',
+    messageOptional: 'Message (optionnel)',
+    messagePlaceholder: 'Ajoutez un message à votre offre...',
+    yourOffer: 'Votre offre :',
+    savings: 'Économie',
+    cancel: 'Annuler',
+    sendOffer: 'Envoyer l\'offre',
+    price: 'Prix'
+  },
+  pl: {
+    makeOffer: 'Złóż ofertę',
+    makeCounterOffer: 'Złóż kontrofertę',
+    lastOffer: 'Ostatnia oferta',
+    askingPrice: 'Cena wywoławcza',
+    amount: 'Kwota (€)',
+    enterAmount: 'Wprowadź kwotę',
+    messageOptional: 'Wiadomość (opcjonalnie)',
+    messagePlaceholder: 'Dodaj wiadomość do swojej oferty...',
+    yourOffer: 'Twoja oferta:',
+    savings: 'Oszczędność',
+    cancel: 'Anuluj',
+    sendOffer: 'Wyślij ofertę',
+    price: 'Cena'
+  }
+};
+
 export default function OfferModal({ 
   open, 
   onClose, 
@@ -17,7 +125,8 @@ export default function OfferModal({
   isCounter = false,
   isPending = false 
 }) {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const ot = offerTranslations[language] || offerTranslations.de;
   const [amount, setAmount] = useState(lastOffer?.amount || listingPrice || '');
   const [message, setMessage] = useState('');
 
