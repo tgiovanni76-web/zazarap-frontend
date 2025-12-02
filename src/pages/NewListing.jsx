@@ -85,12 +85,31 @@ export default function NewListing() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.title || !formData.price || !formData.category) {
       toast.error('Compila tutti i campi obbligatori');
       return;
+    }
+
+    // Validazione contenuto proibito
+    try {
+      const validationResult = await base44.functions.invoke('validateListingAdvanced', {
+        title: formData.title,
+        description: formData.description,
+        categoryName: formData.category
+      });
+
+      if (!validationResult.data.allowed) {
+        toast.error('Dieses Angebot ist auf Zazarap nicht erlaubt. Bitte überprüfen Sie Ihre Angaben.', {
+          duration: 5000
+        });
+        return;
+      }
+    } catch (err) {
+      console.error('Validation error:', err);
+      // Continua comunque se la validazione fallisce per errore tecnico
     }
 
     createListingMutation.mutate({
