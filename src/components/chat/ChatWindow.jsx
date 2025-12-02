@@ -615,7 +615,7 @@ export default function ChatWindow({
             <span className="font-semibold text-green-600">{listing.price}€</span>
             {chat.lastPrice && chat.lastPrice !== listing.price && (
               <Badge variant="outline" className="text-xs">
-                {t('lastOffer')}: {chat.lastPrice}€
+                {ct.lastOffer}: {chat.lastPrice}€
               </Badge>
             )}
             <Badge className={statusColors[chat.status].replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
