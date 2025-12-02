@@ -706,7 +706,25 @@ export default function ChatWindow({
 
                       {/* Text */}
                       {msg.text && (
-                        <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
+                        <div>
+                          <p className="text-sm whitespace-pre-wrap">
+                            {translatedMessages[msg.id] || msg.text}
+                          </p>
+                          {msg.text && msg.senderId !== user?.email && msg.messageType !== 'system' && (
+                            <button
+                              onClick={() => handleTranslateMessage(msg.id, msg.text)}
+                              disabled={translatingId === msg.id}
+                              className={`text-xs mt-1 flex items-center gap-1 ${isOwn ? 'text-white/60 hover:text-white/80' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                              {translatingId === msg.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Languages className="h-3 w-3" />
+                              )}
+                              {translatedMessages[msg.id] ? ct.original : ct.translate}
+                            </button>
+                          )}
+                        </div>
                       )}
 
                       {/* Price */}
