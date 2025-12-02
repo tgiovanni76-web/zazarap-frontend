@@ -639,7 +639,7 @@ export default function ChatWindow({
                 className="bg-green-600 hover:bg-green-700 text-xs"
               >
                 <DollarSign className="h-4 w-4 mr-1" />
-                Offerta
+                {ct.offer}
               </Button>
             )}
           </div>
