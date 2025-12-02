@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 
 export default function Messages() {
   const { t } = useLanguage();
+  const urlParams = new URLSearchParams(window.location.search);
+  const chatIdFromUrl = urlParams.get('chatId');
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -56,6 +58,16 @@ export default function Messages() {
   const myChats = chats.filter(
     c => c.buyerId === user?.email || c.sellerId === user?.email
   );
+
+  // Auto-select chat from URL parameter
+  useEffect(() => {
+    if (chatIdFromUrl && myChats.length > 0 && !selectedChat) {
+      const chatFromUrl = myChats.find(c => c.id === chatIdFromUrl);
+      if (chatFromUrl) {
+        setSelectedChat(chatFromUrl);
+      }
+    }
+  }, [chatIdFromUrl, myChats, selectedChat]);
 
   // Real-time notification for new messages
   useEffect(() => {

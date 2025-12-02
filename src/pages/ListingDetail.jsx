@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp, Flag } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp, Flag, Loader2 } from 'lucide-react';
 import ReportListingModal from '../components/ReportListingModal';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ import SocialShareButtons from '../components/SocialShareButtons';
 
 export default function ListingDetail() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('id');
   const queryClient = useQueryClient();
@@ -25,6 +26,7 @@ export default function ListingDetail() {
   const [reviewComment, setReviewComment] = useState('');
   const [activityTracked, setActivityTracked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [isContactingLoading, setIsContactingLoading] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -115,6 +117,57 @@ export default function ListingDetail() {
       rating: reviewRating,
       comment: reviewComment
     });
+  };
+
+  const handleContactSeller = async () => {
+    if (!user || !listing) return;
+    
+    setIsContactingLoading(true);
+    try {
+      // Check if chat already exists
+      const existingChats = await base44.entities.Chat.filter({
+        listingId: listingId,
+        buyerId: user.email
+      });
+
+      let chatId;
+      
+      if (existingChats.length > 0) {
+        // Chat exists, use it
+        chatId = existingChats[0].id;
+      } else {
+        // Create new chat
+        const newChat = await base44.entities.Chat.create({
+          listingId: listingId,
+          buyerId: user.email,
+          sellerId: listing.created_by,
+          status: 'in_attesa',
+          lastMessage: '',
+          listingTitle: listing.title,
+          listingImage: listing.images?.[0] || '',
+          updatedAt: new Date().toISOString(),
+          unreadBuyer: 0,
+          unreadSeller: 0
+        });
+        chatId = newChat.id;
+        
+        // Send welcome system message
+        await base44.entities.ChatMessage.create({
+          chatId: chatId,
+          senderId: 'system',
+          text: `💬 Chat avviata per "${listing.title}" - Prezzo: ${listing.price}€`,
+          messageType: 'system'
+        });
+      }
+
+      // Navigate to Messages with chatId
+      navigate(createPageUrl('Messages') + '?chatId=' + chatId);
+    } catch (error) {
+      console.error('Error creating chat:', error);
+      toast.error('Errore nell\'avvio della chat');
+    } finally {
+      setIsContactingLoading(false);
+    }
   };
 
   // Track user activity
@@ -242,12 +295,18 @@ export default function ListingDetail() {
             </>
           ) : (
             <>
-              <Link to={createPageUrl('Messages')}>
-                <button className="zaza-contact-btn">
-                  <MessageSquare className="inline h-4 w-4 mr-2" />
-                  {t('contactSeller')}
-                </button>
-              </Link>
+              <button 
+                onClick={handleContactSeller}
+                disabled={isContactingLoading}
+                className="zaza-contact-btn flex items-center justify-center gap-2"
+              >
+                {isContactingLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MessageSquare className="inline h-4 w-4" />
+                )}
+                {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
+              </button>
               <button
                 onClick={() => toggleFavoriteMutation.mutate()}
                 className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold focus:ring-2 focus:ring-[#e84c00]"
