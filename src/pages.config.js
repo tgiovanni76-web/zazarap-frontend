@@ -37,6 +37,8 @@ import SystemCheckup from './pages/SystemCheckup';
 import AdminSEO from './pages/AdminSEO';
 import CompleteProfile from './pages/CompleteProfile';
 import Werbung from './pages/Werbung';
+import UserProfile from './pages/UserProfile';
+import EditProfile from './pages/EditProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +82,8 @@ export const PAGES = {
     "AdminSEO": AdminSEO,
     "CompleteProfile": CompleteProfile,
     "Werbung": Werbung,
+    "UserProfile": UserProfile,
+    "EditProfile": EditProfile,
 }
 
 export const pagesConfig = {
