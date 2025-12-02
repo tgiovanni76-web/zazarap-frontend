@@ -156,12 +156,12 @@ export default function OfferModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {isCounter ? '🔄 Fai una contro-offerta' : '💰 Fai un\'offerta'}
+            {isCounter ? `🔄 ${ot.makeCounterOffer}` : `💰 ${ot.makeOffer}`}
           </DialogTitle>
           <DialogDescription>
             {isCounter 
-              ? `Ultima offerta: ${lastOffer?.amount}€` 
-              : `Prezzo richiesto: ${listingPrice}€`
+              ? `${ot.lastOffer}: ${lastOffer?.amount}€` 
+              : `${ot.askingPrice}: ${listingPrice}€`
             }
           </DialogDescription>
         </DialogHeader>
