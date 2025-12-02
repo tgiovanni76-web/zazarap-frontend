@@ -558,7 +558,7 @@ export default function ChatWindow({
 
   // Group messages by date
   const groupedMessages = messages.reduce((groups, message) => {
-    const date = formatMessageDate(message.created_date);
+    const date = formatMessageDate(message.created_date, language);
     if (!groups[date]) groups[date] = [];
     groups[date].push(message);
     return groups;
