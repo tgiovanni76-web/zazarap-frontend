@@ -223,12 +223,12 @@ export default function OfferModal({
           {amount > 0 && (
             <div className="bg-slate-50 p-3 rounded-lg">
               <div className="flex justify-between items-center">
-                <span className="text-slate-600">La tua offerta:</span>
+                <span className="text-slate-600">{ot.yourOffer}</span>
                 <span className="text-2xl font-bold text-green-600">{parseFloat(amount).toFixed(2)}€</span>
               </div>
               {listingPrice && amount < listingPrice && (
                 <p className="text-xs text-slate-500 mt-1">
-                  Risparmio: {(listingPrice - amount).toFixed(2)}€
+                  {ot.savings}: {(listingPrice - amount).toFixed(2)}€
                 </p>
               )}
             </div>
@@ -237,7 +237,7 @@ export default function OfferModal({
 
         <div className="flex gap-3">
           <Button variant="outline" onClick={onClose} className="flex-1">
-            Annulla
+            {ot.cancel}
           </Button>
           <Button 
             onClick={handleSubmit} 
@@ -249,7 +249,7 @@ export default function OfferModal({
             ) : (
               <Send className="h-4 w-4 mr-2" />
             )}
-            Invia offerta
+            {ot.sendOffer}
           </Button>
         </div>
       </DialogContent>
