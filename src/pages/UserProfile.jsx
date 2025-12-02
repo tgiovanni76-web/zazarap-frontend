@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '@/components/LanguageProvider';
+import { AggregatedRating, ReviewCard } from '@/components/reviews/UserRatingDisplay';
 
 export default function UserProfile() {
   const { t } = useLanguage();
@@ -73,7 +74,7 @@ export default function UserProfile() {
   const activeListings = listings.filter(l => l.status === 'active' && l.moderationStatus === 'approved');
   const soldListings = listings.filter(l => l.status === 'sold');
   const avgRating = ratings.length > 0 
-    ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
+    ? (ratings.reduce((sum, r) => sum + r.overallRating, 0) / ratings.length).toFixed(1)
     : null;
 
   const getInitials = () => {
@@ -257,43 +258,20 @@ export default function UserProfile() {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4">
-              {ratings.map(rating => (
-                <Card key={rating.id}>
-                  <CardContent className="pt-4">
-                    <div className="flex items-start gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-slate-100">
-                          {rating.raterEmail?.[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium">{rating.raterEmail}</span>
-                          <div className="flex">
-                            {[1,2,3,4,5].map(star => (
-                              <Star key={star} className={`h-4 w-4 ${star <= rating.rating ? 'fill-yellow-500 text-yellow-500' : 'text-slate-300'}`} />
-                            ))}
-                          </div>
-                        </div>
-                        {rating.comment && (
-                          <p className="text-slate-600 text-sm">{rating.comment}</p>
-                        )}
-                        {rating.tags?.length > 0 && (
-                          <div className="flex gap-1 mt-2 flex-wrap">
-                            {rating.tags.map(tag => (
-                              <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                            ))}
-                          </div>
-                        )}
-                        <p className="text-xs text-slate-400 mt-2">
-                          {format(new Date(rating.created_date), 'dd/MM/yyyy')}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="space-y-6">
+              {/* Aggregated Rating Summary */}
+              <Card>
+                <CardContent className="pt-6">
+                  <AggregatedRating ratings={ratings} showDetails={true} />
+                </CardContent>
+              </Card>
+
+              {/* Individual Reviews */}
+              <div className="space-y-4">
+                {ratings.map(rating => (
+                  <ReviewCard key={rating.id} review={rating} />
+                ))}
+              </div>
             </div>
           )}
         </TabsContent>
