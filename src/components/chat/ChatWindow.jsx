@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Send, Image, Smile, MoreVertical, Phone, Video, 
   Check, CheckCheck, ArrowLeft, Zap, Languages,
-  CreditCard, AlertTriangle, X, Circle, DollarSign, History
+  CreditCard, AlertTriangle, X, Circle, DollarSign, History, Star
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '../LanguageProvider';
 import OfferModal from './OfferModal';
 import OfferHistory from './OfferHistory';
+import ReviewForm from '../reviews/ReviewForm';
 
 const statusColors = {
   'in_attesa': 'bg-yellow-500',
@@ -47,6 +48,7 @@ export default function ChatWindow({
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showOfferHistory, setShowOfferHistory] = useState(false);
   const [isCounterOffer, setIsCounterOffer] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -63,6 +65,15 @@ export default function ChatWindow({
   });
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
+
+  // Check if user already left a review for this chat
+  const { data: existingReviews = [] } = useQuery({
+    queryKey: ['chatReviews', chat?.id, user?.email],
+    queryFn: () => base44.entities.UserRating.filter({ chatId: chat.id, raterEmail: user.email }),
+    enabled: !!chat?.id && !!user?.email,
+  });
+
+  const hasLeftReview = existingReviews.length > 0;
 
   // Typing indicator logic
   const handleTyping = useCallback(() => {
@@ -586,6 +597,32 @@ export default function ChatWindow({
         </div>
       )}
 
+      {/* Review prompt after transaction completed */}
+      {chat.status === 'completata' && !hasLeftReview && (
+        <div className="p-3 bg-yellow-50 border-t">
+          <Button 
+            onClick={() => setShowReviewModal(true)} 
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+          >
+            <Star className="h-4 w-4 mr-2" />
+            Lascia una recensione
+          </Button>
+          <p className="text-center text-xs text-yellow-700 mt-2">
+            La tua opinione è importante! Valuta {isSeller ? "l'acquirente" : "il venditore"}
+          </p>
+        </div>
+      )}
+
+      {/* Already reviewed message */}
+      {chat.status === 'completata' && hasLeftReview && (
+        <div className="p-3 bg-green-50 border-t text-center">
+          <p className="text-sm text-green-700 flex items-center justify-center gap-2">
+            <Check className="h-4 w-4" />
+            Hai già lasciato una recensione per questa transazione
+          </p>
+        </div>
+      )}
+
       {/* Input */}
       <div className="flex items-center gap-2 p-3 border-t bg-slate-50">
         <input
@@ -651,6 +688,19 @@ export default function ChatWindow({
         lastOffer={lastOffer}
         isCounter={isCounterOffer}
         isPending={createOfferMutation.isPending}
+      />
+
+      {/* Review Modal */}
+      <ReviewForm
+        open={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        chatId={chat.id}
+        listingId={chat.listingId}
+        ratedEmail={otherUser}
+        raterEmail={user?.email}
+        raterRole={isSeller ? 'seller' : 'buyer'}
+        listingTitle={listing?.title}
+        transactionAmount={chat.lastPrice}
       />
     </div>
   );
