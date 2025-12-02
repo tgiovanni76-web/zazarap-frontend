@@ -137,7 +137,7 @@ export default function OfferModal({
   const suggestedPrices = listingPrice ? [
     { label: '-10%', value: Math.round(listingPrice * 0.9) },
     { label: '-5%', value: Math.round(listingPrice * 0.95) },
-    { label: 'Prezzo', value: listingPrice },
+    { label: ot.price, value: listingPrice },
   ] : [];
 
   const handleSubmit = () => {
