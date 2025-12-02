@@ -775,10 +775,10 @@ export default function ChatWindow({
             disabled={acceptOfferMutation.isPending}
             className="flex-1 bg-green-600 hover:bg-green-700"
           >
-            ✓ {t('accept')}
+            ✓ {ct.accept}
           </Button>
           <Button onClick={handleCounterOffer} variant="outline" className="flex-1">
-            🔄 {t('counterOffer')}
+            🔄 {ct.counterOffer}
           </Button>
           <Button 
             onClick={handleRejectOffer} 
@@ -786,7 +786,7 @@ export default function ChatWindow({
             variant="destructive" 
             className="flex-1"
           >
-            ✕ {t('reject')}
+            ✕ {ct.reject}
           </Button>
         </div>
       )}
