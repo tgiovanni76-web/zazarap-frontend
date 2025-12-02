@@ -6,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Send, Image, Smile, MoreVertical, Phone, Video, 
   Check, CheckCheck, ArrowLeft, Zap, Languages,
-  CreditCard, AlertTriangle, X, Circle
+  CreditCard, AlertTriangle, X, Circle, DollarSign, History
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useLanguage } from '../LanguageProvider';
+import OfferModal from './OfferModal';
+import OfferHistory from './OfferHistory';
 
 const statusColors = {
   'in_attesa': 'bg-yellow-500',
@@ -42,6 +44,9 @@ export default function ChatWindow({
   const [showImagePreview, setShowImagePreview] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [showOfferHistory, setShowOfferHistory] = useState(false);
+  const [isCounterOffer, setIsCounterOffer] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -49,6 +54,15 @@ export default function ChatWindow({
 
   const isSeller = chat?.sellerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+
+  // Fetch offers for this chat
+  const { data: offers = [] } = useQuery({
+    queryKey: ['offers', chat?.id],
+    queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
+    enabled: !!chat?.id,
+  });
+
+  const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
 
   // Typing indicator logic
   const handleTyping = useCallback(() => {
@@ -188,63 +202,149 @@ export default function ChatWindow({
     }
   };
 
-  const handleAcceptOffer = async () => {
-    await base44.entities.ChatMessage.create({
-      chatId: chat.id,
-      senderId: user.email,
-      text: `✅ Offerta di ${chat.lastPrice}€ accettata!`,
-      messageType: 'system'
-    });
-
-    await base44.entities.Chat.update(chat.id, {
-      status: 'accettata',
-      lastMessage: 'Offerta accettata',
-      updatedAt: new Date().toISOString()
-    });
-
-    await base44.entities.Notification.create({
-      userId: chat.buyerId,
-      type: 'status_update',
-      title: '✅ Offerta accettata!',
-      message: `La tua offerta di ${chat.lastPrice}€ è stata accettata`,
-      linkUrl: '/Messages',
-      relatedId: chat.id
-    });
-
-    queryClient.invalidateQueries({ queryKey: ['chats'] });
-    queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
-    toast.success('Offerta accettata!');
-  };
-
-  const handleRejectOffer = async () => {
-    await base44.entities.ChatMessage.create({
-      chatId: chat.id,
-      senderId: user.email,
-      text: `❌ Offerta rifiutata`,
-      messageType: 'system'
-    });
-
-    await base44.entities.Chat.update(chat.id, {
-      status: 'rifiutata',
-      lastMessage: 'Offerta rifiutata',
-      updatedAt: new Date().toISOString()
-    });
-
-    queryClient.invalidateQueries({ queryKey: ['chats'] });
-    queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
-    toast.info('Offerta rifiutata');
-  };
+  const handleAcceptOffer = () => acceptOfferMutation.mutate();
+  const handleRejectOffer = () => rejectOfferMutation.mutate();
 
   const handleCounterOffer = () => {
-    const price = prompt('Inserisci la tua controproposta (€):');
-    if (price && !isNaN(price) && parseFloat(price) > 0) {
-      sendMessageMutation.mutate({ 
-        text: `🔄 Controproposta: ${price}€`,
-        price: parseFloat(price),
+    setIsCounterOffer(true);
+    setShowOfferModal(true);
+  };
+
+  const handleMakeOffer = () => {
+    setIsCounterOffer(false);
+    setShowOfferModal(true);
+  };
+
+  // Create offer mutation
+  const createOfferMutation = useMutation({
+    mutationFn: async ({ amount, message, type }) => {
+      // Update previous pending offers to 'countered'
+      const pendingOffers = offers.filter(o => o.status === 'pending');
+      for (const offer of pendingOffers) {
+        await base44.entities.Offer.update(offer.id, { status: 'countered' });
+      }
+
+      // Create new offer
+      const offer = await base44.entities.Offer.create({
+        chatId: chat.id,
+        listingId: chat.listingId,
+        senderId: user.email,
+        receiverId: otherUser,
+        amount,
+        previousAmount: lastOffer?.amount || listing?.price,
+        status: 'pending',
+        type,
+        message
+      });
+
+      // Send chat message
+      await sendMessageMutation.mutateAsync({
+        text: message ? `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€\n"${message}"` : `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€`,
+        price: amount,
         messageType: 'offer'
       });
+
+      // Update chat status
+      await base44.entities.Chat.update(chat.id, {
+        lastPrice: amount,
+        status: 'in_attesa',
+        updatedAt: new Date().toISOString()
+      });
+
+      // Send detailed notification
+      await base44.entities.Notification.create({
+        userId: otherUser,
+        type: 'offer',
+        title: type === 'counter' ? '🔄 Nuova controproposta!' : '💰 Nuova offerta!',
+        message: `${user.email.split('@')[0]} ha ${type === 'counter' ? 'fatto una controproposta di' : 'offerto'} ${amount}€ per "${listing?.title}"`,
+        linkUrl: '/Messages',
+        relatedId: chat.id
+      });
+
+      return offer;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      setShowOfferModal(false);
+      toast.success('Offerta inviata!');
     }
-  };
+  });
+
+  // Accept offer mutation  
+  const acceptOfferMutation = useMutation({
+    mutationFn: async () => {
+      // Update offer status
+      if (lastOffer) {
+        await base44.entities.Offer.update(lastOffer.id, { status: 'accepted' });
+      }
+
+      await base44.entities.ChatMessage.create({
+        chatId: chat.id,
+        senderId: user.email,
+        text: `✅ Offerta di ${chat.lastPrice}€ accettata! Procedi al pagamento.`,
+        messageType: 'system'
+      });
+
+      await base44.entities.Chat.update(chat.id, {
+        status: 'accettata',
+        lastMessage: '✅ Offerta accettata',
+        updatedAt: new Date().toISOString()
+      });
+
+      await base44.entities.Notification.create({
+        userId: chat.buyerId,
+        type: 'status_update',
+        title: '✅ Offerta accettata!',
+        message: `La tua offerta di ${chat.lastPrice}€ per "${listing?.title}" è stata accettata! Procedi al pagamento.`,
+        linkUrl: '/Messages',
+        relatedId: chat.id
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+      toast.success('Offerta accettata!');
+    }
+  });
+
+  // Reject offer mutation
+  const rejectOfferMutation = useMutation({
+    mutationFn: async () => {
+      if (lastOffer) {
+        await base44.entities.Offer.update(lastOffer.id, { status: 'rejected' });
+      }
+
+      await base44.entities.ChatMessage.create({
+        chatId: chat.id,
+        senderId: user.email,
+        text: `❌ Offerta di ${chat.lastPrice}€ rifiutata`,
+        messageType: 'system'
+      });
+
+      await base44.entities.Chat.update(chat.id, {
+        status: 'rifiutata',
+        lastMessage: '❌ Offerta rifiutata',
+        updatedAt: new Date().toISOString()
+      });
+
+      await base44.entities.Notification.create({
+        userId: chat.buyerId,
+        type: 'status_update',
+        title: '❌ Offerta rifiutata',
+        message: `La tua offerta di ${chat.lastPrice}€ per "${listing?.title}" è stata rifiutata.`,
+        linkUrl: '/Messages',
+        relatedId: chat.id
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+      toast.info('Offerta rifiutata');
+    }
+  });
 
   // Group messages by date
   const groupedMessages = messages.reduce((groups, message) => {
@@ -300,16 +400,50 @@ export default function ChatWindow({
 
       {/* Listing Info Bar */}
       {listing && (
-        <div className="flex items-center gap-3 p-2 bg-slate-50 border-b text-sm">
-          <span className="font-semibold text-green-600">{listing.price}€</span>
-          {chat.lastPrice && chat.lastPrice !== listing.price && (
-            <Badge variant="outline" className="text-xs">
-              {t('lastOffer')}: {chat.lastPrice}€
+        <div className="flex items-center justify-between p-2 bg-slate-50 border-b text-sm">
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-green-600">{listing.price}€</span>
+            {chat.lastPrice && chat.lastPrice !== listing.price && (
+              <Badge variant="outline" className="text-xs">
+                {t('lastOffer')}: {chat.lastPrice}€
+              </Badge>
+            )}
+            <Badge className={statusColors[chat.status].replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
+              {chat.status}
             </Badge>
-          )}
-          <Badge className={statusColors[chat.status].replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
-            {chat.status}
-          </Badge>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowOfferHistory(!showOfferHistory)}
+              className="text-xs"
+            >
+              <History className="h-4 w-4 mr-1" />
+              {offers.length}
+            </Button>
+            {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && (
+              <Button 
+                size="sm" 
+                onClick={handleMakeOffer}
+                className="bg-green-600 hover:bg-green-700 text-xs"
+              >
+                <DollarSign className="h-4 w-4 mr-1" />
+                Offerta
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Offer History Panel */}
+      {showOfferHistory && (
+        <div className="p-3 bg-slate-100 border-b">
+          <OfferHistory 
+            offers={offers} 
+            userEmail={user?.email} 
+            listingPrice={listing?.price} 
+          />
         </div>
       )}
 
@@ -408,13 +542,22 @@ export default function ChatWindow({
       {/* Offer Actions (for seller) */}
       {chat.status === 'in_attesa' && isSeller && chat.lastPrice && (
         <div className="flex gap-2 p-3 bg-yellow-50 border-t">
-          <Button onClick={handleAcceptOffer} className="flex-1 bg-green-600 hover:bg-green-700">
+          <Button 
+            onClick={handleAcceptOffer} 
+            disabled={acceptOfferMutation.isPending}
+            className="flex-1 bg-green-600 hover:bg-green-700"
+          >
             ✓ {t('accept')}
           </Button>
           <Button onClick={handleCounterOffer} variant="outline" className="flex-1">
             🔄 {t('counterOffer')}
           </Button>
-          <Button onClick={handleRejectOffer} variant="destructive" className="flex-1">
+          <Button 
+            onClick={handleRejectOffer} 
+            disabled={rejectOfferMutation.isPending}
+            variant="destructive" 
+            className="flex-1"
+          >
             ✕ {t('reject')}
           </Button>
         </div>
@@ -422,10 +565,23 @@ export default function ChatWindow({
 
       {/* Payment Button (for buyer after acceptance) */}
       {chat.status === 'accettata' && !isSeller && (
-        <div className="p-3 bg-green-50 border-t">
-          <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700">
-            <CreditCard className="h-4 w-4 mr-2" />
-            {t('proceedToPayment')} - {chat.lastPrice}€
+        <div className="p-3 bg-green-50 border-t animate-pulse">
+          <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
+            <CreditCard className="h-5 w-5 mr-2" />
+            💳 PAGA ORA - {chat.lastPrice}€
+          </Button>
+          <p className="text-center text-xs text-green-700 mt-2">
+            L'offerta è stata accettata! Completa il pagamento per procedere.
+          </p>
+        </div>
+      )}
+
+      {/* Buyer can make new offer after rejection */}
+      {chat.status === 'rifiutata' && !isSeller && (
+        <div className="p-3 bg-orange-50 border-t">
+          <Button onClick={handleMakeOffer} className="w-full bg-orange-500 hover:bg-orange-600">
+            <DollarSign className="h-4 w-4 mr-2" />
+            Fai una nuova offerta
           </Button>
         </div>
       )}
@@ -485,6 +641,17 @@ export default function ChatWindow({
           <img src={showImagePreview} alt="" className="max-w-full max-h-full object-contain" />
         </div>
       )}
+
+      {/* Offer Modal */}
+      <OfferModal
+        open={showOfferModal}
+        onClose={() => setShowOfferModal(false)}
+        onSubmit={(data) => createOfferMutation.mutate(data)}
+        listingPrice={listing?.price}
+        lastOffer={lastOffer}
+        isCounter={isCounterOffer}
+        isPending={createOfferMutation.isPending}
+      />
     </div>
   );
 }
