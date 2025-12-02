@@ -187,10 +187,11 @@ const statusColors = {
   'completata': 'bg-blue-500'
 };
 
-function formatMessageDate(dateStr) {
+function formatMessageDate(dateStr, lang = 'de') {
   const date = new Date(dateStr);
-  if (isToday(date)) return 'Oggi';
-  if (isYesterday(date)) return 'Ieri';
+  const ct = chatTranslations[lang] || chatTranslations.de;
+  if (isToday(date)) return ct.today;
+  if (isYesterday(date)) return ct.yesterday;
   return format(date, 'dd MMMM yyyy');
 }
 
