@@ -590,7 +590,7 @@ export default function ChatWindow({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate">{listing?.title || 'Annuncio'}</h3>
           <p className="text-xs text-white/80 truncate flex items-center gap-1">
-            {isSeller ? t('buyer') : t('seller')}: {otherUser?.split('@')[0]}
+            {isSeller ? ct.buyer : ct.seller}: {otherUser?.split('@')[0]}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
           </p>
         </div>
