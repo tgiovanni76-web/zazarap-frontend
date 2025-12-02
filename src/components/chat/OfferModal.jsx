@@ -210,11 +210,11 @@ export default function OfferModal({
 
           {/* Message */}
           <div>
-            <Label>Messaggio (opzionale)</Label>
+            <Label>{ot.messageOptional}</Label>
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Aggiungi un messaggio alla tua offerta..."
+              placeholder={ot.messagePlaceholder}
               rows={2}
             />
           </div>
