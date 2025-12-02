@@ -179,7 +179,46 @@ export default function AGB() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 10 Sperrung und Kündigung</CardTitle>
+          <CardTitle>§ 10 Verbotene Angebote</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>Die folgenden Angebote sind auf Zazarap strikt untersagt:</p>
+          <ol className="list-decimal list-inside space-y-1 ml-4">
+            <li>Waffen, Munition und explosionsgefährliche Stoffe</li>
+            <li>Betäubungsmittel gemäß BtMG</li>
+            <li>Verschreibungspflichtige Arzneimittel und medizinische Geräte</li>
+            <li>Pornografische Inhalte und jugendgefährdende Medien</li>
+            <li>Geschützte Tierarten und artgeschützte Produkte</li>
+            <li>Markenfälschungen und urheberrechtswidrige Produkte</li>
+            <li>Verfassungswidrige Symbole und extremistische Inhalte</li>
+            <li>Gefährliche Chemikalien und radioaktive Stoffe</li>
+            <li>Illegale Dienstleistungen</li>
+            <li>Angebote aus dem Glücksspiel- und Wettbereich</li>
+            <li>Sonstige gesetzlich genehmigungspflichtige Produkte</li>
+          </ol>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>§ 11 Moderation und Sanktionen</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>
+            Zazarap setzt automatische Filter sowie manuelle Kontrollen ein, um verbotene Inhalte frühzeitig zu erkennen und zu entfernen. Bei Verstößen wird der Nutzer wie folgt sanktioniert:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-4">
+            <li>Warnung</li>
+            <li>Vorübergehende Sperrung</li>
+            <li>Dauerhafte Kontoschließung</li>
+            <li>Weitergabe von Daten an Behörden (bei schweren Fällen)</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>§ 12 Sperrung und Kündigung</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
@@ -194,9 +233,20 @@ export default function AGB() {
         </CardContent>
       </Card>
 
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>§ 13 Haftungsausschluss</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>
+            Zazarap ist nicht Vertragspartner zwischen Käufer und Verkäufer. Der Plattformbetreiber haftet nur nach Maßgabe der gesetzlichen Vorschriften.
+          </p>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle>§ 11 Schlussbestimmungen</CardTitle>
+          <CardTitle>§ 14 Schlussbestimmungen</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
