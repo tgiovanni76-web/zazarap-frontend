@@ -859,7 +859,7 @@ export default function ChatWindow({
         </Button>
         
         <Input
-          placeholder={t('typeMessage')}
+          placeholder={ct.typeMessage}
           value={messageText}
           onChange={(e) => {
             setMessageText(e.target.value);
