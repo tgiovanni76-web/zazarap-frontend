@@ -637,13 +637,6 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      {/* German Flag Banner */}
-      <div className="w-full h-3 flex border border-black rounded-t-lg overflow-hidden">
-        <div className="flex-1 bg-black"></div>
-        <div className="flex-1 bg-[#DD0000]"></div>
-        <div className="flex-1 bg-[#FFCC00]"></div>
-      </div>
-      
       <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
                     <div className="flex items-center justify-between text-[#f9d65c]">
                       {/* Logo + Slogan + Home */}
