@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Send, Image, Smile, MoreVertical, Phone, Video, 
   Check, CheckCheck, ArrowLeft, Zap, Languages,
-  CreditCard, AlertTriangle, X
+  CreditCard, AlertTriangle, X, Circle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -40,12 +40,51 @@ export default function ChatWindow({
   const [messageText, setMessageText] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [otherUserTyping, setOtherUserTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
   const queryClient = useQueryClient();
 
   const isSeller = chat?.sellerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+
+  // Typing indicator logic
+  const handleTyping = useCallback(() => {
+    if (!isTyping) {
+      setIsTyping(true);
+      // Store typing status (could be expanded to use a real-time service)
+      localStorage.setItem(`typing_${chat?.id}_${user?.email}`, Date.now().toString());
+    }
+    
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      localStorage.removeItem(`typing_${chat?.id}_${user?.email}`);
+    }, 2000);
+  }, [chat?.id, user?.email, isTyping]);
+
+  // Check if other user is typing
+  useEffect(() => {
+    if (!chat || !otherUser) return;
+    
+    const checkTyping = () => {
+      const typingTimestamp = localStorage.getItem(`typing_${chat.id}_${otherUser}`);
+      if (typingTimestamp) {
+        const elapsed = Date.now() - parseInt(typingTimestamp);
+        setOtherUserTyping(elapsed < 3000);
+      } else {
+        setOtherUserTyping(false);
+      }
+    };
+    
+    const interval = setInterval(checkTyping, 1000);
+    return () => clearInterval(interval);
+  }, [chat, otherUser]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -240,8 +279,9 @@ export default function ChatWindow({
         
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate">{listing?.title || 'Annuncio'}</h3>
-          <p className="text-xs text-white/80 truncate">
+          <p className="text-xs text-white/80 truncate flex items-center gap-1">
             {isSeller ? t('buyer') : t('seller')}: {otherUser?.split('@')[0]}
+            <Circle className="h-2 w-2 fill-green-400 text-green-400" />
           </p>
         </div>
 
@@ -350,6 +390,18 @@ export default function ChatWindow({
             })}
           </div>
         ))}
+        {/* Typing Indicator */}
+        {otherUserTyping && (
+          <div className="flex justify-start mb-2">
+            <div className="bg-slate-200 rounded-2xl px-4 py-2 rounded-bl-md">
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -399,7 +451,10 @@ export default function ChatWindow({
         <Input
           placeholder={t('typeMessage')}
           value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
+          onChange={(e) => {
+            setMessageText(e.target.value);
+            handleTyping();
+          }}
           onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
           className="flex-1"
         />
