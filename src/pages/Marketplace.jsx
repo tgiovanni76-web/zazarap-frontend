@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart, ShoppingBag, Briefcase } from 'lucide-react';
 import { toast } from 'sonner';
-import RecommendationsWidget from '../components/marketplace/RecommendationsWidget';
+import AIRecommendations from '../components/marketplace/AIRecommendations';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
