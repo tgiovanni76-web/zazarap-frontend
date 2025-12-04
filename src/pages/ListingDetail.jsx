@@ -170,7 +170,7 @@ export default function ListingDetail() {
     }
   };
 
-  // Track user activity
+  // Track user activity for AI recommendations
   useEffect(() => {
     if (user && listing && !activityTracked) {
       base44.entities.UserActivity.create({
@@ -178,7 +178,9 @@ export default function ListingDetail() {
         activityType: 'view',
         listingId: listing.id,
         category: listing.category,
-        priceRange: listing.price < 50 ? '0-50' : listing.price < 200 ? '50-200' : '200+'
+        city: listing.city,
+        priceRange: listing.price < 50 ? '0-50' : listing.price < 200 ? '50-200' : '200+',
+        source: urlParams.get('source') || 'direct'
       });
       setActivityTracked(true);
     }

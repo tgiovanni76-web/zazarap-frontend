@@ -319,7 +319,7 @@ export default function Marketplace() {
 
       {user && (
         <div className="mb-8">
-          <RecommendationsWidget user={user} />
+          <AIRecommendations user={user} />
         </div>
       )}
 
