@@ -367,6 +367,51 @@ export default function ChatWindow({
         });
       }
 
+      // AI moderation (non-blocking)
+      try {
+        if (text && text.trim().length > 0) {
+          const moderation = await base44.integrations.Core.InvokeLLM({
+            prompt: `Sei un moderatore AI per una chat di marketplace. Classifica il seguente messaggio come appropriato o da segnalare. Restituisci JSON con: flagged (boolean), labels (array di stringhe come spam, harassment, scam, hate, sexual, violence, self-harm), severity (low|medium|high), rationale (breve spiegazione).\n\nMessaggio:\n"${text}"`,
+            response_json_schema: {
+              type: 'object',
+              properties: {
+                flagged: { type: 'boolean' },
+                labels: { type: 'array', items: { type: 'string' } },
+                severity: { type: 'string' },
+                rationale: { type: 'string' }
+              }
+            }
+          });
+
+          if (moderation?.flagged) {
+            const labels = (moderation.labels || []).map(l => String(l).toLowerCase());
+            const reason = labels.some(l => l.includes('spam')) ? 'spam'
+              : labels.some(l => l.includes('harass')) ? 'harassment'
+              : labels.some(l => l.includes('scam') || l.includes('fraud') || l.includes('phishing')) ? 'scam'
+              : labels.some(l => l.includes('sexual') || l.includes('hate') || l.includes('violence') || l.includes('inappropriate')) ? 'inappropriate'
+              : 'other';
+
+            await base44.entities.ChatMessage.update(message.id, {
+              flagged: true,
+              moderationLabels: moderation.labels || [],
+              moderationSeverity: moderation.severity || 'medium'
+            });
+
+            // Create admin report for review
+            await base44.entities.Report.create({
+              reporterId: user.email,
+              reportedUserId: user.email,
+              chatId: chat.id,
+              messageId: message.id,
+              reason,
+              description: `[AI] ${moderation.rationale || 'Contenuto potenzialmente problematico'}`
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Moderation error:', err);
+      }
+
       return message;
     },
     onSuccess: () => {
@@ -734,6 +779,13 @@ export default function ChatWindow({
                         </div>
                       )}
 
+                      {/* Moderation Flag */}
+                      {msg.flagged && (
+                        <div className={`mt-1 flex items-center gap-1 ${isOwn ? 'text-yellow-200' : 'text-red-600'} text-xs`}>
+                          <AlertTriangle className="h-3 w-3" />
+                          In review
+                        </div>
+                      )}
                       {/* Time & Read Status */}
                       <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-white/70' : 'text-slate-400'}`}>
                         <span className="text-xs">
