@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart, ShoppingBag, Briefcase } from 'lucide-react';
+import MapView from '../components/marketplace/MapView';
 import { toast } from 'sonner';
 import AIRecommendations from '../components/marketplace/AIRecommendations';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
@@ -26,6 +27,12 @@ export default function Marketplace() {
   const [dateFilter, setDateFilter] = useState('all');
   const [sortBy, setSortBy] = useState('-created_date');
   const [showFilters, setShowFilters] = useState(false);
+  const [radiusKm, setRadiusKm] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
+  const [showMap, setShowMap] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const cityCoordsRef = useRef({});
   const queryClient = useQueryClient();
 
   const { data: listings = [], isLoading } = useQuery({
@@ -41,6 +48,12 @@ export default function Marketplace() {
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
     queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
+    enabled: !!user
+  });
+
+  const { data: activities = [] } = useQuery({
+    queryKey: ['userActivities', user?.email],
+    queryFn: () => base44.entities.UserActivity.filter({ userId: user.email }, '-created_date', 200),
     enabled: !!user
   });
 
@@ -66,14 +79,83 @@ export default function Marketplace() {
     }
   });
 
+  // Helpers for advanced keyword search
+  const normalize = (s) => (s || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+  const stem = (w) => w
+    .replace(/(mente|mente$)/, '')
+    .replace(/(azioni|zione|zioni|mente|mente$)/, '')
+    .replace(/(ing|ed|es|s)$/,'')
+    .replace(/(mente|ico|ici|ica|iche|ivi|iva|ivo)$/,'')
+    .replace(/(lichkeit|schaft|chen|ung|en|er|e|n)$/,'');
+  const tokenize = (s) => normalize(s).split(/[^a-z0-9à-ÿ]+/).filter(Boolean).map(stem);
+  const SYN = {
+    auto: ['car', 'auto', 'wagen'],
+    macchina: ['auto', 'car'],
+    telefono: ['smartphone', 'cellulare', 'phone', 'handy'],
+    bici: ['bicicletta', 'fahrrad', 'bike'],
+    casa: ['house', 'home', 'wohnung'],
+    vestiti: ['abbigliamento', 'clothes', 'kleidung'],
+  };
+  const expand = (t) => Array.from(new Set([t, ...(SYN[t] || [])]));
+
+  // Geodesic distance (km)
+  const haversineKm = (a, b) => {
+    const toRad = (x) => (x * Math.PI) / 180;
+    const R = 6371;
+    const dLat = toRad(b.lat - a.lat);
+    const dLon = toRad(b.lng - a.lng);
+    const lat1 = toRad(a.lat);
+    const lat2 = toRad(b.lat);
+    const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  };
+
+  // Preload coords for visible cities when needed
+  useEffect(() => {
+    if (!radiusKm && !showMap) return;
+    const uniqueCitiesToLoad = Array.from(new Set(listings.map(l => l.city).filter(Boolean)))
+      .filter(city => !cityCoordsRef.current[city]);
+    if (uniqueCitiesToLoad.length === 0) return;
+    (async () => {
+      for (const city of uniqueCitiesToLoad.slice(0, 20)) { // limit per batch
+        try {
+          const { data } = await base44.functions.invoke('geocodeCity', { city });
+          if (data?.found) {
+            cityCoordsRef.current[city] = { lat: data.lat, lng: data.lon };
+          }
+        } catch (_) {}
+      }
+    })();
+  }, [radiusKm, showMap, listings]);
+
   const filteredListings = listings.filter(listing => {
-    const matchesSearch = listing.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          listing.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    // Advanced keyword match
+    const qTokens = tokenize(searchTerm);
+    const lTokens = new Set([...tokenize(listing.title || ''), ...tokenize(listing.description || '')]);
+    const matchesSearch = qTokens.length === 0 || qTokens.every(t => {
+      const ex = expand(t);
+      return ex.some(x => lTokens.has(x));
+    });
+
     const matchesCategory = categoryFilter === 'all' || listing.category === categoryFilter;
     const matchesMinPrice = !minPrice || listing.price >= parseFloat(minPrice);
     const matchesMaxPrice = !maxPrice || listing.price <= parseFloat(maxPrice);
+
+    // City text filter
     const matchesCity = !cityFilter || listing.city?.toLowerCase().includes(cityFilter.toLowerCase());
-    
+
+    // Geo radius filter
+    let matchesRadius = true;
+    if (radiusKm && userLocation) {
+      const coords = listing.city ? cityCoordsRef.current[listing.city] : null;
+      if (!coords) {
+        matchesRadius = false; // will become true after coords load and re-render
+      } else {
+        const d = haversineKm(userLocation, coords);
+        matchesRadius = d <= parseFloat(radiusKm);
+      }
+    }
+
     // Status filter - only show active by default to users, or filter by specific status
     const matchesStatus = statusFilter === 'all' 
       ? (user?.role === 'admin' ? true : listing.status === 'active')
@@ -85,7 +167,6 @@ export default function Marketplace() {
     if (dateFilter !== 'all') {
       const createdDate = new Date(listing.created_date);
       const daysDiff = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
-      
       if (dateFilter === 'today') matchesDate = daysDiff === 0;
       else if (dateFilter === 'week') matchesDate = daysDiff <= 7;
       else if (dateFilter === 'month') matchesDate = daysDiff <= 30;
@@ -94,7 +175,7 @@ export default function Marketplace() {
     // Only show approved listings to non-admin users
     const matchesModeration = user?.role === 'admin' || listing.moderationStatus === 'approved';
     
-    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesStatus && matchesDate && matchesModeration;
+    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesRadius && matchesStatus && matchesDate && matchesModeration;
   });
 
   const uniqueCities = [...new Set(listings.map(l => l.city).filter(Boolean))].sort();
@@ -172,23 +253,69 @@ export default function Marketplace() {
       <div className="mb-6 flex flex-col md:flex-row gap-4 items-stretch">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" aria-hidden="true" />
-          <Input
-            type="search"
-            aria-label={t('searchPlaceholder')}
-            placeholder={t('searchPlaceholder')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter' && user && searchTerm.trim()) {
-                base44.entities.UserActivity.create({
-                  userId: user.email,
-                  activityType: 'search',
-                  searchTerm: searchTerm.trim()
-                });
-              }
-            }}
-            className="pl-10 h-12 text-lg border-2 border-red-600"
-          />
+          <div className="relative">
+            <Input
+              type="search"
+              aria-label={t('searchPlaceholder')}
+              placeholder={t('searchPlaceholder')}
+              value={searchTerm}
+              onChange={(e) => {
+                const v = e.target.value;
+                setSearchTerm(v);
+                setShowSuggestions(v.trim().length > 0);
+                // build suggestions
+                const vLower = v.toLowerCase();
+                const catSugs = categories
+                  .map(c => c.name)
+                  .filter(Boolean)
+                  .filter(n => n.toLowerCase().startsWith(vLower))
+                  .slice(0, 5);
+                const userSugs = activities
+                  .filter(a => a.activityType === 'search' && a.searchTerm)
+                  .map(a => a.searchTerm)
+                  .filter(s => s.toLowerCase().startsWith(vLower))
+                  .slice(0, 5);
+                const titleWords = listings
+                  .flatMap(l => (l.title || '').toLowerCase().split(/[^a-zA-ZÀ-ÿ0-9]+/))
+                  .filter(w => w.length > 3);
+                const uniqueWords = Array.from(new Set(titleWords)).filter(w => w.startsWith(vLower)).slice(0, 5);
+                setSuggestions(Array.from(new Set([...catSugs, ...userSugs, ...uniqueWords])).slice(0, 8));
+              }}
+              onFocus={() => setShowSuggestions(searchTerm.trim().length > 0)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && user && searchTerm.trim()) {
+                  base44.entities.UserActivity.create({
+                    userId: user.email,
+                    activityType: 'search',
+                    searchTerm: searchTerm.trim()
+                  });
+                  setShowSuggestions(false);
+                }
+              }}
+              className="pl-10 h-12 text-lg border-2 border-red-600"
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-auto">
+                {suggestions.map((s) => (
+                  <button
+                    type="button"
+                    key={s}
+                    onMouseDown={() => {
+                      setSearchTerm(s);
+                      setShowSuggestions(false);
+                      if (user) {
+                        base44.entities.UserActivity.create({ userId: user.email, activityType: 'search', searchTerm: s });
+                      }
+                    }}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -258,6 +385,30 @@ export default function Marketplace() {
                 </Select>
               </div>
               <div>
+                <label className="text-sm font-medium mb-2 block">Raggio (km)</label>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    placeholder=""
+                    value={radiusKm}
+                    onChange={(e) => setRadiusKm(e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition((pos) => {
+                          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                        });
+                      }
+                    }}
+                  >
+                    Usa la mia posizione
+                  </Button>
+                </div>
+              </div>
+              <div>
                 <label className="text-sm font-medium mb-2 block">{t('sortBy')}</label>
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger>
@@ -320,6 +471,32 @@ export default function Marketplace() {
       {user && (
         <div className="mb-8">
           <AIRecommendations user={user} />
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-sm text-slate-600">
+          {userLocation ? `Posizione impostata • ${userLocation.lat.toFixed(2)}, ${userLocation.lng.toFixed(2)}` : 'Posizione non impostata'}
+          {radiusKm && ` • Raggio: ${radiusKm}km`}
+        </div>
+        <Button variant="outline" onClick={() => setShowMap(!showMap)}>
+          {showMap ? 'Nascondi mappa' : 'Mostra mappa'}
+        </Button>
+      </div>
+      {showMap && (
+        <div className="mb-6">
+          <MapView
+            markers={filteredListings
+              .map(l => ({
+                id: l.id,
+                title: l.title,
+                price: l.price,
+                ...(l.city && cityCoordsRef.current[l.city] ? { lat: cityCoordsRef.current[l.city].lat, lng: cityCoordsRef.current[l.city].lng } : null)
+              }))
+              .filter(m => m.lat && m.lng)}
+            userLocation={userLocation}
+            height={420}
+          />
         </div>
       )}
 
