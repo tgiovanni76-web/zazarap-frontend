@@ -21,6 +21,8 @@ export default function NewListing() {
     title: '',
     description: '',
     price: '',
+    offerPrice: '',
+    expiresAt: '',
     category: '',
     city: '',
     seo_title: '',
@@ -114,7 +116,9 @@ export default function NewListing() {
 
     createListingMutation.mutate({
       ...formData,
-      price: parseFloat(formData.price)
+      price: parseFloat(formData.price),
+      offerPrice: formData.offerPrice ? parseFloat(formData.offerPrice) : undefined,
+      expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined
     });
   };
 
@@ -151,6 +155,25 @@ export default function NewListing() {
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
           className="zaza-input"
           placeholder="0.00"
+        />
+
+        <label className="zaza-form-label">Prezzo in offerta (€) — opzionale</label>
+        <input
+          name="offerPrice"
+          type="number"
+          value={formData.offerPrice}
+          onChange={(e) => setFormData({ ...formData, offerPrice: e.target.value })}
+          className="zaza-input"
+          placeholder=""
+        />
+
+        <label className="zaza-form-label">Data e ora di scadenza — opzionale</label>
+        <input
+          name="expiresAt"
+          type="datetime-local"
+          value={formData.expiresAt}
+          onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
+          className="zaza-input"
         />
 
         <label className="zaza-form-label">{t('category')}</label>

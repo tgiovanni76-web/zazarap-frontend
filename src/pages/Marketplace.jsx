@@ -45,6 +45,13 @@ export default function Marketplace() {
     queryFn: () => base44.auth.me(),
   });
 
+  // Trigger expiry checks in background on page load
+  useEffect(() => {
+    (async () => {
+      try { await base44.functions.invoke('handleListingsExpiry', {}); } catch (_) {}
+    })();
+  }, []);
+
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
     queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
@@ -535,7 +542,14 @@ export default function Marketplace() {
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
                 <div className="zaza-category">{t(listing.category)}</div>
                 <div className="zaza-title">{listing.title}</div>
-                <div className="zaza-price">{listing.price} €</div>
+                {listing.offerPrice ? (
+                  <div className="zaza-price">
+                    <span className="text-green-700 font-bold mr-2">{listing.offerPrice} €</span>
+                    <span className="line-through text-slate-400 text-sm">{listing.price} €</span>
+                  </div>
+                ) : (
+                  <div className="zaza-price">{listing.price} €</div>
+                )}
                 {listing.city && <div className="zaza-location">{listing.city}</div>}
               </Link>
             </div>

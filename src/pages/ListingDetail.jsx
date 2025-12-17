@@ -243,7 +243,19 @@ export default function ListingDetail() {
 
       <div className="zaza-detail-category">{t(listing.category)}</div>
       <h2 className="zaza-detail-title">{listing.title}</h2>
-      <div className="zaza-detail-price">{listing.price} €</div>
+      {listing.offerPrice ? (
+        <div className="zaza-detail-price">
+          <span className="text-green-600 font-bold mr-2">{listing.offerPrice} €</span>
+          <span className="line-through text-slate-400 text-base">{listing.price} €</span>
+        </div>
+      ) : (
+        <div className="zaza-detail-price">{listing.price} €</div>
+      )}
+      {listing.expiresAt && (new Date(listing.expiresAt) > new Date()) && (
+        <div className="text-sm text-red-600 mt-1">
+          Scade il {format(new Date(listing.expiresAt), 'dd/MM/yyyy HH:mm')}
+        </div>
+      )}
       {listing.city && <div className="zaza-detail-location">{listing.city}</div>}
 
       <div className="flex items-center gap-4 mb-4">

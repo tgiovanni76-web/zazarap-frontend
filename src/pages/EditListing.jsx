@@ -22,6 +22,8 @@ export default function EditListing() {
     title: '',
     description: '',
     price: '',
+    offerPrice: '',
+    expiresAt: '',
     category: '',
     city: '',
     seo_title: '',
@@ -48,6 +50,8 @@ export default function EditListing() {
         title: listing.title || '',
         description: listing.description || '',
         price: listing.price || '',
+        offerPrice: listing.offerPrice || '',
+        expiresAt: listing.expiresAt ? new Date(listing.expiresAt).toISOString().slice(0,16) : '',
         category: listing.category || '',
         city: listing.city || '',
         seo_title: listing.seo_title || '',
@@ -120,7 +124,9 @@ export default function EditListing() {
 
     updateListingMutation.mutate({
       ...formData,
-      price: parseFloat(formData.price)
+      price: parseFloat(formData.price),
+      offerPrice: formData.offerPrice ? parseFloat(formData.offerPrice) : undefined,
+      expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : null
     });
   };
 
@@ -179,6 +185,22 @@ export default function EditListing() {
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+          className="zaza-input"
+        />
+
+        <label className="zaza-form-label">Prezzo in offerta (€) — opzionale</label>
+        <input
+          type="number"
+          value={formData.offerPrice}
+          onChange={(e) => setFormData({ ...formData, offerPrice: e.target.value })}
+          className="zaza-input"
+        />
+
+        <label className="zaza-form-label">Data e ora di scadenza — opzionale</label>
+        <input
+          type="datetime-local"
+          value={formData.expiresAt}
+          onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
           className="zaza-input"
         />
 
