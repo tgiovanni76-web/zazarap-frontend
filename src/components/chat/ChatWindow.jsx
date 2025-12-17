@@ -406,6 +406,13 @@ export default function ChatWindow({
               reason,
               description: `[AI] ${moderation.rationale || 'Contenuto potenzialmente problematico'}`
             });
+
+            // Email admin for review
+            await base44.integrations.Core.SendEmail({
+              to: 'info@zazarap.com',
+              subject: `AI Moderation - Messaggio segnalato | Chat ${chat.id}`,
+              body: `Un messaggio è stato segnalato dalla moderazione AI.\n\nChat ID: ${chat.id}\nMessaggio ID: ${message.id}\nMittente: ${user.email}\nAnnuncio: ${listing?.title || ''}\nEtichette: ${(moderation.labels || []).join(', ')}\nSeverità: ${moderation.severity || 'n/d'}\n\nTesto:\n${text}`
+            });
           }
         }
       } catch (err) {
