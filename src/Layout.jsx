@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CookieBanner from '@/components/CookieBanner';
@@ -648,11 +648,11 @@ function LayoutInner({ children, currentPageName }) {
                                   WebkitTextFillColor: 'transparent',
                                   textShadow: '0 0 0 transparent',
                                   filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
-                                }}>Zazarap</span>
-                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">{t('slogan')}</span>
+                                }}>Zazarap.de</span>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">zazarap.de</span>
                                           </Link>
-                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white font-medium text-sm">
-                                          {t('home')}
+                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white p-1 rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
+                                            <Home className="h-5 w-5" aria-hidden="true" />
                                           </Link>
                                       </div>
 
