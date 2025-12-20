@@ -330,6 +330,22 @@ export default function ListingDetail() {
                 <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
                 {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
               </button>
+              {user && user.email !== listing.created_by && (
+                <FollowButton
+                  targetType="user"
+                  targetId={listing.created_by}
+                  className="w-full mt-3"
+                  labelFollow="Segui venditore"
+                  labelUnfollow="Smetti di seguire"
+                />
+              )}
+              <FollowButton
+                targetType="category"
+                targetId={listing.category}
+                className="w-full mt-3"
+                labelFollow="Segui categoria"
+                labelUnfollow="Non seguire più"
+              />
               <button
                 onClick={() => setShowReportModal(true)}
                 className="w-full mt-3 p-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-bold focus:ring-2 focus:ring-red-500"
