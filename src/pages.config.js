@@ -39,6 +39,7 @@ import CompleteProfile from './pages/CompleteProfile';
 import Werbung from './pages/Werbung';
 import UserProfile from './pages/UserProfile';
 import EditProfile from './pages/EditProfile';
+import SellerDashboard from './pages/SellerDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "Werbung": Werbung,
     "UserProfile": UserProfile,
     "EditProfile": EditProfile,
+    "SellerDashboard": SellerDashboard,
 }
 
 export const pagesConfig = {
