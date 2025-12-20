@@ -696,7 +696,7 @@ function LayoutInner({ children, currentPageName }) {
                             )}
                           </>
                         )}
-                        <LanguageSwitcher />
+                        <div className="p-1.5"><LanguageSwitcher /></div>
                       </nav>
                     </div>
                   </header>
