@@ -649,7 +649,7 @@ function LayoutInner({ children, currentPageName }) {
                                   textShadow: '0 0 0 transparent',
                                   filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
                                 }}>Zazarap</span>
-                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">{t('slogan')}</span>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">zazarap.de</span>
                                           </Link>
                                           <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white font-medium text-sm">
                                           {t('home')}
