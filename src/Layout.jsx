@@ -651,13 +651,14 @@ function LayoutInner({ children, currentPageName }) {
                                 }}>Zazarap.de</span>
                                           <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
                                           </Link>
-                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white p-1.5 rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
-                                            <Home className="h-5 w-5" aria-hidden="true" />
-                                          </Link>
+
                                       </div>
 
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-4" aria-label="Main navigation">
+                        <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white p-1.5 rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
+                          <Home className="h-5 w-5" aria-hidden="true" />
+                        </Link>
                         {!user && (
                           <Button 
                             onClick={() => base44.auth.redirectToLogin()}
