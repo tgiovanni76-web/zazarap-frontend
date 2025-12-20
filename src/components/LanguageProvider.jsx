@@ -243,7 +243,7 @@ const translations = {
     
     // Footer
     tagline: 'Der sichere und zuverlässige deutsche Marktplatz',
-    slogan: 'kleinanzeigen',
+    slogan: 'zazarap.de',
     newsletter: 'Newsletter',
     newsletterDesc: 'Erhalten Sie exklusive Angebote und Neuigkeiten',
     euDispute: 'EU-Streitschlichtung',
@@ -522,7 +522,7 @@ const translations = {
     
     // Footer
     tagline: 'Il marketplace italiano sicuro e affidabile',
-    slogan: 'annunci',
+    slogan: 'zazarap.de',
     newsletter: 'Newsletter',
     newsletterDesc: 'Ricevi offerte esclusive e novità',
     euDispute: 'Risoluzione controversie UE',
@@ -801,7 +801,7 @@ const translations = {
     
     // Footer
     tagline: 'Güvenli ve güvenilir Alman pazaryeri',
-    slogan: 'küçük ilanlar',
+    slogan: 'zazarap.de',
     newsletter: 'Bülten',
     newsletterDesc: 'Özel teklifler ve haberler alın',
     euDispute: 'AB Uyuşmazlık Çözümü',
@@ -1080,7 +1080,7 @@ const translations = {
     
     // Footer
     tagline: 'Безпечна та надійна німецька торговельна платформа',
-    slogan: 'оголошення',
+    slogan: 'zazarap.de',
     newsletter: 'Розсилка',
     newsletterDesc: 'Отримуйте ексклюзивні пропозиції та новини',
     euDispute: 'Вирішення спорів ЄС',
@@ -1337,7 +1337,7 @@ const translations = {
     contactUs: 'Nous contacter',
     allRightsReserved: 'Tous droits réservés',
     tagline: 'La place de marché allemande sûre et fiable',
-    slogan: 'petites annonces',
+    slogan: 'zazarap.de',
     newsletter: 'Newsletter',
     newsletterDesc: 'Recevez des offres exclusives et des actualités',
     euDispute: 'Résolution des litiges UE',
@@ -1477,7 +1477,7 @@ const translations = {
     contactUs: 'Kontakt',
     allRightsReserved: 'Wszelkie prawa zastrzeżone',
     tagline: 'Bezpieczna i niezawodna niemiecka platforma handlowa',
-    slogan: 'ogłoszenia',
+    slogan: 'zazarap.de',
     newsletter: 'Newsletter',
     newsletterDesc: 'Otrzymuj ekskluzywne oferty i aktualności',
     euDispute: 'Rozwiązywanie sporów UE',
@@ -1639,7 +1639,7 @@ const translations = {
     
     // Footer
     tagline: 'The secure and reliable German marketplace',
-    slogan: 'classifieds',
+    slogan: 'zazarap.de',
     newsletter: 'Newsletter',
     newsletterDesc: 'Receive exclusive offers and news',
     euDispute: 'EU Dispute Resolution',
