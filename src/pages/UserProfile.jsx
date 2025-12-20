@@ -15,6 +15,8 @@ import {
 import { format } from 'date-fns';
 import { useLanguage } from '@/components/LanguageProvider';
 import { AggregatedRating, ReviewCard } from '@/components/reviews/UserRatingDisplay';
+import FollowButton from '../components/profile/FollowButton';
+import UserStats from '../components/profile/UserStats';
 
 export default function UserProfile() {
   const { t } = useLanguage();
@@ -198,12 +200,22 @@ export default function UserProfile() {
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Contatta
                 </Button>
+                <FollowButton
+                  targetType="user"
+                  targetId={userEmail}
+                  className="mt-2 w-full"
+                  labelFollow="Segui venditore"
+                  labelUnfollow="Smetti di seguire"
+                />
               </div>
             )}
           </div>
         </CardContent>
       </Card>
 
+      <div className="mb-6">
+        <UserStats userEmail={userEmail} />
+      </div>
       {/* Tabs for Listings and Reviews */}
       <Tabs defaultValue="listings">
         <TabsList className="mb-4">

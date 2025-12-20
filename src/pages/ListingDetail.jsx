@@ -15,6 +15,7 @@ import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
 import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
+import FollowButton from '../components/profile/FollowButton';
 
 export default function ListingDetail() {
   const { t } = useLanguage();

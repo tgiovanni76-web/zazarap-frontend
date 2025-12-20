@@ -15,6 +15,7 @@ import AIRecommendations from '../components/marketplace/AIRecommendations';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
+import FollowButton from '../components/profile/FollowButton';
 
 export default function Marketplace() {
   const { t } = useLanguage();
@@ -353,7 +354,16 @@ export default function Marketplace() {
             })}
           </SelectContent>
         </Select>
-      </div>
+        {categoryFilter !== 'all' && (
+          <FollowButton
+            targetType="category"
+            targetId={categoryFilter}
+            className="md:ml-2 h-12"
+            labelFollow="Segui categoria"
+            labelUnfollow="Non seguire più"
+          />
+        )}
+        </div>
 
       {showFilters && (
         <Card className="mb-6">
