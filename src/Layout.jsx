@@ -649,9 +649,9 @@ function LayoutInner({ children, currentPageName }) {
                                   textShadow: '0 0 0 transparent',
                                   filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
                                 }}>Zazarap.de</span>
-                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">zazarap.de</span>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">Kleine Azeigel</span>
                                           </Link>
-                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white p-1 rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
+                                          <Link to={createPageUrl('Marketplace')} className="text-[#f9d65c] hover:text-white p-1.5 rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
                                             <Home className="h-5 w-5" aria-hidden="true" />
                                           </Link>
                                       </div>
@@ -669,19 +669,19 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <>
-                            <Link to={createPageUrl('Werbung')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Werbung & Premium" aria-label="Advertising & Premium">
+                            <Link to={createPageUrl('Werbung')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1.5" title="Werbung & Premium" aria-label="Advertising & Premium">
                               <Megaphone className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Inserieren" aria-label="Create new listing">
+                            <Link to={createPageUrl('NewListing')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1.5" title="Inserieren" aria-label="Create new listing">
                               <Plus className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Verkäufe" aria-label="My sales">
+                            <Link to={createPageUrl('MySales')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1.5" title="Verkäufe" aria-label="My sales">
                               <TrendingUp className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Käufe" aria-label="My purchases">
+                            <Link to={createPageUrl('MyPurchases')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1.5" title="Käufe" aria-label="My purchases">
                               <Package className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative focus:ring-2 focus:ring-white rounded p-1" title="Benachrichtigungen" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
+                            <Link to={createPageUrl('Notifications')} className="text-[#f9d65c] hover:text-white relative focus:ring-2 focus:ring-white rounded p-1.5" title="Benachrichtigungen" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
                               <Bell className="h-5 w-5" aria-hidden="true" />
                               {unreadCount > 0 && (
                                 <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
@@ -690,7 +690,7 @@ function LayoutInner({ children, currentPageName }) {
                               )}
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1" title="Admin" aria-label="Admin Dashboard">
+                              <Link to={createPageUrl('AdminDashboard')} className="text-[#f9d65c] hover:text-white focus:ring-2 focus:ring-white rounded p-1.5" title="Admin" aria-label="Admin Dashboard">
                                 <Settings className="h-5 w-5" aria-hidden="true" />
                               </Link>
                             )}
