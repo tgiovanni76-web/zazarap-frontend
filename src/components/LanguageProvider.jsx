@@ -132,7 +132,7 @@ const i18n = {
   "dashboard.totalRevenue": { de: "Gesamtumsatz", it: "Ricavi totali", en: "Total Revenue", fr: "Revenu total", pl: "Łączne przychody", tr: "Toplam Gelir", uk: "Загальний дохід" },
   "dashboard.listingsByCategory": { de: "Anzeigen nach Kategorie", it: "Annunci per categoria", en: "Listings by Category", fr: "Annonces par catégorie", pl: "Ogłoszenia wg kategorii", tr: "Kategoriye göre ilanlar", uk: "Оголошення за категоріями" },
   "dashboard.recentListings": { de: "Neueste Anzeigen", it: "Annunci recenti", en: "Recent Listings", fr: "Annonces récentes", pl: "Najnowsze ogłoszenia", tr: "En Son İlanlar", uk: "Останні оголошення" },
-  "dashboard.exportCSV": { de: "CSV exportieren", it: "Esporta CSV", en: "Export CSV", fr: "Exporter CSV", pl: "Eksportuj CSV", tr: "CSV Dışa Aktar", uk: "Експортувати CSV" }
+  "dashboard.exportCSV": { de: "CSV exportieren", it: "Esporta CSV", en: "Export CSV", fr: "Exporter CSV", pl: "Eksportuj CSV", tr: "CSV Dışa Aktar", uk: "Експортувати CSV" },
   "dashboard.listingsActivity": { de: "Anzeigen-Aktivit e4t (Letzte 7 Tage)", it: "Attivit e0 annunci (ultimi 7 giorni)", en: "Listings Activity (Last 7 Days)", fr: "Activit e9 des annonces (7 derniers jours)", pl: "Aktywno5b07 og42osze44 (ostatnie 7 dni)", tr: "30lan Aktivitesi (Son 7 G fcn)", uk: "Активність оголошень (останні 7 днів)" },
   "dashboard.legend.active": { de: "Aktive Anzeigen", it: "Annunci attivi", en: "Active Listings", fr: "Annonces actives", pl: "Aktywne ogłoszenia", tr: "Aktif 30lanlar", uk: "Активні оголошення" },
   "dashboard.legend.sold": { de: "Verkaufte Artikel", it: "Oggetti venduti", en: "Sold Items", fr: "Articles vendus", pl: "Sprzedane", tr: "Sat31lanlar", uk: "Продані товари" },
