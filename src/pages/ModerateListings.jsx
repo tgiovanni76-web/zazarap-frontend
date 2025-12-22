@@ -116,7 +116,7 @@ export default function ModerateListings() {
   };
 
   const handleDelete = (listing) => {
-    const reason = prompt('Motivo eliminazione (verrà notificato al venditore):');
+    const reason = prompt(t('admin.moderation.deleteReasonPrompt'));
     if (reason) {
       deleteListingMutation.mutate(listing.id);
       
@@ -289,7 +289,7 @@ export default function ModerateListings() {
                           className="bg-red-600 hover:bg-red-700"
                         >
                           <XCircle className="h-4 w-4 mr-1" />
-                          Rifiuta
+                          {t('reject')}
                         </Button>
                       </>
                     )}
