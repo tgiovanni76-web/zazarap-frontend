@@ -274,7 +274,7 @@ const i18n = {
     "category.servizi": { de: "Dienstleistungen", it: "Servizi", en: "Services", fr: "Services", pl: "Usługi", tr: "Hizmetler", uk: "Послуги" },
     "category.elettronica": { de: "Elektronik", it: "Elettronica", en: "Electronics", fr: "Électronique", pl: "Elektronika", tr: "Elektronik", uk: "Електроніка" },
     "category.animali": { de: "Tiere", it: "Animali", en: "Animals", fr: "Animaux", pl: "Zwierzęta", tr: "Hayvanlar", uk: "Тварини" },
-  "category.arredamento": { de: "Möbel", it: "Arredamento", en: "Furniture", fr: "Meubles", pl: "Meble", tr: "Mobilya", uk: "Меблі" },
+    "category.arredamento": { de: "Möbel", it: "Arredamento", en: "Furniture", fr: "Meubles", pl: "Meble", tr: "Mobilya", uk: "Меблі" },
   "category.abbigliamento": { de: "Kleidung", it: "Abbigliamento", en: "Clothing", fr: "Vêtements", pl: "Odzież", tr: "Giyim", uk: "Одяг" },
   "category.libri": { de: "Bücher", it: "Libri", en: "Books", fr: "Livres", pl: "Książki", tr: "Kitaplar", uk: "Книги" },
   "category.altro": { de: "Sonstiges", it: "Altro", en: "Other", fr: "Autre", pl: "Inne", tr: "Diğer", uk: "Інше" },
