@@ -366,7 +366,7 @@ export default function ModerateListings() {
                       setSelectedListing(null);
                     }}
                   >
-                    Annulla
+                    {t('cancel')}
                   </Button>
                 </div>
               </div>
