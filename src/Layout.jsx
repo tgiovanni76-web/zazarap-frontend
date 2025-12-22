@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
+import ErrorBoundary from '@/components/core/ErrorBoundary';
+import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
@@ -7,14 +9,14 @@ import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Setting
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
-import CookieBanner from '@/components/CookieBanner';
-import EmailVerificationBanner from '@/components/EmailVerificationBanner';
-import Analytics from '@/components/Analytics';
-import StructuredData from '@/components/marketplace/StructuredData';
-import SEOHead from '@/components/SEOHead';
+
+
+
+
+
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import NewsletterForm from '@/components/NewsletterForm';
+
+
 
 function LayoutContent({ children, currentPageName, user, unreadCount }) {
   const { t } = useLanguage();
