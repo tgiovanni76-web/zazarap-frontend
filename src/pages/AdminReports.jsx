@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminReports() {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -29,7 +31,7 @@ export default function AdminReports() {
     mutationFn: (data) => base44.entities.Report.update(data.id, { status: data.status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reports'] });
-      toast.success('Segnalazione aggiornata');
+      toast.success(t('admin.reportUpdated'));
     }
   });
 
@@ -54,7 +56,7 @@ export default function AdminReports() {
   });
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const statusColors = {
@@ -65,7 +67,7 @@ export default function AdminReports() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Segnalazioni Utenti</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('admin.reports')}</h2>
 
       <div className="grid grid-cols-1 gap-4">
         {reports.map(report => {
@@ -97,18 +99,18 @@ export default function AdminReports() {
                     variant="outline"
                     size="sm"
                   >
-                    Revisionata
+                    {t('action.reviewed')}
                   </Button>
                   <Button
                     onClick={() => updateReportMutation.mutate({ id: report.id, status: 'resolved' })}
                     size="sm"
                     className="bg-green-600 hover:bg-green-700"
                   >
-                    Risolta
+                    {t('action.resolved')}
                   </Button>
                   <Button
                     onClick={() => {
-                      if (confirm(`Bannare ${report.reportedUserId}?`)) {
+                      if (confirm(`${t('admin.confirmBan')} ${report.reportedUserId}?`)) {
                         banUserMutation.mutate(report.reportedUserId);
                         updateReportMutation.mutate({ id: report.id, status: 'resolved' });
                       }
@@ -116,7 +118,7 @@ export default function AdminReports() {
                     size="sm"
                     variant="destructive"
                   >
-                    Ban Utente
+                    {t('action.banUser')}
                   </Button>
                 </div>
               </CardContent>
@@ -127,7 +129,7 @@ export default function AdminReports() {
 
       {reports.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Nessuna segnalazione trovata
+          {t('admin.noReportsFound')}
         </div>
       )}
     </div>

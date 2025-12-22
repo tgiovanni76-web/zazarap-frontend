@@ -205,7 +205,47 @@ const i18n = {
     "accessDenied": { de: "Zugriff verweigert", it: "Accesso Negato", en: "Access Denied", fr: "Accès refusé", pl: "Odmowa dostępu", tr: "Erişim Engellendi", uk: "Доступ заборонено" },
     "adminOnly": { de: "Nur Administratoren können auf diese Seite zugreifen.", it: "Solo gli amministratori possono accedere a questa pagina.", en: "Only administrators can access this page.", fr: "Seuls les administrateurs peuvent accéder à cette page.", pl: "Tylko administratorzy mogą uzyskać dostęp do tej strony.", tr: "Bu sayfaya yalnızca yöneticiler erişebilir.", uk: "Тільки адміністратори можуть отримати доступ до цієї сторінки." },
 
-  // Categories (canonical keys)
+    "action.reviewed": { de: "Überprüft", it: "Revisionata", en: "Reviewed" },
+    "action.resolved": { de: "Gelöst", it: "Risolta", en: "Resolved" },
+    "action.banUser": { de: "Benutzer sperren", it: "Ban Utente", en: "Ban User" },
+
+    "admin.noReportsFound": { de: "Keine Meldungen gefunden", it: "Nessuna segnalazione trovata", en: "No reports found" },
+    "admin.noDisputesFound": { de: "Keine Streitfälle gefunden", it: "Nessuna dispute trovata", en: "No disputes found" },
+    "admin.total": { de: "Gesamt", it: "Totale", en: "Total" },
+    "admin.active": { de: "Aktiv", it: "Attivi", en: "Active" },
+    "admin.blocked": { de: "Gesperrt", it: "Bloccati", en: "Blocked" },
+    "admin.admins": { de: "Admins", it: "Admin", en: "Admins" },
+    "admin.searchUserPlaceholder": { de: "Nach E-Mail oder Namen suchen...", it: "Cerca per email o nome...", en: "Search by email or name..." },
+    "admin.noUsersFound": { de: "Keine Benutzer gefunden", it: "Nessun utente trovato", en: "No users found" },
+    "admin.blockUser": { de: "Benutzer sperren", it: "Blocca Utente", en: "Block User" },
+    "admin.userLabel": { de: "Benutzer:", it: "Utente:", en: "User:" },
+    "admin.blockReasonLabel": { de: "Sperrgrund", it: "Motivo del blocco", en: "Block reason" },
+    "admin.blockReasonPlaceholder": { de: "Geben Sie den Sperrgrund an...", it: "Descrivi il motivo del blocco...", en: "Describe the block reason..." },
+    "admin.activityHistory": { de: "Aktivitätsverlauf", it: "Storico Attività", en: "Activity History" },
+    "admin.noActivity": { de: "Keine Aktivitäten registriert", it: "Nessuna attività registrata", en: "No activity recorded" },
+
+    "admin.newCategory": { de: "Neue Kategorie", it: "Nuova Categoria", en: "New Category" },
+    "admin.editCategory": { de: "Kategorie bearbeiten", it: "Modifica Categoria", en: "Edit Category" },
+    "admin.deactivated": { de: "Deaktiviert", it: "Disattivata", en: "Deactivated" },
+    "admin.deleteCategoryConfirm": { de: "Diese Kategorie löschen?", it: "Eliminare questa categoria?", en: "Delete this category?" },
+
+    "admin.reportUpdated": { de: "Meldung aktualisiert", it: "Segnalazione aggiornata", en: "Report updated" },
+    "admin.userBanned": { de: "Benutzer gesperrt", it: "Utente bannato", en: "User banned" },
+    "admin.ticketUpdated": { de: "Ticket aktualisiert", it: "Ticket aggiornato", en: "Ticket updated" },
+
+    "admin.supportReplyTitle": { de: "Support-Antwort", it: "Risposta Supporto", en: "Support Reply" },
+    "admin.supportReplyPrefix": { de: "Der Support hat auf dein Ticket geantwortet:", it: "Il supporto ha risposto al tuo ticket:", en: "Support replied to your ticket:" },
+    "email.supportReplySubjectPrefix": { de: "Antwort auf", it: "Risposta a", en: "Reply to" },
+    "email.supportReplyBodyHeader": { de: "Wir haben auf dein Support-Ticket geantwortet:", it: "Abbiamo risposto al tuo ticket di supporto:", en: "We replied to your support ticket:" },
+    "email.supportReplyBodyFooter": { de: "Wenn du weitere Fragen hast, antworte bitte auf diese Nachricht.\nDas Zazarap Team", it: "Se hai altre domande, non esitare a contattarci.\nIl team Zazarap", en: "If you have more questions, just reply to this message.\nThe Zazarap Team" },
+
+    "admin.accountBlockedTitle": { de: "Konto gesperrt", it: "Account bloccato", en: "Account blocked" },
+    "admin.accountBlockedMsgPrefix": { de: "Dein Konto wurde gesperrt. Grund:", it: "Il tuo account è stato bloccato. Motivo:", en: "Your account has been blocked. Reason:" },
+    "admin.accountUnblockedTitle": { de: "Konto entsperrt", it: "Account sbloccato", en: "Account unblocked" },
+    "admin.accountUnblockedMessage": { de: "Dein Konto wurde entsperrt und du kannst dich normal anmelden.", it: "Il tuo account è stato sbloccato e puoi accedere normalmente.", en: "Your account has been unblocked and you can sign in normally." },
+    "admin.confirmBan": { de: "Diesen Benutzer sperren", it: "Bannare", en: "Ban" },
+
+    // Categories (canonical keys)
   "category.veicoli": { de: "Fahrzeuge", it: "Veicoli", en: "Vehicles", fr: "Véhicules", pl: "Pojazdy", tr: "Araçlar", uk: "Транспорт" },
   "category.sport": { de: "Sport", it: "Sport", en: "Sports", fr: "Sport", pl: "Sport", tr: "Spor", uk: "Спорт" },
   "category.servizi": { de: "Dienstleistungen", it: "Servizi", en: "Services", fr: "Services", pl: "Usługi", tr: "Hizmetler", uk: "Послуги" },

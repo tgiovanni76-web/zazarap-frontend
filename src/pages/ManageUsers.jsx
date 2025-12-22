@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Users, Shield, Ban, Unlock, Activity, Search, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function ManageUsers() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +19,7 @@ export default function ManageUsers() {
   const [showBlockDialog, setShowBlockDialog] = useState(false);
   const [showActivityDialog, setShowActivityDialog] = useState(false);
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -103,8 +105,8 @@ export default function ManageUsers() {
   if (currentUser?.role !== 'admin') {
     return (
       <div className="py-8 text-center">
-        <h2 className="text-2xl font-bold">Accesso negato</h2>
-        <p className="text-slate-600">Solo gli amministratori possono gestire gli utenti.</p>
+        <h2 className="text-2xl font-bold">{t('accessDenied')}</h2>
+        <p className="text-slate-600">{t('adminOnly')}</p>
       </div>
     );
   }
@@ -124,22 +126,22 @@ export default function ManageUsers() {
   return (
     <div className="py-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Gestione Utenti</h2>
+        <h2 className="text-3xl font-bold">{t('admin.userManagement')}</h2>
         <div className="flex gap-4">
           <Card className="px-4 py-2">
-            <div className="text-sm text-slate-600">Totale</div>
+            <div className="text-sm text-slate-600">{t('admin.total')}</div>
             <div className="text-2xl font-bold">{stats.total}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-sm text-slate-600">Attivi</div>
+            <div className="text-sm text-slate-600">{t('admin.active')}</div>
             <div className="text-2xl font-bold text-green-600">{stats.active}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-sm text-slate-600">Bloccati</div>
+            <div className="text-sm text-slate-600">{t('admin.blocked')}</div>
             <div className="text-2xl font-bold text-red-600">{stats.blocked}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-sm text-slate-600">Admin</div>
+            <div className="text-sm text-slate-600">{t('admin.admins')}</div>
             <div className="text-2xl font-bold text-indigo-600">{stats.admins}</div>
           </Card>
         </div>
@@ -150,7 +152,7 @@ export default function ManageUsers() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
             <Input
-              placeholder="Cerca per email o nome..."
+              placeholder={t('admin.searchUserPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -253,7 +255,7 @@ export default function ManageUsers() {
       {filteredUsers.length === 0 && (
         <div className="text-center py-12">
           <Users className="h-12 w-12 mx-auto mb-4 text-slate-400" />
-          <p className="text-slate-500">Nessun utente trovato</p>
+          <p className="text-slate-500">{t('admin.noUsersFound')}</p>
         </div>
       )}
 
@@ -262,7 +264,7 @@ export default function ManageUsers() {
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Blocca Utente</CardTitle>
+                <CardTitle>{t('admin.blockUser')}</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => { setShowBlockDialog(false); setBlockReason(''); }}>
                   <X className="h-4 w-4" />
                 </Button>
@@ -271,14 +273,14 @@ export default function ManageUsers() {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium mb-2">Utente:</p>
+                  <p className="text-sm font-medium mb-2">{t('admin.userLabel')}</p>
                   <p className="font-bold">{selectedUser.full_name}</p>
                   <p className="text-sm text-slate-600">{selectedUser.email}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Motivo del blocco</label>
+                  <label className="text-sm font-medium mb-2 block">{t('admin.blockReasonLabel')}</label>
                   <Textarea
-                    placeholder="Descrivi il motivo del blocco..."
+                    placeholder={t('admin.blockReasonPlaceholder')}
                     value={blockReason}
                     onChange={(e) => setBlockReason(e.target.value)}
                     rows={4}
@@ -292,7 +294,7 @@ export default function ManageUsers() {
                     className="flex-1 bg-red-600 hover:bg-red-700"
                   >
                     <Ban className="h-4 w-4 mr-2" />
-                    Blocca Utente
+                    {t('admin.blockUser')}
                   </Button>
                   <Button
                     variant="outline"
