@@ -108,7 +108,7 @@ export default function Werbung() {
               title={t('ads.packages.topAd.title')} 
               description={t('ads.packages.topAd.desc')}
               price="€4,99"
-              btnText="Jetzt kaufen"
+              btnText={t('ads.btn.buyNow')}
               onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 4.99 })}
             />
             <PricingCard 
