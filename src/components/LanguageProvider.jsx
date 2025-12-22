@@ -245,6 +245,9 @@ const i18n = {
     "admin.accountUnblockedMessage": { de: "Dein Konto wurde entsperrt und du kannst dich normal anmelden.", it: "Il tuo account è stato sbloccato e puoi accedere normalmente.", en: "Your account has been unblocked and you can sign in normally." },
     "admin.confirmBan": { de: "Diesen Benutzer sperren", it: "Bannare", en: "Ban" },
 
+    "admin.released": { de: "Freigegeben", it: "Rilasciati", en: "Released" },
+    "admin.totalTransactions": { de: "Transaktionen gesamt", it: "Totale Transazioni", en: "Total Transactions" },
+
     // Categories (canonical keys)
   "category.veicoli": { de: "Fahrzeuge", it: "Veicoli", en: "Vehicles", fr: "Véhicules", pl: "Pojazdy", tr: "Araçlar", uk: "Транспорт" },
   "category.sport": { de: "Sport", it: "Sport", en: "Sports", fr: "Sport", pl: "Sport", tr: "Spor", uk: "Спорт" },

@@ -47,8 +47,8 @@ export default function AdminTickets() {
 
         await base44.integrations.Core.SendEmail({
           to: ticket.userId,
-          subject: `Risposta a: ${ticket.subject}`,
-          body: `Ciao,\n\nAbbiamo risposto al tuo ticket di supporto:\n\n${response}\n\nSe hai altre domande, non esitare a contattarci.\n\nIl team Zazarap`
+          subject: `${t('email.supportReplySubjectPrefix')}: ${ticket.subject}`,
+          body: `${t('email.supportReplyBodyHeader')}\n\n${response}\n\n${t('email.supportReplyBodyFooter')}`
         });
       }
     },
@@ -112,7 +112,7 @@ export default function AdminTickets() {
 
               {ticket.adminResponse ? (
                 <div className="p-4 bg-green-50 border border-green-200 rounded">
-                  <p className="text-sm font-semibold text-green-800 mb-1">Risposta Admin:</p>
+                  <p className="text-sm font-semibold text-green-800 mb-1">{t('admin.supportReplyTitle')}:</p>
                   <p className="text-sm text-green-700">{ticket.adminResponse}</p>
                 </div>
               ) : (

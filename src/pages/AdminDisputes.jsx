@@ -137,7 +137,7 @@ export default function AdminDisputes() {
                 {dispute.status === 'open' || dispute.status === 'under_review' ? (
                   <div className="space-y-3 mt-4 p-4 bg-slate-50 rounded">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Risoluzione</label>
+                      <label className="text-sm font-medium mb-2 block">{t('admin.supportReplyTitle')}</label>
                       <Textarea
                         placeholder="Descrivi la decisione presa..."
                         value={selectedDispute === dispute.id ? resolution : ''}
@@ -149,7 +149,7 @@ export default function AdminDisputes() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Note Admin (private)</label>
+                      <label className="text-sm font-medium mb-2 block">{t('adminOnly')}</label>
                       <Textarea
                         placeholder="Note interne..."
                         value={selectedDispute === dispute.id ? adminNotes : ''}
@@ -171,7 +171,7 @@ export default function AdminDisputes() {
                         variant="outline"
                         size="sm"
                       >
-                        In Revisione
+                        {t('admin.moderation.pending')}
                       </Button>
                       <Button
                         onClick={() => resolveDisputeMutation.mutate({
@@ -184,7 +184,7 @@ export default function AdminDisputes() {
                         size="sm"
                         className="bg-green-600 hover:bg-green-700"
                       >
-                        Risolvi
+                        {t('action.resolved')}
                       </Button>
                       <Button
                         onClick={() => resolveDisputeMutation.mutate({
@@ -220,7 +220,7 @@ export default function AdminDisputes() {
 
       {disputes.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Nessuna dispute trovata
+          {t('admin.noDisputesFound')}
         </div>
       )}
     </div>

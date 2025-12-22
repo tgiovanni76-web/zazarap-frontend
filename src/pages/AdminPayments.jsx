@@ -104,19 +104,19 @@ export default function AdminPayments() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">In Escrow</div>
+            <div className="text-sm text-slate-500 mb-1">{t('inEscrow')}</div>
             <div className="text-3xl font-bold text-blue-600">{totalEscrow.toFixed(0)}€</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Rilasciati</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.released')}</div>
             <div className="text-3xl font-bold text-green-600">{totalReleased.toFixed(0)}€</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">Totale Transazioni</div>
+            <div className="text-sm text-slate-500 mb-1">{t('admin.totalTransactions')}</div>
             <div className="text-3xl font-bold">{payments.length}</div>
           </CardContent>
         </Card>

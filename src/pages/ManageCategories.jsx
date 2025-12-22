@@ -90,14 +90,14 @@ export default function ManageCategories() {
         <h2 className="text-3xl font-bold">{t('admin.categoryManagement')}</h2>
         <Button onClick={() => { setShowForm(true); setEditingCategory(null); setFormData({ name: '', icon: '', description: '', active: true, order: 0 }); }}>
           <Plus className="h-4 w-4 mr-2" />
-          Nuova Categoria
+          {t('admin.newCategory')}
         </Button>
       </div>
 
       {showForm && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>{editingCategory ? 'Modifica Categoria' : 'Nuova Categoria'}</CardTitle>
+            <CardTitle>{editingCategory ? t('admin.editCategory') : t('admin.newCategory')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -170,7 +170,7 @@ export default function ManageCategories() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold">{category.name}</h3>
-                      {!category.active && <Badge variant="secondary">Disattivata</Badge>}
+                      {!category.active && <Badge variant="secondary">{t('admin.deactivated')}</Badge>
                     </div>
                     {category.description && <p className="text-sm text-slate-600">{category.description}</p>}
                     <p className="text-xs text-slate-500">Icona: {category.icon || 'N/A'} | Ordine: {category.order}</p>
@@ -181,7 +181,7 @@ export default function ManageCategories() {
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => {
-                    if (confirm('Eliminare questa categoria?')) {
+                    if (confirm(t('admin.deleteCategoryConfirm'))) {
                       deleteCategoryMutation.mutate(category.id);
                     }
                   }}>
