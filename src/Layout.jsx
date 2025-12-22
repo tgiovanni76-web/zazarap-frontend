@@ -755,6 +755,7 @@ function LayoutInner({ children, currentPageName }) {
                         <h3 className="font-semibold mb-3">{t('support')}</h3>
                         <ul className="space-y-2">
                           <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
+                          <li><Link to={createPageUrl('Blog')} className="text-white hover:text-slate-300">Blog</Link></li>
                           <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">{t('contactUs')}</Link></li>
                           <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">{t('completeProfile')}</Link></li>
                           </ul>
