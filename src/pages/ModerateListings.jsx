@@ -168,11 +168,11 @@ export default function ModerateListings() {
             <div className="text-xl font-bold text-orange-600">{stats.pending}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">{t('label.approved')}</div>
+            <div className="text-xs text-slate-600">{t('admin.moderation.approved')}</div>
             <div className="text-xl font-bold text-green-600">{stats.approved}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">{t('label.rejected')}</div>
+            <div className="text-xs text-slate-600">{t('admin.moderation.rejected')}</div>
             <div className="text-xl font-bold text-red-600">{stats.rejected}</div>
           </Card>
         </div>
@@ -191,10 +191,10 @@ export default function ModerateListings() {
               value={filterModeration}
               onChange={(e) => setFilterModeration(e.target.value)}
             >
-              <option value="all">{t('admin.moderation.moderationAll')}</option>
+              <option value="all">{t('admin.moderation.allModeration')}</option>
               <option value="pending">{t('pending')}</option>
-              <option value="approved">{t('label.approved')}</option>
-              <option value="rejected">{t('label.rejected')}</option>
+              <option value="approved">{t('admin.moderation.approved')}</option>
+              <option value="rejected">{t('admin.moderation.rejected')}</option>
             </select>
             <select
               className="w-full p-2 border rounded-md"
@@ -246,12 +246,12 @@ export default function ModerateListings() {
                         )}
                         {listing.moderationStatus === 'approved' && (
                           <Badge className="bg-green-100 text-green-800">
-                            {t('label.approved')}
+                            {t('admin.moderation.approved')}
                           </Badge>
                         )}
                         {listing.moderationStatus === 'rejected' && (
                           <Badge className="bg-red-100 text-red-800">
-                            {t('label.rejected')}
+                            {t('admin.moderation.rejected')}
                           </Badge>
                         )}
                       </div>

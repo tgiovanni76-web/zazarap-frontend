@@ -72,7 +72,7 @@ export default function DashboardFilters({
               className="bg-indigo-600 hover:bg-indigo-700 gap-2"
             >
               <Download className="w-4 h-4" />
-              Export CSV
+              {t('dashboard.exportCSV')}
             </Button>
           </div>
         </div>

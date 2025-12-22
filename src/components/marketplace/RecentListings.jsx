@@ -18,7 +18,7 @@ export default function RecentListings({ listings }) {
   return (
     <Card className="border-none shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Recent Listings</CardTitle>
+        <CardTitle className="text-xl font-semibold">{t('dashboard.recentListings')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
