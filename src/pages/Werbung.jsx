@@ -153,7 +153,7 @@ export default function Werbung() {
               title={t('ads.packages.premiumShop.title')} 
               features={[t('ads.features.unlimitedAds'), t('ads.features.homepageBanner'), t('ads.features.prioritySupport')]}
               price="€79,99 / Monat"
-              btnText="Jetzt abonnieren"
+              btnText={t('ads.btn.subscribeNow')}
               onAction={() => openRequest({ packageName: 'Premium Shop-Paket', price: '€79,99 / Monat' })}
             />
           </div>
