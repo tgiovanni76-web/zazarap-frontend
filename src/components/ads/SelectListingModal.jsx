@@ -42,7 +42,7 @@ export default function SelectListingModal({ open, onClose, listings = [], packa
           )}
         </div>
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose}>Annulla</Button>
+          <Button variant="outline" onClick={onClose}>{t('cancel')}</Button>
           <Button onClick={() => onConfirm && selected && onConfirm(selected)} disabled={!selected || listings.length === 0} className="bg-[#d62020] hover:bg-[#b91818]">Attiva</Button>
         </DialogFooter>
       </DialogContent>
