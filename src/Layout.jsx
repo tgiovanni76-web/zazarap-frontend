@@ -15,6 +15,12 @@ import { initAuditLogger } from '@/components/auditLogger';
 
 
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
+const Analytics = lazy(() => import('@/components/Analytics'));
+const StructuredData = lazy(() => import('@/components/marketplace/StructuredData'));
+const SEOHead = lazy(() => import('@/components/SEOHead'));
+const LanguageSwitcher = lazy(() => import('@/components/LanguageSwitcher'));
+const NewsletterForm = lazy(() => import('@/components/NewsletterForm'));
+const CookieBanner = lazy(() => import('@/components/CookieBanner'));
 
 
 
@@ -22,9 +28,9 @@ function LayoutContent({ children, currentPageName, user, unreadCount }) {
   const { t } = useLanguage();
   
   return (
-    <>
+    <ErrorBoundary>
       {/* ... content with t() ... */}
-    </>
+    </ErrorBoundary>
   );
 }
 
@@ -71,11 +77,14 @@ function LayoutInner({ children, currentPageName }) {
   const unreadCount = notifications.length;
 
   return (
-    <>
+    <ErrorBoundary>
       <div className="min-h-screen bg-slate-50">
-        <Analytics />
-        <SEOHead googleVerification={seoSettings?.googleSiteVerification} />
-        <StructuredData type="organization" data={{}} />
+        <PerformanceMonitor />
+        <Suspense fallback={null}>
+          <Analytics />
+          <SEOHead googleVerification={seoSettings?.googleSiteVerification} />
+          <StructuredData type="organization" data={{}} />
+        </Suspense>
       <style>{`
           :root {
             --z-gray-light: #F2F2F2;
@@ -675,7 +684,7 @@ function LayoutInner({ children, currentPageName }) {
                             </Button>
                         )}
                         {user && (
-                          <>
+                          <ErrorBoundary>
                             <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
                               <Megaphone className="h-5 w-5" aria-hidden="true" />
                             </Link>
@@ -701,9 +710,9 @@ function LayoutInner({ children, currentPageName }) {
                                 <Settings className="h-5 w-5" aria-hidden="true" />
                               </Link>
                             )}
-                          </>
+                          </ErrorBoundary>
                         )}
-                        <div className="inline-flex items-center justify-center h-8 w-8"><LanguageSwitcher /></div>
+                        <div className="inline-flex items-center justify-center h-8 w-8"><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
                     </div>
                   </header>
@@ -714,7 +723,7 @@ function LayoutInner({ children, currentPageName }) {
         {children}
       </main>
       
-      <CookieBanner />
+      <Suspense fallback={null}><CookieBanner /></Suspense>
       
       <footer className="bg-[#0c1526] text-white mt-20 py-10">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
@@ -725,7 +734,7 @@ function LayoutInner({ children, currentPageName }) {
 
                         <h3 className="font-semibold mt-6 mb-1">{t('newsletter')}</h3>
                         <p className="text-sm text-slate-300 mb-3">{t('newsletterDesc')}</p>
-                        <NewsletterForm source="footer" />
+                        <Suspense fallback={null}><NewsletterForm source="footer" /></Suspense>
                       </div>
 
                       {/* Rechtliches */}
@@ -767,6 +776,6 @@ function LayoutInner({ children, currentPageName }) {
                       </div>
                   </footer>
       </div>
-      </>
+      </ErrorBoundary>
       );
       }
