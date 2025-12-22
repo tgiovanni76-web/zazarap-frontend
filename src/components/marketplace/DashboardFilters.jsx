@@ -11,7 +11,7 @@ export default function DashboardFilters({
   categoryFilter, 
   setCategoryFilter,
   onExport,
-  onReset 
+  on{t('resetFilters')} 
 }) {
   const { t } = useLanguage();
   return (
@@ -60,12 +60,12 @@ export default function DashboardFilters({
 
           <div className="flex gap-2">
             <Button 
-              onClick={onReset} 
+              onClick={on{t('resetFilters')}} 
               variant="outline"
               className="gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              Reset
+              {t('resetFilters')}
             </Button>
             <Button 
               onClick={onExport}
