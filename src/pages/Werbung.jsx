@@ -122,7 +122,7 @@ export default function Werbung() {
               title={t('ads.packages.premium14.title')} 
               description={t('ads.packages.premium14.desc')}
               price="€8,99"
-              btnText="Jetzt kaufen"
+              btnText={t('ads.btn.buyNow')}
               onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 8.99 })}
             />
           </div>
