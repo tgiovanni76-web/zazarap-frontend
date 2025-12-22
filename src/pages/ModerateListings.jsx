@@ -202,10 +202,10 @@ export default function ModerateListings() {
               onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="all">{t('allStatuses')}</option>
-              <option value="active">Attivi</option>
-              <option value="sold">Venduti</option>
-              <option value="expired">Scaduti</option>
-              <option value="archived">Archiviati</option>
+              <option value="active">{t('active')}</option>
+              <option value="sold">{t('sold')}</option>
+              <option value="expired">{t('expired')}</option>
+              <option value="archived">{t('archived')}</option>
             </select>
           </div>
         </CardContent>
