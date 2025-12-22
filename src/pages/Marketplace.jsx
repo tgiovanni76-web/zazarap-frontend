@@ -249,7 +249,7 @@ export default function Marketplace() {
       )}
 
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">{t('home')}</h2>
+        <h2 className="text-3xl font-bold">{t('nav.home')}</h2>
         <Button
           onClick={() => setShowFilters(!showFilters)}
           className="bg-yellow-400 text-red-600 border-2 border-red-600 hover:bg-yellow-500 hover:text-red-700"
@@ -402,7 +402,7 @@ export default function Marketplace() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Raggio (km)</label>
+                <label className="text-sm font-medium mb-2 block">{t('ui.radius')}</label>
                 <div className="flex gap-2">
                   <Input
                     type="number"
@@ -421,7 +421,7 @@ export default function Marketplace() {
                       }
                     }}
                   >
-                    Usa la mia posizione
+                    {t('ui.useMyLocation')}
                   </Button>
                 </div>
               </div>
@@ -493,11 +493,11 @@ export default function Marketplace() {
 
       <div className="flex items-center justify-between mb-4">
         <div className="text-sm text-slate-600">
-          {userLocation ? `Posizione impostata • ${userLocation.lat.toFixed(2)}, ${userLocation.lng.toFixed(2)}` : 'Posizione non impostata'}
+          {userLocation ? `${t('ui.positionSet')} • ${userLocation.lat.toFixed(2)}, ${userLocation.lng.toFixed(2)}` : t('ui.positionNotSet')}
           {radiusKm && ` • Raggio: ${radiusKm}km`}
         </div>
         <Button variant="outline" onClick={() => setShowMap(!showMap)}>
-          {showMap ? 'Nascondi mappa' : 'Mostra mappa'}
+          {showMap ? t('ui.hideMap') : t('ui.showMap')}
         </Button>
       </div>
       {showMap && (
