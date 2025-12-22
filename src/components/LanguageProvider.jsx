@@ -237,6 +237,9 @@ const translations = {
     priceAsc: 'Preis aufsteigend',
     priceDesc: 'Preis absteigend',
     resetFilters: 'Filter zurücksetzen',
+    'dashboard.recentListings': 'Neueste Anzeigen',
+    'dashboard.exportCSV': 'CSV exportieren',
+    'dashboard.listingsByCategory': 'Anzeigen nach Kategorie',
     adsFound: 'Anzeigen gefunden',
     noAdsFound: 'Keine Anzeigen gefunden',
     
@@ -516,6 +519,9 @@ const translations = {
     priceAsc: 'Prezzo crescente',
     priceDesc: 'Prezzo decrescente',
     resetFilters: 'Resetta filtri',
+    'dashboard.recentListings': 'Annunci recenti',
+    'dashboard.exportCSV': 'Esporta CSV',
+    'dashboard.listingsByCategory': 'Annunci per categoria',
     adsFound: 'annunci trovati',
     noAdsFound: 'Nessun annuncio trovato',
     
@@ -1633,6 +1639,9 @@ const translations = {
     priceAsc: 'Price Ascending',
     priceDesc: 'Price Descending',
     resetFilters: 'Reset Filters',
+    'dashboard.recentListings': 'Recent Listings',
+    'dashboard.exportCSV': 'Export CSV',
+    'dashboard.listingsByCategory': 'Listings by Category',
     adsFound: 'ads found',
     noAdsFound: 'No ads found',
     
