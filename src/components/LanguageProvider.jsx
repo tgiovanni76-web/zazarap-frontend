@@ -203,7 +203,7 @@ const i18n = {
     "admin.systemCheckupComplete": { de: "System-Check abgeschlossen", it: "System Checkup Completo", en: "System Checkup Complete", fr: "Vérification du système terminée", pl: "Pełny przegląd systemu", tr: "Sistem Kontrolü Tamamlandı", uk: "Системна перевірка завершена" },
     "admin.paymentsManagement": { de: "Zahlungsverwaltung", it: "Gestione Pagamenti", en: "Payments Management", fr: "Gestion des paiements", pl: "Zarządzanie płatnościami", tr: "Ödeme Yönetimi", uk: "Керування платежами" },
     "accessDenied": { de: "Zugriff verweigert", it: "Accesso Negato", en: "Access Denied", fr: "Accès refusé", pl: "Odmowa dostępu", tr: "Erişim Engellendi", uk: "Доступ заборонено" },
-    "adminOnly": { de: "Nur Administratoren können auf diese Seite zugreifen.", it: "Solo gli amministratori possono accedere a questa pagina.", en: "Only administrators can access this page.", fr: "Seuls les administrateurs peuvent accéder à cette page.", pl: "Tylko administratorzy mogą uzyskać dostęp do tej strony.", tr: "Bu sayfaya yalnızca yöneticiler erişebilir.", uk: "Тільки адміністратори можуть отримати доступ до цієї сторінки." },,
+    "adminOnly": { de: "Nur Administratoren können auf diese Seite zugreifen.", it: "Solo gli amministratori possono accedere a questa pagina.", en: "Only administrators can access this page.", fr: "Seuls les administrateurs peuvent accéder à cette page.", pl: "Tylko administratorzy mogą uzyskać dostęp do tej strony.", tr: "Bu sayfaya yalnızca yöneticiler erişebilir.", uk: "Тільки адміністратори можуть отримати доступ до цієї сторінки." },
 
     "action.reviewed": { de: "Überprüft", it: "Revisionata", en: "Reviewed" },
     "action.resolved": { de: "Gelöst", it: "Risolta", en: "Resolved" },
