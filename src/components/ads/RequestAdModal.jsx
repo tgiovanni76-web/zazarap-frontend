@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function RequestAdModal({ open, onClose, packageName, price, onSubmit }) {
+  const { t } = useLanguage();
   const [message, setMessage] = React.useState("");
 
   React.useEffect(() => {
