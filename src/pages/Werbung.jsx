@@ -138,7 +138,7 @@ export default function Werbung() {
               title={t('ads.packages.basicShop.title')} 
               features={[t('ads.features.ownShopPage'), t('ads.features.upTo20Active'), t('ads.features.standardSupport')]}
               price="€14,99 / Monat"
-              btnText="Jetzt abonnieren"
+              btnText={t('ads.btn.subscribeNow')}
               onAction={() => openRequest({ packageName: 'Basic Shop-Paket', price: '€14,99 / Monat' })}
             />
              <PricingCard 
