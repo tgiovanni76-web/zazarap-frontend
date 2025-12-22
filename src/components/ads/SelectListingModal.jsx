@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function SelectListingModal({ open, onClose, listings = [], packageName, days, price, onConfirm }) {
+  const { t } = useLanguage();
   const [selected, setSelected] = React.useState("");
 
   React.useEffect(() => {
