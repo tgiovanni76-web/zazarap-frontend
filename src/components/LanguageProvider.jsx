@@ -92,7 +92,7 @@ const i18n = {
     "admin.moderation.rejectListing": { de: "Anzeige ablehnen", it: "Rifiuta Annuncio", en: "Reject Listing" },
     "admin.moderation.rejectReasonPlaceholder": { de: "Begründe, warum die Anzeige abgelehnt wird...", it: "Spiega perché l'annuncio viene rifiutato...", en: "Explain why the listing is rejected..." },
     "admin.moderation.deleteReasonPrompt": { de: "Löschgrund (wird dem Verkäufer mitgeteilt):", it: "Motivo eliminazione (verrà notificato al venditore):", en: "Deletion reason (will be notified to the seller):" },
-    "action.approve": { de: "Genehmigen", it: "Approva", en: "Approve" }
+    "action.approve": { de: "Genehmigen", it: "Approva", en: "Approve" },
     "admin.disputeManagement": { de: "Streitfallverwaltung", it: "Gestione Dispute", en: "Dispute Management", fr: "Gestion des litiges", pl: "Zarządzanie sporami", tr: "Anlaşmazlık Yönetimi", uk: "Управління суперечками" },
     "admin.disputeManagementDesc": { de: "Streitigkeiten zwischen Benutzern lösen", it: "Risolvi controversie tra utenti", en: "Resolve disputes between users", fr: "Résoudre les litiges entre utilisateurs", pl: "Rozwiązuj spory między użytkownikami", tr: "Kullanıcılar arasındaki anlaşmazlıkları çöz", uk: "Вирішення суперечок між користувачами" },
     "admin.supportTickets": { de: "Support-Tickets", it: "Ticket Supporto", en: "Support Tickets", fr: "Tickets de support", pl: "Zgłoszenia wsparcia", tr: "Destek Talepleri", uk: "Тікети підтримки" },
