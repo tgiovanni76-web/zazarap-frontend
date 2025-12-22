@@ -21,7 +21,7 @@ export default function RequestAdModal({ open, onClose, packageName, price, onSu
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
-          <p className="text-sm text-slate-600">Inserisci eventuali dettagli (periodo, target, pagina di destinazione, ecc.). Ti risponderemo al più presto.</p>
+          <p className="text-sm text-slate-600">{t('ads.modal.request.desc')}</p>
           <Textarea rows={5} placeholder="Dettagli richiesta" value={message} onChange={(e) => setMessage(e.target.value)} />
         </div>
         <DialogFooter className="gap-2">
