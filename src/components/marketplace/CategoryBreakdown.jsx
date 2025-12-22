@@ -1,32 +1,51 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { useLanguage } from '../LanguageProvider';
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
 
-const getCategoryLabel = (category) => {
-  return category.charAt(0).toUpperCase() + category.slice(1);
+const CANON = {
+  veicoli: ['veicoli','vehicles','vehicle','auto','cars','car'],
+  sport: ['sport','sports'],
+  servizi: ['servizi','services','service'],
+  elettronica: ['elettronica','electronics','electronic'],
+  animali: ['animali','animals','pets'],
+  arredamento: ['arredamento','furniture'],
+  abbigliamento: ['abbigliamento','clothing','clothes','fashion'],
+  libri: ['libri','books','book'],
+  altro: ['altro','other','others']
 };
 
-export default function CategoryBreakdown({ listings }) {
-  const chartData = React.useMemo(() => {
-    const categoryCounts = {};
-    
-    listings.forEach(listing => {
-      const category = listing.category || 'other';
-      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
-    });
+const normalizeCategory = (raw) => {
+  const s = (raw || 'altro').toString().trim().toLowerCase();
+  for (const [key, vals] of Object.entries(CANON)) {
+    if (s === key || vals.includes(s)) return key;
+  }
+  return 'altro';
+};
 
-    return Object.entries(categoryCounts).map(([category, count]) => ({
-      name: getCategoryLabel(category),
+const getCategoryLabel = (category) => category.charAt(0).toUpperCase() + category.slice(1);
+
+export default function CategoryBreakdown({ listings }) {
+  const { t } = useLanguage();
+  const chartData = React.useMemo(() => {
+    const counts = {};
+    listings.forEach(listing => {
+      const key = normalizeCategory(listing.category);
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return Object.entries(counts).map(([key, count]) => ({
+      key,
+      name: t(`category.${key}`) || getCategoryLabel(key),
       value: count
     }));
-  }, [listings]);
+  }, [listings, t]);
 
   return (
     <Card className="border-none shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Listings by Category</CardTitle>
+        <CardTitle className="text-xl font-semibold">{t('dashboard.listingsByCategory') || 'Listings by Category'}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
