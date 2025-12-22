@@ -6,6 +6,8 @@ import AdminReports from './pages/AdminReports';
 import AdminSEO from './pages/AdminSEO';
 import AdminSettings from './pages/AdminSettings';
 import AdminTickets from './pages/AdminTickets';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
 import Contact from './pages/Contact';
@@ -41,8 +43,8 @@ import TermsOfService from './pages/TermsOfService';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
+import AccessibilityAudit from './pages/AccessibilityAudit';
+import SystemLogs from './pages/SystemLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -55,6 +57,8 @@ export const PAGES = {
     "AdminSEO": AdminSEO,
     "AdminSettings": AdminSettings,
     "AdminTickets": AdminTickets,
+    "Blog": Blog,
+    "BlogPost": BlogPost,
     "Category": Category,
     "CompleteProfile": CompleteProfile,
     "Contact": Contact,
@@ -90,8 +94,8 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "Blog": Blog,
-    "BlogPost": BlogPost,
+    "AccessibilityAudit": AccessibilityAudit,
+    "SystemLogs": SystemLogs,
 }
 
 export const pagesConfig = {

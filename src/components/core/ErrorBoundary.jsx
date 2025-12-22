@@ -1,4 +1,5 @@
 import React from 'react';
+import { base44 } from '@/api/base44Client';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -11,9 +12,17 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    // Basic logging; extend to send to backend if needed
+    // Log to console
     // eslint-disable-next-line no-console
     console.error('UI ErrorBoundary caught:', error, info);
+    // Send to backend logs (best effort)
+    base44.functions.invoke('logEvent', {
+      level: 'error',
+      message: 'ErrorBoundary',
+      details: error?.stack || String(error),
+      context: { componentStack: info?.componentStack || '' },
+      path: typeof window !== 'undefined' ? window.location.pathname : ''
+    }).catch(() => {});
   }
 
   render() {
