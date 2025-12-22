@@ -23,7 +23,7 @@ export default function SelectListingModal({ open, onClose, listings = [], packa
         <div className="space-y-3 py-2">
           {listings.length === 0 ? (
             <div className="text-sm text-slate-600">
-              Non hai annunci attivi. Crea un nuovo annuncio e riprova.
+              {t('ads.modal.select.noListings')}
             </div>
           ) : (
             <div>
