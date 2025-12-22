@@ -266,7 +266,7 @@ const i18n = {
     "admin.adminNotesLabel": { de: "Admin-Notizen", it: "Note Admin", en: "Admin notes" },
     "admin.iconLabel": { de: "Icon", it: "Icona", en: "Icon" },
     "admin.order": { de: "Ordnung", it: "Ordine", en: "Order" },
-    "admin.activeCategory": { de: "Kategorie aktiv", it: "Categoria attiva", en: "Active category" }
+    "admin.activeCategory": { de: "Kategorie aktiv", it: "Categoria attiva", en: "Active category" },
 
     // Categories (canonical keys)
   "category.veicoli": { de: "Fahrzeuge", it: "Veicoli", en: "Vehicles", fr: "Véhicules", pl: "Pojazdy", tr: "Araçlar", uk: "Транспорт" },
