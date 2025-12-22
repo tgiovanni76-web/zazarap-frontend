@@ -1,91 +1,93 @@
-import MarketplaceDashboard from './pages/MarketplaceDashboard';
-import Marketplace from './pages/Marketplace';
-import ListingDetail from './pages/ListingDetail';
-import NewListing from './pages/NewListing';
-import Messages from './pages/Messages';
-import Favorites from './pages/Favorites';
-import Category from './pages/Category';
-import EditListing from './pages/EditListing';
-import Notifications from './pages/Notifications';
-import Recommendations from './pages/Recommendations';
-import ManageCategories from './pages/ManageCategories';
-import PromoteListing from './pages/PromoteListing';
-import ManageUsers from './pages/ManageUsers';
-import NotificationSettings from './pages/NotificationSettings';
-import MySales from './pages/MySales';
-import MyPurchases from './pages/MyPurchases';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import DisputeCenter from './pages/DisputeCenter';
-import CustomerSupport from './pages/CustomerSupport';
-import PayPalWebhook from './pages/PayPalWebhook';
-import AdminDashboard from './pages/AdminDashboard';
-import ModerateListings from './pages/ModerateListings';
-import AdminDisputes from './pages/AdminDisputes';
-import AdminTickets from './pages/AdminTickets';
-import AdminReports from './pages/AdminReports';
-import AdminPayments from './pages/AdminPayments';
-import AdminSettings from './pages/AdminSettings';
-import Impressum from './pages/Impressum';
-import Widerrufsrecht from './pages/Widerrufsrecht';
 import AGB from './pages/AGB';
-import DatenschutzDE from './pages/DatenschutzDE';
-import PreLaunchChecklist from './pages/PreLaunchChecklist';
-import Contact from './pages/Contact';
-import FAQ from './pages/FAQ';
-import SystemCheckup from './pages/SystemCheckup';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminDisputes from './pages/AdminDisputes';
+import AdminPayments from './pages/AdminPayments';
+import AdminReports from './pages/AdminReports';
 import AdminSEO from './pages/AdminSEO';
+import AdminSettings from './pages/AdminSettings';
+import AdminTickets from './pages/AdminTickets';
+import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
-import Werbung from './pages/Werbung';
-import UserProfile from './pages/UserProfile';
+import Contact from './pages/Contact';
+import CustomerSupport from './pages/CustomerSupport';
+import DatenschutzDE from './pages/DatenschutzDE';
+import DisputeCenter from './pages/DisputeCenter';
+import EditListing from './pages/EditListing';
 import EditProfile from './pages/EditProfile';
+import FAQ from './pages/FAQ';
+import Favorites from './pages/Favorites';
+import Home from './pages/Home';
+import Impressum from './pages/Impressum';
+import ListingDetail from './pages/ListingDetail';
+import ManageCategories from './pages/ManageCategories';
+import ManageUsers from './pages/ManageUsers';
+import Marketplace from './pages/Marketplace';
+import MarketplaceDashboard from './pages/MarketplaceDashboard';
+import Messages from './pages/Messages';
+import ModerateListings from './pages/ModerateListings';
+import MyPurchases from './pages/MyPurchases';
+import MySales from './pages/MySales';
+import NewListing from './pages/NewListing';
+import NotificationSettings from './pages/NotificationSettings';
+import Notifications from './pages/Notifications';
+import PayPalWebhook from './pages/PayPalWebhook';
+import PreLaunchChecklist from './pages/PreLaunchChecklist';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import PromoteListing from './pages/PromoteListing';
+import Recommendations from './pages/Recommendations';
 import SellerDashboard from './pages/SellerDashboard';
+import SystemCheckup from './pages/SystemCheckup';
+import TermsOfService from './pages/TermsOfService';
+import UserProfile from './pages/UserProfile';
+import Werbung from './pages/Werbung';
+import Widerrufsrecht from './pages/Widerrufsrecht';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "MarketplaceDashboard": MarketplaceDashboard,
-    "Marketplace": Marketplace,
-    "ListingDetail": ListingDetail,
-    "NewListing": NewListing,
-    "Messages": Messages,
-    "Favorites": Favorites,
-    "Category": Category,
-    "EditListing": EditListing,
-    "Notifications": Notifications,
-    "Recommendations": Recommendations,
-    "ManageCategories": ManageCategories,
-    "PromoteListing": PromoteListing,
-    "ManageUsers": ManageUsers,
-    "NotificationSettings": NotificationSettings,
-    "MySales": MySales,
-    "MyPurchases": MyPurchases,
-    "PrivacyPolicy": PrivacyPolicy,
-    "TermsOfService": TermsOfService,
-    "DisputeCenter": DisputeCenter,
-    "CustomerSupport": CustomerSupport,
-    "PayPalWebhook": PayPalWebhook,
-    "AdminDashboard": AdminDashboard,
-    "ModerateListings": ModerateListings,
-    "AdminDisputes": AdminDisputes,
-    "AdminTickets": AdminTickets,
-    "AdminReports": AdminReports,
-    "AdminPayments": AdminPayments,
-    "AdminSettings": AdminSettings,
-    "Impressum": Impressum,
-    "Widerrufsrecht": Widerrufsrecht,
     "AGB": AGB,
-    "DatenschutzDE": DatenschutzDE,
-    "PreLaunchChecklist": PreLaunchChecklist,
-    "Contact": Contact,
-    "FAQ": FAQ,
-    "SystemCheckup": SystemCheckup,
+    "AdminDashboard": AdminDashboard,
+    "AdminDisputes": AdminDisputes,
+    "AdminPayments": AdminPayments,
+    "AdminReports": AdminReports,
     "AdminSEO": AdminSEO,
+    "AdminSettings": AdminSettings,
+    "AdminTickets": AdminTickets,
+    "Category": Category,
     "CompleteProfile": CompleteProfile,
-    "Werbung": Werbung,
-    "UserProfile": UserProfile,
+    "Contact": Contact,
+    "CustomerSupport": CustomerSupport,
+    "DatenschutzDE": DatenschutzDE,
+    "DisputeCenter": DisputeCenter,
+    "EditListing": EditListing,
     "EditProfile": EditProfile,
+    "FAQ": FAQ,
+    "Favorites": Favorites,
+    "Home": Home,
+    "Impressum": Impressum,
+    "ListingDetail": ListingDetail,
+    "ManageCategories": ManageCategories,
+    "ManageUsers": ManageUsers,
+    "Marketplace": Marketplace,
+    "MarketplaceDashboard": MarketplaceDashboard,
+    "Messages": Messages,
+    "ModerateListings": ModerateListings,
+    "MyPurchases": MyPurchases,
+    "MySales": MySales,
+    "NewListing": NewListing,
+    "NotificationSettings": NotificationSettings,
+    "Notifications": Notifications,
+    "PayPalWebhook": PayPalWebhook,
+    "PreLaunchChecklist": PreLaunchChecklist,
+    "PrivacyPolicy": PrivacyPolicy,
+    "PromoteListing": PromoteListing,
+    "Recommendations": Recommendations,
     "SellerDashboard": SellerDashboard,
+    "SystemCheckup": SystemCheckup,
+    "TermsOfService": TermsOfService,
+    "UserProfile": UserProfile,
+    "Werbung": Werbung,
+    "Widerrufsrecht": Widerrufsrecht,
 }
 
 export const pagesConfig = {

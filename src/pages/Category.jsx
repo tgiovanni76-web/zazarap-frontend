@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from '../components/LanguageProvider';
 import { ArrowLeft } from 'lucide-react';
 
 export default function Category() {
   const urlParams = new URLSearchParams(window.location.search);
   const category = urlParams.get('name') || 'animali';
+
+  const { t } = useLanguage();
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
@@ -36,11 +39,11 @@ export default function Category() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h2 className="text-3xl font-bold capitalize">{category}</h2>
+        <h2 className="text-3xl font-bold capitalize">{t(category)}</h2>
       </div>
 
       {categoryListings.length === 0 ? (
-        <p className="text-slate-500">Nessun annuncio in questa categoria</p>
+        <p className="text-slate-500">{t('noAdsFound')}</p>
       ) : (
         <div className="space-y-4">
           {categoryListings.map(listing => (
@@ -57,7 +60,7 @@ export default function Category() {
                 <p className="text-slate-700 mb-3">{listing.description}</p>
                 <p className="text-lg font-bold mb-3">{listing.price} €</p>
                 <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
-                  <Button variant="outline">Dettagli</Button>
+                  <Button variant="outline">{t('details')}</Button>
                 </Link>
               </CardContent>
             </Card>
