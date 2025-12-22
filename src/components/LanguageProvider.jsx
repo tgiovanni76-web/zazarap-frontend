@@ -90,7 +90,7 @@ const i18n = {
     "admin.moderation.searchPlaceholder": { de: "Nach Titel oder Verkäufer suchen...", it: "Cerca per titolo o venditore...", en: "Search by title or seller..." },
     "admin.moderation.allModeration": { de: "Alle Moderationsstatus", it: "Tutti gli stati moderazione", en: "All moderation statuses" },
     "admin.moderation.rejectListing": { de: "Anzeige ablehnen", it: "Rifiuta Annuncio", en: "Reject Listing" },
-    "admin.moderation.rejectReasonPlaceholder": { de: "Begründe, warum die Anzeige abgelehnt wird...", it: "Spiega perch e9 l'annuncio viene rifiutato...", en: "Explain why the listing is rejected..." },
+    "admin.moderation.rejectReasonPlaceholder": { de: "Begründe, warum die Anzeige abgelehnt wird...", it: "Spiega perché l'annuncio viene rifiutato...", en: "Explain why the listing is rejected..." },
     "admin.moderation.deleteReasonPrompt": { de: "Löschgrund (wird dem Verkäufer mitgeteilt):", it: "Motivo eliminazione (verrà notificato al venditore):", en: "Deletion reason (will be notified to the seller):" },
     "action.approve": { de: "Genehmigen", it: "Approva", en: "Approve" },
     "admin.disputeManagement": { de: "Streitfallverwaltung", it: "Gestione Dispute", en: "Dispute Management", fr: "Gestion des litiges", pl: "Zarządzanie sporami", tr: "Anlaşmazlık Yönetimi", uk: "Управління суперечками" },
