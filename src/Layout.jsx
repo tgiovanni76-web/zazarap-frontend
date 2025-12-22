@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { initAuditLogger } from '@/utils/auditLogger';
 import CookieBanner from '@/components/CookieBanner';
 import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 import Analytics from '@/components/Analytics';
@@ -34,8 +35,11 @@ export default function Layout({ children, currentPageName }) {
 }
 
 function LayoutInner({ children, currentPageName }) {
-  const { t } = useLanguage();
-  const navigate = useNavigate();
+        const { t } = useLanguage();
+        const navigate = useNavigate();
+
+        // Initialize global audit logger once
+        useEffect(() => { initAuditLogger(base44); }, []);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
