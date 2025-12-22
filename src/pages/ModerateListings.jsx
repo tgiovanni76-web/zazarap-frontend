@@ -10,8 +10,10 @@ import { CheckCircle, XCircle, Trash2, AlertTriangle, Search } from 'lucide-reac
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function ModerateListings() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedListing, setSelectedListing] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -131,7 +133,7 @@ export default function ModerateListings() {
   };
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const filteredListings = listings.filter(l => {
@@ -159,18 +161,18 @@ export default function ModerateListings() {
   return (
     <div className="py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Moderazione Annunci</h2>
+        <h2 className="text-3xl font-bold">{t('admin.listingModeration')}</h2>
         <div className="flex gap-3">
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">In Attesa</div>
+            <div className="text-xs text-slate-600">{t('admin.moderation.pending')}</div>
             <div className="text-xl font-bold text-orange-600">{stats.pending}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">Approvati</div>
+            <div className="text-xs text-slate-600">{t('admin.moderation.approved')}</div>
             <div className="text-xl font-bold text-green-600">{stats.approved}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">Rifiutati</div>
+            <div className="text-xs text-slate-600">{t('admin.moderation.rejected')}</div>
             <div className="text-xl font-bold text-red-600">{stats.rejected}</div>
           </Card>
         </div>
@@ -180,7 +182,7 @@ export default function ModerateListings() {
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input
-              placeholder="Cerca per titolo o venditore..."
+              placeholder={t('admin.moderation.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -189,21 +191,21 @@ export default function ModerateListings() {
               value={filterModeration}
               onChange={(e) => setFilterModeration(e.target.value)}
             >
-              <option value="all">Tutti gli stati moderazione</option>
-              <option value="pending">In attesa</option>
-              <option value="approved">Approvati</option>
-              <option value="rejected">Rifiutati</option>
+              <option value="all">{t('admin.moderation.allModeration')}</option>
+              <option value="pending">{t('admin.moderation.pending')}</option>
+              <option value="approved">{t('admin.moderation.approved')}</option>
+              <option value="rejected">{t('admin.moderation.rejected')}</option>
             </select>
             <select
               className="w-full p-2 border rounded-md"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
             >
-              <option value="all">Tutti gli stati</option>
-              <option value="active">Attivi</option>
-              <option value="sold">Venduti</option>
-              <option value="expired">Scaduti</option>
-              <option value="archived">Archiviati</option>
+              <option value="all">{t('allStatuses')}</option>
+              <option value="active">{t('active')}</option>
+              <option value="sold">{t('sold')}</option>
+              <option value="expired">{t('expired')}</option>
+              <option value="archived">{t('archived')}</option>
             </select>
           </div>
         </CardContent>
@@ -226,10 +228,10 @@ export default function ModerateListings() {
                     <div>
                       <h3 className="font-bold text-lg">{listing.title}</h3>
                       <p className="text-sm text-slate-600">
-                        Venditore: {listing.created_by}
+                        {t('seller')}: {listing.created_by}
                       </p>
                       <p className="text-sm text-slate-500">
-                        Creato: {format(new Date(listing.created_date), 'dd/MM/yyyy HH:mm')}
+                        {t('publishDate')}: {format(new Date(listing.created_date), 'dd/MM/yyyy HH:mm')}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -239,17 +241,17 @@ export default function ModerateListings() {
                         </Badge>
                         {listing.moderationStatus === 'pending' && (
                           <Badge className="bg-orange-100 text-orange-800">
-                            In attesa
+                            {t('admin.moderation.pending')}
                           </Badge>
                         )}
                         {listing.moderationStatus === 'approved' && (
                           <Badge className="bg-green-100 text-green-800">
-                            Approvato
+                            {t('admin.moderation.approved')}
                           </Badge>
                         )}
                         {listing.moderationStatus === 'rejected' && (
                           <Badge className="bg-red-100 text-red-800">
-                            Rifiutato
+                            {t('admin.moderation.rejected')}
                           </Badge>
                         )}
                       </div>
@@ -276,7 +278,7 @@ export default function ModerateListings() {
                           className="bg-green-600 hover:bg-green-700"
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          Approva
+                          {t('action.approve')}
                         </Button>
                         <Button
                           size="sm"
@@ -287,7 +289,7 @@ export default function ModerateListings() {
                           className="bg-red-600 hover:bg-red-700"
                         >
                           <XCircle className="h-4 w-4 mr-1" />
-                          Rifiuta
+                          {t('reject')}
                         </Button>
                       </>
                     )}
@@ -297,10 +299,10 @@ export default function ModerateListings() {
                       value={listing.status}
                       onChange={(e) => handleChangeStatus(listing, e.target.value)}
                     >
-                      <option value="active">Attivo</option>
-                      <option value="sold">Venduto</option>
-                      <option value="expired">Scaduto</option>
-                      <option value="archived">Archiviato</option>
+                      <option value="active">{t('active')}</option>
+                      <option value="sold">{t('sold')}</option>
+                      <option value="expired">{t('expired')}</option>
+                      <option value="archived">{t('archived')}</option>
                     </select>
 
                     <Button
@@ -309,7 +311,7 @@ export default function ModerateListings() {
                       variant="destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Elimina
+                      {t('delete')}
                     </Button>
                   </div>
                 </div>
