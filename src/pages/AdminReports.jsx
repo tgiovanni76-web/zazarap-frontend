@@ -51,7 +51,7 @@ export default function AdminReports() {
       }
     },
     onSuccess: () => {
-      toast.success('Utente bannato');
+      toast.success(t('admin.userBanned'));
     }
   });
 

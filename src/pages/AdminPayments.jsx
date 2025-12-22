@@ -151,10 +151,10 @@ export default function AdminPayments() {
                 </div>
 
                 <div className="text-sm text-slate-600 mb-3">
-                  <div>Metodo: {payment.method}</div>
-                  {payment.paypalOrderId && <div>PayPal Order: {payment.paypalOrderId}</div>}
+                  <div>{t('admin.method')}: {payment.method}</div>
+                  {payment.paypalOrderId && <div>{t('admin.paypalOrder')}: {payment.paypalOrderId}</div>}
                   {payment.escrowReleaseDate && (
-                    <div>Rilascio previsto: {format(new Date(payment.escrowReleaseDate), 'dd/MM/yyyy')}</div>
+                    <div>{t('admin.estimatedRelease')}: {format(new Date(payment.escrowReleaseDate), 'dd/MM/yyyy')}</div>
                   )}
                 </div>
 
@@ -162,7 +162,7 @@ export default function AdminPayments() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        if (confirm('Rilasciare i fondi al venditore?')) {
+                        if (confirm(t('admin.confirmRelease'))) {
                           releaseEscrowMutation.mutate(payment.id);
                         }
                       }}
@@ -173,7 +173,7 @@ export default function AdminPayments() {
                     </Button>
                     <Button
                       onClick={() => {
-                        if (confirm('Rimborsare l\'acquirente?')) {
+                        if (confirm(t('admin.confirmRefund'))) {
                           refundMutation.mutate(payment.id);
                         }
                       }}

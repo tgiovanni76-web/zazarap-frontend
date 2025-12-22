@@ -136,8 +136,8 @@ export default function AdminTickets() {
                       variant="outline"
                       size="sm"
                     >
-                      In Corso
-                    </Button>
+                                            {t('inProgress')}
+                                          </Button>
                     <Button
                       onClick={() => updateTicketMutation.mutate({
                         ticketId: ticket.id,
@@ -148,8 +148,8 @@ export default function AdminTickets() {
                       size="sm"
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      Rispondi e Risolvi
-                    </Button>
+                                            {t('action.resolved')}
+                                          </Button>
                   </div>
                 </div>
               )}
@@ -160,7 +160,7 @@ export default function AdminTickets() {
 
       {tickets.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Nessun ticket trovato
+          {t('admin.noTicketsFound')}
         </div>
       )}
     </div>

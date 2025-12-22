@@ -247,6 +247,26 @@ const i18n = {
 
     "admin.released": { de: "Freigegeben", it: "Rilasciati", en: "Released" },
     "admin.totalTransactions": { de: "Transaktionen gesamt", it: "Totale Transazioni", en: "Total Transactions" },
+    "admin.method": { de: "Methode", it: "Metodo", en: "Method" },
+    "admin.paypalOrder": { de: "PayPal-Bestellung", it: "Ordine PayPal", en: "PayPal Order" },
+    "admin.estimatedRelease": { de: "Voraussichtliche Freigabe", it: "Rilascio previsto", en: "Estimated release" },
+    "admin.releaseFunds": { de: "Gelder freigeben", it: "Rilascia Fondi", en: "Release funds" },
+    "admin.refund": { de: "Rcckerstatten", it: "Rimborsa", en: "Refund" },
+    "admin.confirmRelease": { de: "Gelder an den Verk e4ufer freigeben?", it: "Rilasciare i fondi al venditore?", en: "Release funds to seller?" },
+    "admin.confirmRefund": { de: "K e4ufer erstatten?", it: "Rimborsare l'acquirente?", en: "Refund the buyer?" },
+    "admin.noPaymentsFound": { de: "Keine Zahlungen gefunden", it: "Nessun pagamento trovato", en: "No payments found" },
+    "admin.noTicketsFound": { de: "Keine Tickets gefunden", it: "Nessun ticket trovato", en: "No tickets found" },
+    "admin.type": { de: "Typ", it: "Tipo", en: "Type" },
+    "admin.from": { de: "Da", it: "Da", en: "From" },
+    "admin.against": { de: "Gegen", it: "Contro", en: "Against" },
+    "admin.evidence": { de: "Beweise", it: "Prove allegate", en: "Evidence" },
+    "admin.decisionPlaceholder": { de: "Beschreibe die getroffene Entscheidung...", it: "Descrivi la decisione presa...", en: "Describe the decision taken..." },
+    "admin.internalNotesPlaceholder": { de: "Interne Notizen...", it: "Note interne...", en: "Internal notes..." },
+    "admin.resolutionLabel": { de: "L f6sung", it: "Risoluzione", en: "Resolution" },
+    "admin.adminNotesLabel": { de: "Admin-Notizen", it: "Note Admin", en: "Admin notes" },
+    "admin.iconLabel": { de: "Icon", it: "Icona", en: "Icon" },
+    "admin.order": { de: "Ordnung", it: "Ordine", en: "Order" },
+    "admin.activeCategory": { de: "Kategorie aktiv", it: "Categoria attiva", en: "Active category" }
 
     // Categories (canonical keys)
   "category.veicoli": { de: "Fahrzeuge", it: "Veicoli", en: "Vehicles", fr: "Véhicules", pl: "Pojazdy", tr: "Araçlar", uk: "Транспорт" },
