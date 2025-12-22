@@ -17,7 +17,7 @@ export default function RequestAdModal({ open, onClose, packageName, price, onSu
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            Richiesta: {packageName} • {typeof price === 'number' ? `€${price.toFixed(2)}` : price}
+            {t('ads.modal.request.title', { pkg: packageName, price: typeof price === 'number' ? `€${price.toFixed(2)}` : price })}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
