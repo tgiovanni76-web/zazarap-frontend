@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminPayments() {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -75,7 +77,7 @@ export default function AdminPayments() {
   });
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const statusColors = {
@@ -97,7 +99,7 @@ export default function AdminPayments() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Gestione Pagamenti</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('admin.paymentsManagement')}</h2>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         <Card>

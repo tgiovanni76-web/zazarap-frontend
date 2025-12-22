@@ -8,11 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminDisputes() {
   const [selectedDispute, setSelectedDispute] = useState(null);
   const [resolution, setResolution] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -74,7 +76,7 @@ export default function AdminDisputes() {
   });
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const statusColors = {
@@ -86,7 +88,7 @@ export default function AdminDisputes() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Gestione Dispute</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('admin.disputeManagement')}</h2>
 
       <div className="grid grid-cols-1 gap-4">
         {disputes.map(dispute => {

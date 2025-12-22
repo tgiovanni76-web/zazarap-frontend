@@ -8,10 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminTickets() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [response, setResponse] = useState('');
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -59,7 +61,7 @@ export default function AdminTickets() {
   });
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const statusColors = {
@@ -78,7 +80,7 @@ export default function AdminTickets() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Ticket Supporto</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('admin.supportTickets')}</h2>
 
       <div className="grid grid-cols-1 gap-4">
         {tickets.map(ticket => (

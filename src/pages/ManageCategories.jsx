@@ -8,11 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function ManageCategories() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', icon: '', description: '', active: true, order: 0 });
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -76,8 +78,8 @@ export default function ManageCategories() {
   if (user?.role !== 'admin') {
     return (
       <div className="py-8 text-center">
-        <h2 className="text-2xl font-bold">Accesso negato</h2>
-        <p className="text-slate-600">Solo gli amministratori possono gestire le categorie.</p>
+        <h2 className="text-2xl font-bold">{t('accessDenied')}</h2>
+        <p className="text-slate-600">{t('adminOnly')}</p>
       </div>
     );
   }
@@ -85,7 +87,7 @@ export default function ManageCategories() {
   return (
     <div className="py-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Gestione Categorie</h2>
+        <h2 className="text-3xl font-bold">{t('admin.categoryManagement')}</h2>
         <Button onClick={() => { setShowForm(true); setEditingCategory(null); setFormData({ name: '', icon: '', description: '', active: true, order: 0 }); }}>
           <Plus className="h-4 w-4 mr-2" />
           Nuova Categoria

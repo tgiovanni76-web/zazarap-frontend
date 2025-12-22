@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, AlertTriangle, Info, ChevronDown, ChevronUp, Zap, Shield, TrendingUp, Code, Users, FileText, Globe, Database, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function SystemCheckup() {
   const [expandedSections, setExpandedSections] = useState({});
+  const { t } = useLanguage();
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -33,7 +35,7 @@ export default function SystemCheckup() {
   });
 
   if (user?.role !== 'admin') {
-    return <div className="py-8 text-center">Accesso negato</div>;
+    return <div className="py-8 text-center">{t('accessDenied')}</div>;
   }
 
   const toggleSection = (section) => {
