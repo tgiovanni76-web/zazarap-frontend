@@ -145,7 +145,7 @@ export default function Werbung() {
               title={t('ads.packages.businessShop.title')} 
               features={[t('ads.features.upTo100Active'), t('ads.features.logoBranding'), t('ads.features.searchBanner')]}
               price="€39,99 / Monat"
-              btnText="Jetzt abonnieren"
+              btnText={t('ads.btn.subscribeNow')}
               highlighted={true}
               onAction={() => openRequest({ packageName: 'Business Shop-Paket', price: '€39,99 / Monat' })}
             />
