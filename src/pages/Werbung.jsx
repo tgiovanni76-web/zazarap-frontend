@@ -10,8 +10,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import SelectListingModal from '@/components/ads/SelectListingModal';
 import RequestAdModal from '@/components/ads/RequestAdModal';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function Werbung() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me().catch(() => null) });
   const { data: myListings = [] } = useQuery({
@@ -81,44 +83,44 @@ export default function Werbung() {
   };
   return (
     <div className="min-h-screen bg-[#f5f5f5] pb-20">
-      <SEOHead title="Werbung & Premium-Pakete – Zazarap" description="Mehr Sichtbarkeit. Mehr Kunden. Mehr Verkäufe." />
+      <SEOHead title={`${t('ads.header.title')} – Zazarap`} description={t('ads.header.subtitle')} />
       
       {/* Header */}
       <div className="bg-[#d62020] py-12 px-4 text-center text-white mb-10 shadow-md">
-        <h1 className="text-4xl font-bold mb-3">Werbung & Premium-Pakete</h1>
-        <p className="text-xl opacity-90 max-w-2xl mx-auto">Mehr Sichtbarkeit. Mehr Kunden. Mehr Verkäufe.</p>
+        <h1 className="text-4xl font-bold mb-3">{t('ads.header.title')}</h1>
+        <p className="text-xl opacity-90 max-w-2xl mx-auto">{t('ads.header.subtitle')}</p>
       </div>
 
       <div className="container max-w-6xl mx-auto px-4">
         
         {/* Banner */}
         <div className="w-full h-48 bg-gradient-to-br from-[#d62020] to-[#ff4b4b] rounded-2xl flex items-center justify-center text-white text-2xl md:text-4xl font-bold mb-16 shadow-xl text-center px-6 transform hover:scale-[1.01] transition-transform duration-300">
-          Erhöhen Sie Ihre Reichweite auf Zazarap
+          {t('ads.banner.cta')}
         </div>
 
         {/* Section 1 */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">Premium-Werbung für private Nutzer</h2>
-          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">Steigern Sie die Sichtbarkeit Ihrer Anzeigen mit unseren Premium-Optionen. Ideal für Verkäufer, die schneller verkaufen möchten.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">{t('ads.section.privateTitle')}</h2>
+          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">{t('ads.section.privateDesc')}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PricingCard 
-              title="TOP-Anzeige" 
-              description="Ihre Anzeige wird 7 Tage lang ganz oben in der Kategorie angezeigt."
+              title={t('ads.packages.topAd.title')} 
+              description={t('ads.packages.topAd.desc')}
               price="€4,99"
               btnText="Jetzt kaufen"
               onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 4.99 })}
             />
             <PricingCard 
-              title="Hervorgehobene Anzeige" 
-              description="Farblicher Rahmen + besserer Platz in den Suchergebnissen."
+              title={t('ads.packages.highlighted.title')} 
+              description={t('ads.packages.highlighted.desc')}
               price="€2,49"
               btnText="Jetzt kaufen"
               onAction={() => startPromo({ packageName: 'Hervorgehobene Anzeige', days: 7, price: 2.49 })}
             />
             <PricingCard 
-              title="Premium 14 Tage" 
-              description="Maximale Sichtbarkeit für zwei Wochen mit allen Vorteilen."
+              title={t('ads.packages.premium14.title')} 
+              description={t('ads.packages.premium14.desc')}
               price="€8,99"
               btnText="Jetzt kaufen"
               onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 8.99 })}
@@ -128,28 +130,28 @@ export default function Werbung() {
 
         {/* Section 2 */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">Werbepakete für Geschäfte & Unternehmen</h2>
-          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">Perfekt für Shops, Händler und professionelle Anbieter. Präsentieren Sie Ihre Marke auf Zazarap.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">{t('ads.section.businessTitle')}</h2>
+          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">{t('ads.section.businessDesc')}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
              <PricingCard 
-              title="Basic Shop-Paket" 
-              features={["Eigene Shop-Seite", "Bis zu 20 aktive Anzeigen", "Standard-Unterstützung"]}
+              title={t('ads.packages.basicShop.title')} 
+              features={[t('ads.features.ownShopPage'), t('ads.features.upTo20Active'), t('ads.features.standardSupport')]}
               price="€14,99 / Monat"
               btnText="Jetzt abonnieren"
               onAction={() => openRequest({ packageName: 'Basic Shop-Paket', price: '€14,99 / Monat' })}
             />
              <PricingCard 
-              title="Business Shop-Paket" 
-              features={["Bis zu 100 aktive Anzeigen", "Logo & Branding", "Werbebanner im Suchbereich"]}
+              title={t('ads.packages.businessShop.title')} 
+              features={[t('ads.features.upTo100Active'), t('ads.features.logoBranding'), t('ads.features.searchBanner')]}
               price="€39,99 / Monat"
               btnText="Jetzt abonnieren"
               highlighted={true}
               onAction={() => openRequest({ packageName: 'Business Shop-Paket', price: '€39,99 / Monat' })}
             />
              <PricingCard 
-              title="Premium Shop-Paket" 
-              features={["Unbegrenzte Anzeigen", "Startseiten-Banner", "Priorisierter Support"]}
+              title={t('ads.packages.premiumShop.title')} 
+              features={[t('ads.features.unlimitedAds'), t('ads.features.homepageBanner'), t('ads.features.prioritySupport')]}
               price="€79,99 / Monat"
               btnText="Jetzt abonnieren"
               onAction={() => openRequest({ packageName: 'Premium Shop-Paket', price: '€79,99 / Monat' })}
@@ -159,27 +161,27 @@ export default function Werbung() {
 
         {/* Section 3 */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">Werbebanner & Grafikpromotion</h2>
-          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">Platzieren Sie Ihren Banner an strategischen Orten auf Zazarap.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left border-l-4 border-[#d62020] pl-4">{t('ads.section.bannerTitle')}</h2>
+          <p className="text-gray-600 mb-8 text-center md:text-left pl-5">{t('ads.section.bannerDesc')}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PricingCard 
-              title="Startseiten-Banner" 
-              description="Perfekt für maximale Sichtbarkeit."
+              title={t('ads.packages.homeBanner.title')} 
+              description={t('ads.packages.homeBanner.desc')}
               price="€149,00 / Woche"
               btnText="Banner buchen"
               onAction={() => openRequest({ packageName: 'Startseiten-Banner', price: '€149,00 / Woche' })}
             />
             <PricingCard 
-              title="Kategorie-Banner" 
-              description="Direkt in der passenden Kategorie für Ihre Zielgruppe."
+              title={t('ads.packages.categoryBanner.title')} 
+              description={t('ads.packages.categoryBanner.desc')}
               price="€79,00 / Woche"
               btnText="Banner buchen"
               onAction={() => openRequest({ packageName: 'Kategorie-Banner', price: '€79,00 / Woche' })}
             />
             <PricingCard 
-              title="Sidebar-Werbung" 
-              description="Eine günstige, aber sichtbare Werbefläche."
+              title={t('ads.packages.sidebarAd.title')} 
+              description={t('ads.packages.sidebarAd.desc')}
               price="€39,00 / Woche"
               btnText="Banner buchen"
               onAction={() => openRequest({ packageName: 'Sidebar-Werbung', price: '€39,00 / Woche' })}
@@ -210,11 +212,12 @@ export default function Werbung() {
 }
 
 function PricingCard({ title, description, features, price, btnText, highlighted = false, onAction }) {
+  const { t } = useLanguage();
   return (
     <Card className={`h-full border-none shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden ${highlighted ? 'ring-2 ring-[#d62020] scale-105 relative z-10' : ''}`}>
       {highlighted && (
         <div className="bg-[#d62020] text-white text-xs font-bold text-center py-1 uppercase tracking-wider">
-          Bestseller
+          {t('ads.bestseller')}
         </div>
       )}
       <CardHeader className="pb-4">
