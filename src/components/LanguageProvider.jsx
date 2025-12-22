@@ -270,7 +270,7 @@ const i18n = {
 
     // Categories (canonical keys)
     "category.veicoli": { de: "Fahrzeuge", it: "Veicoli", en: "Vehicles", fr: "Véhicules", pl: "Pojazdy", tr: "Araçlar", uk: "Транспорт" },
-  "category.sport": { de: "Sport", it: "Sport", en: "Sports", fr: "Sport", pl: "Sport", tr: "Spor", uk: "Спорт" },
+    "category.sport": { de: "Sport", it: "Sport", en: "Sports", fr: "Sport", pl: "Sport", tr: "Spor", uk: "Спорт" },
   "category.servizi": { de: "Dienstleistungen", it: "Servizi", en: "Services", fr: "Services", pl: "Usługi", tr: "Hizmetler", uk: "Послуги" },
   "category.elettronica": { de: "Elektronik", it: "Elettronica", en: "Electronics", fr: "Électronique", pl: "Elektronika", tr: "Elektronik", uk: "Електроніка" },
   "category.animali": { de: "Tiere", it: "Animali", en: "Animals", fr: "Animaux", pl: "Zwierzęta", tr: "Hayvanlar", uk: "Тварини" },
