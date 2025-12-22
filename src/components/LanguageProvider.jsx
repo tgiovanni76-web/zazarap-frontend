@@ -277,7 +277,7 @@ const i18n = {
     "category.arredamento": { de: "Möbel", it: "Arredamento", en: "Furniture", fr: "Meubles", pl: "Meble", tr: "Mobilya", uk: "Меблі" },
     "category.abbigliamento": { de: "Kleidung", it: "Abbigliamento", en: "Clothing", fr: "Vêtements", pl: "Odzież", tr: "Giyim", uk: "Одяг" },
     "category.libri": { de: "Bücher", it: "Libri", en: "Books", fr: "Livres", pl: "Książki", tr: "Kitaplar", uk: "Книги" },
-  "category.altro": { de: "Sonstiges", it: "Altro", en: "Other", fr: "Autre", pl: "Inne", tr: "Diğer", uk: "Інше" },
+    "category.altro": { de: "Sonstiges", it: "Altro", en: "Other", fr: "Autre", pl: "Inne", tr: "Diğer", uk: "Інше" },
 
   "dashboard.title": { de: "Zazarap Dashboard", it: "Zazarap Dashboard", en: "Zazarap Dashboard", fr: "Tableau de bord Zazarap", pl: "Pulpit Zazarap", tr: "Zazarap Panosu", uk: "Панель Zazarap" },
   "dashboard.subtitle": { de: "Überwache die Performance deines Marktplatzes", it: "Monitora le performance del tuo marketplace", en: "Monitor your marketplace performance", fr: "Surveillez les performances de votre marketplace", pl: "Monitoruj wydajność swojego marketplace", tr: "Pazaryerinizin performansını izleyin", uk: "Відстежуйте ефективність свого маркетплейсу" },
