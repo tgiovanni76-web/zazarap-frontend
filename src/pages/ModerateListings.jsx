@@ -164,15 +164,15 @@ export default function ModerateListings() {
         <h2 className="text-3xl font-bold">{t('admin.listingModeration')}</h2>
         <div className="flex gap-3">
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">{t('admin.moderation.pending')}</div>
+            <div className="text-xs text-slate-600">{t('pending')}</div>
             <div className="text-xl font-bold text-orange-600">{stats.pending}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">{t('admin.moderation.approved')}</div>
+            <div className="text-xs text-slate-600">{t('label.approved')}</div>
             <div className="text-xl font-bold text-green-600">{stats.approved}</div>
           </Card>
           <Card className="px-4 py-2">
-            <div className="text-xs text-slate-600">{t('admin.moderation.rejected')}</div>
+            <div className="text-xs text-slate-600">{t('label.rejected')}</div>
             <div className="text-xl font-bold text-red-600">{stats.rejected}</div>
           </Card>
         </div>
@@ -191,10 +191,10 @@ export default function ModerateListings() {
               value={filterModeration}
               onChange={(e) => setFilterModeration(e.target.value)}
             >
-              <option value="all">{t('admin.moderation.allModeration')}</option>
-              <option value="pending">{t('admin.moderation.pending')}</option>
-              <option value="approved">{t('admin.moderation.approved')}</option>
-              <option value="rejected">{t('admin.moderation.rejected')}</option>
+              <option value="all">{t('admin.moderation.moderationAll')}</option>
+              <option value="pending">{t('pending')}</option>
+              <option value="approved">{t('label.approved')}</option>
+              <option value="rejected">{t('label.rejected')}</option>
             </select>
             <select
               className="w-full p-2 border rounded-md"
@@ -202,10 +202,10 @@ export default function ModerateListings() {
               onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="all">{t('allStatuses')}</option>
-              <option value="active">{t('active')}</option>
-              <option value="sold">{t('sold')}</option>
-              <option value="expired">{t('expired')}</option>
-              <option value="archived">{t('archived')}</option>
+              <option value="active">Attivi</option>
+              <option value="sold">Venduti</option>
+              <option value="expired">Scaduti</option>
+              <option value="archived">Archiviati</option>
             </select>
           </div>
         </CardContent>
@@ -241,17 +241,17 @@ export default function ModerateListings() {
                         </Badge>
                         {listing.moderationStatus === 'pending' && (
                           <Badge className="bg-orange-100 text-orange-800">
-                            {t('admin.moderation.pending')}
+                            In attesa
                           </Badge>
                         )}
                         {listing.moderationStatus === 'approved' && (
                           <Badge className="bg-green-100 text-green-800">
-                            {t('admin.moderation.approved')}
+                            Approvato
                           </Badge>
                         )}
                         {listing.moderationStatus === 'rejected' && (
                           <Badge className="bg-red-100 text-red-800">
-                            {t('admin.moderation.rejected')}
+                            Rifiutato
                           </Badge>
                         )}
                       </div>
@@ -265,7 +265,7 @@ export default function ModerateListings() {
 
                   {listing.rejectionReason && (
                     <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded text-sm">
-                      <span className="font-semibold">Motivo rifiuto:</span> {listing.rejectionReason}
+                      <span className="font-semibold">{t('reason')}:</span> {listing.rejectionReason}
                     </div>
                   )}
 
@@ -278,7 +278,7 @@ export default function ModerateListings() {
                           className="bg-green-600 hover:bg-green-700"
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          {t('action.approve')}
+                          Approva
                         </Button>
                         <Button
                           size="sm"
@@ -289,7 +289,7 @@ export default function ModerateListings() {
                           className="bg-red-600 hover:bg-red-700"
                         >
                           <XCircle className="h-4 w-4 mr-1" />
-                          {t('reject')}
+                          Rifiuta
                         </Button>
                       </>
                     )}
@@ -311,7 +311,7 @@ export default function ModerateListings() {
                       variant="destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      {t('delete')}
+                      Elimina
                     </Button>
                   </div>
                 </div>
@@ -323,7 +323,7 @@ export default function ModerateListings() {
 
       {filteredListings.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Nessun annuncio trovato
+          {t('noAdsFound')}
         </div>
       )}
 
@@ -331,19 +331,19 @@ export default function ModerateListings() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
-              <CardTitle>Rifiuta Annuncio</CardTitle>
+              <CardTitle>{t('reject')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium mb-2">Annuncio:</p>
+                  <p className="text-sm font-medium mb-2">{t('title')}:</p>
                   <p className="font-bold">{selectedListing.title}</p>
                   <p className="text-sm text-slate-600">{selectedListing.created_by}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Motivo del rifiuto *</label>
+                  <label className="text-sm font-medium mb-2 block">{t('reason')} *</label>
                   <Textarea
-                    placeholder="Spiega perché l'annuncio viene rifiutato..."
+                    placeholder={t('report.descPlaceholder')}
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
                     rows={4}

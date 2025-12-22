@@ -84,15 +84,6 @@ const i18n = {
     "admin.userManagementDesc": { de: "Benutzer, Rollen und Sperren verwalten", it: "Gestisci utenti, ruoli e ban", en: "Manage users, roles and bans", fr: "Gérer les utilisateurs, rôles et bannissements", pl: "Zarządzaj użytkownikami, rolami i banami", tr: "Kullanıcıları, rolleri ve yasakları yönet", uk: "Керування користувачами, ролями та баном" },
     "admin.listingModeration": { de: "Anzeigen-Moderation", it: "Moderazione Annunci", en: "Listing Moderation", fr: "Modération des annonces", pl: "Moderacja ogłoszeń", tr: "İlan Moderasyonu", uk: "Модерація оголошень" },
     "admin.listingModerationDesc": { de: "Anzeigen genehmigen, ablehnen oder löschen", it: "Approva, rifiuta o elimina annunci", en: "Approve, reject or delete listings", fr: "Approuver, rejeter ou supprimer des annonces", pl: "Zatwierdzaj, odrzucaj lub usuwaj ogłoszenia", tr: "İlanları onayla, reddet veya sil", uk: "Схвалення, відхилення або видалення оголошень" },
-    "admin.moderation.pending": { de: "Ausstehend", it: "In attesa", en: "Pending" },
-    "admin.moderation.approved": { de: "Genehmigt", it: "Approvati", en: "Approved" },
-    "admin.moderation.rejected": { de: "Abgelehnt", it: "Rifiutati", en: "Rejected" },
-    "admin.moderation.searchPlaceholder": { de: "Nach Titel oder Verkäufer suchen...", it: "Cerca per titolo o venditore...", en: "Search by title or seller..." },
-    "admin.moderation.allModeration": { de: "Alle Moderationsstatus", it: "Tutti gli stati moderazione", en: "All moderation statuses" },
-    "admin.moderation.rejectListing": { de: "Anzeige ablehnen", it: "Rifiuta Annuncio", en: "Reject Listing" },
-    "admin.moderation.rejectReasonPlaceholder": { de: "Begründe, warum die Anzeige abgelehnt wird...", it: "Spiega perché l'annuncio viene rifiutato...", en: "Explain why the listing is rejected..." },
-    "admin.moderation.deleteReasonPrompt": { de: "Löschgrund (wird dem Verkäufer mitgeteilt):", it: "Motivo eliminazione (verrà notificato al venditore):", en: "Deletion reason (will be notified to the seller):" },
-    "action.approve": { de: "Genehmigen", it: "Approva", en: "Approve" },
     "admin.disputeManagement": { de: "Streitfallverwaltung", it: "Gestione Dispute", en: "Dispute Management", fr: "Gestion des litiges", pl: "Zarządzanie sporami", tr: "Anlaşmazlık Yönetimi", uk: "Управління суперечками" },
     "admin.disputeManagementDesc": { de: "Streitigkeiten zwischen Benutzern lösen", it: "Risolvi controversie tra utenti", en: "Resolve disputes between users", fr: "Résoudre les litiges entre utilisateurs", pl: "Rozwiązuj spory między użytkownikami", tr: "Kullanıcılar arasındaki anlaşmazlıkları çöz", uk: "Вирішення суперечок між користувачами" },
     "admin.supportTickets": { de: "Support-Tickets", it: "Ticket Supporto", en: "Support Tickets", fr: "Tickets de support", pl: "Zgłoszenia wsparcia", tr: "Destek Talepleri", uk: "Тікети підтримки" },
@@ -112,10 +103,14 @@ const i18n = {
     "admin.systemCheckup": { de: "System-Check", it: "Controllo Sistema", en: "System Checkup", fr: "Vérification système", pl: "Sprawdzanie systemu", tr: "Sistem Kontrolü", uk: "Перевірка системи" },
     "admin.systemCheckupDesc": { de: "Vollständige Systemanalyse", it: "Analisi completa sistema", en: "Complete system analysis", fr: "Analyse complète du système", pl: "Pełna analiza systemu", tr: "Tam sistem analizi", uk: "Повний аналіз системи" },
     "accessDenied": { de: "Zugriff verweigert", it: "Accesso Negato", en: "Access Denied", fr: "Accès refusé", pl: "Odmowa dostępu", tr: "Erişim Engellendi", uk: "Доступ заборонено" },
-    "adminOnly": { de: "Nur Administratoren können auf diese Seite zugreifen.", it: "Solo gli amministratori possono accedere a questa pagina.", en: "Only administrators can access this page.", fr: "Seuls les administrateurs peuvent accéder à cette page.", pl: "Tylko administratorzy mogą uzyskać dostęp do tej strony.", tr: "Bu sayfaya yalnızca yöneticiler erişebilir.", uk: "Тільки адміністратори можуть отримати доступ до цієї сторінки." }
-};
+    "adminOnly": { de: "Nur Administratoren können auf diese Seite zugreifen.", it: "Solo gli amministratori possono accedere a questa pagina.", en: "Only administrators can access this page.", fr: "Seuls les administrateurs peuvent accéder à cette page.", pl: "Tylko administratorzy mogą uzyskać dostęp do tej strony.", tr: "Bu sayfaya yalnızca yöneticiler erişebilir.", uk: "Тільки адміністратори можуть отримати доступ до цієї сторінки." },
+            "label.approved": { de: "Genehmigt", it: "Approvati", en: "Approved", fr: "Approuvés", pl: "Zatwierdzone", tr: "Onaylandı", uk: "Схвалено" },
+            "label.rejected": { de: "Abgelehnt", it: "Rifiutati", en: "Rejected", fr: "Rejetés", pl: "Odrzucone", tr: "Reddedildi", uk: "Відхилено" },
+            "admin.moderation.searchPlaceholder": { de: "Nach Titel oder Verkäufer suchen...", it: "Cerca per titolo o venditore...", en: "Search by title or seller...", fr: "Rechercher par titre ou vendeur...", pl: "Szukaj po tytule lub sprzedawcy...", tr: "Başlığa veya satıcıya göre ara...", uk: "Пошук за назвою або продавцем..." },
+            "admin.moderation.moderationAll": { de: "Alle Moderationsstatus", it: "Tutti gli stati moderazione", en: "All moderation statuses", fr: "Tous les statuts de modération", pl: "Wszystkie statusy moderacji", tr: "Tüm moderasyon durumları", uk: "Усі статуси модерації" }
+          };
 
-// Legacy flat translations (kept for backward compatibility)
+          // Legacy flat translations (kept for backward compatibility)
 const translations = {
   de: {
     // Categories - Fahrzeuge
