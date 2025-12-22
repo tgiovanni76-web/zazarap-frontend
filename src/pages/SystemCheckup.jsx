@@ -349,7 +349,7 @@ export default function SystemCheckup() {
   return (
     <div className="py-8 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">🔍 System Checkup Completo</h1>
+        <h1 className="text-4xl font-bold mb-2">{t('admin.systemCheckupComplete')}</h1>
         <p className="text-slate-600">Analisi dettagliata dello stato dell'applicazione Zazarap</p>
       </div>
 
