@@ -17,7 +17,7 @@ export default function SelectListingModal({ open, onClose, listings = [], packa
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {packageName} • {days} {days === 1 ? 'day' : 'days'} • €{price.toFixed(2)}
+            {t('ads.modal.select.title', { pkg: packageName, days, price: price.toFixed(2) })}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
