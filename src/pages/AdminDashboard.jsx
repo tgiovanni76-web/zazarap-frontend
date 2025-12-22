@@ -161,8 +161,24 @@ export default function AdminDashboard() {
       link: 'SystemCheckup',
       count: null,
       color: 'bg-cyan-500'
+    },
+    {
+      titleKey: 'System Logs',
+      descKey: 'Eventi e errori dell\'app',
+      icon: FileText,
+      link: 'SystemLogs',
+      count: null,
+      color: 'bg-slate-600'
+    },
+    {
+      titleKey: 'Accessibility Audit',
+      descKey: 'Verifica base a11y (manuale)',
+      icon: CheckSquare,
+      link: 'AccessibilityAudit',
+      count: null,
+      color: 'bg-emerald-600'
     }
-  ];
+    ];
 
   return (
     <div className="py-8">
