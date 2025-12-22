@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from 'lucide-react';
 import { format } from 'date-fns';
+import { useLanguage } from '../LanguageProvider';
 
 const statusColors = {
   active: 'bg-green-100 text-green-800 border-green-200',
@@ -11,6 +12,7 @@ const statusColors = {
 };
 
 export default function RecentListings({ listings }) {
+  const { t } = useLanguage();
   const recentListings = listings.slice(0, 5);
 
   return (
@@ -47,7 +49,7 @@ export default function RecentListings({ listings }) {
               <div className="text-right">
                 <p className="text-lg font-bold text-slate-900">€{listing.price}</p>
                 <Badge className={`${statusColors[listing.status] || statusColors.active} border mt-1`}>
-                  {listing.status}
+                  {t(listing.status)}
                 </Badge>
               </div>
             </div>

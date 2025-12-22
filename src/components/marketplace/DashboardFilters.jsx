@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw, Filter } from 'lucide-react';
+import { useLanguage } from '../LanguageProvider';
 
 export default function DashboardFilters({ 
   statusFilter, 
@@ -12,6 +13,7 @@ export default function DashboardFilters({
   onExport,
   onReset 
 }) {
+  const { t } = useLanguage();
   return (
     <Card className="border-none shadow-lg">
       <CardContent className="p-6">
@@ -19,17 +21,17 @@ export default function DashboardFilters({
           <div className="flex-1 min-w-[200px]">
             <label className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
               <Filter className="w-4 h-4" />
-              Status
+              {t('listingStatus')}
             </label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder={t('allStatuses')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="sold">Sold</SelectItem>
-                <SelectItem value="expired">Expired</SelectItem>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                <SelectItem value="active">{t('active')}</SelectItem>
+                <SelectItem value="sold">{t('sold')}</SelectItem>
+                <SelectItem value="expired">{t('expired')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -37,21 +39,21 @@ export default function DashboardFilters({
           <div className="flex-1 min-w-[200px]">
             <label className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
               <Filter className="w-4 h-4" />
-              Category
+              {t('category')}
             </label>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder={t('allCategories')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="elettronica">Elettronica</SelectItem>
-                <SelectItem value="casa">Casa</SelectItem>
-                <SelectItem value="moda">Moda</SelectItem>
-                <SelectItem value="sport">Sport</SelectItem>
-                <SelectItem value="auto">Auto</SelectItem>
-                <SelectItem value="animali">Animali</SelectItem>
-                <SelectItem value="altro">Altro</SelectItem>
+                <SelectItem value="all">{t('allCategories')}</SelectItem>
+                <SelectItem value="elettronica">{t('electronics')}</SelectItem>
+                <SelectItem value="casa">{t('home')}</SelectItem>
+                <SelectItem value="moda">{t('fashion')}</SelectItem>
+                <SelectItem value="sport">{t('sports')}</SelectItem>
+                <SelectItem value="auto">{t('auto')}</SelectItem>
+                <SelectItem value="animali">{t('animals')}</SelectItem>
+                <SelectItem value="altro">{t('other')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
