@@ -5,8 +5,80 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import SEOHead from '@/components/SEOHead';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import SelectListingModal from '@/components/ads/SelectListingModal';
+import RequestAdModal from '@/components/ads/RequestAdModal';
 
 export default function Werbung() {
+  const queryClient = useQueryClient();
+  const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me().catch(() => null) });
+  const { data: myListings = [] } = useQuery({
+    queryKey: ['myListings', user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      // show only active listings created by the user
+      return base44.entities.Listing.filter({ created_by: user.email, status: 'active' }, '-updated_date', 200);
+    },
+    enabled: !!user,
+    initialData: []
+  });
+
+  const [selectModal, setSelectModal] = React.useState({ open: false, packageName: '', days: 0, price: 0 });
+  const [requestModal, setRequestModal] = React.useState({ open: false, packageName: '', price: '' });
+
+  const updateListingMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Listing.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myListings'] });
+    }
+  });
+
+  const createTicketMutation = useMutation({
+    mutationFn: (payload) => base44.entities.SupportTicket.create(payload),
+  });
+
+  const ensureAuth = async () => {
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) {
+      base44.auth.redirectToLogin(window.location.href);
+      return false;
+    }
+    return true;
+  };
+
+  const startPromo = async (pkg) => {
+    if (!(await ensureAuth())) return;
+    setSelectModal({ open: true, ...pkg });
+  };
+
+  const handleActivatePromo = async (listingId) => {
+    const daysMs = selectModal.days * 24 * 60 * 60 * 1000;
+    const until = new Date(Date.now() + daysMs).toISOString();
+    await updateListingMutation.mutateAsync({ id: listingId, data: { featured: true, featuredUntil: until } });
+    setSelectModal({ open: false, packageName: '', days: 0, price: 0 });
+    toast.success('Promozione attivata sull\'annuncio');
+  };
+
+  const openRequest = async (pkg) => {
+    if (!(await ensureAuth())) return;
+    setRequestModal({ open: true, ...pkg });
+  };
+
+  const handleSendRequest = async ({ message }) => {
+    if (!user) return;
+    await createTicketMutation.mutateAsync({
+      userId: user.email,
+      subject: `Richiesta pubblicità: ${requestModal.packageName}`,
+      message: `${message || ''}\n\nPacchetto: ${requestModal.packageName}\nPrezzo: ${requestModal.price}`,
+      category: 'listing',
+      priority: 'urgent',
+      status: 'open'
+    });
+    setRequestModal({ open: false, packageName: '', price: '' });
+    toast.success('Richiesta inviata. Ti contatteremo a breve.');
+  };
   return (
     <div className="min-h-screen bg-[#f5f5f5] pb-20">
       <SEOHead title="Werbung & Premium-Pakete – Zazarap" description="Mehr Sichtbarkeit. Mehr Kunden. Mehr Verkäufe." />
@@ -35,18 +107,21 @@ export default function Werbung() {
               description="Ihre Anzeige wird 7 Tage lang ganz oben in der Kategorie angezeigt."
               price="€4,99"
               btnText="Jetzt kaufen"
+              onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 4.99 })}
             />
             <PricingCard 
               title="Hervorgehobene Anzeige" 
               description="Farblicher Rahmen + besserer Platz in den Suchergebnissen."
               price="€2,49"
               btnText="Jetzt kaufen"
+              onAction={() => startPromo({ packageName: 'Hervorgehobene Anzeige', days: 7, price: 2.49 })}
             />
             <PricingCard 
               title="Premium 14 Tage" 
               description="Maximale Sichtbarkeit für zwei Wochen mit allen Vorteilen."
               price="€8,99"
               btnText="Jetzt kaufen"
+              onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 8.99 })}
             />
           </div>
         </div>
@@ -62,6 +137,7 @@ export default function Werbung() {
               features={["Eigene Shop-Seite", "Bis zu 20 aktive Anzeigen", "Standard-Unterstützung"]}
               price="€14,99 / Monat"
               btnText="Jetzt abonnieren"
+              onAction={() => openRequest({ packageName: 'Basic Shop-Paket', price: '€14,99 / Monat' })}
             />
              <PricingCard 
               title="Business Shop-Paket" 
@@ -69,12 +145,14 @@ export default function Werbung() {
               price="€39,99 / Monat"
               btnText="Jetzt abonnieren"
               highlighted={true}
+              onAction={() => openRequest({ packageName: 'Business Shop-Paket', price: '€39,99 / Monat' })}
             />
              <PricingCard 
               title="Premium Shop-Paket" 
               features={["Unbegrenzte Anzeigen", "Startseiten-Banner", "Priorisierter Support"]}
               price="€79,99 / Monat"
               btnText="Jetzt abonnieren"
+              onAction={() => openRequest({ packageName: 'Premium Shop-Paket', price: '€79,99 / Monat' })}
             />
           </div>
         </div>
@@ -90,28 +168,48 @@ export default function Werbung() {
               description="Perfekt für maximale Sichtbarkeit."
               price="€149,00 / Woche"
               btnText="Banner buchen"
+              onAction={() => openRequest({ packageName: 'Startseiten-Banner', price: '€149,00 / Woche' })}
             />
             <PricingCard 
               title="Kategorie-Banner" 
               description="Direkt in der passenden Kategorie für Ihre Zielgruppe."
               price="€79,00 / Woche"
               btnText="Banner buchen"
+              onAction={() => openRequest({ packageName: 'Kategorie-Banner', price: '€79,00 / Woche' })}
             />
             <PricingCard 
               title="Sidebar-Werbung" 
               description="Eine günstige, aber sichtbare Werbefläche."
               price="€39,00 / Woche"
               btnText="Banner buchen"
+              onAction={() => openRequest({ packageName: 'Sidebar-Werbung', price: '€39,00 / Woche' })}
             />
           </div>
         </div>
 
       </div>
+      {/* Modals */}
+      <SelectListingModal 
+        open={selectModal.open}
+        onClose={() => setSelectModal({ open: false, packageName: '', days: 0, price: 0 })}
+        listings={myListings}
+        packageName={selectModal.packageName}
+        days={selectModal.days}
+        price={selectModal.price}
+        onConfirm={handleActivatePromo}
+      />
+      <RequestAdModal 
+        open={requestModal.open}
+        onClose={() => setRequestModal({ open: false, packageName: '', price: '' })}
+        packageName={requestModal.packageName}
+        price={requestModal.price}
+        onSubmit={handleSendRequest}
+      />
     </div>
   );
 }
 
-function PricingCard({ title, description, features, price, btnText, highlighted = false }) {
+function PricingCard({ title, description, features, price, btnText, highlighted = false, onAction }) {
   return (
     <Card className={`h-full border-none shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden ${highlighted ? 'ring-2 ring-[#d62020] scale-105 relative z-10' : ''}`}>
       {highlighted && (
@@ -138,7 +236,7 @@ function PricingCard({ title, description, features, price, btnText, highlighted
         
         <div className="mt-auto w-full text-center">
           <div className="text-3xl font-bold text-[#d62020] mb-6">{price}</div>
-          <Button className="w-full bg-[#d62020] hover:bg-[#b91818] text-white font-bold py-6 text-lg rounded-xl transition-colors shadow-md hover:shadow-lg">
+          <Button onClick={onAction} className="w-full bg-[#d62020] hover:bg-[#b91818] text-white font-bold py-6 text-lg rounded-xl transition-colors shadow-md hover:shadow-lg">
             {btnText}
           </Button>
         </div>
