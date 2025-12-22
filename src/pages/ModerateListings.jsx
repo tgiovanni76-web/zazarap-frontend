@@ -241,17 +241,17 @@ export default function ModerateListings() {
                         </Badge>
                         {listing.moderationStatus === 'pending' && (
                           <Badge className="bg-orange-100 text-orange-800">
-                            In attesa
+                            {t('pending')}
                           </Badge>
                         )}
                         {listing.moderationStatus === 'approved' && (
                           <Badge className="bg-green-100 text-green-800">
-                            Approvato
+                            {t('label.approved')}
                           </Badge>
                         )}
                         {listing.moderationStatus === 'rejected' && (
                           <Badge className="bg-red-100 text-red-800">
-                            Rifiutato
+                            {t('label.rejected')}
                           </Badge>
                         )}
                       </div>
@@ -311,7 +311,7 @@ export default function ModerateListings() {
                       variant="destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Elimina
+                      {t('delete')}
                     </Button>
                   </div>
                 </div>
@@ -356,7 +356,7 @@ export default function ModerateListings() {
                     className="flex-1 bg-red-600 hover:bg-red-700"
                   >
                     <XCircle className="h-4 w-4 mr-2" />
-                    Rifiuta Annuncio
+                    {t('reject')}
                   </Button>
                   <Button
                     variant="outline"
