@@ -359,8 +359,8 @@ export default function Marketplace() {
             targetType="category"
             targetId={categoryFilter}
             className="md:ml-2 h-12"
-            labelFollow="Segui categoria"
-            labelUnfollow="Non seguire più"
+            labelFollow={t('ui.followCategory')}
+            labelUnfollow={t('ui.unfollowCategory')}
           />
         )}
         </div>

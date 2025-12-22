@@ -16,7 +16,11 @@ const i18n = {
   "ui.positionSet": { de: "Position gesetzt", it: "Posizione impostata", en: "Position set", uk: "Позицію встановлено", tr: "Konum ayarlandı", fr: "Position définie", pl: "Pozycja ustawiona" },
   "ui.positionNotSet": { de: "Position nicht festgelegt", it: "Posizione non impostata", en: "Position not set", uk: "Позицію не встановлено", tr: "Konum ayarlı değil", fr: "Position non définie", pl: "Pozycja nieustawiona" },
   "ui.useMyLocation": { de: "Meinen Standort verwenden", it: "Usa la mia posizione", en: "Use my location", uk: "Використати мою локацію", tr: "Konumumu kullan", fr: "Utiliser ma position", pl: "Użyj mojej lokalizacji" },
-  "ui.radius": { de: "Radius (km)", it: "Raggio (km)", en: "Radius (km)", uk: "Радіус (км)", tr: "Yarıçap (km)", fr: "Rayon (km)", pl: "Promień (km)" }
+  "ui.radius": { de: "Radius (km)", it: "Raggio (km)", en: "Radius (km)", uk: "Радіус (км)", tr: "Yarıçap (km)", fr: "Rayon (km)", pl: "Promień (km)" },
+  "ui.follow": { de: "Folgen", it: "Segui", en: "Follow", uk: "Стежити", tr: "Takip et", fr: "Suivre", pl: "Obserwuj" },
+  "ui.unfollow": { de: "Nicht mehr folgen", it: "Smetti di seguire", en: "Unfollow", uk: "Відписатися", tr: "Takibi bırak", fr: "Ne plus suivre", pl: "Przestań obserwować" },
+  "ui.followCategory": { de: "Kategorie folgen", it: "Segui categoria", en: "Follow category", uk: "Стежити за категорією", tr: "Kategoriyi takip et", fr: "Suivre la catégorie", pl: "Obserwuj kategorię" },
+  "ui.unfollowCategory": { de: "Kategorie nicht mehr folgen", it: "Non seguire più", en: "Unfollow category", uk: "Відписатися від категорії", tr: "Kategoriyi takipten çık", fr: "Ne plus suivre la catégorie", pl: "Przestań obserwować kategorię" }
   "header.nav.postAd": { de: "Anzeige aufgeben", it: "Pubblica annuncio", en: "Post an ad", uk: "Створити оголошення", tr: "İlan ver", fr: "Déposer une annonce", pl: "Dodaj ogłoszenie" },
   
   // Nav shortcuts
