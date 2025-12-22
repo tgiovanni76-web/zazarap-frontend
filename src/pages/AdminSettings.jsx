@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Key, CreditCard, BarChart3, Shield, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminSettings() {
+  const { t } = useLanguage();
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -17,8 +19,8 @@ export default function AdminSettings() {
   if (user?.role !== 'admin') {
     return (
       <div className="py-8 text-center">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h2>
-        <p>Solo gli amministratori possono accedere a questa pagina.</p>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">{t('accessDenied')}</h2>
+        <p>{t('adminOnly')}</p>
       </div>
     );
   }
@@ -27,11 +29,11 @@ export default function AdminSettings() {
     {
       name: 'PayPal',
       icon: CreditCard,
-      description: 'Integrazione pagamenti e escrow',
+      description: t('settings.integrations.paypal.description'),
       secrets: [
-        { key: 'PAYPAL_CLIENT_ID', label: 'Client ID', placeholder: 'AXX...' },
-        { key: 'PAYPAL_CLIENT_SECRET', label: 'Client Secret', placeholder: 'EXX...' },
-        { key: 'PAYPAL_WEBHOOK_ID', label: 'Webhook ID', placeholder: 'WH-...' }
+        { key: 'PAYPAL_CLIENT_ID', label: t('settings.paypal.clientId'), placeholder: 'AXX...' },
+        { key: 'PAYPAL_CLIENT_SECRET', label: t('settings.paypal.clientSecret'), placeholder: 'EXX...' },
+        { key: 'PAYPAL_WEBHOOK_ID', label: t('settings.paypal.webhookId'), placeholder: 'WH-...' }
       ],
       docs: 'https://developer.paypal.com/dashboard/',
       status: 'required',
@@ -40,9 +42,9 @@ export default function AdminSettings() {
     {
       name: 'Google Analytics',
       icon: BarChart3,
-      description: 'Tracciamento utenti e conversioni',
+      description: t('settings.integrations.ga.description'),
       secrets: [
-        { key: 'GOOGLE_ANALYTICS_ID', label: 'Measurement ID', placeholder: 'G-XXXXXXXXXX' }
+        { key: 'GOOGLE_ANALYTICS_ID', label: t('settings.ga.measurementId'), placeholder: 'G-XXXXXXXXXX' }
       ],
       docs: 'https://analytics.google.com/',
       status: 'recommended',
@@ -52,26 +54,26 @@ export default function AdminSettings() {
 
   const setupSteps = [
     {
-      title: '1. Abilita Backend Functions',
-      description: 'Dal pannello Base44, vai in Settings → Backend Functions e abilitale',
+      title: t('settings.step.enableFunctions.title'),
+      description: t('settings.step.enableFunctions.desc'),
       status: 'required',
       icon: Shield
     },
     {
-      title: '2. Configura PayPal',
-      description: 'Crea un\'app PayPal e inserisci le credenziali qui sotto',
+      title: t('settings.step.setupPayPal.title'),
+      description: t('settings.step.setupPayPal.desc'),
       status: 'required',
       icon: CreditCard
     },
     {
-      title: '3. Imposta Google Analytics',
-      description: 'Crea una proprietà GA4 e inserisci il Measurement ID',
+      title: t('settings.step.setupGA.title'),
+      description: t('settings.step.setupGA.desc'),
       status: 'recommended',
       icon: BarChart3
     },
     {
-      title: '4. Configura Dominio',
-      description: 'Collega il tuo dominio personalizzato nelle impostazioni Base44',
+      title: t('settings.step.setupDomain.title'),
+      description: t('settings.step.setupDomain.desc'),
       status: 'recommended',
       icon: Settings
     }
@@ -79,17 +81,16 @@ export default function AdminSettings() {
 
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6">Configurazione Piattaforma</h2>
+      <h2 className="text-3xl font-bold mb-6">{t('settings.platformConfigTitle')}</h2>
 
       <Card className="mb-8 bg-yellow-50 border-yellow-200">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
             <Shield className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-bold text-yellow-900 mb-2">Configurazione Necessaria</h3>
+              <h3 className="font-bold text-yellow-900 mb-2">{t('settings.necessaryConfig')}</h3>
               <p className="text-sm text-yellow-800 mb-4">
-                Per utilizzare il marketplace in produzione, devi completare la configurazione delle integrazioni.
-                Vai nel pannello Base44 → Settings per inserire i secrets.
+                {t('settings.necessaryConfigDesc')}
               </p>
               <div className="space-y-2">
                 {setupSteps.map((step, i) => (
@@ -100,7 +101,7 @@ export default function AdminSettings() {
                       <p className="text-xs text-yellow-700">{step.description}</p>
                     </div>
                     <Badge variant={step.status === 'required' ? 'destructive' : 'secondary'} className="ml-auto">
-                      {step.status}
+                      {step.status === 'required' ? t('settings.required') : t('settings.recommended')}
                     </Badge>
                   </div>
                 ))}
@@ -112,29 +113,28 @@ export default function AdminSettings() {
 
       <Card className="mb-8 border-red-200">
         <CardHeader>
-            <CardTitle className="text-red-600">Gestione Categorie</CardTitle>
+            <CardTitle className="text-red-600">{t('settings.categoryManagementTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
             <p className="mb-4 text-sm text-gray-600">
-                Attenzione: questa azione cancellerà tutte le categorie esistenti e le sostituirà con la struttura predefinita (Motoren, Markt, Immobilien, Arbeit).
-                I prodotti esistenti potrebbero perdere la loro associazione di categoria.
+                {t('settings.categoryResetWarning')}
             </p>
             <Button 
                 variant="destructive"
                 onClick={async () => {
-                    if(confirm('Sei sicuro di voler resettare tutte le categorie?')) {
-                        const toastId = toast.loading('Resetting categories...');
+                    if(confirm(t('settings.resetCategoriesConfirm'))) {
+                        const toastId = toast.loading(t('settings.resettingCategories'));
                         try {
                             await base44.functions.invoke('setupCategories');
-                            toast.success('Categorie resettate con successo', { id: toastId });
+                            toast.success(t('settings.categoriesResetSuccess'), { id: toastId });
                             // Reload page to reflect changes if needed or just let user know
                         } catch (e) {
-                            toast.error('Errore durante il reset: ' + e.message, { id: toastId });
+                            toast.error(t('settings.categoriesResetError') + ' ' + e.message, { id: toastId });
                         }
                     }
                 }}
             >
-                Reset Categorie Default (Tedesco)
+                {t('settings.resetCategoriesButton')}
             </Button>
         </CardContent>
       </Card>
@@ -161,7 +161,7 @@ export default function AdminSettings() {
                     <div key={secret.key}>
                       <label className="text-sm font-medium mb-1 block">{secret.label}</label>
                       <div className="text-xs text-slate-500 mb-1">
-                        Secret Key: <code className="bg-slate-100 px-1 py-0.5 rounded">{secret.key}</code>
+                        {t('settings.secretKeyLabel')}: <code className="bg-slate-100 px-1 py-0.5 rounded">{secret.key}</code>
                       </div>
                       <Input
                         type="password"
@@ -170,7 +170,7 @@ export default function AdminSettings() {
                         className="bg-slate-50"
                       />
                       <p className="text-xs text-slate-500 mt-1">
-                        Configura questo secret nel pannello Base44 → Settings → Secrets
+                        {t('settings.configureSecretHint')}
                       </p>
                     </div>
                   ))}
@@ -181,7 +181,7 @@ export default function AdminSettings() {
                   rel="noopener noreferrer"
                   className="text-sm text-blue-600 hover:underline"
                 >
-                  📚 Documentazione {integration.name} →
+                  📚 {t('settings.documentation')} {integration.name} →
                 </a>
               </CardContent>
             </Card>
@@ -191,38 +191,38 @@ export default function AdminSettings() {
 
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle>Guida Rapida: PayPal Setup</CardTitle>
+          <CardTitle>{t('settings.paypal.quickGuideTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-700">
-            <li>Vai su <a href="https://developer.paypal.com/dashboard/" target="_blank" className="text-blue-600 hover:underline">PayPal Developer Dashboard</a></li>
-            <li>Crea una nuova app (Apps & Credentials → Create App)</li>
-            <li>Copia il Client ID e Client Secret</li>
-            <li>Configura i Webhooks (Webhooks → Add Webhook)</li>
-            <li>URL Webhook: <code className="bg-slate-100 px-2 py-1 rounded text-xs">https://tuodominio.com/api/paypal-webhook</code></li>
-            <li>Eventi da sottoscrivere: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED</li>
-            <li>Copia il Webhook ID</li>
-            <li>Inserisci tutti i secrets nel pannello Base44</li>
+            <li>{t('settings.paypal.step1')} <a href="https://developer.paypal.com/dashboard/" target="_blank" className="text-blue-600 hover:underline">PayPal Developer Dashboard</a></li>
+            <li>{t('settings.paypal.step2')}</li>
+            <li>{t('settings.paypal.step3')}</li>
+            <li>{t('settings.paypal.step4')}</li>
+            <li>{t('settings.paypal.webhookUrlLabel')}: <code className="bg-slate-100 px-2 py-1 rounded text-xs">https://tuodominio.com/api/paypal-webhook</code></li>
+            <li>{t('settings.paypal.eventsToSubscribe')}: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED</li>
+            <li>{t('settings.paypal.step7')}</li>
+            <li>{t('settings.paypal.step8')}</li>
           </ol>
         </CardContent>
       </Card>
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Checklist Pre-Lancio</CardTitle>
+          <CardTitle>{t('settings.checklist.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             {[
-              'Backend Functions abilitate',
-              'Secrets PayPal configurati',
-              'Google Analytics configurato',
-              'Dominio personalizzato collegato',
-              'SSL/HTTPS attivo',
-              'Email di sistema configurate',
-              'Test pagamenti eseguiti (sandbox)',
-              'Privacy Policy e ToS pubblicati',
-              'Sistema di backup attivo'
+              t('settings.checklist.backendFunctions'),
+              t('settings.checklist.paypalSecrets'),
+              t('settings.checklist.ga'),
+              t('settings.checklist.customDomain'),
+              t('settings.checklist.ssl'),
+              t('settings.checklist.systemEmails'),
+              t('settings.checklist.paymentsTested'),
+              t('settings.checklist.privacyTos'),
+              t('settings.checklist.backup')
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-2 p-2 border rounded">
                 <input type="checkbox" className="h-4 w-4" />
