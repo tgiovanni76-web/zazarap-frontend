@@ -123,7 +123,22 @@ const i18n = {
   "category.arredamento": { de: "Möbel", it: "Arredamento", en: "Furniture", fr: "Meubles", pl: "Meble", tr: "Mobilya", uk: "Меблі" },
   "category.abbigliamento": { de: "Kleidung", it: "Abbigliamento", en: "Clothing", fr: "Vêtements", pl: "Odzież", tr: "Giyim", uk: "Одяг" },
   "category.libri": { de: "Bücher", it: "Libri", en: "Books", fr: "Livres", pl: "Książki", tr: "Kitaplar", uk: "Книги" },
-  "category.altro": { de: "Sonstiges", it: "Altro", en: "Other", fr: "Autre", pl: "Inne", tr: "Diğer", uk: "Інше" }
+  "category.altro": { de: "Sonstiges", it: "Altro", en: "Other", fr: "Autre", pl: "Inne", tr: "Diğer", uk: "Інше" },
+
+  "dashboard.title": { de: "Zazarap Dashboard", it: "Zazarap Dashboard", en: "Zazarap Dashboard", fr: "Tableau de bord Zazarap", pl: "Pulpit Zazarap", tr: "Zazarap Panosu", uk: "Панель Zazarap" },
+  "dashboard.subtitle": { de: "Überwache die Performance deines Marktplatzes", it: "Monitora le performance del tuo marketplace", en: "Monitor your marketplace performance", fr: "Surveillez les performances de votre marketplace", pl: "Monitoruj wydajność swojego marketplace", tr: "Pazaryerinizin performansını izleyin", uk: "Відстежуйте ефективність свого маркетплейсу" },
+  "dashboard.activeListings": { de: "Aktive Anzeigen", it: "Annunci attivi", en: "Active Listings", fr: "Annonces actives", pl: "Aktywne ogłoszenia", tr: "Aktif İlanlar", uk: "Активні оголошення" },
+  "dashboard.soldItems": { de: "Verkaufte Artikel", it: "Venduti", en: "Sold Items", fr: "Articles vendus", pl: "Sprzedane", tr: "Satılanlar", uk: "Продані товари" },
+  "dashboard.totalRevenue": { de: "Gesamtumsatz", it: "Ricavi totali", en: "Total Revenue", fr: "Revenu total", pl: "Łączne przychody", tr: "Toplam Gelir", uk: "Загальний дохід" },
+  "dashboard.listingsActivity": { de: "Anzeigen-Aktivit e4t (Letzte 7 Tage)", it: "Attivit e0 annunci (ultimi 7 giorni)", en: "Listings Activity (Last 7 Days)", fr: "Activit e9 des annonces (7 derniers jours)", pl: "Aktywno5b07 og42osze44 (ostatnie 7 dni)", tr: "30lan Aktivitesi (Son 7 G fcn)", uk: "Активність оголошень (останні 7 днів)" },
+  "dashboard.legend.active": { de: "Aktive Anzeigen", it: "Annunci attivi", en: "Active Listings", fr: "Annonces actives", pl: "Aktywne ogłoszenia", tr: "Aktif 30lanlar", uk: "Активні оголошення" },
+  "dashboard.legend.sold": { de: "Verkaufte Artikel", it: "Oggetti venduti", en: "Sold Items", fr: "Articles vendus", pl: "Sprzedane", tr: "Sat31lanlar", uk: "Продані товари" },
+
+  "admin.moderation.rejectReasonLabel": { de: "Ablehnungsgrund", it: "Motivo del rifiuto", en: "Rejection reason", fr: "Raison du refus", pl: "Pow f3d odrzucenia", tr: "Reddetme nedeni", uk: "Причина відхилення" },
+  "admin.moderation.rejectReasonRequired": { de: "Bitte gib einen Ablehnungsgrund an", it: "Inserisci un motivo per il rifiuto", en: "Please provide a rejection reason", fr: "Veuillez indiquer une raison du refus", pl: "Podaj pow f3d odrzucenia", tr: "L fctfen reddetme nedeni girin", uk: "Будь ласка, вкажіть причину відхилення" },
+
+  "moderation.updated": { de: "Anzeige aktualisiert", it: "Annuncio aggiornato", en: "Listing updated", fr: "Annonce mise  e0 jour", pl: "Og42oszenie zaktualizowano", tr: "30lan g fcncellendi", uk: "Оголошення оновлено" },
+  "moderation.deleted": { de: "Anzeige gel f6scht", it: "Annuncio eliminato", en: "Listing deleted", fr: "Annonce supprim e9e", pl: "Og42oszenie usuni19to", tr: "30lan silindi", uk: "Оголошення видалено" }
 };
 
 // Legacy flat translations (kept for backward compatibility)

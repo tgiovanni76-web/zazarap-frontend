@@ -2,8 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, subDays } from 'date-fns';
+import { useLanguage } from '../LanguageProvider';
 
 export default function ListingsChart({ listings }) {
+  const { t } = useLanguage();
   const chartData = React.useMemo(() => {
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = subDays(new Date(), 6 - i);
@@ -29,7 +31,7 @@ export default function ListingsChart({ listings }) {
   return (
     <Card className="border-none shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Listings Activity (Last 7 Days)</CardTitle>
+        <CardTitle className="text-xl font-semibold">{t('dashboard.listingsActivity') || 'Listings Activity (Last 7 Days)'}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -53,8 +55,8 @@ export default function ListingsChart({ listings }) {
               }}
             />
             <Legend />
-            <Bar dataKey="active" fill="#3B82F6" name="Active Listings" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="sold" fill="#10B981" name="Sold Items" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="active" fill="#3B82F6" name={t('dashboard.legend.active') || 'Active Listings'} radius={[8, 8, 0, 0]} />
+            <Bar dataKey="sold" fill="#10B981" name={t('dashboard.legend.sold') || 'Sold Items'} radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -36,7 +36,7 @@ export default function ModerateListings() {
     mutationFn: ({ id, data }) => base44.entities.Listing.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      toast.success('Annuncio aggiornato');
+      toast.success(t('moderation.updated'));
       setSelectedListing(null);
     }
   });
@@ -45,7 +45,7 @@ export default function ModerateListings() {
     mutationFn: (id) => base44.entities.Listing.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      toast.success('Annuncio eliminato');
+      toast.success(t('moderation.deleted'));
       setSelectedListing(null);
     }
   });
@@ -69,7 +69,7 @@ export default function ModerateListings() {
 
   const handleReject = async () => {
     if (!rejectReason.trim()) {
-      toast.error('Inserisci un motivo per il rifiuto');
+      toast.error(t('admin.moderation.rejectReasonRequired'));
       return;
     }
 
