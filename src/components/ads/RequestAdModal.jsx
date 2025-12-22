@@ -26,7 +26,7 @@ export default function RequestAdModal({ open, onClose, packageName, price, onSu
         </div>
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onClose}>{t('cancel')}</Button>
-          <Button onClick={() => onSubmit && onSubmit({ message })} className="bg-[#d62020] hover:bg-[#b91818]">Invia richiesta</Button>
+          <Button onClick={() => onSubmit && onSubmit({ message })} className="bg-[#d62020] hover:bg-[#b91818]">{t('ads.modal.request.submit')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
