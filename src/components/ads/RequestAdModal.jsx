@@ -25,7 +25,7 @@ export default function RequestAdModal({ open, onClose, packageName, price, onSu
           <Textarea rows={5} placeholder={t('ads.modal.request.placeholder')} value={message} onChange={(e) => setMessage(e.target.value)} />
         </div>
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose}>Annulla</Button>
+          <Button variant="outline" onClick={onClose}>{t('cancel')}</Button>
           <Button onClick={() => onSubmit && onSubmit({ message })} className="bg-[#d62020] hover:bg-[#b91818]">Invia richiesta</Button>
         </DialogFooter>
       </DialogContent>
