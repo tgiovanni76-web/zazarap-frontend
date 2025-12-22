@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { checkRateLimit } from './rateLimiter.js';
 
 function asISODate(date) {
   const d = new Date(date);
@@ -12,6 +13,12 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rl = checkRateLimit(req, user, 'sellerAnalytics', { limit: 12, windowSeconds: 60 });
+    if (!rl.allowed) {
+      return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
     }
 
     // Get seller listings

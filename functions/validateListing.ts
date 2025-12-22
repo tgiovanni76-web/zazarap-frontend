@@ -1,4 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { checkRateLimit } from './rateLimiter.js';
+import { z } from 'npm:zod@3.24.2';
 
 Deno.serve(async (req) => {
     try {
@@ -9,7 +11,23 @@ Deno.serve(async (req) => {
             return Response.json({ allowed: false, decision: 'block', error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { title, description, category } = await req.json();
+        // Rate limiting
+        const rl = checkRateLimit(req, user, 'validateListing', { limit: 20, windowSeconds: 60 });
+        if (!rl.allowed) {
+            return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
+        }
+
+        const payload = await req.json().catch(() => ({}));
+        const schema = z.object({
+            title: z.string().min(1),
+            description: z.string().min(1),
+            category: z.string().min(1)
+        });
+        const parsed = schema.safeParse(payload);
+        if (!parsed.success) {
+            return Response.json({ error: 'Invalid input', details: parsed.error.issues }, { status: 400 });
+        }
+        const { title, description, category } = parsed.data;
         const browserLanguage = req.headers.get("accept-language") || "unknown";
 
         // 1) PAROLE TOTALMENTE VIETATE (blocco immediato)

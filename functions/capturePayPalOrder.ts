@@ -1,4 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { checkRateLimit } from './rateLimiter.js';
+import { z } from 'npm:zod@3.24.2';
 
 Deno.serve(async (req) => {
   try {
@@ -9,7 +11,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { orderId, chatId, listingId, sellerId, shippingMethod, shippingAddress } = await req.json();
+    // Rate limiting
+    const rl = checkRateLimit(req, user, 'capturePayPalOrder', { limit: 10, windowSeconds: 60 });
+    if (!rl.allowed) {
+      return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
+    }
+
+    const payload = await req.json().catch(() => ({}));
+    const schema = z.object({
+      orderId: z.string().min(1),
+      chatId: z.string().min(1),
+      listingId: z.string().min(1),
+      sellerId: z.string().min(1),
+      shippingMethod: z.enum(['ritiro_persona', 'corriere', 'posta']),
+      shippingAddress: z.string().optional()
+    });
+    const parsed = schema.safeParse(payload);
+    if (!parsed.success) {
+      return Response.json({ error: 'Invalid input', details: parsed.error.issues }, { status: 400 });
+    }
+    const { orderId, chatId, listingId, sellerId, shippingMethod, shippingAddress } = parsed.data;
 
     const PAYPAL_CLIENT_ID = Deno.env.get("REACT_APP_PAYPAL_CLIENT_ID");
     const PAYPAL_CLIENT_SECRET = Deno.env.get("PAYPAL_CLIENT_SECRET");
