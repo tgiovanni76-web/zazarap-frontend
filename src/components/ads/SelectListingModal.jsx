@@ -27,7 +27,7 @@ export default function SelectListingModal({ open, onClose, listings = [], packa
             </div>
           ) : (
             <div>
-              <label className="text-sm font-medium mb-1 block">Seleziona annuncio</label>
+              <label className="text-sm font-medium mb-1 block">{t('ads.modal.select.chooseListing')}</label>
               <Select value={selected} onValueChange={setSelected}>
                 <SelectTrigger>
                   <SelectValue placeholder="Scegli l'annuncio da promuovere" />
