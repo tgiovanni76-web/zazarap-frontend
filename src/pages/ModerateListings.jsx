@@ -278,7 +278,7 @@ export default function ModerateListings() {
                           className="bg-green-600 hover:bg-green-700"
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          Approva
+                          {t('action.approve')}
                         </Button>
                         <Button
                           size="sm"
