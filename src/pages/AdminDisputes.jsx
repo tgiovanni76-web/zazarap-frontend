@@ -102,10 +102,10 @@ export default function AdminDisputes() {
                   <div>
                     <h3 className="font-bold text-lg">{listing?.title}</h3>
                     <p className="text-sm text-slate-600">
-                      Tipo: {dispute.type.replace(/_/g, ' ')}
+                      {t('admin.type')}: {dispute.type.replace(/_/g, ' ')}
                     </p>
                     <p className="text-sm text-slate-500">
-                      Da: {dispute.reporterId} | Contro: {dispute.respondentId}
+                      {t('admin.from')}: {dispute.reporterId} | {t('admin.against')}: {dispute.respondentId}
                     </p>
                     <p className="text-xs text-slate-400">
                       {format(new Date(dispute.created_date), 'dd/MM/yyyy HH:mm')}
@@ -139,7 +139,7 @@ export default function AdminDisputes() {
                     <div>
                       <label className="text-sm font-medium mb-2 block">{t('admin.supportReplyTitle')}</label>
                       <Textarea
-                        placeholder="Descrivi la decisione presa..."
+                        placeholder={t('admin.decisionPlaceholder')}
                         value={selectedDispute === dispute.id ? resolution : ''}
                         onChange={(e) => {
                           setSelectedDispute(dispute.id);
@@ -151,7 +151,7 @@ export default function AdminDisputes() {
                     <div>
                       <label className="text-sm font-medium mb-2 block">{t('adminOnly')}</label>
                       <Textarea
-                        placeholder="Note interne..."
+                        placeholder={t('admin.internalNotesPlaceholder')}
                         value={selectedDispute === dispute.id ? adminNotes : ''}
                         onChange={(e) => {
                           setSelectedDispute(dispute.id);
@@ -202,11 +202,11 @@ export default function AdminDisputes() {
                   </div>
                 ) : (
                   <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
-                    <p className="text-sm font-semibold text-green-800 mb-1">Risoluzione:</p>
+                    <p className="text-sm font-semibold text-green-800 mb-1">{t('admin.resolutionLabel')}:</p>
                     <p className="text-sm text-green-700">{dispute.resolution}</p>
                     {dispute.adminNotes && (
                       <>
-                        <p className="text-sm font-semibold text-green-800 mt-2 mb-1">Note Admin:</p>
+                        <p className="text-sm font-semibold text-green-800 mt-2 mb-1">{t('admin.adminNotesLabel')}:</p>
                         <p className="text-sm text-green-700">{dispute.adminNotes}</p>
                       </>
                     )}

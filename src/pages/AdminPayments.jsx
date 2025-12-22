@@ -169,8 +169,8 @@ export default function AdminPayments() {
                       size="sm"
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      Rilascia Fondi
-                    </Button>
+                                          {t('admin.releaseFunds')}
+                                        </Button>
                     <Button
                       onClick={() => {
                         if (confirm(t('admin.confirmRefund'))) {
@@ -180,8 +180,8 @@ export default function AdminPayments() {
                       size="sm"
                       variant="destructive"
                     >
-                      Rimborsa
-                    </Button>
+                                          {t('admin.refund')}
+                                        </Button>
                   </div>
                 )}
               </CardContent>
@@ -192,7 +192,7 @@ export default function AdminPayments() {
 
       {payments.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Nessun pagamento trovato
+          {t('admin.noPaymentsFound')}
         </div>
       )}
     </div>

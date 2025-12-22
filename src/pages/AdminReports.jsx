@@ -45,7 +45,7 @@ export default function AdminReports() {
           userId: email,
           type: 'status_update',
           title: '🚫 Account Sospeso',
-          message: 'Il tuo account è stato sospeso per violazione dei termini di servizio.',
+          message: `${t('admin.accountBlockedMsgPrefix')}`,
           linkUrl: '/CustomerSupport'
         });
       }
