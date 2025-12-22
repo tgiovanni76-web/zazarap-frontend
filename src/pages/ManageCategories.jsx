@@ -170,7 +170,7 @@ export default function ManageCategories() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold">{category.name}</h3>
-                      {!category.active && <Badge variant="secondary">{t('admin.deactivated')}</Badge>
+                      {!category.active && (<Badge variant="secondary">{t('admin.deactivated')}</Badge>)}
                     </div>
                     {category.description && <p className="text-sm text-slate-600">{category.description}</p>}
                     <p className="text-xs text-slate-500">Icona: {category.icon || 'N/A'} | Ordine: {category.order}</p>
