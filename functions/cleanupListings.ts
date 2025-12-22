@@ -91,21 +91,29 @@ Deno.serve(async (req) => {
     const results = {
       deleted: 0,
       deletedByTitle: {},
-      categoryUpdates: []
+      categoryUpdates: [],
+      skipped: 0,
+      errors: []
     };
 
     // Delete listings by title (service role to bypass RLS when needed)
     for (const title of titles) {
       const matches = await base44.asServiceRole.entities.Listing.filter({ title });
+      let perTitleDeleted = 0;
       if (Array.isArray(matches) && matches.length > 0) {
         for (const item of matches) {
-          await base44.asServiceRole.entities.Listing.delete(item.id);
-          results.deleted += 1;
+          try {
+            await base44.asServiceRole.entities.Listing.delete(item.id);
+            results.deleted += 1;
+            perTitleDeleted += 1;
+          } catch (e) {
+            // tolerate stale or already-deleted IDs
+            results.skipped += 1;
+            results.errors.push(`delete ${item.id}: ${e?.message || e}`);
+          }
         }
-        results.deletedByTitle[title] = matches.length;
-      } else {
-        results.deletedByTitle[title] = 0;
       }
+      results.deletedByTitle[title] = perTitleDeleted;
     }
 
     // Normalize categories where requested
@@ -116,8 +124,13 @@ Deno.serve(async (req) => {
         const toUpdate = await base44.asServiceRole.entities.Listing.filter({ category: from });
         let count = 0;
         for (const item of toUpdate) {
-          await base44.asServiceRole.entities.Listing.update(item.id, { category: to });
-          count += 1;
+          try {
+            await base44.asServiceRole.entities.Listing.update(item.id, { category: to });
+            count += 1;
+          } catch (e) {
+            results.skipped += 1;
+            results.errors.push(`update ${item.id}: ${e?.message || e}`);
+          }
         }
         if (count > 0) {
           results.categoryUpdates.push({ from, to, updated: count });
