@@ -30,6 +30,9 @@ export default function NewListing() {
     seo_keywords: ''
   });
   const [imageFiles, setImageFiles] = useState([]);
+  const [promoType, setPromoType] = useState('none');
+  const [promoBilling, setPromoBilling] = useState('week');
+  const [promoQty, setPromoQty] = useState(1);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -267,6 +270,33 @@ export default function NewListing() {
             ))}
           </div>
         )}
+
+        <div className="border-t pt-6 mt-6 mb-4">
+          <h3 className="text-lg font-semibold mb-3">Werbeoptionen</h3>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-none" name="promoType" checked={promoType==='none'} onChange={()=>setPromoType('none')} />
+              <label htmlFor="promo-none">Keine</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-featured" name="promoType" checked={promoType==='featured'} onChange={()=>setPromoType('featured')} />
+              <label htmlFor="promo-featured">Hervorgehobene Anzeige</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-top" name="promoType" checked={promoType==='top'} onChange={()=>setPromoType('top')} />
+              <label htmlFor="promo-top">Top-Anzeige</label>
+            </div>
+          </div>
+          {promoType !== 'none' && (
+            <div className="mt-3 flex items-center gap-3">
+              <select className="zaza-input" value={promoBilling} onChange={(e)=>setPromoBilling(e.target.value)}>
+                <option value="day">pro Tag</option>
+                <option value="week">pro Woche</option>
+              </select>
+              <input className="zaza-input" type="number" min={1} max={52} value={promoQty} onChange={(e)=>setPromoQty(e.target.value)} style={{maxWidth:'120px'}} />
+            </div>
+          )}
+        </div>
 
         <button type="submit" disabled={isLoading} className="zaza-submit">
           {isLoading ? t('loading') : t('submit')}

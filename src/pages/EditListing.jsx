@@ -33,6 +33,9 @@ export default function EditListing() {
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [promoType, setPromoType] = useState('none');
+  const [promoBilling, setPromoBilling] = useState('week');
+  const [promoQty, setPromoQty] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
 
   const { data: listing, isLoading } = useQuery({
@@ -80,9 +83,25 @@ export default function EditListing() {
         images: imageUrls.slice(0, 4)
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
       queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
+      if (promoType !== 'none' && promoQty > 0) {
+        try {
+          const { data } = await base44.functions.invoke('createPromotionOrder', {
+            listingId: listingId,
+            type: promoType === 'featured' ? 'featured' : 'top',
+            billing: promoBilling,
+            quantity: Number(promoQty)
+          });
+          if (data?.approveUrl) {
+            window.location.href = data.approveUrl;
+            return;
+          }
+        } catch (e) {
+          toast.error('Zahlung konnte nicht gestartet werden');
+        }
+      }
       toast.success('Annuncio aggiornato!');
       navigate(createPageUrl('ListingDetail') + '?id=' + listingId);
     },
@@ -301,6 +320,33 @@ export default function EditListing() {
             ))}
           </div>
         )}
+
+        <div className="border-t pt-6 mt-6 mb-4">
+          <h3 className="text-lg font-semibold mb-3">Werbeoptionen</h3>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-none" name="promoType" checked={promoType==='none'} onChange={()=>setPromoType('none')} />
+              <label htmlFor="promo-none">Keine</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-featured" name="promoType" checked={promoType==='featured'} onChange={()=>setPromoType('featured')} />
+              <label htmlFor="promo-featured">Hervorgehobene Anzeige</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="radio" id="promo-top" name="promoType" checked={promoType==='top'} onChange={()=>setPromoType('top')} />
+              <label htmlFor="promo-top">Top-Anzeige</label>
+            </div>
+          </div>
+          {promoType !== 'none' && (
+            <div className="mt-3 flex items-center gap-3">
+              <select className="zaza-input" value={promoBilling} onChange={(e)=>setPromoBilling(e.target.value)}>
+                <option value="day">pro Tag</option>
+                <option value="week">pro Woche</option>
+              </select>
+              <input className="zaza-input" type="number" min={1} max={52} value={promoQty} onChange={(e)=>setPromoQty(e.target.value)} style={{maxWidth:'120px'}} />
+            </div>
+          )}
+        </div>
 
         <button type="submit" disabled={isLoadingState} className="zaza-submit">
           {isLoadingState ? t('loading') : t('saveChanges')}
