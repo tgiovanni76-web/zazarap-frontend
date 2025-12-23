@@ -297,7 +297,15 @@ const i18n = {
   "moderation.updated": { de: "Anzeige aktualisiert", it: "Annuncio aggiornato", en: "Listing updated", fr: "Annonce mise  e0 jour", pl: "Og42oszenie zaktualizowano", tr: "30lan g fcncellendi", uk: "Оголошення оновлено" },
   "moderation.deleted": { de: "Anzeige gel f6scht", it: "Annuncio eliminato", en: "Listing deleted", fr: "Annonce supprim e9e", pl: "Og42oszenie usuni19to", tr: "30lan silindi", uk: "Оголошення видалено" }
 ,
-  "systemCheck.subtitle": { de: "Detaillierte Analyse des Zustands der Zazarap-Anwendung", it: "Analisi dettagliata dello stato dell'applicazione Zazarap", en: "Detailed analysis of the Zazarap application state" },
+        "systemCheck.subtitle": { de: "Detaillierte Analyse des Zustands der Zazarap-Anwendung", it: "Analisi dettagliata dello stato dell'applicazione Zazarap", en: "Detailed analysis of the Zazarap application state" },
+        "aria.home": { de: "Startseite", it: "Home", en: "Home" },
+        "aria.messages": { de: "Nachrichten", it: "Messaggi", en: "Messages" },
+        "aria.create": { de: "Anzeige erstellen", it: "Crea annuncio", en: "Create ad" },
+        "aria.stats": { de: "Statistiken", it: "Statistiche", en: "Statistics" },
+        "aria.packages": { de: "Pakete", it: "Pacchetti", en: "Packages" },
+        "aria.notifications": { de: "Benachrichtigungen", it: "Notifiche", en: "Notifications" },
+        "aria.settings": { de: "Einstellungen", it: "Impostazioni", en: "Settings" },
+        "aria.language": { de: "Sprache wählen", it: "Scegli lingua", en: "Choose language" }
   "systemCheck.overallScore": { de: "Gesamtpunktzahl", it: "Punteggio Complessivo", en: "Overall Score" },
   "systemCheck.totalListings": { de: "Gesamtanzeigen", it: "Total Listings", en: "Total Listings" },
   "systemCheck.totalUsers": { de: "Gesamtnutzer", it: "Total Users", en: "Total Users" },

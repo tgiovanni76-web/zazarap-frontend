@@ -672,8 +672,8 @@ function LayoutInner({ children, currentPageName }) {
 
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-4" aria-label="Main navigation">
-                        <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
-                          <Home className="h-5 w-5" aria-hidden="true" />
+                        <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
+                          <Home className="h-5 w-5" aria-hidden="true" focusable="false" />
                         </Link>
                         {!user && (
                           <Button 
@@ -687,19 +687,19 @@ function LayoutInner({ children, currentPageName }) {
                         {user && (
                           <ErrorBoundary>
                             <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
-                              <Megaphone className="h-5 w-5" aria-hidden="true" />
+                              <Megaphone className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Inserieren" aria-label="Create new listing">
-                              <Plus className="h-5 w-5" aria-hidden="true" />
+                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
+                              <Plus className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
                             <Link to={createPageUrl('MySales')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Verkäufe" aria-label="My sales">
-                              <TrendingUp className="h-5 w-5" aria-hidden="true" />
+                              <TrendingUp className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
                             <Link to={createPageUrl('MyPurchases')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Käufe" aria-label="My purchases">
-                              <Package className="h-5 w-5" aria-hidden="true" />
+                              <Package className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title="Benachrichtigungen" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
-                              <Bell className="h-5 w-5" aria-hidden="true" />
+                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
+                              <Bell className="h-5 w-5" aria-hidden="true" focusable="false" />
                               {unreadCount > 0 && (
                                 <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
                                   {unreadCount}
@@ -707,13 +707,13 @@ function LayoutInner({ children, currentPageName }) {
                               )}
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
-                                <Settings className="h-5 w-5" aria-hidden="true" />
+                                                                <Link to={createPageUrl('AdminDashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
+                                <Settings className="h-5 w-5" aria-hidden="true" focusable="false" />
                               </Link>
                             )}
                           </ErrorBoundary>
                         )}
-                        <div className="inline-flex items-center justify-center h-8 w-8"><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
+                        <div className="inline-flex items-center justify-center h-8 w-8" title={t('aria.language')} aria-label={t('aria.language')}><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
                     </div>
                   </header>
