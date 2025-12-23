@@ -26,11 +26,9 @@ const CookieBanner = lazy(() => import('@/components/CookieBanner'));
 
 
 function LayoutContent({ children, currentPageName, user, unreadCount }) {
-  const { t } = useLanguage();
-  
   return (
     <ErrorBoundary>
-      {/* ... content with t() ... */}
+      {children}
     </ErrorBoundary>
   );
 }
