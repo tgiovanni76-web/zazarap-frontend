@@ -305,7 +305,7 @@ const i18n = {
         "aria.packages": { de: "Pakete", it: "Pacchetti", en: "Packages" },
         "aria.notifications": { de: "Benachrichtigungen", it: "Notifiche", en: "Notifications" },
         "aria.settings": { de: "Einstellungen", it: "Impostazioni", en: "Settings" },
-        "aria.language": { de: "Sprache wählen", it: "Scegli lingua", en: "Choose language" },,
+        "aria.language": { de: "Sprache wählen", it: "Scegli lingua", en: "Choose language" },
   "systemCheck.overallScore": { de: "Gesamtpunktzahl", it: "Punteggio Complessivo", en: "Overall Score" },
   "systemCheck.totalListings": { de: "Gesamtanzeigen", it: "Total Listings", en: "Total Listings" },
   "systemCheck.totalUsers": { de: "Gesamtnutzer", it: "Total Users", en: "Total Users" },
