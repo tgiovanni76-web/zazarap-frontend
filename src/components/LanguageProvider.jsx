@@ -1,3 +1,4 @@
+// @ts-check
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const SUPPORTED_LANGS = ["de", "it", "en", "fr", "pl", "tr", "uk"];
@@ -2019,6 +2020,9 @@ const translations = {
 
 const LanguageContext = createContext();
 
+/**
+ * @returns {{language: string, setLanguage: (lang: string) => void, t: (key: string) => string, translations: Record<string, any>}}
+ */
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (!context) {
@@ -2027,6 +2031,7 @@ export function useLanguage() {
   return context;
 }
 
+/** @param {{children: React.ReactNode}} props */
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
     const saved = localStorage.getItem('zazarap_language');

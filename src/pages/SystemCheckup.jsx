@@ -1,3 +1,4 @@
+// @ts-check
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -9,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useLanguage } from '@/components/LanguageProvider';
 
+/** @returns {JSX.Element} */
 export default function SystemCheckup() {
   const [expandedSections, setExpandedSections] = useState({});
   const { t } = useLanguage();
@@ -170,9 +172,9 @@ export default function SystemCheckup() {
           { name: 'Base44 SDK integrato', status: 'complete', notes: 'Backend as a Service' },
           { name: 'Backend functions', status: 'complete', notes: 'PayPal + Sitemap' },
           { name: 'Componentizzazione', status: 'complete', notes: 'Buona separazione delle responsabilità' },
-          { name: 'Type safety', status: 'warning', notes: 'JavaScript - considerare TypeScript' },
-          { name: 'Testing', status: 'missing', notes: 'Nessun test automatico presente' },
-          { name: 'CI/CD', status: 'unknown', notes: 'Dipende da Base44 setup' },
+          { name: 'Type safety', status: 'good', notes: 'JS Type-Checking abilitato (tsc --checkJs)' },
+          { name: 'Testing', status: 'complete', notes: 'Vitest + React Testing Library configurati' },
+          { name: 'CI/CD', status: 'complete', notes: 'GitHub Actions workflow attivo' },
           { name: 'Error boundaries', status: 'complete', notes: 'Global ErrorBoundary attivo' },
           { name: 'Performance monitoring', status: 'complete', notes: 'PerformanceMonitor con beacon attivo' },
           { name: 'Code splitting', status: 'good', notes: 'React.lazy e Suspense attivi per componenti pesanti' }

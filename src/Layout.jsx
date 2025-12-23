@@ -1,3 +1,4 @@
+// @ts-check
 import React, { useEffect, lazy, Suspense } from 'react';
 import ErrorBoundary from '@/components/core/ErrorBoundary';
 import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
@@ -33,6 +34,9 @@ function LayoutContent({ children, currentPageName, user, unreadCount }) {
   );
 }
 
+/**
+ * @param {{children: React.ReactNode, currentPageName?: string}} props
+ */
 export default function Layout({ children, currentPageName }) {
   return (
     <LanguageProvider>
