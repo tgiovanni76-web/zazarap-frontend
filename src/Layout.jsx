@@ -727,7 +727,6 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         <div className="inline-flex items-center justify-center h-8 w-8"><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
-                    </div>
                   
 
       {/* EmailVerificationBanner removed as requested */}
