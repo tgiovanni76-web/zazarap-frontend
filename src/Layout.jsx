@@ -10,7 +10,7 @@ import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Setting
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
-import HeaderClassic from '@/components/HeaderClassic';
+import HeaderClassic from '@/components/HeaderClassic.jsx';
 
 
 
