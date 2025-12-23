@@ -173,9 +173,9 @@ export default function SystemCheckup() {
           { name: 'Type safety', status: 'warning', notes: 'JavaScript - considerare TypeScript' },
           { name: 'Testing', status: 'missing', notes: 'Nessun test automatico presente' },
           { name: 'CI/CD', status: 'unknown', notes: 'Dipende da Base44 setup' },
-          { name: 'Error boundaries', status: 'missing', notes: 'Non implementati' },
-          { name: 'Performance monitoring', status: 'missing', notes: 'Considerare Sentry/LogRocket' },
-          { name: 'Code splitting', status: 'warning', notes: 'Non ottimizzato' }
+          { name: 'Error boundaries', status: 'complete', notes: 'Global ErrorBoundary attivo' },
+          { name: 'Performance monitoring', status: 'complete', notes: 'PerformanceMonitor con beacon attivo' },
+          { name: 'Code splitting', status: 'good', notes: 'React.lazy e Suspense attivi per componenti pesanti' }
         ]
       },
       {
