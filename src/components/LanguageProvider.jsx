@@ -296,6 +296,30 @@ const i18n = {
 
   "moderation.updated": { de: "Anzeige aktualisiert", it: "Annuncio aggiornato", en: "Listing updated", fr: "Annonce mise  e0 jour", pl: "Og42oszenie zaktualizowano", tr: "30lan g fcncellendi", uk: "Оголошення оновлено" },
   "moderation.deleted": { de: "Anzeige gel f6scht", it: "Annuncio eliminato", en: "Listing deleted", fr: "Annonce supprim e9e", pl: "Og42oszenie usuni19to", tr: "30lan silindi", uk: "Оголошення видалено" }
+,
+  "systemCheck.subtitle": { de: "Detaillierte Analyse des Zustands der Zazarap-Anwendung", it: "Analisi dettagliata dello stato dell'applicazione Zazarap", en: "Detailed analysis of the Zazarap application state" },
+  "systemCheck.overallScore": { de: "Gesamtpunktzahl", it: "Punteggio Complessivo", en: "Overall Score" },
+  "systemCheck.totalListings": { de: "Gesamtanzeigen", it: "Total Listings", en: "Total Listings" },
+  "systemCheck.totalUsers": { de: "Gesamtnutzer", it: "Total Users", en: "Total Users" },
+  "systemCheck.categories": { de: "Kategorien", it: "Categorie", en: "Categories" },
+  "systemCheck.entities": { de: "Entities", it: "Entities", en: "Entities" },
+  "systemCheck.categoryAnalysis": { de: "📊 Analyse nach Kategorie", it: "📊 Analisi per Categoria", en: "📊 Category Analysis" },
+  "systemCheck.recommendations": { de: "💡 Empfehlungen", it: "💡 Raccomandazioni", en: "💡 Recommendations" },
+  "systemCheck.criticalLabel": { de: "🚨 KRITISCH (Vor dem Launch erledigen)", it: "🚨 CRITICHE (Da fare PRIMA del lancio)", en: "🚨 CRITICAL (Do before launch)" },
+  "systemCheck.highPriorityLabel": { de: "⚡ HOHE PRIORITÄT", it: "⚡ PRIORITÀ ALTA", en: "⚡ HIGH PRIORITY" },
+  "systemCheck.mediumPriorityLabel": { de: "📋 Mittlere Priorität", it: "📋 Priorità Media", en: "📋 Medium Priority" },
+  "systemCheck.nextStepsTitle": { de: "🎯 Nächste Schritte für den Launch", it: "🎯 Prossimi Passi per il Lancio", en: "🎯 Next Steps for Launch" },
+  "systemCheck.goToChecklistButton": { de: "📋 Zur Pre-Launch-Checkliste", it: "📋 Vai alla Pre-Launch Checklist", en: "📋 Go to Pre-Launch Checklist" },
+  "systemCheck.backToDashboardButton": { de: "⬅️ Zurück zum Dashboard", it: "⬅️ Torna al Dashboard", en: "⬅️ Back to Dashboard" },
+  "systemCheck.cat.core": { de: "🎯 Kernfunktionen", it: "🎯 Funzionalità Core", en: "🎯 Core Features" },
+  "systemCheck.cat.moderation": { de: "🛡️ Moderation & Sicherheit", it: "🛡️ Moderazione e Sicurezza", en: "🛡️ Moderation & Security" },
+  "systemCheck.cat.adminTools": { de: "⚙️ Admin-Tools", it: "⚙️ Strumenti Admin", en: "⚙️ Admin Tools" },
+  "systemCheck.cat.legal": { de: "⚖️ Rechtliche Compliance", it: "⚖️ Compliance Legale", en: "⚖️ Legal Compliance" },
+  "systemCheck.cat.seo": { de: "📈 SEO & Marketing", it: "📈 SEO & Marketing", en: "📈 SEO & Marketing" },
+  "systemCheck.cat.ux": { de: "🌍 UX & Mehrsprachigkeit", it: "🌍 UX & Multilingua", en: "🌍 UX & Multilingual" },
+  "systemCheck.cat.technical": { de: "💻 Technische Aspekte", it: "💻 Aspetti Tecnici", en: "💻 Technical Aspects" },
+  "systemCheck.cat.db": { de: "🗄️ Datenbank & Entities", it: "🗄️ Database & Entities", en: "🗄️ Database & Entities" },
+  "systemCheck.cat.security": { de: "🔒 Erweiterte Sicherheit", it: "🔒 Sicurezza Avanzata", en: "🔒 Advanced Security" }
 };
 
 // Legacy flat translations (kept for backward compatibility)

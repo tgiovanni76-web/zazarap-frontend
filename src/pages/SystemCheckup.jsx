@@ -55,7 +55,7 @@ export default function SystemCheckup() {
     categories: [
       {
         id: 'core-features',
-        title: '🎯 Funzionalità Core',
+        title: t('systemCheck.cat.core'),
         icon: Zap,
         score: 95,
         status: 'excellent',
@@ -74,7 +74,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'moderation',
-        title: '🛡️ Moderazione e Sicurezza',
+        title: t('systemCheck.cat.moderation'),
         icon: Shield,
         score: 90,
         status: 'good',
@@ -91,7 +91,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'admin-tools',
-        title: '⚙️ Strumenti Admin',
+        title: t('systemCheck.cat.adminTools'),
         icon: Users,
         score: 88,
         status: 'good',
@@ -108,7 +108,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'legal-compliance',
-        title: '⚖️ Compliance Legale',
+        title: t('systemCheck.cat.legal'),
         icon: FileText,
         score: 95,
         status: 'excellent',
@@ -125,7 +125,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'seo-marketing',
-        title: '📈 SEO & Marketing',
+        title: t('systemCheck.cat.seo'),
         icon: TrendingUp,
         score: 82,
         status: 'good',
@@ -144,7 +144,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'ux-multilingual',
-        title: '🌍 UX & Multilingua',
+        title: t('systemCheck.cat.ux'),
         icon: Globe,
         score: 92,
         status: 'excellent',
@@ -161,7 +161,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'technical',
-        title: '💻 Aspetti Tecnici',
+        title: t('systemCheck.cat.technical'),
         icon: Code,
         score: 78,
         status: 'good',
@@ -180,7 +180,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'data-entities',
-        title: '🗄️ Database & Entities',
+        title: t('systemCheck.cat.db'),
         icon: Database,
         score: 95,
         status: 'excellent',
@@ -195,7 +195,7 @@ export default function SystemCheckup() {
       },
       {
         id: 'security',
-        title: '🔒 Sicurezza Avanzata',
+        title: t('systemCheck.cat.security'),
         icon: Lock,
         score: 75,
         status: 'good',
@@ -350,7 +350,7 @@ export default function SystemCheckup() {
     <div className="py-8 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">{t('admin.systemCheckupComplete')}</h1>
-        <p className="text-slate-600">Analisi dettagliata dello stato dell'applicazione Zazarap</p>
+        <p className="text-slate-600">{t('systemCheck.subtitle')}</p>
       </div>
 
       {/* Overall Score */}
@@ -358,7 +358,7 @@ export default function SystemCheckup() {
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-2">Punteggio Complessivo</h2>
+              <h2 className="text-2xl font-bold mb-2">{t('systemCheck.overallScore')}</h2>
               <p className="text-lg text-slate-700">{analysis.overall.message}</p>
             </div>
             <div className="text-center">
@@ -375,25 +375,25 @@ export default function SystemCheckup() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-600">Total Listings</div>
+            <div className="text-sm text-slate-600">{t('systemCheck.totalListings')}</div>
             <div className="text-3xl font-bold">{listings.length}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-600">Total Users</div>
+            <div className="text-sm text-slate-600">{t('systemCheck.totalUsers')}</div>
             <div className="text-3xl font-bold">{users.length}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-600">Categories</div>
+            <div className="text-sm text-slate-600">{t('systemCheck.categories')}</div>
             <div className="text-3xl font-bold">{categories.length}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-600">Entities</div>
+            <div className="text-sm text-slate-600">{t('systemCheck.entities')}</div>
             <div className="text-3xl font-bold">{getEntityCount()}</div>
           </CardContent>
         </Card>
@@ -401,7 +401,7 @@ export default function SystemCheckup() {
 
       {/* Categories Analysis */}
       <div className="space-y-4 mb-8">
-        <h2 className="text-2xl font-bold">📊 Analisi per Categoria</h2>
+        <h2 className="text-2xl font-bold">{t('systemCheck.categoryAnalysis')}</h2>
         {analysis.categories.map(category => {
           const Icon = category.icon;
           const isExpanded = expandedSections[category.id];
@@ -450,11 +450,11 @@ export default function SystemCheckup() {
 
       {/* Recommendations */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">💡 Raccomandazioni</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('systemCheck.recommendations')}</h2>
         
         {recommendations.critical.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-red-600 mb-3">🚨 CRITICHE (Da fare PRIMA del lancio)</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-3">{t('systemCheck.criticalLabel')}</h3>
             <div className="space-y-3">
               {recommendations.critical.map((rec, i) => (
                 <Card key={i} className="border-red-300 bg-red-50">
@@ -480,7 +480,7 @@ export default function SystemCheckup() {
         )}
 
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-orange-600 mb-3">⚡ PRIORITÀ ALTA</h3>
+          <h3 className="text-xl font-bold text-orange-600 mb-3">{t('systemCheck.highPriorityLabel')}</h3>
           <div className="space-y-3">
             {recommendations.high.map((rec, i) => (
               <Card key={i} className="border-orange-300 bg-orange-50">
@@ -497,7 +497,7 @@ export default function SystemCheckup() {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-blue-600 mb-3">📋 Priorità Media</h3>
+          <h3 className="text-xl font-bold text-blue-600 mb-3">{t('systemCheck.mediumPriorityLabel')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {recommendations.medium.map((rec, i) => (
               <Card key={i} className="border-blue-200">
@@ -514,7 +514,7 @@ export default function SystemCheckup() {
       {/* Next Steps */}
       <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
         <CardHeader>
-          <CardTitle>🎯 Prossimi Passi per il Lancio</CardTitle>
+          <CardTitle>{t('systemCheck.nextStepsTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -541,12 +541,12 @@ export default function SystemCheckup() {
       <div className="mt-8 flex gap-4">
         <Link to={createPageUrl('PreLaunchChecklist')} className="flex-1">
           <Button className="w-full bg-indigo-600 hover:bg-indigo-700" size="lg">
-            📋 Vai alla Pre-Launch Checklist
+            {t('systemCheck.goToChecklistButton')}
           </Button>
         </Link>
         <Link to={createPageUrl('AdminDashboard')} className="flex-1">
           <Button variant="outline" className="w-full" size="lg">
-            ⬅️ Torna al Dashboard
+            {t('systemCheck.backToDashboardButton')}
           </Button>
         </Link>
       </div>
