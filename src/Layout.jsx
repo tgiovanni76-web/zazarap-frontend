@@ -10,7 +10,6 @@ import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Setting
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
-import HeaderClassic from '@/components/HeaderClassic';
 
 
 
@@ -656,16 +655,70 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <HeaderClassic
-        homeUrl={createPageUrl('Marketplace')}
-        messagesUrl={createPageUrl('Messages')}
-        createUrl={createPageUrl('NewListing')}
-        statsUrl={createPageUrl('MarketplaceDashboard')}
-        packagesUrl={createPageUrl('Werbung')}
-        notificationsUrl={createPageUrl('Notifications')}
-        settingsUrl={createPageUrl('AdminSettings')}
-        showSettings={user?.role === 'admin'}
-      />
+      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
+                    <div className="flex items-center justify-between text-[#f9d65c]">
+                      {/* Logo + Slogan + Home */}
+                                      <div className="flex items-center gap-4">
+                                        <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
+                                          <span className="text-[26px] font-extrabold" style={{
+                                  background: 'linear-gradient(180deg, #000000 33%, #DD0000 33%, #DD0000 66%, #FFCC00 66%)',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                  textShadow: '0 0 0 transparent',
+                                  filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
+                                }}>Zazarap.de</span>
+                                          <span className="text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
+                                          </Link>
+
+                                      </div>
+
+                      {/* Menu Icons */}
+                      <nav className="flex items-center gap-4" aria-label="Main navigation">
+                        <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('home')} aria-label={t('home')}>
+                          <Home className="h-5 w-5" aria-hidden="true" />
+                        </Link>
+                        {!user && (
+                          <Button 
+                            onClick={() => base44.auth.redirectToLogin()}
+                            className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
+                            aria-label="Login"
+                            >
+                            {t('loginOrRegister')}
+                            </Button>
+                        )}
+                        {user && (
+                          <ErrorBoundary>
+                            <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
+                              <Megaphone className="h-5 w-5" aria-hidden="true" />
+                            </Link>
+                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Inserieren" aria-label="Create new listing">
+                              <Plus className="h-5 w-5" aria-hidden="true" />
+                            </Link>
+                            <Link to={createPageUrl('MySales')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Verkäufe" aria-label="My sales">
+                              <TrendingUp className="h-5 w-5" aria-hidden="true" />
+                            </Link>
+                            <Link to={createPageUrl('MyPurchases')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Käufe" aria-label="My purchases">
+                              <Package className="h-5 w-5" aria-hidden="true" />
+                            </Link>
+                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title="Benachrichtigungen" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
+                              <Bell className="h-5 w-5" aria-hidden="true" />
+                              {unreadCount > 0 && (
+                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
+                                  {unreadCount}
+                                </Badge>
+                              )}
+                            </Link>
+                            {user?.role === 'admin' && (
+                              <Link to={createPageUrl('AdminDashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
+                                <Settings className="h-5 w-5" aria-hidden="true" />
+                              </Link>
+                            )}
+                          </ErrorBoundary>
+                        )}
+                        <div className="inline-flex items-center justify-center h-8 w-8"><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
+                      </nav>
+                    </div>
+                  </header>
 
       {/* EmailVerificationBanner removed as requested */}
       
