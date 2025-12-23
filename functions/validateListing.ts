@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { checkRateLimit } from './rateLimiter.js';
-import { z } from 'npm:zod@3.24.2';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
+import { listingCreateSchema } from './_lib/validation.js';
 
 Deno.serve(async (req) => {
     try {
@@ -12,20 +13,15 @@ Deno.serve(async (req) => {
         }
 
         // Rate limiting
-        const rl = checkRateLimit(req, user, 'validateListing', { limit: 20, windowSeconds: 60 });
+        const rl = await checkRateLimit(req, 'validateListing', { limit: 20, windowSec: 60 });
         if (!rl.allowed) {
             return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
         }
 
         const payload = await req.json().catch(() => ({}));
-        const schema = z.object({
-            title: z.string().min(1),
-            description: z.string().min(1),
-            category: z.string().min(1)
-        });
-        const parsed = schema.safeParse(payload);
+        const parsed = listingCreateSchema.safeParse(payload);
         if (!parsed.success) {
-            return Response.json({ error: 'Invalid input', details: parsed.error.issues }, { status: 400 });
+            return new Response(JSON.stringify({ error: 'Ungültige Eingabedaten', details: parsed.error.issues }), withSecurityHeaders({ status: 400, headers: { 'Content-Type': 'application/json' } }));
         }
         const { title, description, category } = parsed.data;
         const browserLanguage = req.headers.get("accept-language") || "unknown";
@@ -205,37 +201,37 @@ Deno.serve(async (req) => {
 
         // Risposta
         if (decision === "block") {
-            return Response.json({
+            return new Response(JSON.stringify({
                 allowed: false,
                 decision,
                 reason,
                 matchedWord,
                 message: "Dieses Angebot ist auf Zazarap nicht erlaubt."
-            });
+            }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
         }
 
         if (decision === "pending_review") {
-            return Response.json({
+            return new Response(JSON.stringify({
                 allowed: true,
                 decision,
                 reason,
                 matchedWord,
                 message: "Ihr Angebot wird manuell überprüft."
-            });
+            }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
         }
 
-        return Response.json({ 
+        return new Response(JSON.stringify({ 
             allowed: true, 
             decision: "allow" 
-        });
+        }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
 
     } catch (error) {
         console.error("Validation error:", error.message);
-        return Response.json({ 
+        return new Response(JSON.stringify({ 
             allowed: false, 
             decision: "pending_review",
             reason: "ERROR",
             error: error.message 
-        }, { status: 500 });
+        }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
 });

@@ -1,4 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { paypalWebhookSchema } from './_lib/validation.js';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
 
 Deno.serve(async (req) => {
   try {
@@ -10,10 +13,20 @@ Deno.serve(async (req) => {
     const clientSecret = Deno.env.get('PAYPAL_CLIENT_SECRET');
     
     if (!webhookId || !clientId || !clientSecret) {
-      return Response.json({ error: 'PayPal credentials not configured' }, { status: 500 });
+      return new Response(JSON.stringify({ error: 'PayPal credentials not configured' }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
 
-    const webhookEvent = await req.json();
+    const payload = await req.json().catch(() => ({}));
+    const parsed = paypalWebhookSchema.safeParse(payload);
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: 'Ungültige Eingabedaten' }), withSecurityHeaders({ status: 400, headers: { 'Content-Type': 'application/json' } }));
+    }
+    const webhookEvent = parsed.data;
+
+    const rl = await checkRateLimit(req, 'paypalWebhook', { limit: 60, windowSec: 60 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Zu viele Anfragen', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
+    }
     
     // Get PayPal access token
     const authString = btoa(`${clientId}:${clientSecret}`);
@@ -52,7 +65,7 @@ Deno.serve(async (req) => {
     
     if (verifyResult.verification_status !== 'SUCCESS') {
       console.error('Webhook verification failed:', verifyResult);
-      return Response.json({ error: 'Invalid webhook signature' }, { status: 401 });
+      return new Response(JSON.stringify({ error: 'Invalid webhook signature' }), withSecurityHeaders({ status: 401, headers: { 'Content-Type': 'application/json' } }));
     }
 
     // Process webhook event
@@ -148,13 +161,12 @@ Deno.serve(async (req) => {
         console.log('Unhandled webhook event type:', eventType);
     }
 
-    return Response.json({ received: true, event_type: eventType });
+    return new Response(JSON.stringify({ received: true, event_type: eventType }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
 
   } catch (error) {
     console.error('PayPal webhook error:', error);
-    return Response.json({ 
-      error: error.message,
-      stack: error.stack 
-    }, { status: 500 });
+    return new Response(JSON.stringify({ 
+      error: error.message
+    }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
   }
 });

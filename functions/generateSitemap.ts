@@ -1,4 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
 
 Deno.serve(async (req) => {
   try {
@@ -12,6 +14,12 @@ Deno.serve(async (req) => {
     const protocol = host.includes('localhost') ? 'http' : 'https';
     const baseUrl = `${protocol}://${host}`;
     
+    // Rate limit
+    const rl = await checkRateLimit(req, 'generateSitemap', { limit: 6, windowSec: 60 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Zu viele Anfragen', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
+    }
+
     // Generate sitemap XML
     let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
     sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
@@ -58,13 +66,13 @@ Deno.serve(async (req) => {
     
     sitemap += '</urlset>';
     
-    return new Response(sitemap, {
+    return new Response(sitemap, withSecurityHeaders({
       status: 200,
       headers: {
         'Content-Type': 'application/xml',
         'Cache-Control': 'public, max-age=3600'
       }
-    });
+    }));
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

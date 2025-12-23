@@ -1,4 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
 
 Deno.serve(async (req) => {
   try {
@@ -26,13 +28,19 @@ Sitemap: ${sitemapUrl}`;
         robots += `\n\nSitemap: ${sitemapUrl}`;
     }
 
-    return new Response(robots, {
+    // Rate limit
+    const rl = await checkRateLimit(req, 'robots', { limit: 6, windowSec: 60 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Zu viele Anfragen', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
+    }
+
+    return new Response(robots, withSecurityHeaders({
       status: 200,
       headers: {
         'Content-Type': 'text/plain',
         'Cache-Control': 'public, max-age=3600'
       }
-    });
+    }));
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

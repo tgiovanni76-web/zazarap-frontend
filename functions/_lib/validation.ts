@@ -28,6 +28,21 @@ export const contactSchema = z.object({
 
 export const newsletterSchema = z.object({ email: z.string().email() });
 
+export const createPayPalOrderSchema = z.object({
+  amount: z.number().positive(),
+  chatId: z.string().min(1),
+  listingId: z.string().min(1)
+});
+
+export const capturePayPalOrderSchema = z.object({
+  orderId: z.string().min(1),
+  chatId: z.string().min(1),
+  listingId: z.string().min(1),
+  sellerId: z.string().min(1),
+  shippingMethod: z.enum(['ritiro_persona', 'corriere', 'posta']),
+  shippingAddress: z.string().optional()
+});
+
 export const uploadMetadataSchema = z.object({
   filename: z.string().min(1).max(200),
   contentType: z.string().min(3).max(100),

@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     }
 
     // Rate limiting
-    const rl = checkRateLimit(req, user, 'sellerAnalytics', { limit: 12, windowSeconds: 60 });
+    const rl = await checkRateLimit(req, 'sellerAnalytics', { limit: 12, windowSec: 60 });
     if (!rl.allowed) {
       return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
     }
@@ -136,15 +136,15 @@ Deno.serve(async (req) => {
       listingTitle: c.listingTitle || ''
     }));
 
-    return Response.json({
+    return new Response(JSON.stringify({
       summary: { totalViews, totalClicks, totalOffers },
       listings: listingStats,
       engagement30d: series30,
       sales: { monthly, totals: { revenue: totalRevenue, orders: totalOrders } },
       events,
       offers: offersList
-    });
+    }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
   }
 });

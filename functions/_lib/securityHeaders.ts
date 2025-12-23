@@ -12,7 +12,7 @@ export function getSecurityHeaders() {
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'X-Frame-Options': 'DENY',
-    'Permissions-Policy': 'geolocation=(), camera=(), microphone=()',(void 0),
+    'Permissions-Policy': 'geolocation=(), camera=(), microphone=()',
     'Content-Security-Policy': csp
   };
 }

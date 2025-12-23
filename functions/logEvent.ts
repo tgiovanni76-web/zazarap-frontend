@@ -1,4 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { logEventSchema } from './_lib/validation.js';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
 
 Deno.serve(async (req) => {
   try {
@@ -10,6 +13,19 @@ Deno.serve(async (req) => {
 
     let body = {};
     try { body = await req.json(); } catch (_) { body = {}; }
+
+    // Rate limit
+    const rl = await checkRateLimit(req, 'logEvent', { limit: 120, windowSec: 60 });
+    if (!rl.allowed) {
+      return new Response(JSON.stringify({ error: 'Zu viele Anfragen', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
+    }
+
+    // Validate
+    const parsed = logEventSchema.safeParse(body);
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: 'Ungültige Eingabedaten', details: parsed.error.issues }), withSecurityHeaders({ status: 400, headers: { 'Content-Type': 'application/json' } }));
+    }
+    body = parsed.data;
 
     const url = new URL(req.url);
     const path = body.path || url.searchParams.get('path') || '';
@@ -66,8 +82,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ status: 'ok' });
+    return new Response(JSON.stringify({ status: 'ok' }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
   }
 });

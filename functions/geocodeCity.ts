@@ -1,12 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { checkRateLimit } from './rateLimiter.js';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
 import { z } from 'npm:zod@3.24.2';
 
 function toJSON(data, status = 200) {
-  return new Response(JSON.stringify(data), {
+  return new Response(JSON.stringify(data), withSecurityHeaders({
     status,
     headers: { 'Content-Type': 'application/json' },
-  });
+  }));
 }
 
 Deno.serve(async (req) => {
@@ -18,7 +19,7 @@ Deno.serve(async (req) => {
     }
 
     // Rate limiting
-    const rl = checkRateLimit(req, user, 'geocodeCity', { limit: 30, windowSeconds: 60 });
+    const rl = await checkRateLimit(req, 'geocodeCity', { limit: 30, windowSec: 60 });
     if (!rl.allowed) {
       return toJSON({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, 429);
     }

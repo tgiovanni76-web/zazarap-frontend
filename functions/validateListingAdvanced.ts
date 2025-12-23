@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { checkRateLimit } from './rateLimiter.js';
-import { z } from 'npm:zod@3.24.2';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
+import { listingCreateSchema } from './_lib/validation.js';
 
 Deno.serve(async (req) => {
   try {
@@ -8,7 +9,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     // Rate limiting
-    const rl = checkRateLimit(req, user, 'validateListingAdvanced', { limit: 20, windowSeconds: 60 });
+    const rl = await checkRateLimit(req, 'validateListingAdvanced', { limit: 20, windowSec: 60 });
     if (!rl.allowed) {
       return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
     }
@@ -18,14 +19,9 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json().catch(() => ({}));
-    const schema = z.object({
-      title: z.string().min(1),
-      description: z.string().min(1),
-      categoryName: z.string().min(1)
-    });
-    const parsed = schema.safeParse(payload);
+    const parsed = listingCreateSchema.safeParse({ title: payload.title, description: payload.description, category: payload.categoryName });
     if (!parsed.success) {
-      return Response.json({ error: 'Invalid input', details: parsed.error.issues }, { status: 400 });
+      return new Response(JSON.stringify({ error: 'Ungültige Eingabedaten', details: parsed.error.issues }), withSecurityHeaders({ status: 400, headers: { 'Content-Type': 'application/json' } }));
     }
     const { title = "", description = "", categoryName = "" } = parsed.data;
 
@@ -115,9 +111,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    return Response.json({ allowed: true });
+    return new Response(JSON.stringify({ allowed: true }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
 
   } catch (err) {
-    return Response.json({ allowed: false, error: err.message }, { status: 500 });
+    return new Response(JSON.stringify({ allowed: false, error: err.message }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
   }
 });

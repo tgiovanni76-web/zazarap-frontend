@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { checkRateLimit } from './rateLimiter.js';
-import { z } from 'npm:zod@3.24.2';
+import { checkRateLimit } from './_lib/rateLimit.js';
+import { withSecurityHeaders } from './_lib/securityHeaders.js';
+import { capturePayPalOrderSchema } from './_lib/validation.js';
 
 Deno.serve(async (req) => {
   try {
@@ -12,23 +13,15 @@ Deno.serve(async (req) => {
     }
 
     // Rate limiting
-    const rl = checkRateLimit(req, user, 'capturePayPalOrder', { limit: 10, windowSeconds: 60 });
+    const rl = await checkRateLimit(req, 'capturePayPalOrder', { limit: 10, windowSec: 60 });
     if (!rl.allowed) {
       return Response.json({ error: 'Rate limit exceeded', resetAt: rl.resetAt }, { status: 429 });
     }
 
     const payload = await req.json().catch(() => ({}));
-    const schema = z.object({
-      orderId: z.string().min(1),
-      chatId: z.string().min(1),
-      listingId: z.string().min(1),
-      sellerId: z.string().min(1),
-      shippingMethod: z.enum(['ritiro_persona', 'corriere', 'posta']),
-      shippingAddress: z.string().optional()
-    });
-    const parsed = schema.safeParse(payload);
+    const parsed = capturePayPalOrderSchema.safeParse(payload);
     if (!parsed.success) {
-      return Response.json({ error: 'Invalid input', details: parsed.error.issues }, { status: 400 });
+      return new Response(JSON.stringify({ error: 'Ungültige Eingabedaten', details: parsed.error.issues }), withSecurityHeaders({ status: 400, headers: { 'Content-Type': 'application/json' } }));
     }
     const { orderId, chatId, listingId, sellerId, shippingMethod, shippingAddress } = parsed.data;
 
@@ -36,9 +29,9 @@ Deno.serve(async (req) => {
     const PAYPAL_CLIENT_SECRET = Deno.env.get("PAYPAL_CLIENT_SECRET");
     
     if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
-      return Response.json({ 
+      return new Response(JSON.stringify({ 
         error: 'PayPal credentials not configured' 
-      }, { status: 500 });
+      }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
 
     const PAYPAL_API = "https://api-m.sandbox.paypal.com"; // Sandbox per test - cambia a https://api-m.paypal.com per produzione
@@ -57,10 +50,10 @@ Deno.serve(async (req) => {
     
     if (!authResponse.ok) {
       console.error('PayPal auth error:', authData);
-      return Response.json({ 
+      return new Response(JSON.stringify({ 
         error: 'PayPal authentication failed',
         details: authData.error_description 
-      }, { status: 500 });
+      }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
 
     const { access_token } = authData;
@@ -78,10 +71,10 @@ Deno.serve(async (req) => {
 
     if (!captureResponse.ok) {
       console.error('PayPal capture error:', capture);
-      return Response.json({ 
+      return new Response(JSON.stringify({ 
         error: 'Failed to capture payment',
         details: capture.message || capture.error_description || 'Errore sconosciuto'
-      }, { status: 500 });
+      }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
 
     if (capture.status === 'COMPLETED') {
@@ -176,17 +169,17 @@ Deno.serve(async (req) => {
         relatedId: chatId
       });
 
-      return Response.json({ 
+      return new Response(JSON.stringify({ 
         success: true,
         transactionId: transactionId,
         status: 'held_in_escrow'
-      });
+      }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
     }
 
-    return Response.json({ error: 'Payment capture failed' }, { status: 500 });
+    return new Response(JSON.stringify({ error: 'Payment capture failed' }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
     
   } catch (error) {
     console.error('PayPal capture error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), withSecurityHeaders({ status: 500, headers: { 'Content-Type': 'application/json' } }));
   }
 });

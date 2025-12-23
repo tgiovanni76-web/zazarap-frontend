@@ -206,10 +206,10 @@ export default function SystemCheckup() {
           { name: 'Authentication', status: 'complete', notes: 'Base44 auth system' },
           { name: 'XSS protection', status: 'complete', notes: 'React auto-escape' },
           { name: 'CSRF protection', status: 'complete', notes: 'Token-based auth' },
-          { name: 'Input validation', status: 'partial', notes: 'Client-side presente, server-side limitato' },
+          { name: 'Input validation', status: 'complete', notes: 'Zod server-side für alle Functions' },
           { name: 'File upload security', status: 'complete', notes: 'Validazione tipo file' },
           { name: 'SQL injection protection', status: 'complete', notes: 'SDK parameterized queries' },
-          { name: 'Rate limiting API', status: 'missing', notes: 'Non implementato' },
+          { name: 'Rate limiting API', status: 'complete', notes: 'Fixed-window, entity-backed' },
           { name: 'Security headers', status: 'unknown', notes: 'Da verificare su server' },
           { name: 'Secrets management', status: 'complete', notes: 'Base44 secrets system' }
         ]
