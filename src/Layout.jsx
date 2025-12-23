@@ -657,16 +657,16 @@ function LayoutInner({ children, currentPageName }) {
           }
         `}</style>
       <HeaderClassic 
-  homeUrl={createPageUrl('Marketplace')}
-  messagesUrl={createPageUrl('Messages')}
-  createUrl={createPageUrl('NewListing')}
-  statsUrl={createPageUrl('MarketplaceDashboard')}
-  packagesUrl={createPageUrl('Werbung')}
-  notificationsUrl={createPageUrl('Notifications')}
-  settingsUrl={createPageUrl('EditProfile')}
-  unreadCount={unreadCount}
-/>
-                    <div className="flex items-center justify-between text-[#f9d65c]">
+        homeUrl={createPageUrl('Marketplace')}
+        messagesUrl={createPageUrl('Messages')}
+        createUrl={createPageUrl('NewListing')}
+        statsUrl={createPageUrl('MarketplaceDashboard')}
+        packagesUrl={createPageUrl('Werbung')}
+        notificationsUrl={createPageUrl('Notifications')}
+        settingsUrl={createPageUrl('EditProfile')}
+        unreadCount={unreadCount}
+      />
+
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
