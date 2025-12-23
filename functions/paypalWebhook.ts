@@ -81,26 +81,15 @@ Deno.serve(async (req) => {
         const captureId = resource.id;
         const amount = parseFloat(resource.amount.value);
 
-        // Find payment by PayPal order ID
-        const payments = await base44.asServiceRole.entities.Payment.filter({ 
-          paypalOrderId: orderId 
-        });
-
+        // Purchases flow (existing)
+        const payments = await base44.asServiceRole.entities.Payment.filter({ paypalOrderId: orderId });
         if (payments.length > 0) {
           const payment = payments[0];
-          
-          // Update payment status
           await base44.asServiceRole.entities.Payment.update(payment.id, {
             status: 'held_in_escrow',
             paypalTransactionId: captureId
           });
-
-          // Update chat status
-          await base44.asServiceRole.entities.Chat.update(payment.chatId, {
-            status: 'pagamento_completato'
-          });
-
-          // Notify both users
+          await base44.asServiceRole.entities.Chat.update(payment.chatId, { status: 'pagamento_completato' });
           await base44.asServiceRole.entities.Notification.create({
             userId: payment.buyerId,
             type: 'status_update',
@@ -109,7 +98,6 @@ Deno.serve(async (req) => {
             linkUrl: `/messages?chatId=${payment.chatId}`,
             relatedId: payment.chatId
           });
-
           await base44.asServiceRole.entities.Notification.create({
             userId: payment.sellerId,
             type: 'status_update',
@@ -118,6 +106,32 @@ Deno.serve(async (req) => {
             linkUrl: `/messages?chatId=${payment.chatId}`,
             relatedId: payment.chatId
           });
+        }
+
+        // Promotions flow (new)
+        const promos = await base44.asServiceRole.entities.ListingPromotion.filter({ paypalOrderId: orderId });
+        if (promos.length > 0) {
+          const promo = promos[0];
+          const now = new Date();
+          const end = new Date(now.getTime() + (promo.durationDays || 0) * 24 * 60 * 60 * 1000);
+
+          await base44.asServiceRole.entities.ListingPromotion.update(promo.id, {
+            status: 'paid',
+            paypalTransactionId: captureId,
+            startDate: now.toISOString(),
+            endDate: end.toISOString()
+          });
+
+          if (promo.type === 'featured') {
+            await base44.asServiceRole.entities.Listing.update(promo.listingId, {
+              featured: true,
+              featuredUntil: end.toISOString()
+            });
+          } else if (promo.type === 'top') {
+            await base44.asServiceRole.entities.Listing.update(promo.listingId, {
+              topAdUntil: end.toISOString()
+            });
+          }
         }
         break;
       }
