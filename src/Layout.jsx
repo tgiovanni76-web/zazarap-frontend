@@ -10,7 +10,6 @@ import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Setting
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
-import HeaderClassic from '@/components/HeaderClassic.jsx';
 
 
 
@@ -656,17 +655,8 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <HeaderClassic 
-        homeUrl={createPageUrl('Marketplace')}
-        messagesUrl={createPageUrl('Messages')}
-        createUrl={createPageUrl('NewListing')}
-        statsUrl={createPageUrl('MarketplaceDashboard')}
-        packagesUrl={createPageUrl('Werbung')}
-        notificationsUrl={createPageUrl('Notifications')}
-        settingsUrl={createPageUrl('EditProfile')}
-        unreadCount={unreadCount}
-      />
-
+      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
+                    <div className="flex items-center justify-between text-[#f9d65c]">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
@@ -727,7 +717,8 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         <div className="inline-flex items-center justify-center h-8 w-8"><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
-                  
+                    </div>
+                  </header>
 
       {/* EmailVerificationBanner removed as requested */}
       
