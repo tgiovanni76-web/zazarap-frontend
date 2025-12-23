@@ -13,7 +13,7 @@ export function getSecurityHeaders() {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'X-Frame-Options': 'DENY',
     'Permissions-Policy': 'geolocation=(), camera=(), microphone=()',
-    'Content-Security-Policy': csp
+    // 'Content-Security-Policy': csp // aktivieren nach Tests (PayPal/CDNs)
   };
 }
 
