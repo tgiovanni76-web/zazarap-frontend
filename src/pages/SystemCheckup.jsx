@@ -103,7 +103,7 @@ export default function SystemCheckup() {
           { name: 'Gestione pagamenti', status: 'complete', notes: 'Monitor escrow + transazioni' },
           { name: 'Sistema ticket supporto', status: 'complete', notes: 'Gestione richieste utenti' },
           { name: 'Pre-launch checklist', status: 'complete', notes: 'Guida completa pre-lancio' },
-          { name: 'Logs di sistema', status: 'missing', notes: 'Non implementato - considerare servizio esterno' }
+          { name: 'Logs di sistema', status: 'complete', notes: 'Implementato: Logtail + retention 30 giorni' }
         ]
       },
       {

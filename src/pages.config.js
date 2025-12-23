@@ -1,4 +1,5 @@
 import AGB from './pages/AGB';
+import AccessibilityAudit from './pages/AccessibilityAudit';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDisputes from './pages/AdminDisputes';
 import AdminPayments from './pages/AdminPayments';
@@ -39,17 +40,17 @@ import PromoteListing from './pages/PromoteListing';
 import Recommendations from './pages/Recommendations';
 import SellerDashboard from './pages/SellerDashboard';
 import SystemCheckup from './pages/SystemCheckup';
+import SystemLogs from './pages/SystemLogs';
 import TermsOfService from './pages/TermsOfService';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import AccessibilityAudit from './pages/AccessibilityAudit';
-import SystemLogs from './pages/SystemLogs';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AGB": AGB,
+    "AccessibilityAudit": AccessibilityAudit,
     "AdminDashboard": AdminDashboard,
     "AdminDisputes": AdminDisputes,
     "AdminPayments": AdminPayments,
@@ -90,12 +91,11 @@ export const PAGES = {
     "Recommendations": Recommendations,
     "SellerDashboard": SellerDashboard,
     "SystemCheckup": SystemCheckup,
+    "SystemLogs": SystemLogs,
     "TermsOfService": TermsOfService,
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "AccessibilityAudit": AccessibilityAudit,
-    "SystemLogs": SystemLogs,
 }
 
 export const pagesConfig = {
