@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     const { listingId, type, billing, quantity } = parsed.data;
 
     // Pricing
-    const { amount, currency, durationDays } = computePromotionPrice({ type, billing, quantity });
+    const { amount, currency, durationDays } = computePromotionPrice({ type, billing, quantity }); // uses updated market pricing
 
     const PAYPAL_CLIENT_ID = Deno.env.get('REACT_APP_PAYPAL_CLIENT_ID');
     const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');

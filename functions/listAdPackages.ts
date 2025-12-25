@@ -18,15 +18,15 @@ Deno.serve(async (req) => {
     }
 
     const packages = {
-      topAd: { id: 'topAd', name: 'TOP-Anzeige', displayPrice: '€4,99', kind: 'one_time' },
-      highlighted: { id: 'highlighted', name: 'Hervorgehobene Anzeige', displayPrice: '€2,49', kind: 'one_time' },
-      premium14: { id: 'premium14', name: 'Premium 14 Tage', displayPrice: '€8,99', kind: 'one_time' },
-      basicShop: { id: 'basicShop', name: 'Basic Shop-Paket', displayPrice: '€14,99 / Monat', kind: 'subscription' },
+      topAd: { id: 'topAd', name: 'TOP-Anzeige (7 Tage)', displayPrice: '€9,99', kind: 'one_time' },
+      highlighted: { id: 'highlighted', name: 'Hervorgehobene Anzeige', displayPrice: '€3,99', kind: 'one_time' },
+      premium14: { id: 'premium14', name: 'Premium 14 Tage', displayPrice: '€14,99', kind: 'one_time' },
+      basicShop: { id: 'basicShop', name: 'Basic Shop-Paket', displayPrice: '€19,99 / Monat', kind: 'subscription' },
       businessShop: { id: 'businessShop', name: 'Business Shop-Paket', displayPrice: '€39,99 / Monat', kind: 'subscription' },
-      premiumShop: { id: 'premiumShop', name: 'Premium Shop-Paket', displayPrice: '€79,99 / Monat', kind: 'subscription' },
-      homeBanner: { id: 'homeBanner', name: 'Startseiten-Banner', displayPrice: '€149,00 / Woche', kind: 'banner' },
-      categoryBanner: { id: 'categoryBanner', name: 'Kategorie-Banner', displayPrice: '€79,00 / Woche', kind: 'banner' },
-      sidebarAd: { id: 'sidebarAd', name: 'Sidebar-Werbung', displayPrice: '€39,00 / Woche', kind: 'banner' }
+      premiumShop: { id: 'premiumShop', name: 'Premium Shop-Paket', displayPrice: '€69,99 / Monat', kind: 'subscription' },
+      homeBanner: { id: 'homeBanner', name: 'Startseiten-Banner', displayPrice: '€199,00 / Woche', kind: 'banner' },
+      categoryBanner: { id: 'categoryBanner', name: 'Kategorie-Banner', displayPrice: '€99,00 / Woche', kind: 'banner' },
+      sidebarAd: { id: 'sidebarAd', name: 'Sidebar-Werbung', displayPrice: '€49,00 / Woche', kind: 'banner' }
     };
 
     // Log access (no sensitive data)

@@ -2,7 +2,7 @@ export function computePromotionPrice({ type, billing, quantity }) {
   const qty = Math.max(1, Math.floor(Number(quantity) || 1));
   const table = {
     featured: { day: 2.99, week: 14.99 },
-    top: { day: 4.99, week: 24.99 }
+    top: { day: 4.99, week: 9.99 }
   };
   if (!table[type] || !table[type][billing]) throw new Error('Unsupported plan');
   const unit = table[type][billing];

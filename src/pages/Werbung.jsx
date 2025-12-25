@@ -114,23 +114,23 @@ export default function Werbung() {
             <PricingCard 
               title={t('ads.packages.topAd.title')} 
               description={t('ads.packages.topAd.desc')}
-              price="€4,99"
+              price={packages?.topAd?.displayPrice || '€9,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 4.99 })}
+              onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 9.99 })}
             />
             <PricingCard 
               title={t('ads.packages.highlighted.title')} 
               description={t('ads.packages.highlighted.desc')}
-              price="€2,49"
+              price={packages?.highlighted?.displayPrice || '€3,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'Hervorgehobene Anzeige', days: 7, price: 2.49 })}
+              onAction={() => startPromo({ packageName: 'Hervorgehobene Anzeige', days: 7, price: 3.99 })}
             />
             <PricingCard 
               title={t('ads.packages.premium14.title')} 
               description={t('ads.packages.premium14.desc')}
-              price="€8,99"
+              price={packages?.premium14?.displayPrice || '€14,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 8.99 })}
+              onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 14.99 })}
             />
           </div>
         </div>
@@ -175,23 +175,23 @@ export default function Werbung() {
             <PricingCard 
               title={t('ads.packages.homeBanner.title')} 
               description={t('ads.packages.homeBanner.desc')}
-              price="€149,00 / Woche"
+              price={packages?.homeBanner?.displayPrice || '€199,00 / Woche'}
               btnText="Banner buchen"
-              onAction={() => openRequest({ packageName: 'Startseiten-Banner', price: '€149,00 / Woche' })}
+              onAction={() => openRequest({ packageId: 'homeBanner' })}
             />
             <PricingCard 
               title={t('ads.packages.categoryBanner.title')} 
               description={t('ads.packages.categoryBanner.desc')}
-              price="€79,00 / Woche"
+              price={packages?.categoryBanner?.displayPrice || '€99,00 / Woche'}
               btnText="Banner buchen"
-              onAction={() => openRequest({ packageName: 'Kategorie-Banner', price: '€79,00 / Woche' })}
+              onAction={() => openRequest({ packageId: 'categoryBanner' })}
             />
             <PricingCard 
               title={t('ads.packages.sidebarAd.title')} 
               description={t('ads.packages.sidebarAd.desc')}
-              price="€39,00 / Woche"
+              price={packages?.sidebarAd?.displayPrice || '€49,00 / Woche'}
               btnText="Banner buchen"
-              onAction={() => openRequest({ packageName: 'Sidebar-Werbung', price: '€39,00 / Woche' })}
+              onAction={() => openRequest({ packageId: 'sidebarAd' })}
             />
           </div>
         </div>
