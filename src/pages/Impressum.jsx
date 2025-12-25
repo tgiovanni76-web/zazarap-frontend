@@ -12,14 +12,14 @@ export default function Impressum() {
 
       <Card className="mb-6">
         <CardContent className="pt-6 space-y-2">
-          <p className="font-bold">Zazarap GmbH</p>
-          <p>[Via e numero civico]</p>
-          <p>[CAP, Città]</p>
+          <p className="font-bold">zazarap GmbH</p>
+          <p>Kronenstraße 10</p>
+          <p>75245 Neulingen</p>
           <p>Deutschland</p>
           
           <div className="mt-4">
             <p><strong>Vertretungsberechtigter Geschäftsführer:</strong></p>
-            <p>[Nome e Cognome]</p>
+            <p>Giovanni Tornabene</p>
           </div>
 
           <div className="mt-4">
@@ -35,13 +35,11 @@ export default function Impressum() {
           </div>
 
           <div className="mt-4">
-            <p><strong>Umsatzsteuer-ID gemäß § 27a UStG:</strong></p>
-            <p>[DE……]</p>
-          </div>
-
-          <div className="mt-4">
             <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong></p>
-            <p>[Nome e Cognome, indirizzo come sopra]</p>
+            <p>Giovanni Tornabene</p>
+            <p>Kronenstraße 10</p>
+            <p>75245 Neulingen</p>
+            <p>Deutschland</p>
           </div>
         </CardContent>
       </Card>
@@ -64,8 +62,9 @@ export default function Impressum() {
           <CardTitle>2. Verantwortlicher</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p className="font-semibold">Zazarap GmbH</p>
-          <p>[Indirizzo completo]</p>
+          <p className="font-semibold">zazarap GmbH</p>
+          <p>Kronenstraße 10</p>
+          <p>75245 Neulingen</p>
           <p>Deutschland</p>
           <p>E-Mail: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
         </CardContent>
@@ -78,11 +77,8 @@ export default function Impressum() {
         <CardContent className="space-y-4">
           <div>
             <h3 className="font-semibold mb-2">a) Beim Besuch der Website</h3>
-            <p className="text-sm text-slate-700 mb-2">
-              Beim Aufruf von zazarap.de werden automatisch folgende Daten erhoben:
-            </p>
             <p className="text-sm text-slate-700">
-              IP-Adresse (gekürzt, soweit möglich), Datum und Uhrzeit des Zugriffs, Browsertyp, Betriebssystem, Referrer-URL.
+              Beim Aufruf von zazarap.de werden automatisch folgende Daten erhoben: IP-Adresse (gekürzt, soweit möglich), Datum und Uhrzeit des Zugriffs, Browsertyp, Betriebssystem, Referrer-URL.
             </p>
             <p className="text-sm text-slate-600 mt-2">
               <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.
@@ -92,7 +88,7 @@ export default function Impressum() {
           <div>
             <h3 className="font-semibold mb-2">b) Registrierung und Nutzerkonto</h3>
             <p className="text-sm text-slate-700">
-              Bei der Registrierung verarbeiten wir Name/Benutzername, E-Mail-Adresse, Passwort (verschlüsselt) und optionale Profildaten.
+              Bei der Registrierung verarbeiten wir Name/Benutzername, E-Mail-Adresse, Passwort (verschlüsselt) sowie optionale Profildaten.
             </p>
             <p className="text-sm text-slate-600 mt-2">
               <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO.
@@ -116,16 +112,17 @@ export default function Impressum() {
           <CardTitle>4. Cookies</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-sm text-slate-700">Diese Website verwendet Cookies.</p>
+          <p className="text-sm text-slate-700 mb-3">Diese Website verwendet Cookies.</p>
           
           <div>
-            <p className="font-semibold text-sm mb-1">Technisch notwendige Cookies (z. B. Login, Spracheinstellung zazarap_language)</p>
+            <p className="font-semibold text-sm mb-2">Technisch notwendige Cookies</p>
+            <p className="text-sm text-slate-700 mb-1">(z. B. Login, Spracheinstellung zazarap_language)</p>
             <p className="text-sm text-slate-600">
               <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.
             </p>
           </div>
 
-          <p className="text-sm text-slate-700">
+          <p className="text-sm text-slate-700 mt-3">
             Optionale Cookies (z. B. Statistik) werden nur nach Einwilligung gesetzt.
           </p>
         </CardContent>
@@ -178,7 +175,7 @@ export default function Impressum() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p className="text-sm text-slate-700">
-            Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch gemäß Art. 15–21 DSGVO.
+            Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gemäß Art. 15–21 DSGVO.
           </p>
           <p className="text-sm text-slate-700 mt-3">
             Anfragen bitte an: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a>
@@ -203,7 +200,7 @@ export default function Impressum() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-slate-700">
-            Wir setzen technische und organisatorische Sicherheitsmaßnahmen ein (z. B. SSL-Verschlüsselung).
+            Wir setzen geeignete technische und organisatorische Sicherheitsmaßnahmen ein (z. B. SSL-Verschlüsselung).
           </p>
         </CardContent>
       </Card>
