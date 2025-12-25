@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe, Brain } from 'lucide-react';
+import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe, Brain, BarChart3 } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -129,6 +129,14 @@ export default function AdminDashboard() {
       link: 'MarketplaceDashboard',
       count: null,
       color: 'bg-purple-500'
+    },
+    {
+      titleKey: 'User Analytics',
+      descKey: 'Detaillierte Nutzer- und Performance-Daten',
+      icon: BarChart3,
+      link: 'AdminAnalytics',
+      count: null,
+      color: 'bg-indigo-500'
     },
     {
       titleKey: 'admin.categoryManagement',
