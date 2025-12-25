@@ -32,6 +32,7 @@ import ModerateListings from './pages/ModerateListings';
 import MyPurchases from './pages/MyPurchases';
 import MySales from './pages/MySales';
 import MySubscriptions from './pages/MySubscriptions';
+import MySubscriptionsV2 from './pages/MySubscriptionsV2';
 import NewListing from './pages/NewListing';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
@@ -47,9 +48,9 @@ import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
-import Widerrufsrecht from './pages/Widerrufsrecht';
 import WerbungV2 from './pages/WerbungV2';
-import MySubscriptionsV2 from './pages/MySubscriptionsV2';
+import Widerrufsrecht from './pages/Widerrufsrecht';
+import I18nDebug from './pages/I18nDebug';
 import __Layout from './Layout.jsx';
 
 
@@ -88,6 +89,7 @@ export const PAGES = {
     "MyPurchases": MyPurchases,
     "MySales": MySales,
     "MySubscriptions": MySubscriptions,
+    "MySubscriptionsV2": MySubscriptionsV2,
     "NewListing": NewListing,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
@@ -103,9 +105,9 @@ export const PAGES = {
     "Transactions": Transactions,
     "UserProfile": UserProfile,
     "Werbung": Werbung,
-    "Widerrufsrecht": Widerrufsrecht,
     "WerbungV2": WerbungV2,
-    "MySubscriptionsV2": MySubscriptionsV2,
+    "Widerrufsrecht": Widerrufsrecht,
+    "I18nDebug": I18nDebug,
 }
 
 export const pagesConfig = {
