@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreditCard, Trash2, Star, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import { loadStripe } from 'npm:@stripe/stripe-js@4.14.0';
-import { Elements, PaymentElement, useStripe, useElements } from 'npm:@stripe/react-stripe-js@2.10.0';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_...');
 
