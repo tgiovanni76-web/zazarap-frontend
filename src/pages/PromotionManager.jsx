@@ -5,55 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TrendingUp, Calendar, Euro, Eye, MessageSquare, Star, RefreshCw, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_dummy');
-
-function ExtensionPaymentForm({ clientSecret, onSuccess, onCancel }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-
-    setLoading(true);
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: window.location.origin + '/promotion-manager' }
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
-    } else {
-      onSuccess();
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
-      <div className="flex gap-2">
-        <Button type="submit" disabled={!stripe || loading} className="flex-1">
-          {loading ? 'Wird verarbeitet...' : 'Jetzt verlängern'}
-        </Button>
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Abbrechen
-        </Button>
-      </div>
-    </form>
-  );
-}
 
 function PromotionCard({ promo, onExtend }) {
   const [showExtension, setShowExtension] = useState(false);
   const [extensionDays, setExtensionDays] = useState(7);
-  const [clientSecret, setClientSecret] = useState(null);
+  const [paymentUrl, setPaymentUrl] = useState(null);
   const queryClient = useQueryClient();
 
   const extendMutation = useMutation({
@@ -65,8 +24,13 @@ function PromotionCard({ promo, onExtend }) {
       return res.data;
     },
     onSuccess: (data) => {
-      setClientSecret(data.clientSecret);
-      toast.success(`Extension für ${data.extensionDays} Tage: €${data.amount.toFixed(2)}`);
+      // Redirect to Stripe Checkout
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        toast.success(`Verlängerung vorbereitet: ${data.extensionDays} Tage für €${data.amount.toFixed(2)}`);
+        setPaymentUrl(data.clientSecret);
+      }
     },
     onError: (error) => {
       toast.error(error.message);
@@ -164,55 +128,51 @@ function PromotionCard({ promo, onExtend }) {
           </Button>
         )}
 
-        {showExtension && !clientSecret && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <label className="text-sm">Verlängerung:</label>
-              <select 
-                value={extensionDays}
-                onChange={(e) => setExtensionDays(Number(e.target.value))}
-                className="border rounded px-3 py-1"
-              >
-                <option value={7}>7 Tage</option>
-                <option value={14}>14 Tage</option>
-                <option value={30}>30 Tage</option>
-              </select>
+        <Dialog open={showExtension} onOpenChange={setShowExtension}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Promotion verlängern</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Verlängerung wählen:</label>
+                <select 
+                  value={extensionDays}
+                  onChange={(e) => setExtensionDays(Number(e.target.value))}
+                  className="w-full border rounded-lg px-4 py-2"
+                >
+                  <option value={7}>7 Tage</option>
+                  <option value={14}>14 Tage</option>
+                  <option value={30}>30 Tage</option>
+                </select>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-lg">
+                <div className="text-sm text-slate-600 mb-1">Geschätzter Preis:</div>
+                <div className="text-2xl font-bold">
+                  €{((promo.amount / promo.durationDays) * extensionDays).toFixed(2)}
+                </div>
+                <div className="text-xs text-slate-500 mt-1">
+                  Basierend auf €{(promo.amount / promo.durationDays).toFixed(2)}/Tag
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleExtend}
+                  disabled={extendMutation.isPending}
+                  className="flex-1"
+                >
+                  {extendMutation.isPending ? 'Wird verarbeitet...' : 'Zur Zahlung'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowExtension(false)}
+                >
+                  Abbrechen
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleExtend}
-                disabled={extendMutation.isPending}
-                className="flex-1"
-              >
-                {extendMutation.isPending ? 'Lädt...' : 'Weiter zur Zahlung'}
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setShowExtension(false)}
-              >
-                Abbrechen
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {clientSecret && (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <ExtensionPaymentForm
-              clientSecret={clientSecret}
-              onSuccess={() => {
-                toast.success('Promotion erfolgreich verlängert!');
-                queryClient.invalidateQueries(['promotionAnalytics']);
-                setShowExtension(false);
-                setClientSecret(null);
-              }}
-              onCancel={() => {
-                setShowExtension(false);
-                setClientSecret(null);
-              }}
-            />
-          </Elements>
-        )}
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

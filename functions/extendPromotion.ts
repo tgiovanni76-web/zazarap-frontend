@@ -56,18 +56,31 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create payment intent for extension
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(extensionAmount * 100), // cents
-      currency: 'eur',
+    // Create Stripe Checkout Session for extension
+    const session = await stripe.checkout.sessions.create({
       customer: customerId,
+      payment_method_types: ['card', 'paypal'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `Promotion Extension: ${promo.type}`,
+            description: `Extend promotion for ${extensionDays} days`
+          },
+          unit_amount: Math.round(extensionAmount * 100)
+        },
+        quantity: 1
+      }],
+      mode: 'payment',
+      success_url: `${req.headers.get('origin')}/promotion-manager?success=true`,
+      cancel_url: `${req.headers.get('origin')}/promotion-manager?canceled=true`,
       metadata: {
         type: 'promotion_extension',
         promotionId: promo.id,
         listingId: promo.listingId,
-        extensionDays: extensionDays.toString()
-      },
-      description: `Extension: ${promo.type} promotion for ${extensionDays} days`
+        extensionDays: extensionDays.toString(),
+        userId: user.email
+      }
     });
 
     // Create transaction record
@@ -78,7 +91,7 @@ Deno.serve(async (req) => {
       amount: extensionAmount,
       currency: 'EUR',
       status: 'pending',
-      externalOrderId: paymentIntent.id,
+      externalOrderId: session.id,
       description: `Promotion extension: ${promo.type} for ${extensionDays} days`,
       relatedEntity: 'ListingPromotion',
       relatedId: promo.id,
@@ -86,7 +99,7 @@ Deno.serve(async (req) => {
     });
 
     return Response.json({
-      clientSecret: paymentIntent.client_secret,
+      checkoutUrl: session.url,
       amount: extensionAmount,
       extensionDays
     });
