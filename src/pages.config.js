@@ -51,6 +51,8 @@ import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import QuickPromote from './pages/QuickPromote';
 import Dashboard from './pages/Dashboard';
+import SellerProfile from './pages/SellerProfile';
+import EditSellerProfile from './pages/EditSellerProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -108,6 +110,8 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "QuickPromote": QuickPromote,
     "Dashboard": Dashboard,
+    "SellerProfile": SellerProfile,
+    "EditSellerProfile": EditSellerProfile,
 }
 
 export const pagesConfig = {
