@@ -10,12 +10,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import SelectListingModal from '@/components/ads/SelectListingModal';
 import RequestAdModal from '@/components/ads/RequestAdModal';
+import MediaUploader from '@/components/ads/MediaUploader';
+import CreateAdModal from '@/components/ads/CreateAdModal';
 import { useLanguage } from '@/components/LanguageProvider';
 
 export default function Werbung() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me().catch(() => null) });
+  const { data: pkgData } = useQuery({ queryKey: ['adPackages'], queryFn: async () => (await base44.functions.invoke('listAdPackages')).data, staleTime: 1000 * 60 * 10 });
+  React.useEffect(() => { if (pkgData?.packages) setPackages(pkgData.packages); }, [pkgData]);
   const { data: myListings = [] } = useQuery({
     queryKey: ['myListings', user?.email],
     queryFn: async () => {
@@ -28,6 +32,8 @@ export default function Werbung() {
   });
 
   const [selectModal, setSelectModal] = React.useState({ open: false, packageName: '', days: 0, price: 0 });
+  const [packages, setPackages] = React.useState(null);
+  const [adModalOpen, setAdModalOpen] = React.useState(false);
   const [requestModal, setRequestModal] = React.useState({ open: false, packageId: '' });
 
   const updateListingMutation = useMutation({
@@ -70,16 +76,17 @@ export default function Werbung() {
 
   const handleSendRequest = async ({ message }) => {
     if (!user) return;
+    const pkg = packages?.[requestModal.packageId];
     await createTicketMutation.mutateAsync({
       userId: user.email,
-      subject: `Richiesta pubblicità: ${requestModal.packageName}`,
-      message: `${message || ''}\n\nPacchetto: ${requestModal.packageName}\nPrezzo: ${requestModal.price}`,
-      category: 'listing',
-      priority: 'urgent',
+      subject: `Werbeanfrage: ${pkg?.name || requestModal.packageId}`,
+      message: `${message || ''}\n\nPaket: ${pkg?.name || requestModal.packageId}\nPreis: ${pkg?.displayPrice || ''}`,
+      category: 'ads',
+      priority: 'normal',
       status: 'open'
     });
-    setRequestModal({ open: false, packageName: '', price: '' });
-    toast.success('Richiesta inviata. Ti contatteremo a breve.');
+    setRequestModal({ open: false, packageId: '' });
+    toast.success('Anfrage gesendet. Wir melden uns in Kürze.');
   };
   return (
     <div className="min-h-screen bg-[#f5f5f5] pb-20">
@@ -135,27 +142,27 @@ export default function Werbung() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
              <PricingCard 
-              title={t('ads.packages.basicShop.title')} 
-              features={[t('ads.features.ownShopPage'), t('ads.features.upTo20Active'), t('ads.features.standardSupport')]}
-              price="€14,99 / Monat"
-              btnText={t('ads.btn.subscribeNow')}
-              onAction={() => openRequest({ packageName: 'Basic Shop-Paket', price: '€14,99 / Monat' })}
-            />
+               title={t('ads.packages.basicShop.title')} 
+               features={[t('ads.features.ownShopPage'), t('ads.features.upTo20Active'), t('ads.features.standardSupport')]}
+               price={packages?.basicShop?.displayPrice || '€14,99 / Monat'}
+               btnText={t('ads.btn.subscribeNow')}
+               onAction={() => openRequest({ packageId: 'basicShop' })}
+             />
              <PricingCard 
-              title={t('ads.packages.businessShop.title')} 
-              features={[t('ads.features.upTo100Active'), t('ads.features.logoBranding'), t('ads.features.searchBanner')]}
-              price="€39,99 / Monat"
-              btnText={t('ads.btn.subscribeNow')}
-              highlighted={true}
-              onAction={() => openRequest({ packageName: 'Business Shop-Paket', price: '€39,99 / Monat' })}
-            />
+               title={t('ads.packages.businessShop.title')} 
+               features={[t('ads.features.upTo100Active'), t('ads.features.logoBranding'), t('ads.features.searchBanner')]}
+               price={packages?.businessShop?.displayPrice || '€39,99 / Monat'}
+               btnText={t('ads.btn.subscribeNow')}
+               highlighted={true}
+               onAction={() => openRequest({ packageId: 'businessShop' })}
+             />
              <PricingCard 
-              title={t('ads.packages.premiumShop.title')} 
-              features={[t('ads.features.unlimitedAds'), t('ads.features.homepageBanner'), t('ads.features.prioritySupport')]}
-              price="€79,99 / Monat"
-              btnText={t('ads.btn.subscribeNow')}
-              onAction={() => openRequest({ packageName: 'Premium Shop-Paket', price: '€79,99 / Monat' })}
-            />
+               title={t('ads.packages.premiumShop.title')} 
+               features={[t('ads.features.unlimitedAds'), t('ads.features.homepageBanner'), t('ads.features.prioritySupport')]}
+               price={packages?.premiumShop?.displayPrice || '€79,99 / Monat'}
+               btnText={t('ads.btn.subscribeNow')}
+               onAction={() => openRequest({ packageId: 'premiumShop' })}
+             />
           </div>
         </div>
 
@@ -190,6 +197,19 @@ export default function Werbung() {
         </div>
 
       </div>
+
+      {/* Create Advertising Ad Modal (gated) */}
+      <div className="container max-w-6xl mx-auto px-4 mt-6">
+        <div className="bg-white p-4 rounded-xl border shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold">Werbeinserat</h3>
+            {!user?.canCreateAds && <span className="text-xs text-slate-500">Nur für Abonnenten</span>}
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={() => setAdModalOpen(true)} disabled={!user?.canCreateAds} className="bg-[#d62020] hover:bg-[#b91818]">Neues Inserat</Button>
+          </div>
+        </div>
+      </div>
       {/* Modals */}
       <SelectListingModal 
         open={selectModal.open}
@@ -202,9 +222,9 @@ export default function Werbung() {
       />
       <RequestAdModal 
         open={requestModal.open}
-        onClose={() => setRequestModal({ open: false, packageName: '', price: '' })}
-        packageName={requestModal.packageName}
-        price={requestModal.price}
+        onClose={() => setRequestModal({ open: false, packageId: '' })}
+        packageId={requestModal.packageId}
+        packages={packages}
         onSubmit={handleSendRequest}
       />
     </div>
