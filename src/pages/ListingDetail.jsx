@@ -16,6 +16,7 @@ import StructuredData from '../components/marketplace/StructuredData';
 import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
 import FollowButton from '../components/profile/FollowButton';
+import SimilarProducts from '../components/marketplace/SimilarProducts';
 
 export default function ListingDetail() {
   const { t } = useLanguage();
@@ -429,9 +430,11 @@ export default function ListingDetail() {
         </CardContent>
       </Card>
 
-      <Link to={createPageUrl('Marketplace')} className="text-indigo-600 hover:underline">
+      <SimilarProducts listingId={listingId} />
+
+      <Link to={createPageUrl('Marketplace')} className="text-indigo-600 hover:underline mt-6 inline-block">
         {t('back')}
       </Link>
-    </div>
-  );
-}
+      </div>
+      );
+      }

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart, ShoppingBag, Briefcase } from 'lucide-react';
+import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Heart, ShoppingBag, Briefcase, Sparkles } from 'lucide-react';
 import MapView from '../components/marketplace/MapView';
 import { toast } from 'sonner';
 import AIRecommendations from '../components/marketplace/AIRecommendations';
@@ -34,6 +34,9 @@ export default function Marketplace() {
   const [showMap, setShowMap] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [useSemanticSearch, setUseSemanticSearch] = useState(false);
+  const [semanticResults, setSemanticResults] = useState(null);
+  const [isSemanticSearching, setIsSemanticSearching] = useState(false);
   const cityCoordsRef = useRef({});
   const queryClient = useQueryClient();
 
@@ -137,7 +140,12 @@ export default function Marketplace() {
     })();
   }, [radiusKm, showMap, listings]);
 
-  const filteredListings = listings.filter(listing => {
+  // Use semantic search results if available
+  const displayListings = useSemanticSearch && semanticResults?.results 
+    ? semanticResults.results 
+    : listings;
+
+  const filteredListings = displayListings.filter(listing => {
     // Advanced keyword match
     const qTokens = tokenize(searchTerm);
     const lTokens = new Set([...tokenize(listing.title || ''), ...tokenize(listing.description || '')]);
@@ -274,38 +282,73 @@ export default function Marketplace() {
               aria-label={t('searchPlaceholder')}
               placeholder={t('searchPlaceholder')}
               value={searchTerm}
-              onChange={(e) => {
+              onChange={async (e) => {
                 const v = e.target.value;
                 setSearchTerm(v);
-                setShowSuggestions(v.trim().length > 0);
-                // build suggestions
-                const vLower = v.toLowerCase();
-                const catSugs = categories
-                  .map(c => c.name)
-                  .filter(Boolean)
-                  .filter(n => n.toLowerCase().startsWith(vLower))
-                  .slice(0, 5);
-                const userSugs = activities
-                  .filter(a => a.activityType === 'search' && a.searchTerm)
-                  .map(a => a.searchTerm)
-                  .filter(s => s.toLowerCase().startsWith(vLower))
-                  .slice(0, 5);
-                const titleWords = listings
-                  .flatMap(l => (l.title || '').toLowerCase().split(/[^a-zA-ZÀ-ÿ0-9]+/))
-                  .filter(w => w.length > 3);
-                const uniqueWords = Array.from(new Set(titleWords)).filter(w => w.startsWith(vLower)).slice(0, 5);
-                setSuggestions(Array.from(new Set([...catSugs, ...userSugs, ...uniqueWords])).slice(0, 8));
-              }}
-              onFocus={() => setShowSuggestions(searchTerm.trim().length > 0)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && user && searchTerm.trim()) {
-                  base44.entities.UserActivity.create({
-                    userId: user.email,
-                    activityType: 'search',
-                    searchTerm: searchTerm.trim()
-                  });
+                setUseSemanticSearch(false);
+                setSemanticResults(null);
+
+                if (v.trim().length >= 2) {
+                  setShowSuggestions(true);
+                  // Get AI-powered suggestions
+                  try {
+                    const response = await base44.functions.invoke('getSearchSuggestions', {
+                      query: v,
+                      limit: 8
+                    });
+                    if (response.data?.suggestions) {
+                      setSuggestions(response.data.suggestions);
+                    }
+                  } catch (err) {
+                    // Fallback to simple suggestions
+                    const vLower = v.toLowerCase();
+                    const catSugs = categories
+                      .map(c => c.name)
+                      .filter(Boolean)
+                      .filter(n => n.toLowerCase().includes(vLower))
+                      .slice(0, 4);
+                    const userSugs = activities
+                      .filter(a => a.activityType === 'search' && a.searchTerm)
+                      .map(a => a.searchTerm)
+                      .filter(s => s.toLowerCase().includes(vLower))
+                      .slice(0, 4);
+                    setSuggestions(Array.from(new Set([...catSugs, ...userSugs])).slice(0, 8));
+                  }
+                } else {
                   setShowSuggestions(false);
+                  setSuggestions([]);
+                }
+              }}
+              onFocus={() => setShowSuggestions(searchTerm.trim().length >= 2)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+              onKeyPress={async (e) => {
+                if (e.key === 'Enter' && searchTerm.trim()) {
+                  setShowSuggestions(false);
+                  if (user) {
+                    base44.entities.UserActivity.create({
+                      userId: user.email,
+                      activityType: 'search',
+                      searchTerm: searchTerm.trim()
+                    });
+                  }
+                  // Trigger semantic search
+                  if (searchTerm.trim().length > 3) {
+                    setIsSemanticSearching(true);
+                    try {
+                      const response = await base44.functions.invoke('semanticSearch', {
+                        query: searchTerm.trim(),
+                        limit: 50
+                      });
+                      if (response.data?.results) {
+                        setSemanticResults(response.data);
+                        setUseSemanticSearch(true);
+                      }
+                    } catch (err) {
+                      console.error('Semantic search error:', err);
+                    } finally {
+                      setIsSemanticSearching(false);
+                    }
+                  }
                 }
               }}
               className="pl-10 h-12 text-lg border-2 border-red-600"
@@ -316,15 +359,34 @@ export default function Marketplace() {
                   <button
                     type="button"
                     key={s}
-                    onMouseDown={() => {
+                    onMouseDown={async () => {
                       setSearchTerm(s);
                       setShowSuggestions(false);
                       if (user) {
                         base44.entities.UserActivity.create({ userId: user.email, activityType: 'search', searchTerm: s });
                       }
+                      // Trigger semantic search
+                      if (s.trim().length > 3) {
+                        setIsSemanticSearching(true);
+                        try {
+                          const response = await base44.functions.invoke('semanticSearch', {
+                            query: s.trim(),
+                            limit: 50
+                          });
+                          if (response.data?.results) {
+                            setSemanticResults(response.data);
+                            setUseSemanticSearch(true);
+                          }
+                        } catch (err) {
+                          console.error('Semantic search error:', err);
+                        } finally {
+                          setIsSemanticSearching(false);
+                        }
+                      }
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
                   >
+                    <Search className="h-3 w-3 text-slate-400" />
                     {s}
                   </button>
                 ))}
@@ -511,6 +573,61 @@ export default function Marketplace() {
       )}
 
       <FeaturedListings listings={listings} />
+
+      {isSemanticSearching && (
+      <Card className="mb-6">
+      <CardContent className="py-8 text-center">
+      <div className="flex items-center justify-center gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+        <p className="text-slate-600">KI analysiert deine Suche...</p>
+      </div>
+      </CardContent>
+      </Card>
+      )}
+
+      {useSemanticSearch && semanticResults && (
+      <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+      <CardContent className="pt-6">
+      <div className="flex items-start gap-3">
+        <div className="p-2 bg-purple-100 rounded-lg">
+          <Sparkles className="h-5 w-5 text-purple-600" />
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold text-purple-900 mb-1">
+            🔍 KI-Suche aktiv
+          </p>
+          <p className="text-sm text-purple-700">
+            Suchintention: <strong>{semanticResults.searchIntent}</strong>
+          </p>
+          {semanticResults.suggestions && semanticResults.suggestions.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <span className="text-xs text-purple-600">Vorschläge:</span>
+              {semanticResults.suggestions.map((sug, idx) => (
+                <Badge 
+                  key={idx} 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-purple-100"
+                  onClick={() => setSearchTerm(sug)}
+                >
+                  {sug}
+                </Badge>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={() => {
+              setUseSemanticSearch(false);
+              setSemanticResults(null);
+            }}
+            className="text-xs text-purple-600 hover:underline mt-2"
+          >
+            Normale Suche verwenden
+          </button>
+        </div>
+      </div>
+      </CardContent>
+      </Card>
+      )}
 
       <div className="flex items-center justify-between mb-4">
         <div className="text-sm text-slate-600">
