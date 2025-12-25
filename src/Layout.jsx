@@ -16,7 +16,7 @@ import { initAuditLogger } from '@/components/auditLogger';
 
 
 
-import { LanguageProvider, useLanguage } from '@/components/LanguageProviderV3';
+import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
 const Analytics = lazy(() => import('@/components/Analytics'));
 const StructuredData = lazy(() => import('@/components/marketplace/StructuredData'));
 const SEOHead = lazy(() => import('@/components/SEOHead'));

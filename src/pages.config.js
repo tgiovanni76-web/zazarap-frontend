@@ -14,6 +14,7 @@ import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
 import Contact from './pages/Contact';
 import CustomerSupport from './pages/CustomerSupport';
+import CustomerSupportV2 from './pages/CustomerSupportV2';
 import DatenschutzDE from './pages/DatenschutzDE';
 import DisputeCenter from './pages/DisputeCenter';
 import EditListing from './pages/EditListing';
@@ -21,6 +22,7 @@ import EditProfile from './pages/EditProfile';
 import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
+import I18nDebug from './pages/I18nDebug';
 import Impressum from './pages/Impressum';
 import ListingDetail from './pages/ListingDetail';
 import ManageCategories from './pages/ManageCategories';
@@ -34,6 +36,7 @@ import MySales from './pages/MySales';
 import MySubscriptions from './pages/MySubscriptions';
 import MySubscriptionsV2 from './pages/MySubscriptionsV2';
 import NewListing from './pages/NewListing';
+import NewListingV2 from './pages/NewListingV2';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
 import PayPalWebhook from './pages/PayPalWebhook';
@@ -50,9 +53,6 @@ import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import WerbungV2 from './pages/WerbungV2';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import I18nDebug from './pages/I18nDebug';
-import NewListingV2 from './pages/NewListingV2';
-import CustomerSupportV2 from './pages/CustomerSupportV2';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +73,7 @@ export const PAGES = {
     "CompleteProfile": CompleteProfile,
     "Contact": Contact,
     "CustomerSupport": CustomerSupport,
+    "CustomerSupportV2": CustomerSupportV2,
     "DatenschutzDE": DatenschutzDE,
     "DisputeCenter": DisputeCenter,
     "EditListing": EditListing,
@@ -80,6 +81,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "Favorites": Favorites,
     "Home": Home,
+    "I18nDebug": I18nDebug,
     "Impressum": Impressum,
     "ListingDetail": ListingDetail,
     "ManageCategories": ManageCategories,
@@ -93,6 +95,7 @@ export const PAGES = {
     "MySubscriptions": MySubscriptions,
     "MySubscriptionsV2": MySubscriptionsV2,
     "NewListing": NewListing,
+    "NewListingV2": NewListingV2,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
     "PayPalWebhook": PayPalWebhook,
@@ -109,9 +112,6 @@ export const PAGES = {
     "Werbung": Werbung,
     "WerbungV2": WerbungV2,
     "Widerrufsrecht": Widerrufsrecht,
-    "I18nDebug": I18nDebug,
-    "NewListingV2": NewListingV2,
-    "CustomerSupportV2": CustomerSupportV2,
 }
 
 export const pagesConfig = {
