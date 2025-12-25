@@ -54,6 +54,7 @@ import Dashboard from './pages/Dashboard';
 import SellerProfile from './pages/SellerProfile';
 import EditSellerProfile from './pages/EditSellerProfile';
 import Billing from './pages/Billing';
+import AdminBilling from './pages/AdminBilling';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "SellerProfile": SellerProfile,
     "EditSellerProfile": EditSellerProfile,
     "Billing": Billing,
+    "AdminBilling": AdminBilling,
 }
 
 export const pagesConfig = {
