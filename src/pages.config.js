@@ -39,6 +39,7 @@ import PayPalWebhook from './pages/PayPalWebhook';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import PromoteListing from './pages/PromoteListing';
+import PromotionManager from './pages/PromotionManager';
 import Recommendations from './pages/Recommendations';
 import SellerDashboard from './pages/SellerDashboard';
 import SystemCheckup from './pages/SystemCheckup';
@@ -48,7 +49,7 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import PromotionManager from './pages/PromotionManager';
+import QuickPromote from './pages/QuickPromote';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +95,7 @@ export const PAGES = {
     "PreLaunchChecklist": PreLaunchChecklist,
     "PrivacyPolicy": PrivacyPolicy,
     "PromoteListing": PromoteListing,
+    "PromotionManager": PromotionManager,
     "Recommendations": Recommendations,
     "SellerDashboard": SellerDashboard,
     "SystemCheckup": SystemCheckup,
@@ -103,7 +105,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "PromotionManager": PromotionManager,
+    "QuickPromote": QuickPromote,
 }
 
 export const pagesConfig = {
