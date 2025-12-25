@@ -46,6 +46,7 @@ import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import Transactions from './pages/Transactions';
+import AdminAnalytics from './pages/AdminAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -98,6 +99,7 @@ export const PAGES = {
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
     "Transactions": Transactions,
+    "AdminAnalytics": AdminAnalytics,
 }
 
 export const pagesConfig = {
