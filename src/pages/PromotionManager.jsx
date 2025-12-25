@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TrendingUp, Calendar, Euro, Eye, MessageSquare, Star, RefreshCw, AlertCircle } from 'lucide-react';
+import { TrendingUp, Calendar, Euro, Eye, MessageSquare, Star, RefreshCw, AlertCircle, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import CustomPackageBuilder from '../components/promotions/CustomPackageBuilder';
 
 function PromotionCard({ promo, onExtend }) {
   const [showExtension, setShowExtension] = useState(false);
@@ -179,6 +180,9 @@ function PromotionCard({ promo, onExtend }) {
 }
 
 export default function PromotionManager() {
+  const [showCustomBuilder, setShowCustomBuilder] = useState(false);
+  const queryClient = useQueryClient();
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -189,6 +193,17 @@ export default function PromotionManager() {
     queryFn: async () => {
       const res = await base44.functions.invoke('getPromotionAnalytics', {});
       return res.data;
+    },
+    enabled: !!user
+  });
+
+  const { data: activeListings = [] } = useQuery({
+    queryKey: ['myActiveListings'],
+    queryFn: async () => {
+      return await base44.entities.Listing.filter({
+        created_by: user.email,
+        status: 'active'
+      });
     },
     enabled: !!user
   });
@@ -220,7 +235,63 @@ export default function PromotionManager() {
 
   return (
     <div className="max-w-6xl mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Promotion Manager</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Promotion Manager</h1>
+        <Button
+          onClick={() => setShowCustomBuilder(true)}
+          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Custom-Paket erstellen
+        </Button>
+      </div>
+
+      <Dialog open={showCustomBuilder} onOpenChange={setShowCustomBuilder}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Erstelle dein individuelles Promotion-Paket</DialogTitle>
+          </DialogHeader>
+          {activeListings.length === 0 ? (
+            <div className="py-8 text-center text-slate-500">
+              Du hast keine aktiven Anzeigen. Erstelle zuerst eine Anzeige, um eine Promotion zu buchen.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Wähle eine Anzeige:</label>
+                <select
+                  className="w-full border rounded-lg px-4 py-2"
+                  onChange={(e) => {
+                    const listingId = e.target.value;
+                    if (listingId) {
+                      setShowCustomBuilder(false);
+                      setTimeout(() => {
+                        setShowCustomBuilder(true);
+                      }, 100);
+                    }
+                  }}
+                >
+                  <option value="">-- Anzeige auswählen --</option>
+                  {activeListings.map(listing => (
+                    <option key={listing.id} value={listing.id}>
+                      {listing.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {activeListings[0] && (
+                <CustomPackageBuilder
+                  listingId={activeListings[0].id}
+                  onSuccess={() => {
+                    setShowCustomBuilder(false);
+                    queryClient.invalidateQueries(['promotionAnalytics']);
+                  }}
+                />
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
