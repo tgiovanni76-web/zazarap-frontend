@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_...');
+const stripePromise = loadStripe('pk_test_51SiCkJPVdLKlAY8B64CaZceL4okGRDJft2nI7SUv3pMDx8JeYEfZLDfYFzJAUG9dfzdzejqdeVV9YTJJMR1oa3JG00ZWyU2ny2');
 
 function AddPaymentMethodForm({ clientSecret, onSuccess }) {
   const stripe = useStripe();
