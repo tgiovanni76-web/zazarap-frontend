@@ -63,11 +63,11 @@ export default function NewListing() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      toast.success('Annuncio inviato per moderazione! Sarà pubblicato dopo la revisione.');
+      toast.success(t('newListing.successToast'));
       navigate(createPageUrl('Marketplace'));
     },
     onError: () => {
-      toast.error('Errore nella pubblicazione dell\'annuncio');
+      toast.error(t('newListing.errorToast'));
       setIsUploading(false);
     }
   });
@@ -94,7 +94,7 @@ export default function NewListing() {
     e.preventDefault();
     
     if (!formData.title || !formData.price || !formData.category) {
-      toast.error('Compila tutti i campi obbligatori');
+      toast.error(t('newListing.requiredFields'));
       return;
     }
 
@@ -107,7 +107,7 @@ export default function NewListing() {
       });
 
       if (!validationResult.data.allowed) {
-        toast.error('Dieses Angebot ist auf Zazarap nicht erlaubt. Bitte überprüfen Sie Ihre Angaben.', {
+        toast.error(t('error.illegal'), {
           duration: 5000
         });
         return;
@@ -160,7 +160,7 @@ export default function NewListing() {
           placeholder="0.00"
         />
 
-        <label className="zaza-form-label">Prezzo in offerta (€) — opzionale</label>
+        <label className="zaza-form-label">{t('newListing.offerPrice')}</label>
         <input
           name="offerPrice"
           type="number"
@@ -170,7 +170,7 @@ export default function NewListing() {
           placeholder=""
         />
 
-        <label className="zaza-form-label">Data e ora di scadenza — opzionale</label>
+        <label className="zaza-form-label">{t('newListing.expiresAt')}</label>
         <input
           name="expiresAt"
           type="datetime-local"
@@ -272,26 +272,26 @@ export default function NewListing() {
         )}
 
         <div className="border-t pt-6 mt-6 mb-4">
-          <h3 className="text-lg font-semibold mb-3">Werbeoptionen</h3>
+          <h3 className="text-lg font-semibold mb-3">{t('newListing.promoOptions')}</h3>
           <div className="grid grid-cols-1 gap-3">
             <div className="flex items-center gap-2">
               <input type="radio" id="promo-none" name="promoType" checked={promoType==='none'} onChange={()=>setPromoType('none')} />
-              <label htmlFor="promo-none">Keine</label>
+              <label htmlFor="promo-none">{t('newListing.promoNone')}</label>
             </div>
             <div className="flex items-center gap-2">
               <input type="radio" id="promo-featured" name="promoType" checked={promoType==='featured'} onChange={()=>setPromoType('featured')} />
-              <label htmlFor="promo-featured">Hervorgehobene Anzeige</label>
+              <label htmlFor="promo-featured">{t('newListing.promoFeatured')}</label>
             </div>
             <div className="flex items-center gap-2">
               <input type="radio" id="promo-top" name="promoType" checked={promoType==='top'} onChange={()=>setPromoType('top')} />
-              <label htmlFor="promo-top">Top-Anzeige</label>
+              <label htmlFor="promo-top">{t('newListing.promoTop')}</label>
             </div>
           </div>
           {promoType !== 'none' && (
             <div className="mt-3 flex items-center gap-3">
               <select className="zaza-input" value={promoBilling} onChange={(e)=>setPromoBilling(e.target.value)}>
-                <option value="day">pro Tag</option>
-                <option value="week">pro Woche</option>
+                <option value="day">{t('newListing.perDay')}</option>
+                <option value="week">{t('newListing.perWeek')}</option>
               </select>
               <input className="zaza-input" type="number" min={1} max={52} value={promoQty} onChange={(e)=>setPromoQty(e.target.value)} style={{maxWidth:'120px'}} />
             </div>
