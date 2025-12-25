@@ -115,6 +115,7 @@ export default function AGB() {
               → {t('agb.section6b.linkWithdrawal')}
             </Link>
           </p>
+          <p className="mt-4 font-semibold text-slate-800">{t('agb.section6b.summary')}</p>
         </CardContent>
       </Card>
 
