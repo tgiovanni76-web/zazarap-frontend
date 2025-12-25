@@ -1,5 +1,6 @@
 import AGB from './pages/AGB';
 import AccessibilityAudit from './pages/AccessibilityAudit';
+import AdminAnalytics from './pages/AdminAnalytics';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDisputes from './pages/AdminDisputes';
 import AdminPayments from './pages/AdminPayments';
@@ -30,6 +31,7 @@ import Messages from './pages/Messages';
 import ModerateListings from './pages/ModerateListings';
 import MyPurchases from './pages/MyPurchases';
 import MySales from './pages/MySales';
+import MySubscriptions from './pages/MySubscriptions';
 import NewListing from './pages/NewListing';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
@@ -42,18 +44,19 @@ import SellerDashboard from './pages/SellerDashboard';
 import SystemCheckup from './pages/SystemCheckup';
 import SystemLogs from './pages/SystemLogs';
 import TermsOfService from './pages/TermsOfService';
+import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import Transactions from './pages/Transactions';
-import AdminAnalytics from './pages/AdminAnalytics';
-import MySubscriptions from './pages/MySubscriptions';
+import WerbungV2 from './pages/WerbungV2';
+import MySubscriptionsV2 from './pages/MySubscriptionsV2';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AGB": AGB,
     "AccessibilityAudit": AccessibilityAudit,
+    "AdminAnalytics": AdminAnalytics,
     "AdminDashboard": AdminDashboard,
     "AdminDisputes": AdminDisputes,
     "AdminPayments": AdminPayments,
@@ -84,6 +87,7 @@ export const PAGES = {
     "ModerateListings": ModerateListings,
     "MyPurchases": MyPurchases,
     "MySales": MySales,
+    "MySubscriptions": MySubscriptions,
     "NewListing": NewListing,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
@@ -96,12 +100,12 @@ export const PAGES = {
     "SystemCheckup": SystemCheckup,
     "SystemLogs": SystemLogs,
     "TermsOfService": TermsOfService,
+    "Transactions": Transactions,
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "Transactions": Transactions,
-    "AdminAnalytics": AdminAnalytics,
-    "MySubscriptions": MySubscriptions,
+    "WerbungV2": WerbungV2,
+    "MySubscriptionsV2": MySubscriptionsV2,
 }
 
 export const pagesConfig = {
