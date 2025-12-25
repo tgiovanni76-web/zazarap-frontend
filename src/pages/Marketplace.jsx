@@ -504,13 +504,13 @@ export default function Marketplace() {
         </Card>
       )}
 
-      <FeaturedListings listings={listings} />
-
       {user && (
         <div className="mb-8">
           <AIRecommendations user={user} />
         </div>
       )}
+
+      <FeaturedListings listings={listings} />
 
       <div className="flex items-center justify-between mb-4">
         <div className="text-sm text-slate-600">
