@@ -25,6 +25,7 @@ export default function NewListing() {
     expiresAt: '',
     category: '',
     city: '',
+    listingType: 'fixed',
     seo_title: '',
     seo_description: '',
     seo_keywords: ''
@@ -213,6 +214,17 @@ export default function NewListing() {
           className="zaza-input"
           placeholder=""
         />
+
+        <label className="zaza-form-label">{t('listingType')}</label>
+        <select
+          value={formData.listingType}
+          onChange={(e) => setFormData({ ...formData, listingType: e.target.value })}
+          className="zaza-input"
+        >
+          <option value="fixed">{t('listingType.fixed')}</option>
+          <option value="negotiable">{t('listingType.negotiable')}</option>
+          <option value="auction">{t('listingType.auction')}</option>
+        </select>
 
         <div className="border-t pt-6 mt-6">
           <h3 className="text-lg font-semibold mb-4 text-slate-700">{t('seoOptimization')}</h3>

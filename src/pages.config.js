@@ -1,3 +1,4 @@
+import AGB from './pages/AGB';
 import AccessibilityAudit from './pages/AccessibilityAudit';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminDashboard from './pages/AdminDashboard';
@@ -20,6 +21,7 @@ import EditProfile from './pages/EditProfile';
 import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
+import Impressum from './pages/Impressum';
 import ListingDetail from './pages/ListingDetail';
 import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
@@ -46,12 +48,11 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import AGB from './pages/AGB';
-import Impressum from './pages/Impressum';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AGB": AGB,
     "AccessibilityAudit": AccessibilityAudit,
     "AdminAnalytics": AdminAnalytics,
     "AdminDashboard": AdminDashboard,
@@ -74,6 +75,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "Favorites": Favorites,
     "Home": Home,
+    "Impressum": Impressum,
     "ListingDetail": ListingDetail,
     "ManageCategories": ManageCategories,
     "ManageUsers": ManageUsers,
@@ -100,8 +102,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "AGB": AGB,
-    "Impressum": Impressum,
 }
 
 export const pagesConfig = {

@@ -246,6 +246,13 @@ const i18n = {
   "newListing.promoTop": { de: "Top-Anzeige", it: "Annuncio TOP", en: "TOP listing", fr: "Annonce TOP", pl: "Ogłoszenie TOP", tr: "TOP ilan", uk: "TOP-оголошення" },
   "newListing.perDay": { de: "pro Tag", it: "al giorno", en: "per day", fr: "par jour", pl: "dziennie", tr: "günlük", uk: "на день" },
   "newListing.perWeek": { de: "pro Woche", it: "a settimana", en: "per week", fr: "par semaine", pl: "tygodniowo", tr: "haftalık", uk: "на тиждень" },
+
+  // Listing Types
+  "listingType": { de: "Angebotsart", it: "Tipo di offerta", en: "Listing type", fr: "Type d'offre", pl: "Rodzaj oferty", tr: "İlan türü", uk: "Тип пропозиції" },
+  "allListingTypes": { de: "Alle Angebotsarten", it: "Tutti i tipi", en: "All types", fr: "Tous les types", pl: "Wszystkie typy", tr: "Tüm türler", uk: "Всі типи" },
+  "listingType.fixed": { de: "Festpreis", it: "Prezzo fisso", en: "Fixed price", fr: "Prix fixe", pl: "Cena stała", tr: "Sabit fiyat", uk: "Фіксована ціна" },
+  "listingType.negotiable": { de: "Verhandlungsbasis", it: "Trattabile", en: "Negotiable", fr: "Négociable", pl: "Do negocjacji", tr: "Pazarlık yapılır", uk: "Обговорюється" },
+  "listingType.auction": { de: "Auktion", it: "Asta", en: "Auction", fr: "Enchères", pl: "Aukcja", tr: "Müzayede", uk: "Аукціон" },
   "ads.modal.select.title": { de: "{pkg} • {days} Tage • €{price}", it: "{pkg} • {days} giorni • €{price}", en: "{pkg} • {days} days • €{price}", fr: "{pkg} • {days} jours • €{price}", pl: "{pkg} • {days} dni • €{price}", tr: "{pkg} • {days} gün • €{price}", uk: "{pkg} • {days} днів • €{price}" },
   "ads.modal.select.chooseListing": { de: "Anzeige auswählen", it: "Seleziona annuncio", en: "Select listing", fr: "Sélectionner l'annonce", pl: "Wybierz ogłoszenie", tr: "İlan seçin", uk: "Виберіть оголошення" },
   "ads.modal.select.placeholder": { de: "Wähle die Anzeige zur Promotion", it: "Scegli l'annuncio da promuovere", en: "Choose the listing to promote", fr: "Choisissez l'annonce à promouvoir", pl: "Wybierz ogłoszenie do promocji", tr: "Tanıtılacak ilanı seçin", uk: "Виберіть оголошення для просування" },

@@ -26,6 +26,7 @@ export default function Marketplace() {
   const [cityFilter, setCityFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
+  const [listingTypeFilter, setListingTypeFilter] = useState('all');
   const [sortBy, setSortBy] = useState('-created_date');
   const [showFilters, setShowFilters] = useState(false);
   const [radiusKm, setRadiusKm] = useState('');
@@ -180,10 +181,13 @@ export default function Marketplace() {
       else if (dateFilter === 'month') matchesDate = daysDiff <= 30;
     }
     
+    // Listing type filter
+    const matchesListingType = listingTypeFilter === 'all' || listing.listingType === listingTypeFilter;
+
     // Only show approved listings to non-admin users
     const matchesModeration = user?.role === 'admin' || listing.moderationStatus === 'approved';
     
-    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesRadius && matchesStatus && matchesDate && matchesModeration;
+    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesRadius && matchesStatus && matchesDate && matchesListingType && matchesModeration;
   });
 
   const uniqueCities = [...new Set(listings.map(l => l.city).filter(Boolean))].sort();
@@ -196,7 +200,10 @@ export default function Marketplace() {
     setCityFilter('');
     setStatusFilter('all');
     setDateFilter('all');
+    setListingTypeFilter('all');
     setSortBy('-created_date');
+    setRadiusKm('');
+    setUserLocation(null);
   };
 
   const categoryIcons = {
@@ -368,7 +375,7 @@ export default function Marketplace() {
       {showFilters && (
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">{t('priceMin')}</label>
                 <Input
@@ -467,6 +474,20 @@ export default function Marketplace() {
                     <SelectItem value="today">{t('today')}</SelectItem>
                     <SelectItem value="week">{t('thisWeek')}</SelectItem>
                     <SelectItem value="month">{t('thisMonth')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">{t('listingType')}</label>
+                <Select value={listingTypeFilter} onValueChange={setListingTypeFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('allListingTypes')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('allListingTypes')}</SelectItem>
+                    <SelectItem value="fixed">{t('listingType.fixed')}</SelectItem>
+                    <SelectItem value="negotiable">{t('listingType.negotiable')}</SelectItem>
+                    <SelectItem value="auction">{t('listingType.auction')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
