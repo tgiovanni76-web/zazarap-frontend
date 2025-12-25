@@ -10,10 +10,12 @@ import { CreditCard, Trash2, Star, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useLanguage } from '@/components/LanguageProvider';
 
 const stripePromise = loadStripe('pk_test_51SiCkJPVdLKlAY8B64CaZceL4okGRDJft2nI7SUv3pMDx8JeYEfZLDfYFzJAUG9dfzdzejqdeVV9YTJJMR1oa3JG00ZWyU2ny2');
 
 function AddPaymentMethodForm({ clientSecret, onSuccess }) {
+  const { t } = useLanguage();
   const stripe = useStripe();
   const elements = useElements();
   const [nickname, setNickname] = useState('');
@@ -45,10 +47,10 @@ function AddPaymentMethodForm({ clientSecret, onSuccess }) {
     });
 
     if (res.data.success) {
-      toast.success('Metodo di pagamento salvato');
+      toast.success(t('billing.paymentMethodSaved') || 'Metodo di pagamento salvato');
       onSuccess();
     } else {
-      toast.error('Errore nel salvare il metodo');
+      toast.error(t('billing.errorSaving') || 'Errore nel salvare il metodo');
     }
 
     setLoading(false);
@@ -59,7 +61,7 @@ function AddPaymentMethodForm({ clientSecret, onSuccess }) {
       <PaymentElement />
       
       <Input
-        placeholder="Nome metodo (es. Carta principale)"
+        placeholder={t('billing.methodNickname') || 'Nome metodo (es. Carta principale)'}
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
       />
@@ -70,17 +72,18 @@ function AddPaymentMethodForm({ clientSecret, onSuccess }) {
           checked={isDefault}
           onChange={(e) => setIsDefault(e.target.checked)}
         />
-        <span className="text-sm">Imposta come predefinito</span>
+        <span className="text-sm">{t('billing.setAsDefault') || 'Imposta come predefinito'}</span>
       </label>
 
       <Button type="submit" disabled={!stripe || loading} className="w-full">
-        {loading ? 'Salvataggio...' : 'Salva Metodo di Pagamento'}
+        {loading ? (t('billing.saving') || 'Salvataggio...') : (t('billing.savePaymentMethod') || 'Salva Metodo di Pagamento')}
       </Button>
     </form>
   );
 }
 
 export default function PaymentMethodsManager() {
+  const { t } = useLanguage();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const queryClient = useQueryClient();
@@ -109,7 +112,7 @@ export default function PaymentMethodsManager() {
       return res.data;
     },
     onSuccess: () => {
-      toast.success('Metodo di pagamento rimosso');
+      toast.success(t('billing.paymentMethodRemoved') || 'Metodo di pagamento rimosso');
       queryClient.invalidateQueries(['paymentMethods']);
     }
   });
@@ -123,7 +126,7 @@ export default function PaymentMethodsManager() {
       await Promise.all(updates);
     },
     onSuccess: () => {
-      toast.success('Metodo predefinito aggiornato');
+      toast.success(t('billing.defaultUpdated') || 'Metodo predefinito aggiornato');
       queryClient.invalidateQueries(['paymentMethods']);
     }
   });
@@ -132,20 +135,20 @@ export default function PaymentMethodsManager() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Metodi di Pagamento</CardTitle>
+          <CardTitle>{t('billing.paymentMethods') || 'Metodi di Pagamento'}</CardTitle>
           <Button onClick={() => addMethodMutation.mutate('card')}>
             <Plus className="w-4 h-4 mr-2" />
-            Aggiungi Carta
+            {t('billing.addCard') || 'Aggiungi Carta'}
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {isLoading ? (
-          <div className="text-center py-8">Caricamento...</div>
+          <div className="text-center py-8">{t('loading') || 'Caricamento...'}</div>
         ) : paymentMethods.length === 0 ? (
           <div className="text-center py-8 text-slate-500">
             <CreditCard className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-            <p>Nessun metodo di pagamento salvato</p>
+            <p>{t('billing.noPaymentMethods') || 'Nessun metodo di pagamento salvato'}</p>
           </div>
         ) : (
           paymentMethods.map((method) => (
@@ -165,7 +168,7 @@ export default function PaymentMethodsManager() {
                     {method.isDefault && (
                       <Badge className="bg-blue-100 text-blue-800">
                         <Star className="w-3 h-3 mr-1" />
-                        Predefinito
+                        {t('billing.default') || 'Predefinito'}
                       </Badge>
                     )}
                   </div>
@@ -174,7 +177,7 @@ export default function PaymentMethodsManager() {
                   )}
                   {method.type === 'card' && (
                     <div className="text-xs text-slate-400">
-                      Scadenza: {method.cardExpMonth}/{method.cardExpYear}
+                      {t('billing.expires') || 'Scadenza'}: {method.cardExpMonth}/{method.cardExpYear}
                     </div>
                   )}
                 </div>
@@ -186,14 +189,14 @@ export default function PaymentMethodsManager() {
                     size="sm"
                     onClick={() => setDefaultMutation.mutate(method.id)}
                   >
-                    Imposta predefinito
+                    {t('billing.setDefault') || 'Imposta predefinito'}
                   </Button>
                 )}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => {
-                    if (confirm('Rimuovere questo metodo di pagamento?')) {
+                    if (confirm(t('billing.confirmRemove') || 'Rimuovere questo metodo di pagamento?')) {
                       deleteMethodMutation.mutate(method.id);
                     }
                   }}
@@ -209,7 +212,7 @@ export default function PaymentMethodsManager() {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Aggiungi Metodo di Pagamento</DialogTitle>
+            <DialogTitle>{t('billing.addPaymentMethod') || 'Aggiungi Metodo di Pagamento'}</DialogTitle>
           </DialogHeader>
           {clientSecret && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>

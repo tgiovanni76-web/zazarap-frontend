@@ -12,8 +12,10 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AdminBilling() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
 
   const { data: user } = useQuery({
@@ -34,8 +36,8 @@ export default function AdminBilling() {
   if (!user) {
     return (
       <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold mb-4">Accesso negato</h2>
-        <Button onClick={() => base44.auth.redirectToLogin()}>Login</Button>
+        <h2 className="text-2xl font-bold mb-4">{t('admin.accessDenied') || 'Accesso negato'}</h2>
+        <Button onClick={() => base44.auth.redirectToLogin()}>{t('login') || 'Login'}</Button>
       </div>
     );
   }
@@ -43,7 +45,7 @@ export default function AdminBilling() {
   if (user.role !== 'admin') {
     return (
       <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold mb-4">Solo per amministratori</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('admin.adminOnly') || 'Solo per amministratori'}</h2>
       </div>
     );
   }
@@ -52,7 +54,7 @@ export default function AdminBilling() {
     return (
       <div className="max-w-7xl mx-auto py-12 text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-        <p className="mt-4 text-slate-600">Caricamento dati billing...</p>
+        <p className="mt-4 text-slate-600">{t('admin.loadingBillingData') || 'Caricamento dati billing...'}</p>
       </div>
     );
   }
@@ -88,8 +90,8 @@ export default function AdminBilling() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Dashboard Billing Admin</h1>
-        <p className="text-slate-600">Gestione completa transazioni, abbonamenti e metodi di pagamento</p>
+        <h1 className="text-3xl font-bold mb-2">{t('admin.billingDashboard') || 'Dashboard Billing Admin'}</h1>
+        <p className="text-slate-600">{t('admin.billingDescription') || 'Gestione completa transazioni, abbonamenti e metodi di pagamento'}</p>
       </div>
 
       {/* Stats Overview */}
@@ -100,7 +102,7 @@ export default function AdminBilling() {
               <Euro className="w-8 h-8 text-green-600" />
             </div>
             <div className="text-2xl font-bold text-green-600">€{stats.totalRevenue?.toFixed(0)}</div>
-            <div className="text-sm text-slate-600">Ricavi Totali</div>
+            <div className="text-sm text-slate-600">{t('admin.totalRevenue') || 'Ricavi Totali'}</div>
           </CardContent>
         </Card>
 
@@ -110,7 +112,7 @@ export default function AdminBilling() {
               <TrendingUp className="w-8 h-8 text-blue-600" />
             </div>
             <div className="text-2xl font-bold text-blue-600">€{stats.monthlyRecurringRevenue?.toFixed(0)}</div>
-            <div className="text-sm text-slate-600">MRR</div>
+            <div className="text-sm text-slate-600">{t('admin.mrr') || 'MRR'}</div>
           </CardContent>
         </Card>
 
@@ -120,7 +122,7 @@ export default function AdminBilling() {
               <RotateCw className="w-8 h-8 text-purple-600" />
             </div>
             <div className="text-2xl font-bold text-purple-600">{stats.activeSubscriptions}</div>
-            <div className="text-sm text-slate-600">Abbonamenti Attivi</div>
+            <div className="text-sm text-slate-600">{t('admin.activeSubscriptions') || 'Abbonamenti Attivi'}</div>
           </CardContent>
         </Card>
 
@@ -130,7 +132,7 @@ export default function AdminBilling() {
               <Users className="w-8 h-8 text-indigo-600" />
             </div>
             <div className="text-2xl font-bold text-indigo-600">{stats.totalUsers}</div>
-            <div className="text-sm text-slate-600">Utenti Totali</div>
+            <div className="text-sm text-slate-600">{t('admin.totalUsers') || 'Utenti Totali'}</div>
           </CardContent>
         </Card>
 
@@ -140,7 +142,7 @@ export default function AdminBilling() {
               <CreditCard className="w-8 h-8 text-orange-600" />
             </div>
             <div className="text-2xl font-bold text-orange-600">{stats.payingUsers}</div>
-            <div className="text-sm text-slate-600">Utenti Paganti</div>
+            <div className="text-sm text-slate-600">{t('admin.payingUsers') || 'Utenti Paganti'}</div>
           </CardContent>
         </Card>
 
@@ -150,7 +152,7 @@ export default function AdminBilling() {
               <TrendingUp className="w-8 h-8 text-green-600" />
             </div>
             <div className="text-2xl font-bold text-green-600">{stats.conversionRate}%</div>
-            <div className="text-sm text-slate-600">Conversion Rate</div>
+            <div className="text-sm text-slate-600">{t('admin.conversionRate') || 'Conversion Rate'}</div>
           </CardContent>
         </Card>
       </div>
@@ -158,10 +160,10 @@ export default function AdminBilling() {
       {/* Main Tabs */}
       <Tabs defaultValue="transactions" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="transactions">Transazioni</TabsTrigger>
-          <TabsTrigger value="subscriptions">Abbonamenti</TabsTrigger>
-          <TabsTrigger value="users">Utenti</TabsTrigger>
-          <TabsTrigger value="invoices">Fatture</TabsTrigger>
+          <TabsTrigger value="transactions">{t('admin.transactions') || 'Transazioni'}</TabsTrigger>
+          <TabsTrigger value="subscriptions">{t('admin.subscriptions') || 'Abbonamenti'}</TabsTrigger>
+          <TabsTrigger value="users">{t('admin.users') || 'Utenti'}</TabsTrigger>
+          <TabsTrigger value="invoices">{t('admin.invoices') || 'Fatture'}</TabsTrigger>
         </TabsList>
 
         {/* Transactions Tab */}
@@ -169,14 +171,14 @@ export default function AdminBilling() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Transazioni Recenti</CardTitle>
+                <CardTitle>{t('admin.recentTransactions') || 'Transazioni Recenti'}</CardTitle>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => exportToCSV(recentTransactions, 'transazioni.csv')}
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Esporta CSV
+                  {t('admin.exportCSV') || 'Esporta CSV'}
                 </Button>
               </div>
             </CardHeader>
@@ -185,12 +187,12 @@ export default function AdminBilling() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Data</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Utente</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Tipo</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Provider</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Importo</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Stato</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.date') || 'Data'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.user') || 'Utente'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.type') || 'Tipo'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.provider') || 'Provider'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.amount') || 'Importo'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.status') || 'Stato'}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -234,14 +236,14 @@ export default function AdminBilling() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Abbonamenti Attivi e Recenti</CardTitle>
+                <CardTitle>{t('admin.activeAndRecentSubscriptions') || 'Abbonamenti Attivi e Recenti'}</CardTitle>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => exportToCSV(recentPromotions, 'abbonamenti.csv')}
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Esporta CSV
+                  {t('admin.exportCSV') || 'Esporta CSV'}
                 </Button>
               </div>
             </CardHeader>
@@ -250,13 +252,13 @@ export default function AdminBilling() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Utente</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Listing</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Tipo</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Auto-Rinnovo</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Scadenza</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Importo</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Stato</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.user') || 'Utente'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.listing') || 'Listing'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.type') || 'Tipo'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.autoRenewal') || 'Auto-Rinnovo'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.expiry') || 'Scadenza'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.amount') || 'Importo'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.status') || 'Stato'}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -278,10 +280,10 @@ export default function AdminBilling() {
                             {promo.autoRenew ? (
                               <Badge className="bg-blue-100 text-blue-800">
                                 <RotateCw className="w-3 h-3 mr-1" />
-                                Attivo
+                                {t('admin.active') || 'Attivo'}
                               </Badge>
                             ) : (
-                              <span className="text-slate-400 text-sm">No</span>
+                              <span className="text-slate-400 text-sm">{t('no') || 'No'}</span>
                             )}
                           </td>
                           <td className="py-3 px-4 text-sm">
@@ -294,7 +296,7 @@ export default function AdminBilling() {
                                 ? 'bg-green-100 text-green-800' 
                                 : 'bg-slate-100 text-slate-800'
                             }>
-                              {isActive ? 'Attivo' : 'Scaduto'}
+                              {isActive ? (t('admin.active') || 'Attivo') : (t('admin.expired') || 'Scaduto')}
                             </Badge>
                           </td>
                         </tr>
@@ -312,12 +314,12 @@ export default function AdminBilling() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Utenti e Metodi di Pagamento</CardTitle>
+                <CardTitle>{t('admin.usersAndPaymentMethods') || 'Utenti e Metodi di Pagamento'}</CardTitle>
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
-                      placeholder="Cerca utente..."
+                      placeholder={t('admin.searchUser') || 'Cerca utente...'}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10 w-64"
@@ -329,7 +331,7 @@ export default function AdminBilling() {
                     onClick={() => exportToCSV(userPaymentMethodsSummary, 'utenti.csv')}
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    Esporta
+                    {t('admin.export') || 'Esporta'}
                   </Button>
                 </div>
               </div>
@@ -339,11 +341,11 @@ export default function AdminBilling() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Utente</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Email</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Metodi di Pagamento</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Totale Speso</th>
-                      <th className="text-left py-3 px-4 font-semibold text-sm">Ultima Transazione</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.user') || 'Utente'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.email') || 'Email'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.paymentMethods') || 'Metodi di Pagamento'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.totalSpent') || 'Totale Speso'}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.lastTransaction') || 'Ultima Transazione'}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -377,33 +379,33 @@ export default function AdminBilling() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Fatture Recenti</CardTitle>
+                <CardTitle>{t('admin.recentInvoices') || 'Fatture Recenti'}</CardTitle>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => exportToCSV(invoices, 'fatture.csv')}
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Esporta CSV
+                  {t('admin.exportCSV') || 'Esporta CSV'}
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               {invoices.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
-                  Nessuna fattura trovata
+                  {t('admin.noInvoices') || 'Nessuna fattura trovata'}
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 px-4 font-semibold text-sm">Numero</th>
-                        <th className="text-left py-3 px-4 font-semibold text-sm">Utente</th>
-                        <th className="text-left py-3 px-4 font-semibold text-sm">Data</th>
-                        <th className="text-left py-3 px-4 font-semibold text-sm">Importo</th>
-                        <th className="text-left py-3 px-4 font-semibold text-sm">IVA</th>
-                        <th className="text-left py-3 px-4 font-semibold text-sm">Stato</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.number') || 'Numero'}</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.user') || 'Utente'}</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.date') || 'Data'}</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.amount') || 'Importo'}</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.vat') || 'IVA'}</th>
+                        <th className="text-left py-3 px-4 font-semibold text-sm">{t('admin.status') || 'Stato'}</th>
                       </tr>
                     </thead>
                     <tbody>
