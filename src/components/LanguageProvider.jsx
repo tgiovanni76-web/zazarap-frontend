@@ -2021,7 +2021,7 @@ const translations = {
 const LanguageContext = createContext();
 
 /**
- * @returns {{language: string, setLanguage: (lang: string) => void, t: (key: string) => string, translations: Record<string, any>}}
+ * @returns {{language: string, setLanguage: (lang: string) => void, t: (key: string, params?: object) => string, translations: Record<string, any>}}
  */
 export function useLanguage() {
   const context = useContext(LanguageContext);
@@ -2033,11 +2033,29 @@ export function useLanguage() {
 
 /** @param {{children: React.ReactNode}} props */
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem('zazarap_language');
-    if (saved) return saved;
+  const [language, setLanguageState] = useState(() => {
+    // 1. Check URL path prefix (/de, /it, etc.)
+    if (typeof window !== 'undefined') {
+      const pathLang = window.location.pathname.split('/')[1];
+      if (SUPPORTED_LANGS.includes(pathLang)) {
+        return pathLang;
+      }
+    }
 
-    // Auto-detect browser language
+    // 2. Check cookie
+    if (typeof document !== 'undefined') {
+      const cookieLang = document.cookie.split('; ').find(row => row.startsWith('zazarap_lang='));
+      if (cookieLang) {
+        const lang = cookieLang.split('=')[1];
+        if (SUPPORTED_LANGS.includes(lang)) return lang;
+      }
+    }
+
+    // 3. Check localStorage (backward compatibility)
+    const saved = localStorage.getItem('zazarap_language');
+    if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
+
+    // 4. Auto-detect browser language
     if (typeof navigator !== 'undefined') {
       const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
       if (browserLang.startsWith('de')) return 'de';
@@ -2049,18 +2067,61 @@ export function LanguageProvider({ children }) {
       if (browserLang.startsWith('uk')) return 'uk';
     }
 
-    return 'de'; // Default to German
-    });
+    return DEFAULT_LANG;
+  });
 
-    useEffect(() => {
-    localStorage.setItem('zazarap_language', language);
+  const setLanguage = (newLang) => {
+    if (!SUPPORTED_LANGS.includes(newLang)) return;
+    
+    // Update state
+    setLanguageState(newLang);
+    
+    // Update cookie (30 days expiry)
+    if (typeof document !== 'undefined') {
+      const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = `zazarap_lang=${newLang}; expires=${expires}; path=/; SameSite=Lax`;
+    }
+    
+    // Update localStorage (backward compatibility)
+    localStorage.setItem('zazarap_language', newLang);
+    
+    // Update HTML lang attribute
+    document.documentElement.lang = newLang;
+    
+    // Update URL if needed (without reload)
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      const currentLangPrefix = currentPath.split('/')[1];
+      
+      if (SUPPORTED_LANGS.includes(currentLangPrefix)) {
+        // Replace existing lang prefix
+        const newPath = currentPath.replace(`/${currentLangPrefix}`, `/${newLang}`);
+        window.history.replaceState({}, '', newPath + window.location.search);
+      } else {
+        // Add lang prefix
+        const newPath = `/${newLang}${currentPath}`;
+        window.history.replaceState({}, '', newPath + window.location.search);
+      }
+    }
+  };
+
+  useEffect(() => {
     document.documentElement.lang = language;
-    }, [language]);
+  }, [language]);
 
-    const t = (key) => {
+  const t = (key, params) => {
     // 1. Check namespace-based i18n first (new format: "home.hero.title")
     if (i18n[key]) {
-      return i18n[key][language] || i18n[key][DEFAULT_LANG] || key;
+      let translated = i18n[key][language] || i18n[key][DEFAULT_LANG] || key;
+      
+      // Replace parameters like {name}, {price}, etc.
+      if (params && typeof translated === 'string') {
+        Object.keys(params).forEach(paramKey => {
+          translated = translated.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), params[paramKey]);
+        });
+      }
+      
+      return translated;
     }
 
     // 2. Try legacy flat translations

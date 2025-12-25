@@ -66,7 +66,7 @@ export default function Werbung() {
     const until = new Date(Date.now() + daysMs).toISOString();
     await updateListingMutation.mutateAsync({ id: listingId, data: { featured: true, featuredUntil: until } });
     setSelectModal({ open: false, packageName: '', days: 0, price: 0 });
-    toast.success('Promozione attivata sull\'annuncio');
+    toast.success(t('ads.modal.select.successToast'));
   };
 
   const openRequest = async (pkg) => {
@@ -77,16 +77,17 @@ export default function Werbung() {
   const handleSendRequest = async ({ message }) => {
     if (!user) return;
     const pkg = packages?.[requestModal.packageId];
+    const pkgName = pkg?.packageCode ? t(`ads.packages.${pkg.packageCode}.title`) : requestModal.packageId;
     await createTicketMutation.mutateAsync({
       userId: user.email,
-      subject: `Werbeanfrage: ${pkg?.name || requestModal.packageId}`,
-      message: `${message || ''}\n\nPaket: ${pkg?.name || requestModal.packageId}\nPreis: ${pkg?.displayPrice || ''}`,
+      subject: `${t('ads.modal.request.emailSubject')}: ${pkgName}`,
+      message: `${message || ''}\n\n${t('ads.modal.request.emailPackage')}: ${pkgName}\n${t('ads.modal.request.emailPrice')}: ${pkg?.displayPrice || ''}`,
       category: 'ads',
       priority: 'normal',
       status: 'open'
     });
     setRequestModal({ open: false, packageId: '' });
-    toast.success('Anfrage gesendet. Wir melden uns in Kürze.');
+    toast.success(t('ads.modal.request.successToast'));
   };
   return (
     <div className="min-h-screen bg-[#f5f5f5] pb-20">
@@ -116,21 +117,21 @@ export default function Werbung() {
               description={t('ads.packages.topAd.desc')}
               price={packages?.topAd?.displayPrice || '€9,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'TOP-Anzeige', days: 7, price: 9.99 })}
+              onAction={() => startPromo({ packageName: t('ads.packages.topAd.title'), days: 7, price: 9.99 })}
             />
             <PricingCard 
               title={t('ads.packages.highlighted.title')} 
               description={t('ads.packages.highlighted.desc')}
               price={packages?.highlighted?.displayPrice || '€3,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'Hervorgehobene Anzeige', days: 7, price: 3.99 })}
+              onAction={() => startPromo({ packageName: t('ads.packages.highlighted.title'), days: 7, price: 3.99 })}
             />
             <PricingCard 
               title={t('ads.packages.premium14.title')} 
               description={t('ads.packages.premium14.desc')}
               price={packages?.premium14?.displayPrice || '€14,99'}
               btnText={t('ads.btn.buyNow')}
-              onAction={() => startPromo({ packageName: 'Premium 14 Tage', days: 14, price: 14.99 })}
+              onAction={() => startPromo({ packageName: t('ads.packages.premium14.title'), days: 14, price: 14.99 })}
             />
           </div>
         </div>
@@ -175,22 +176,22 @@ export default function Werbung() {
             <PricingCard 
               title={t('ads.packages.homeBanner.title')} 
               description={t('ads.packages.homeBanner.desc')}
-              price={packages?.homeBanner?.displayPrice || '€199,00 / Woche'}
-              btnText="Banner buchen"
+              price={packages?.homeBanner?.displayPrice || '€199,00'}
+              btnText={t('ads.btn.bookBanner')}
               onAction={() => openRequest({ packageId: 'homeBanner' })}
             />
             <PricingCard 
               title={t('ads.packages.categoryBanner.title')} 
               description={t('ads.packages.categoryBanner.desc')}
-              price={packages?.categoryBanner?.displayPrice || '€99,00 / Woche'}
-              btnText="Banner buchen"
+              price={packages?.categoryBanner?.displayPrice || '€99,00'}
+              btnText={t('ads.btn.bookBanner')}
               onAction={() => openRequest({ packageId: 'categoryBanner' })}
             />
             <PricingCard 
               title={t('ads.packages.sidebarAd.title')} 
               description={t('ads.packages.sidebarAd.desc')}
-              price={packages?.sidebarAd?.displayPrice || '€49,00 / Woche'}
-              btnText="Banner buchen"
+              price={packages?.sidebarAd?.displayPrice || '€49,00'}
+              btnText={t('ads.btn.bookBanner')}
               onAction={() => openRequest({ packageId: 'sidebarAd' })}
             />
           </div>
@@ -202,11 +203,11 @@ export default function Werbung() {
       <div className="container max-w-6xl mx-auto px-4 mt-6">
         <div className="bg-white p-4 rounded-xl border shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold">Werbeinserat</h3>
-            {!user?.canCreateAds && <span className="text-xs text-slate-500">Nur für Abonnenten</span>}
+            <h3 className="text-lg font-semibold">{t('ads.adListing.title')}</h3>
+            {!user?.canCreateAds && <span className="text-xs text-slate-500">{t('ads.adListing.subscribersOnly')}</span>}
           </div>
           <div className="flex gap-3">
-            <Button onClick={() => setAdModalOpen(true)} disabled={!user?.canCreateAds} className="bg-[#d62020] hover:bg-[#b91818]">Neues Inserat</Button>
+            <Button onClick={() => setAdModalOpen(true)} disabled={!user?.canCreateAds} className="bg-[#d62020] hover:bg-[#b91818]">{t('ads.adListing.createNew')}</Button>
           </div>
         </div>
       </div>

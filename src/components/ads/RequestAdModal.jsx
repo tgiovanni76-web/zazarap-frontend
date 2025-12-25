@@ -7,10 +7,12 @@ import { Textarea } from "@/components/ui/textarea";
 export default function RequestAdModal({ open, onClose, packageId, packages, onSubmit }) {
   const { t } = useLanguage();
   const [message, setMessage] = React.useState("");
-  const title = React.useMemo(() => {
-    if (packages && packageId && packages[packageId]) return `${packages[packageId].name} • ${packages[packageId].displayPrice}`;
-    return t('ads.modal.request.title');
-  }, [packages, packageId, t]);
+  const getPackageTitle = () => {
+    if (!packages || !packageId || !packages[packageId]) return '';
+    const pkg = packages[packageId];
+    const pkgName = pkg.packageCode ? t(`ads.packages.${pkg.packageCode}.title`) : packageId;
+    return `${pkgName} • ${pkg.displayPrice}`;
+  };
 
   React.useEffect(() => {
     if (!open) setMessage("");
@@ -21,7 +23,7 @@ export default function RequestAdModal({ open, onClose, packageId, packages, onS
       <DialogContent className="sm:max-w-md" aria-describedby="request-ad-desc">
         <DialogHeader>
           <DialogTitle>
-            {(packages && packageId && packages[packageId]) ? `${packages[packageId].name} • ${packages[packageId].displayPrice}` : t('ads.modal.request.title')}
+            {getPackageTitle() || t('ads.modal.request.title')}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">

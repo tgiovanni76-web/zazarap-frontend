@@ -18,15 +18,15 @@ Deno.serve(async (req) => {
     }
 
     const packages = {
-      topAd: { id: 'topAd', name: 'TOP-Anzeige (7 Tage)', displayPrice: '€9,99', kind: 'one_time' },
-      highlighted: { id: 'highlighted', name: 'Hervorgehobene Anzeige', displayPrice: '€3,99', kind: 'one_time' },
-      premium14: { id: 'premium14', name: 'Premium 14 Tage', displayPrice: '€14,99', kind: 'one_time' },
-      basicShop: { id: 'basicShop', name: 'Basic Shop-Paket', displayPrice: '€19,99 / Monat', kind: 'subscription' },
-      businessShop: { id: 'businessShop', name: 'Business Shop-Paket', displayPrice: '€39,99 / Monat', kind: 'subscription' },
-      premiumShop: { id: 'premiumShop', name: 'Premium Shop-Paket', displayPrice: '€69,99 / Monat', kind: 'subscription' },
-      homeBanner: { id: 'homeBanner', name: 'Startseiten-Banner', displayPrice: '€199,00 / Woche', kind: 'banner' },
-      categoryBanner: { id: 'categoryBanner', name: 'Kategorie-Banner', displayPrice: '€99,00 / Woche', kind: 'banner' },
-      sidebarAd: { id: 'sidebarAd', name: 'Sidebar-Werbung', displayPrice: '€49,00 / Woche', kind: 'banner' }
+      topAd: { packageCode: 'topAd', displayPrice: '€9,99', days: 7, kind: 'one_time' },
+      highlighted: { packageCode: 'highlighted', displayPrice: '€3,99', days: 7, kind: 'one_time' },
+      premium14: { packageCode: 'premium14', displayPrice: '€14,99', days: 14, kind: 'one_time' },
+      basicShop: { packageCode: 'basicShop', displayPrice: '€19,99', period: 'month', kind: 'subscription' },
+      businessShop: { packageCode: 'businessShop', displayPrice: '€39,99', period: 'month', kind: 'subscription' },
+      premiumShop: { packageCode: 'premiumShop', displayPrice: '€69,99', period: 'month', kind: 'subscription' },
+      homeBanner: { packageCode: 'homeBanner', displayPrice: '€199,00', period: 'week', kind: 'banner' },
+      categoryBanner: { packageCode: 'categoryBanner', displayPrice: '€99,00', period: 'week', kind: 'banner' },
+      sidebarAd: { packageCode: 'sidebarAd', displayPrice: '€49,00', period: 'week', kind: 'banner' }
     };
 
     // Log access (no sensitive data)

@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function CreateAdModal({ open, onClose, canCreate = false }) {
+  const { t } = useLanguage();
   const [title, setTitle] = React.useState('');
   const [url, setUrl] = React.useState('');
   const [placement, setPlacement] = React.useState('homepage');
@@ -37,7 +39,7 @@ export default function CreateAdModal({ open, onClose, canCreate = false }) {
       });
       onClose(true, data.ad);
     } catch (e) {
-      setError(e?.response?.data?.error || 'Fehler beim Erstellen');
+      setError(e?.response?.data?.error || t('ads.createModal.error'));
     } finally {
       setSaving(false);
     }
@@ -47,27 +49,27 @@ export default function CreateAdModal({ open, onClose, canCreate = false }) {
     <Dialog open={open} onOpenChange={(v) => !v && onClose(false)}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Werbeinserat erstellen</DialogTitle>
+          <DialogTitle>{t('ads.createModal.title')}</DialogTitle>
         </DialogHeader>
         {!canCreate ? (
-          <p className="text-slate-600">Nur für Abonnenten · Upgrade erforderlich</p>
+          <p className="text-slate-600">{t('ads.createModal.subscribersOnly')}</p>
         ) : (
           <div className="space-y-3">
-            <Input placeholder="Titel" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <Input placeholder="Ziel-URL (https://...)" value={url} onChange={(e) => setUrl(e.target.value)} />
+            <Input placeholder={t('ads.createModal.titlePlaceholder')} value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input placeholder={t('ads.createModal.urlPlaceholder')} value={url} onChange={(e) => setUrl(e.target.value)} />
             <Select value={placement} onValueChange={setPlacement}>
-              <SelectTrigger><SelectValue placeholder="Platzierung" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t('ads.createModal.placementLabel')} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="homepage">Startseite</SelectItem>
-                <SelectItem value="category">Kategorie</SelectItem>
-                <SelectItem value="search">Suche</SelectItem>
-                <SelectItem value="sidebar">Sidebar</SelectItem>
+                <SelectItem value="homepage">{t('ads.createModal.placement.homepage')}</SelectItem>
+                <SelectItem value="category">{t('ads.createModal.placement.category')}</SelectItem>
+                <SelectItem value="search">{t('ads.createModal.placement.search')}</SelectItem>
+                <SelectItem value="sidebar">{t('ads.createModal.placement.sidebar')}</SelectItem>
               </SelectContent>
             </Select>
             <div>
-              <label className="text-sm text-slate-600">Medien-Asset</label>
+              <label className="text-sm text-slate-600">{t('ads.createModal.mediaAssetLabel')}</label>
               <select className="w-full border rounded px-3 py-2" value={mediaId} onChange={(e) => setMediaId(e.target.value)}>
-                <option value="">Wähle ein Asset...</option>
+                <option value="">{t('ads.createModal.selectAsset')}</option>
                 {media.map(m => (
                   <option key={m.id} value={m.id}>{m.originalName} · {m.kind}</option>
                 ))}
@@ -81,8 +83,8 @@ export default function CreateAdModal({ open, onClose, canCreate = false }) {
           </div>
         )}
         <DialogFooter>
-          <Button variant="outline" onClick={() => onClose(false)}>Abbrechen</Button>
-          <Button onClick={handleCreate} disabled={!canCreate || saving} className="bg-[#d62020] hover:bg-[#b91818]">Erstellen</Button>
+          <Button variant="outline" onClick={() => onClose(false)}>{t('cancel')}</Button>
+          <Button onClick={handleCreate} disabled={!canCreate || saving} className="bg-[#d62020] hover:bg-[#b91818]">{t('ads.createModal.createBtn')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
