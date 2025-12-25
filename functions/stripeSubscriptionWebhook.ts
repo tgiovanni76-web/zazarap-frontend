@@ -5,6 +5,15 @@ import { withSecurityHeaders } from './_lib/securityHeaders.js';
 
 Deno.serve(async (req) => {
   try {
+    // Fallback rate limiting for webhooks (high limit + auto-skip for known webhooks)
+    if (shouldUseFallback(req)) {
+      const rateLimitResult = checkFallbackRateLimit(req, 'stripeWebhook', FALLBACK_LIMITS.webhook);
+      
+      if (!rateLimitResult.allowed && !rateLimitResult.skipped) {
+        return createRateLimitResponse(rateLimitResult);
+      }
+    }
+
     const base44 = createClientFromRequest(req);
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
