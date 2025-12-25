@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe } from 'lucide-react';
+import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe, Brain } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -89,6 +89,14 @@ export default function AdminDashboard() {
       link: 'ModerateListings',
       count: pendingListings,
       color: 'bg-green-500'
+    },
+    {
+      titleKey: 'KI-Moderation',
+      descKey: 'Automatische Content-Prüfung mit AI',
+      icon: Brain,
+      link: 'AdminModeration',
+      count: pendingListings,
+      color: 'bg-purple-500'
     },
     {
       titleKey: 'admin.disputeManagement',
