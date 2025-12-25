@@ -3,34 +3,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AGB() {
   return (
-    <div className="py-8 max-w-4xl mx-auto px-4">
+    <div className="py-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Allgemeine Geschäftsbedingungen (AGB)</h1>
-      <p className="text-sm text-slate-600 mb-6">für die Online-Plattform zazarap.de</p>
-      <p className="text-sm text-slate-600 mb-6">Gültig ab: 25.12.2025</p>
+      <p className="text-sm text-slate-600 mb-6">Gültig ab: {new Date().toLocaleDateString('de-DE')}</p>
 
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>§ 1 Geltungsbereich und Vertragspartner</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB") gelten für die Nutzung der Online-Plattform zazarap.de (nachfolgend „Plattform").
+            (1) Diese Allgemeinen Geschäftsbedingungen (nachfolgend "AGB") gelten für die Nutzung der 
+            Online-Plattform Zazarap (nachfolgend "Plattform"), die von [Ihre Firma GmbH] betrieben wird.
           </p>
           <p>
-            (2) Betreiber der Plattform zazarap.de ist:
-          </p>
-          <div className="ml-6 space-y-1">
-            <p>Tornabene Giovanni</p>
-            <p>Kronenstraße 10</p>
-            <p>75245 Neulingen</p>
-            <p>Deutschland</p>
-            <p>E-Mail: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
-          </div>
-          <p>
-            (3) Die Plattform zazarap.de ermöglicht es registrierten Nutzern, Waren anzubieten (Verkäufer) und zu kaufen (Käufer).
+            (2) Die Plattform ermöglicht es registrierten Nutzern, Waren anzubieten (Verkäufer) und zu kaufen (Käufer).
           </p>
           <p>
-            (4) Mit der Registrierung auf zazarap.de akzeptiert der Nutzer diese AGB. Abweichende AGB des Nutzers werden nicht anerkannt, es sei denn, wir stimmen ihrer Geltung ausdrücklich schriftlich zu.
+            (3) Mit der Registrierung akzeptiert der Nutzer diese AGB. Abweichende AGB des Nutzers werden nicht 
+            anerkannt, es sei denn, wir stimmen ihrer Geltung ausdrücklich schriftlich zu.
           </p>
         </CardContent>
       </Card>
@@ -39,18 +30,21 @@ export default function AGB() {
         <CardHeader>
           <CardTitle>§ 2 Registrierung und Nutzerkonto</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Zur Nutzung der Plattform zazarap.de ist eine Registrierung erforderlich. Der Nutzer muss mindestens 18 Jahre alt sein.
+            (1) Zur Nutzung der Plattform ist eine Registrierung erforderlich. Der Nutzer muss mindestens 18 Jahre 
+            alt sein.
           </p>
           <p>
-            (2) Der Nutzer verpflichtet sich, bei der Registrierung auf zazarap.de wahrheitsgemäße Angaben zu machen und diese aktuell zu halten.
+            (2) Der Nutzer verpflichtet sich, wahrheitsgemäße Angaben zu machen und diese aktuell zu halten.
           </p>
           <p>
-            (3) Der Zugang zum Nutzerkonto auf zazarap.de ist durch ein Passwort geschützt. Der Nutzer ist verpflichtet, das Passwort geheim zu halten.
+            (3) Der Zugang zum Nutzerkonto ist durch ein Passwort geschützt. Der Nutzer ist verpflichtet, das 
+            Passwort geheim zu halten.
           </p>
           <p>
-            (4) Jeder Nutzer darf auf zazarap.de nur ein Nutzerkonto führen. Die Weitergabe des Nutzerkontos an Dritte ist untersagt.
+            (4) Jeder Nutzer darf nur ein Nutzerkonto führen. Die Weitergabe des Nutzerkontos an Dritte ist 
+            untersagt.
           </p>
         </CardContent>
       </Card>
@@ -59,15 +53,18 @@ export default function AGB() {
         <CardHeader>
           <CardTitle>§ 3 Vertragsschluss</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Die Einstellung eines Angebots auf zazarap.de durch den Verkäufer stellt kein bindendes Angebot dar, sondern eine Aufforderung zur Kontaktaufnahme.
+            (1) Die Einstellung eines Angebots durch den Verkäufer stellt noch kein bindendes Angebot dar, sondern 
+            eine Aufforderung an andere Nutzer, ein Angebot abzugeben.
           </p>
           <p>
-            (2) Der Kaufvertrag kommt ausschließlich zwischen Käufer und Verkäufer zustande. zazarap.de ist nicht Vertragspartei.
+            (2) Der Kaufvertrag kommt ausschließlich zwischen Käufer und Verkäufer zustande. Die Plattform ist nicht 
+            Vertragspartei.
           </p>
           <p>
-            (3) Durch die Einigung zwischen Käufer und Verkäufer über Preis und Übergabebedingungen kommt ein rechtsverbindlicher Kaufvertrag zustande.
+            (3) Durch die Kontaktaufnahme über die Plattform und die Einigung über Preis und Lieferbedingungen kommt 
+            ein rechtsverbindlicher Kaufvertrag zustande.
           </p>
         </CardContent>
       </Card>
@@ -76,17 +73,17 @@ export default function AGB() {
         <CardHeader>
           <CardTitle>§ 4 Pflichten des Verkäufers</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
-          <p>(1) Der Verkäufer verpflichtet sich insbesondere:</p>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>(1) Der Verkäufer verpflichtet sich:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>nur Waren anzubieten, die er rechtmäßig besitzt und verkaufen darf</li>
-            <li>wahrheitsgemäße und vollständige Produktbeschreibungen auf zazarap.de zu erstellen</li>
-            <li>den vereinbarten Preis einzuhalten</li>
-            <li>die Ware ordnungsgemäß zu verpacken und zu versenden</li>
-            <li>bei gewerblichem Verkauf alle gesetzlichen Pflichten zu erfüllen (z. B. Widerrufsrecht, Gewährleistung)</li>
+            <li>Nur Waren anzubieten, die er rechtmäßig besitzt und verkaufen darf</li>
+            <li>Wahrheitsgemäße und vollständige Produktbeschreibungen zu erstellen</li>
+            <li>Den vereinbarten Preis einzuhalten</li>
+            <li>Die Ware ordnungsgemäß zu verpacken und zu versenden</li>
+            <li>Bei gewerblichem Verkauf die gesetzlichen Pflichten zu erfüllen (z.B. Widerrufsrecht, Gewährleistung)</li>
           </ul>
           <p>
-            (2) Der Verkäufer haftet allein für die Richtigkeit seiner Angaben und die Einhaltung gesetzlicher Vorschriften.
+            (2) Der Verkäufer haftet für die Richtigkeit seiner Angaben und die Einhaltung gesetzlicher Vorschriften.
           </p>
         </CardContent>
       </Card>
@@ -95,87 +92,73 @@ export default function AGB() {
         <CardHeader>
           <CardTitle>§ 5 Pflichten des Käufers</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
-          <p>(1) Der Käufer verpflichtet sich insbesondere:</p>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>(1) Der Käufer verpflichtet sich:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>den vereinbarten Kaufpreis fristgerecht zu zahlen</li>
-            <li>eine korrekte Lieferadresse anzugeben</li>
-            <li>die Ware unverzüglich nach Erhalt zu prüfen</li>
+            <li>Den vereinbarten Kaufpreis fristgerecht zu zahlen</li>
+            <li>Eine korrekte Lieferadresse anzugeben</li>
+            <li>Die Ware unverzüglich nach Erhalt zu prüfen</li>
+            <li>Den Erhalt der Ware zu bestätigen</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 6 Zahlung und Zahlungsabwicklung</CardTitle>
+          <CardTitle>§ 6 Zahlung und Escrow-System</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Die Zahlung auf zazarap.de erfolgt über die von der Plattform bereitgestellten Zahlungsmethoden (z. B. PayPal).
+            (1) Die Zahlung erfolgt über die von der Plattform bereitgestellten Zahlungsmethoden.
           </p>
           <p>
-            (2) zazarap.de bietet kein eigenes Treuhand- oder Escrow-System an. Die Zahlungsabwicklung erfolgt ausschließlich über den jeweiligen Zahlungsdienstleister gemäß dessen Nutzungsbedingungen.
+            (2) Bei PayPal-Zahlungen wird ein Escrow-System verwendet: Der Kaufpreis wird bis zur Bestätigung des 
+            Warenempfangs durch den Käufer einbehalten und erst dann an den Verkäufer ausgezahlt.
           </p>
           <p>
-            (3) zazarap.de kann für erfolgreich vermittelte Verkäufe eine Provision in Höhe von 5 % des Verkaufspreises erheben.
+            (3) Die Plattform behält eine Provision von 5% des Verkaufspreises ein.
           </p>
           <p>
-            (4) Preise auf zazarap.de verstehen sich inklusive der gesetzlichen Mehrwertsteuer, soweit diese anfällt.
+            (4) Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, soweit diese anfällt.
           </p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 7 Widerrufsrecht</CardTitle>
+          <CardTitle>§ 7 Gewährleistung und Haftung</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Bei Käufen über zazarap.de von gewerblichen Verkäufern steht Verbrauchern grundsätzlich ein gesetzliches Widerrufsrecht zu.
+            (1) Die Plattform haftet nicht für die Qualität, Sicherheit oder Rechtmäßigkeit der angebotenen Waren.
           </p>
           <p>
-            (2) Bei Käufen über zazarap.de von privaten Verkäufern besteht kein Widerrufsrecht.
+            (2) Für Mängel an der Ware ist ausschließlich der Verkäufer verantwortlich. Es gelten die gesetzlichen 
+            Gewährleistungsrechte.
           </p>
           <p>
-            (3) Für die ordnungsgemäße Widerrufsbelehrung ist ausschließlich der jeweilige Verkäufer verantwortlich.
+            (3) Die Plattform haftet nur für Vorsatz und grobe Fahrlässigkeit, außer bei Verletzung wesentlicher 
+            Vertragspflichten.
           </p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 8 Gewährleistung und Haftung</CardTitle>
+          <CardTitle>§ 8 Streitbeilegung</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) zazarap.de haftet nicht für die Qualität, Sicherheit oder Rechtmäßigkeit der von Nutzern angebotenen Waren.
+            (1) Bei Streitigkeiten zwischen Käufer und Verkäufer können beide Parteien das interne Dispute-Center 
+            nutzen.
           </p>
           <p>
-            (2) Für Mängel an der Ware ist ausschließlich der Verkäufer verantwortlich. Es gelten die gesetzlichen Gewährleistungsrechte.
+            (2) Die Plattform kann bei der Vermittlung helfen, ist aber nicht verpflichtet, eine Lösung 
+            herbeizuführen.
           </p>
           <p>
-            (3) zazarap.de haftet nur für Vorsatz und grobe Fahrlässigkeit. Bei leichter Fahrlässigkeit haftet zazarap.de nur bei Verletzung wesentlicher Vertragspflichten (Kardinalpflichten) und beschränkt auf den vorhersehbaren Schaden.
-          </p>
-          <p>
-            (4) Die Haftung für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit sowie nach dem Produkthaftungsgesetz bleibt unberührt.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>§ 9 Streitbeilegung</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
-          <p>
-            (1) Bei Streitigkeiten zwischen Käufer und Verkäufer auf zazarap.de können beide Parteien das interne Dispute-Center nutzen.
-          </p>
-          <p>
-            (2) zazarap.de ist nicht verpflichtet, an Streitbeilegungsverfahren teilzunehmen.
-          </p>
-          <p>
-            (3) Plattform der EU zur Online-Streitbeilegung:{' '}
-            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+            (3) Link zur EU-Streitschlichtungsplattform: 
+            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" className="text-blue-600 hover:underline ml-1">
               https://ec.europa.eu/consumers/odr/
             </a>
           </p>
@@ -184,92 +167,100 @@ export default function AGB() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 10 Datenschutz</CardTitle>
+          <CardTitle>§ 9 Datenschutz</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700">
           <p>
-            Die Verarbeitung personenbezogener Daten auf zazarap.de erfolgt gemäß der Datenschutzerklärung und der Datenschutz-Grundverordnung (DSGVO).
+            Die Verarbeitung personenbezogener Daten erfolgt gemäß unserer Datenschutzerklärung und der 
+            Datenschutz-Grundverordnung (DSGVO).
           </p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 11 Verbotene Angebote</CardTitle>
+          <CardTitle>§ 10 Verbotene Angebote</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
-          <p>Auf zazarap.de sind insbesondere untersagt:</p>
-          <ul className="list-disc list-inside space-y-1 ml-4">
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>Die folgenden Angebote sind auf Zazarap strikt untersagt:</p>
+          <ol className="list-decimal list-inside space-y-1 ml-4">
             <li>Waffen, Munition und explosionsgefährliche Stoffe</li>
             <li>Betäubungsmittel gemäß BtMG</li>
-            <li>verschreibungspflichtige Arzneimittel</li>
-            <li>pornografische oder jugendgefährdende Inhalte</li>
-            <li>geschützte Tierarten</li>
-            <li>Markenfälschungen</li>
-            <li>verfassungswidrige Inhalte</li>
-            <li>gefährliche Chemikalien</li>
-            <li>illegale Dienstleistungen</li>
-            <li>Glücksspiel- und Wettangebote</li>
-            <li>sonstige gesetzlich verbotene Produkte</li>
-          </ul>
+            <li>Verschreibungspflichtige Arzneimittel und medizinische Geräte</li>
+            <li>Pornografische Inhalte und jugendgefährdende Medien</li>
+            <li>Geschützte Tierarten und artgeschützte Produkte</li>
+            <li>Markenfälschungen und urheberrechtswidrige Produkte</li>
+            <li>Verfassungswidrige Symbole und extremistische Inhalte</li>
+            <li>Gefährliche Chemikalien und radioaktive Stoffe</li>
+            <li>Illegale Dienstleistungen</li>
+            <li>Angebote aus dem Glücksspiel- und Wettbereich</li>
+            <li>Sonstige gesetzlich genehmigungspflichtige Produkte</li>
+          </ol>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 12 Moderation und Sanktionen</CardTitle>
+          <CardTitle>§ 11 Moderation und Sanktionen</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            zazarap.de setzt automatische sowie manuelle Prüfungen ein. Bei Verstößen können folgende Maßnahmen erfolgen:
+            Zazarap setzt automatische Filter sowie manuelle Kontrollen ein, um verbotene Inhalte frühzeitig zu erkennen und zu entfernen. Bei Verstößen wird der Nutzer wie folgt sanktioniert:
           </p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Verwarnung</li>
-            <li>vorübergehende Sperrung</li>
-            <li>dauerhafte Kontoschließung</li>
-            <li>Weitergabe an Behörden bei schweren Verstößen</li>
+            <li>Warnung</li>
+            <li>Vorübergehende Sperrung</li>
+            <li>Dauerhafte Kontoschließung</li>
+            <li>Weitergabe von Daten an Behörden (bei schweren Fällen)</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>§ 13 Sperrung und Kündigung</CardTitle>
+          <CardTitle>§ 12 Sperrung und Kündigung</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
-            (1) Nutzer können ihr Nutzerkonto auf zazarap.de jederzeit kündigen.
+            (1) Wir können Nutzerkonten bei Verstößen gegen diese AGB sperren oder löschen.
           </p>
           <p>
-            (2) zazarap.de kann Nutzerkonten bei Verstößen sperren oder löschen.
+            (2) Beide Parteien können das Nutzerkonto jederzeit ohne Angabe von Gründen kündigen.
           </p>
           <p>
-            (3) Bereits geschlossene Verträge zwischen Nutzern bleiben unberührt.
+            (3) Laufende Transaktionen müssen ordnungsgemäß abgeschlossen werden.
           </p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>§ 13 Haftungsausschluss</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>
+            Zazarap ist nicht Vertragspartner zwischen Käufer und Verkäufer. Der Plattformbetreiber haftet nur nach Maßgabe der gesetzlichen Vorschriften.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader>
           <CardTitle>§ 14 Schlussbestimmungen</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-700 space-y-3">
+        <CardContent className="text-sm text-slate-700 space-y-2">
           <p>
             (1) Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.
           </p>
           <p>
-            (2) Gerichtsstand ist – soweit gesetzlich zulässig – der Sitz des Betreibers.
+            (2) Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz der Plattform.
           </p>
           <p>
-            (3) Sollte eine Bestimmung dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
+            (3) Sollten einzelne Bestimmungen dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen 
+            Bestimmungen unberührt.
           </p>
         </CardContent>
       </Card>
-
-      <div className="mt-8 p-4 bg-slate-100 rounded-lg text-center">
-        <p className="font-semibold text-slate-800">zazarap.de</p>
-        <p className="text-sm text-slate-600">Der sichere und zuverlässige deutsche Marktplatz</p>
-      </div>
     </div>
   );
 }

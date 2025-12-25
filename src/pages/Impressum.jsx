@@ -2,223 +2,6 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from '../components/LanguageProvider';
 
-export default function Impressum() {
-  const { language } = useLanguage();
-
-  return (
-    <div className="py-8 max-w-4xl mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-6">Impressum</h1>
-      <p className="text-sm text-slate-600 mb-6">Angaben gemäß § 5 TMG und § 18 MStV</p>
-
-      <Card className="mb-6">
-        <CardContent className="pt-6 space-y-2">
-          <p className="font-bold">zazarap GmbH</p>
-          <p>Kronenstraße 10</p>
-          <p>75245 Neulingen</p>
-          <p>Deutschland</p>
-          
-          <div className="mt-4">
-            <p><strong>Vertretungsberechtigter Geschäftsführer:</strong></p>
-            <p>Giovanni Tornabene</p>
-          </div>
-
-          <div className="mt-4">
-            <p><strong>Kontakt:</strong></p>
-            <p>E-Mail: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
-          </div>
-
-          <div className="mt-4">
-            <p><strong>Registereintrag:</strong></p>
-            <p>Eintragung im Handelsregister</p>
-            <p>Registergericht: [Amtsgericht …]</p>
-            <p>Registernummer: [HRB …]</p>
-          </div>
-
-          <div className="mt-4">
-            <p><strong>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</strong></p>
-            <p>Giovanni Tornabene</p>
-            <p>Kronenstraße 10</p>
-            <p>75245 Neulingen</p>
-            <p>Deutschland</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <h2 className="text-2xl font-bold mb-4 mt-8">Datenschutzerklärung</h2>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>1. Datenschutz auf einen Blick</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-700">
-            Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Wir verarbeiten personenbezogene Daten ausschließlich gemäß der Datenschutz-Grundverordnung (DSGVO).
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>2. Verantwortlicher</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="font-semibold">zazarap GmbH</p>
-          <p>Kronenstraße 10</p>
-          <p>75245 Neulingen</p>
-          <p>Deutschland</p>
-          <p>E-Mail: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>3. Erhebung und Verarbeitung personenbezogener Daten</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h3 className="font-semibold mb-2">a) Beim Besuch der Website</h3>
-            <p className="text-sm text-slate-700">
-              Beim Aufruf von zazarap.de werden automatisch folgende Daten erhoben: IP-Adresse (gekürzt, soweit möglich), Datum und Uhrzeit des Zugriffs, Browsertyp, Betriebssystem, Referrer-URL.
-            </p>
-            <p className="text-sm text-slate-600 mt-2">
-              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-2">b) Registrierung und Nutzerkonto</h3>
-            <p className="text-sm text-slate-700">
-              Bei der Registrierung verarbeiten wir Name/Benutzername, E-Mail-Adresse, Passwort (verschlüsselt) sowie optionale Profildaten.
-            </p>
-            <p className="text-sm text-slate-600 mt-2">
-              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-2">c) Inserate und Kommunikation</h3>
-            <p className="text-sm text-slate-700">
-              Inhalte, die Nutzer im Rahmen von Inseraten oder Nachrichten einstellen, werden zur Vertragserfüllung verarbeitet.
-            </p>
-            <p className="text-sm text-slate-600 mt-2">
-              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>4. Cookies</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-slate-700 mb-3">Diese Website verwendet Cookies.</p>
-          
-          <div>
-            <p className="font-semibold text-sm mb-2">Technisch notwendige Cookies</p>
-            <p className="text-sm text-slate-700 mb-1">(z. B. Login, Spracheinstellung zazarap_language)</p>
-            <p className="text-sm text-slate-600">
-              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.
-            </p>
-          </div>
-
-          <p className="text-sm text-slate-700 mt-3">
-            Optionale Cookies (z. B. Statistik) werden nur nach Einwilligung gesetzt.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>5. Zahlungsabwicklung</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm text-slate-700">
-            Zahlungen erfolgen über externe Zahlungsdienstleister (z. B. PayPal, Stripe).
-          </p>
-          <p className="text-sm text-slate-700">
-            Die Zahlungsdaten werden direkt an den jeweiligen Zahlungsanbieter übermittelt.
-          </p>
-          <p className="text-sm text-slate-600 mt-2">
-            <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>6. Weitergabe von Daten</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-700">
-            Eine Weitergabe personenbezogener Daten erfolgt nur, wenn dies zur Vertragserfüllung erforderlich ist, gesetzlich vorgeschrieben ist oder eine Einwilligung vorliegt.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>7. Hosting</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm text-slate-700">Hosting-Anbieter: [Name des Hosters]</p>
-          <p className="text-sm text-slate-700">Serverstandort: EU / Deutschland</p>
-          <p className="text-sm text-slate-600 mt-2">
-            <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>8. Rechte der betroffenen Personen</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm text-slate-700">
-            Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gemäß Art. 15–21 DSGVO.
-          </p>
-          <p className="text-sm text-slate-700 mt-3">
-            Anfragen bitte an: <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a>
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>9. Beschwerderecht</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-700">
-            Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>10. Datensicherheit</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-700">
-            Wir setzen geeignete technische und organisatorische Sicherheitsmaßnahmen ein (z. B. SSL-Verschlüsselung).
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>11. Aktualität</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-700">
-            Diese Datenschutzerklärung ist aktuell gültig und wird bei Bedarf angepasst.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
 const impressumContent = {
   de: {
     title: "Impressum",
@@ -410,3 +193,90 @@ const impressumContent = {
     copyrightText: "Treści i dzieła stworzone przez operatorów witryny na tych stronach podlegają niemieckiemu prawu autorskiemu."
   }
 };
+
+export default function Impressum() {
+  const { language } = useLanguage();
+  const content = impressumContent[language] || impressumContent.de;
+
+  return (
+    <div className="py-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">{content.title}</h1>
+      <p className="text-sm text-slate-600 mb-6">{content.subtitle}</p>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{content.operator}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <p><strong>{content.companyName}:</strong> Zazarap GmbH</p>
+          <p><strong>{content.address}:</strong> Musterstraße 123<br/>
+          10115 Berlin<br/>
+          Deutschland</p>
+          <p><strong>{content.ceo}:</strong> Max Mustermann</p>
+          <p><strong>{content.court}:</strong> Amtsgericht Berlin-Charlottenburg</p>
+          <p><strong>{content.regNumber}:</strong> HRB 123456</p>
+          <p><strong>{content.vatId}:</strong> DE123456789</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{content.contact}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <p><strong>{content.phone}:</strong> +49 (0) 30 12345678</p>
+          <p><strong>{content.email}:</strong> <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
+          <p><strong>{content.website}:</strong> www.zazarap.de</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{content.responsible}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{content.responsibleNote}:<br/>
+          Max Mustermann<br/>
+          Musterstraße 123, 10115 Berlin</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{content.dispute}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-3">
+            {content.disputeText}
+            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline ml-1">
+              https://ec.europa.eu/consumers/odr/
+            </a>
+          </p>
+          <p>{content.disputeNote}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{content.disclaimer}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-semibold mb-2">{content.contentLiability}</h3>
+            <p className="text-sm text-slate-700">{content.contentLiabilityText}</p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">{content.linkLiability}</h3>
+            <p className="text-sm text-slate-700">{content.linkLiabilityText}</p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">{content.copyright}</h3>
+            <p className="text-sm text-slate-700">{content.copyrightText}</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
