@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
+import PriceSuggestion from '../components/seller/PriceSuggestion';
+import DescriptionGenerator from '../components/seller/DescriptionGenerator';
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -149,22 +151,42 @@ export default function NewListing() {
         />
 
         <label className="zaza-form-label">{t('description')}</label>
+
+        <DescriptionGenerator
+          title={formData.title}
+          category={formData.category}
+          condition="gebraucht"
+          price={formData.price}
+          images={imagePreviews}
+          onDescriptionSelect={(desc) => setFormData({ ...formData, description: desc })}
+        />
+
         <textarea
           name="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="zaza-input"
+          className="zaza-input mt-4"
           rows="5"
           placeholder=""
         />
 
         <label className="zaza-form-label">{t('price')} (€)</label>
+
+        <PriceSuggestion
+          title={formData.title}
+          description={formData.description}
+          category={formData.category}
+          condition="gebraucht"
+          images={imagePreviews}
+          onPriceSelect={(price) => setFormData({ ...formData, price: price.toString() })}
+        />
+
         <input
           name="price"
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          className="zaza-input"
+          className="zaza-input mt-4"
           placeholder="0.00"
         />
 
