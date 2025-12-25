@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
         const orderId = resource.supplementary_data?.related_ids?.order_id;
         const captureId = resource.id;
         const amount = parseFloat(resource.amount.value);
+        const currency = resource.amount?.currency_code || 'EUR';
 
         // Purchases flow (existing)
         const payments = await base44.asServiceRole.entities.Payment.filter({ paypalOrderId: orderId });

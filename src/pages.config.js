@@ -45,6 +45,7 @@ import TermsOfService from './pages/TermsOfService';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
+import Transactions from './pages/Transactions';
 import __Layout from './Layout.jsx';
 
 
@@ -96,6 +97,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
+    "Transactions": Transactions,
 }
 
 export const pagesConfig = {
