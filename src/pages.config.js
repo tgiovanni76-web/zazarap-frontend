@@ -51,6 +51,7 @@ import Werbung from './pages/Werbung';
 import WerbungV2 from './pages/WerbungV2';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import I18nDebug from './pages/I18nDebug';
+import NewListingV2 from './pages/NewListingV2';
 import __Layout from './Layout.jsx';
 
 
@@ -108,6 +109,7 @@ export const PAGES = {
     "WerbungV2": WerbungV2,
     "Widerrufsrecht": Widerrufsrecht,
     "I18nDebug": I18nDebug,
+    "NewListingV2": NewListingV2,
 }
 
 export const pagesConfig = {
