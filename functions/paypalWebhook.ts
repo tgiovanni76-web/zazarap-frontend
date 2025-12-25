@@ -107,6 +107,29 @@ Deno.serve(async (req) => {
             linkUrl: `/messages?chatId=${payment.chatId}`,
             relatedId: payment.chatId
           });
+
+          // Audit: Transaction + SystemLog (escrow purchase)
+          await base44.asServiceRole.entities.Transaction.create({
+            userId: payment.buyerId,
+            kind: 'purchase',
+            provider: 'paypal',
+            amount,
+            currency,
+            status: 'held_in_escrow',
+            externalOrderId: orderId,
+            externalTransactionId: captureId,
+            description: `Escrow payment for chat ${payment.chatId}`,
+            relatedEntity: 'Chat',
+            relatedId: payment.chatId,
+            metadata: JSON.stringify({ eventType, resource })
+          });
+          await base44.asServiceRole.entities.SystemLog.create({
+            level: 'info',
+            message: 'PayPal payment captured (escrow)',
+            details: JSON.stringify({ orderId, captureId, amount, currency }),
+            context: JSON.stringify({ chatId: payment.chatId, buyerId: payment.buyerId }),
+            source: 'backend'
+          });
         }
 
         // Promotions flow (new)
@@ -133,6 +156,29 @@ Deno.serve(async (req) => {
               topAdUntil: end.toISOString()
             });
           }
+
+          // Audit: Transaction + SystemLog (promotion)
+          await base44.asServiceRole.entities.Transaction.create({
+            userId: promo.created_by,
+            kind: 'promotion',
+            provider: 'paypal',
+            amount,
+            currency,
+            status: 'paid',
+            externalOrderId: orderId,
+            externalTransactionId: captureId,
+            description: `Promotion ${promo.type} (${promo.billing} x ${promo.quantity})`,
+            relatedEntity: 'Listing',
+            relatedId: promo.listingId,
+            metadata: JSON.stringify({ eventType, resource })
+          });
+          await base44.asServiceRole.entities.SystemLog.create({
+            level: 'info',
+            message: 'PayPal payment captured (promotion)',
+            details: JSON.stringify({ orderId, captureId, amount, currency }),
+            context: JSON.stringify({ listingId: promo.listingId, userId: promo.created_by, promoId: promo.id }),
+            source: 'backend'
+          });
         }
         break;
       }
@@ -160,6 +206,29 @@ Deno.serve(async (req) => {
             message: 'Il pagamento non è andato a buon fine. Riprova o usa un altro metodo.',
             linkUrl: `/messages?chatId=${payment.chatId}`,
             relatedId: payment.chatId
+          });
+
+          // Audit: failed Transaction + SystemLog
+          await base44.asServiceRole.entities.Transaction.create({
+            userId: payment.buyerId,
+            kind: 'purchase',
+            provider: 'paypal',
+            amount: parseFloat(resource.amount?.value || '0'),
+            currency: resource.amount?.currency_code || 'EUR',
+            status: 'failed',
+            externalOrderId: orderId,
+            externalTransactionId: resource.id,
+            description: `Payment failed for chat ${payment.chatId}`,
+            relatedEntity: 'Chat',
+            relatedId: payment.chatId,
+            metadata: JSON.stringify({ eventType, resource })
+          });
+          await base44.asServiceRole.entities.SystemLog.create({
+            level: 'warn',
+            message: 'PayPal payment failed',
+            details: JSON.stringify({ orderId, resource }),
+            context: JSON.stringify({ chatId: payment.chatId, buyerId: payment.buyerId }),
+            source: 'backend'
           });
         }
         break;
