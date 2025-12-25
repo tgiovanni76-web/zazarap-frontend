@@ -18,6 +18,9 @@ Deno.serve(async (req) => {
     if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
     const base44 = createClientFromRequest(req);
 
+    const incomingCid = req.headers.get('x-correlation-id');
+    const correlationId = incomingCid && incomingCid.length <= 128 ? incomingCid : (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+
     const rl = await checkRateLimit(req, 'createAdvertisingAd', { limit: 10, windowSec: 60 });
     if (!rl.allowed) {
       return new Response(JSON.stringify({ error: 'Too Many Requests', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
@@ -49,6 +52,7 @@ Deno.serve(async (req) => {
     }
 
     const ad = await base44.asServiceRole.entities.AdvertisingAd.create({
+      correlationId,
       title: data.title,
       targetUrl: data.targetUrl,
       placement: data.placement,
@@ -61,7 +65,16 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.entities.SystemLog.create({
       level: 'info', message: 'AD_CREATED', details: ad.id,
-      context: JSON.stringify({ user: user.email, placement: data.placement }), path: '/functions/createAdvertisingAd', source: 'backend'
+      context: JSON.stringify({ user: user.email, placement: data.placement, correlationId }), path: '/functions/createAdvertisingAd', source: 'backend'
+    }).catch(() => {});
+
+    await base44.asServiceRole.entities.ChangeLog.create({
+      entityName: 'AdvertisingAd',
+      entityId: ad.id,
+      action: 'create',
+      changedBy: user.email,
+      beforeSnapshot: null,
+      afterSnapshot: JSON.stringify(ad)
     }).catch(() => {});
 
     return new Response(JSON.stringify({ ad }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));

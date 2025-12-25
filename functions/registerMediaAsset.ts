@@ -19,6 +19,9 @@ Deno.serve(async (req) => {
     if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
     const base44 = createClientFromRequest(req);
 
+    const incomingCid = req.headers.get('x-correlation-id');
+    const correlationId = incomingCid && incomingCid.length <= 128 ? incomingCid : (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+
     const rl = await checkRateLimit(req, 'registerMediaAsset', { limit: 20, windowSec: 60 });
     if (!rl.allowed) {
       return new Response(JSON.stringify({ error: 'Too Many Requests', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
@@ -60,7 +63,9 @@ Deno.serve(async (req) => {
 
     const kind = isImage ? 'image' : 'video';
 
+    // TODO: hook in AV scanner (sets scanStatus to 'clean' or 'infected')
     const asset = await base44.asServiceRole.entities.MediaAsset.create({
+      correlationId,
       userId: user.email,
       fileUri,
       originalName,
@@ -72,7 +77,7 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.entities.SystemLog.create({
       level: 'info', message: 'MEDIA_ASSET_REGISTERED', details: `${kind} ${size} bytes`,
-      context: JSON.stringify({ user: user.email }), path: '/functions/registerMediaAsset', source: 'backend'
+      context: JSON.stringify({ user: user.email, correlationId }), path: '/functions/registerMediaAsset', source: 'backend'
     }).catch(() => {});
 
     return new Response(JSON.stringify({ asset }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));

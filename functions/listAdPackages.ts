@@ -8,6 +8,8 @@ Deno.serve(async (req) => {
       return new Response('Method Not Allowed', { status: 405 });
     }
     const base44 = createClientFromRequest(req);
+    const incomingCid = req.headers.get('x-correlation-id');
+    const correlationId = incomingCid && incomingCid.length <= 128 ? incomingCid : (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
     const user = await base44.auth.me().catch(() => null);
 
     const rl = await checkRateLimit(req, 'listAdPackages', { limit: 60, windowSec: 60 });
@@ -30,7 +32,7 @@ Deno.serve(async (req) => {
     // Log access (no sensitive data)
     await base44.asServiceRole.entities.SystemLog.create({
       level: 'info', message: 'LIST_AD_PACKAGES', details: 'Packages fetched',
-      context: JSON.stringify({ user: user?.email || 'anon' }), path: '/functions/listAdPackages', source: 'backend'
+      context: JSON.stringify({ user: user?.email || 'anon', correlationId }), path: '/functions/listAdPackages', source: 'backend'
     }).catch(() => {});
 
     return new Response(JSON.stringify({ packages }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));

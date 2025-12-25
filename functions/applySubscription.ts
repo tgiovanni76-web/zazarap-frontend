@@ -10,6 +10,9 @@ Deno.serve(async (req) => {
     if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
     const base44 = createClientFromRequest(req);
 
+    const incomingCid = req.headers.get('x-correlation-id');
+    const correlationId = incomingCid && incomingCid.length <= 128 ? incomingCid : (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+
     const rl = await checkRateLimit(req, 'applySubscription', { limit: 6, windowSec: 60 });
     if (!rl.allowed) {
       return new Response(JSON.stringify({ error: 'Too Many Requests', retryAfter: rl.retryAfter }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
@@ -25,6 +28,13 @@ Deno.serve(async (req) => {
     const plan = parsed.data.plan;
     const enableAds = parsed.data.enableAds;
 
+    const beforeFlags = {
+      subscriptionActive: !!user.subscriptionActive,
+      subscriptionPlan: user.subscriptionPlan || null,
+      canUploadMedia: !!user.canUploadMedia,
+      canCreateAds: !!user.canCreateAds
+    };
+
     const updated = await base44.auth.updateMe({
       subscriptionActive: true,
       subscriptionPlan: plan,
@@ -34,7 +44,21 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.entities.SystemLog.create({
       level: 'info', message: 'SUBSCRIPTION_APPLIED', details: plan,
-      context: JSON.stringify({ user: user.email }), path: '/functions/applySubscription', source: 'backend'
+      context: JSON.stringify({ user: user.email, correlationId }), path: '/functions/applySubscription', source: 'backend'
+    }).catch(() => {});
+
+    await base44.asServiceRole.entities.ChangeLog.create({
+      entityName: 'User',
+      entityId: user.id,
+      action: 'update',
+      changedBy: user.email,
+      beforeSnapshot: JSON.stringify(beforeFlags),
+      afterSnapshot: JSON.stringify({
+        subscriptionActive: true,
+        subscriptionPlan: plan,
+        canUploadMedia: true,
+        canCreateAds: !!enableAds
+      })
     }).catch(() => {});
 
     return new Response(JSON.stringify({ user: updated }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
