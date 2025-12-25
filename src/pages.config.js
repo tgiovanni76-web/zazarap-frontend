@@ -50,6 +50,7 @@ import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import QuickPromote from './pages/QuickPromote';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +107,7 @@ export const PAGES = {
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
     "QuickPromote": QuickPromote,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {

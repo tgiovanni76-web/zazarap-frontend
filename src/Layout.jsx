@@ -690,6 +690,9 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <ErrorBoundary>
+                            <Link to={createPageUrl('Dashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Dashboard" aria-label="Dashboard">
+                              <LayoutDashboard className="h-5 w-5" aria-hidden="true" focusable="false" />
+                            </Link>
                             <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
                               <Megaphone className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
