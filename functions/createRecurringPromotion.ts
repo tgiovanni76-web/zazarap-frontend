@@ -3,6 +3,7 @@ import { z } from 'npm:zod@3.24.2';
 import Stripe from 'npm:stripe@17.5.0';
 import { checkRateLimit } from './_lib/rateLimit.js';
 import { withSecurityHeaders } from './_lib/securityHeaders.js';
+import { checkFallbackRateLimit, shouldUseFallback, FALLBACK_LIMITS, createRateLimitResponse, createRateLimitHeaders } from './_lib/fallbackRateLimit.js';
 
 const schema = z.object({
   listingId: z.string(),
@@ -17,13 +18,26 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const correlationId = req.headers.get('x-correlation-id') || crypto.randomUUID();
 
+    const user = await base44.auth.me().catch(() => null);
+    if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), withSecurityHeaders({ status: 401, headers: { 'Content-Type': 'application/json' } }));
+
+    // Primary rate limiting (database-backed)
     const rl = await checkRateLimit(req, 'createRecurringPromotion', { limit: 10, windowSec: 60 });
     if (!rl.allowed) {
       return new Response(JSON.stringify({ error: 'Too Many Requests' }), withSecurityHeaders({ status: 429, headers: { 'Content-Type': 'application/json' } }));
     }
 
-    const user = await base44.auth.me().catch(() => null);
-    if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), withSecurityHeaders({ status: 401, headers: { 'Content-Type': 'application/json' } }));
+    // Fallback rate limiting (only if Cloudflare is not active)
+    if (shouldUseFallback(req)) {
+      const fallbackRL = checkFallbackRateLimit(req, 'createRecurringPromotion', {
+        ...FALLBACK_LIMITS.checkout,
+        userId: user.id || user.email
+      });
+      
+      if (!fallbackRL.allowed) {
+        return createRateLimitResponse(fallbackRL);
+      }
+    }
 
     const body = await req.json().catch(() => ({}));
     const parsed = schema.safeParse(body);
@@ -116,12 +130,22 @@ Deno.serve(async (req) => {
 
     const clientSecret = subscription.latest_invoice.payment_intent.client_secret;
 
+    // Add rate limit observability headers
+    const headers = { 'Content-Type': 'application/json' };
+    if (shouldUseFallback(req)) {
+      const fallbackRL = checkFallbackRateLimit(req, 'createRecurringPromotion', {
+        ...FALLBACK_LIMITS.checkout,
+        userId: user.id || user.email
+      });
+      Object.assign(headers, createRateLimitHeaders(fallbackRL));
+    }
+
     return new Response(JSON.stringify({
       subscriptionId: subscription.id,
       clientSecret,
       amount,
       frequency
-    }), withSecurityHeaders({ status: 200, headers: { 'Content-Type': 'application/json' } }));
+    }), withSecurityHeaders({ status: 200, headers }));
 
   } catch (error) {
     console.error('createRecurringPromotion error:', error);
