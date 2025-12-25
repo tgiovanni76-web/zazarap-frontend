@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import QuickPromoteButton from '../components/promotions/QuickPromoteButton';
+import SalesTable from '../components/sales/SalesTable';
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
@@ -394,10 +395,10 @@ export default function Dashboard() {
         {/* Sales Tab */}
         <TabsContent value="sales" className="space-y-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold">Verkäufe & Verhandlungen</h3>
+            <h3 className="text-xl font-semibold">Verkäufe & Transaktionen</h3>
             <Link to={createPageUrl('MySales')}>
               <Button variant="outline">
-                Alle anzeigen
+                Erweiterte Ansicht
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
@@ -411,47 +412,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-3">
-              {chats.slice(0, 5).map(chat => {
-                const statusColors = {
-                  in_attesa: 'bg-yellow-100 text-yellow-800',
-                  accettata: 'bg-green-100 text-green-800',
-                  completata: 'bg-blue-100 text-blue-800',
-                  rifiutata: 'bg-red-100 text-red-800'
-                };
-                
-                return (
-                  <Card key={chat.id}>
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {chat.listingImage && (
-                            <img src={chat.listingImage} alt="" className="w-12 h-12 object-cover rounded" />
-                          )}
-                          <div>
-                            <div className="font-medium">{chat.listingTitle}</div>
-                            <div className="text-sm text-slate-600">
-                              Käufer: {chat.buyerId}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge className={statusColors[chat.status]}>
-                            {chat.status === 'completata' && <CheckCircle className="w-3 h-3 mr-1" />}
-                            {chat.status}
-                          </Badge>
-                          {chat.lastPrice && (
-                            <div className="text-lg font-bold text-green-600 mt-1">
-                              €{chat.lastPrice}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+            <SalesTable chats={chats} />
           )}
         </TabsContent>
       </Tabs>
