@@ -53,6 +53,7 @@ import QuickPromote from './pages/QuickPromote';
 import Dashboard from './pages/Dashboard';
 import SellerProfile from './pages/SellerProfile';
 import EditSellerProfile from './pages/EditSellerProfile';
+import Billing from './pages/Billing';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "SellerProfile": SellerProfile,
     "EditSellerProfile": EditSellerProfile,
+    "Billing": Billing,
 }
 
 export const pagesConfig = {
