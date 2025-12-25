@@ -47,6 +47,7 @@ import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import Transactions from './pages/Transactions';
 import AdminAnalytics from './pages/AdminAnalytics';
+import MySubscriptions from './pages/MySubscriptions';
 import __Layout from './Layout.jsx';
 
 
@@ -100,6 +101,7 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "Transactions": Transactions,
     "AdminAnalytics": AdminAnalytics,
+    "MySubscriptions": MySubscriptions,
 }
 
 export const pagesConfig = {
