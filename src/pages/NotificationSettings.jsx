@@ -3,10 +3,12 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bell, Mail, Heart, MessageCircle, RefreshCw } from 'lucide-react';
+import { Bell, Mail, Heart, MessageCircle, RefreshCw, ShoppingBag, Truck, TrendingDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function NotificationSettings() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -24,7 +26,10 @@ export default function NotificationSettings() {
           newOfferOnFavorite: true,
           messageReplies: true,
           statusUpdates: true,
-          emailNotifications: true
+          emailNotifications: true,
+          purchaseNotifications: true,
+          shippingNotifications: true,
+          priceDropNotifications: true,
         });
         return [newPref];
       }
@@ -38,7 +43,7 @@ export default function NotificationSettings() {
       base44.entities.NotificationPreference.update(preferences[0].id, { [field]: value }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notificationPreferences'] });
-      toast.success('Preferenze aggiornate');
+      toast.success(t('notificationSettings.updated'));
     },
   });
 
@@ -55,29 +60,50 @@ export default function NotificationSettings() {
   const settings = [
     {
       icon: Heart,
-      title: 'Offerte su Preferiti',
-      description: 'Ricevi notifiche quando qualcuno fa un\'offerta su annunci che hai salvato tra i preferiti',
+      title: t('notificationSettings.favorite.title'),
+      description: t('notificationSettings.favorite.desc'),
       field: 'newOfferOnFavorite',
       color: 'text-red-600'
     },
     {
       icon: MessageCircle,
-      title: 'Risposte ai Messaggi',
-      description: 'Ricevi notifiche quando qualcuno risponde ai tuoi messaggi',
+      title: t('notificationSettings.messages.title'),
+      description: t('notificationSettings.messages.desc'),
       field: 'messageReplies',
       color: 'text-blue-600'
     },
     {
       icon: RefreshCw,
-      title: 'Aggiornamenti Trattative',
-      description: 'Ricevi notifiche per cambiamenti di stato nelle tue trattative attive',
+      title: t('notificationSettings.statusUpdates.title'),
+      description: t('notificationSettings.statusUpdates.desc'),
       field: 'statusUpdates',
       color: 'text-green-600'
     },
     {
+      icon: ShoppingBag,
+      title: t('notificationSettings.purchases.title'),
+      description: t('notificationSettings.purchases.desc'),
+      field: 'purchaseNotifications',
+      color: 'text-indigo-600'
+    },
+    {
+      icon: Truck,
+      title: t('notificationSettings.shipping.title'),
+      description: t('notificationSettings.shipping.desc'),
+      field: 'shippingNotifications',
+      color: 'text-orange-600'
+    },
+    {
+      icon: TrendingDown,
+      title: t('notificationSettings.priceDrops.title'),
+      description: t('notificationSettings.priceDrops.desc'),
+      field: 'priceDropNotifications',
+      color: 'text-pink-600'
+    },
+    {
       icon: Mail,
-      title: 'Notifiche Email',
-      description: 'Ricevi una copia delle notifiche anche via email',
+      title: t('notificationSettings.email.title'),
+      description: t('notificationSettings.email.desc'),
       field: 'emailNotifications',
       color: 'text-purple-600'
     }
@@ -87,13 +113,13 @@ export default function NotificationSettings() {
     <div className="py-8 max-w-3xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <Bell className="h-8 w-8 text-indigo-600" />
-        <h2 className="text-3xl font-bold">Preferenze Notifiche</h2>
+        <h2 className="text-3xl font-bold">{t('notificationSettings.title')}</h2>
       </div>
 
       <Card className="mb-6 bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
           <p className="text-sm text-slate-700">
-            Personalizza quali notifiche vuoi ricevere per rimanere aggiornato sulle tue attività nel marketplace.
+            {t('notificationSettings.description')}
           </p>
         </CardContent>
       </Card>
@@ -142,11 +168,11 @@ export default function NotificationSettings() {
           <div className="flex items-start gap-3">
             <Bell className="h-5 w-5 text-slate-600 mt-0.5" />
             <div>
-              <h4 className="font-semibold mb-2">Come funzionano le notifiche?</h4>
+              <h4 className="font-semibold mb-2">{t('notificationSettings.howItWorks.title')}</h4>
               <ul className="text-sm text-slate-600 space-y-1">
-                <li>• Le notifiche in-app appaiono nell'icona campanella in alto</li>
-                <li>• Le notifiche email vengono inviate solo se abilitate</li>
-                <li>• Puoi modificare queste preferenze in qualsiasi momento</li>
+                <li>• {t('notificationSettings.howItWorks.inApp')}</li>
+                <li>• {t('notificationSettings.howItWorks.email')}</li>
+                <li>• {t('notificationSettings.howItWorks.change')}</li>
               </ul>
             </div>
           </div>
