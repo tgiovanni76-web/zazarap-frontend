@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function RequestAdModal({ open, onClose, packageName, price, onSubmit }) {
+export default function RequestAdModal({ open, onClose, packageId, packages, onSubmit }) {
   const { t } = useLanguage();
   const [message, setMessage] = React.useState("");
 
@@ -17,7 +17,7 @@ export default function RequestAdModal({ open, onClose, packageName, price, onSu
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {t('ads.modal.request.title', { pkg: packageName, price: typeof price === 'number' ? `€${price.toFixed(2)}` : price })}
+            {(packages && packageId && packages[packageId]) ? `${packages[packageId].name} • ${packages[packageId].displayPrice}` : t('ads.modal.request.title')}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">

@@ -28,7 +28,7 @@ export default function Werbung() {
   });
 
   const [selectModal, setSelectModal] = React.useState({ open: false, packageName: '', days: 0, price: 0 });
-  const [requestModal, setRequestModal] = React.useState({ open: false, packageName: '', price: '' });
+  const [requestModal, setRequestModal] = React.useState({ open: false, packageId: '' });
 
   const updateListingMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Listing.update(id, data),
@@ -65,7 +65,7 @@ export default function Werbung() {
 
   const openRequest = async (pkg) => {
     if (!(await ensureAuth())) return;
-    setRequestModal({ open: true, ...pkg });
+    setRequestModal({ open: true, packageId: pkg.packageId });
   };
 
   const handleSendRequest = async ({ message }) => {
