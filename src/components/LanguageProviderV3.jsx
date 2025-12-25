@@ -130,7 +130,7 @@ export function useLanguage() {
   return context;
 }
 
-export function LanguageProvider({ children }) {
+export function LanguageProviderV3({ children }) {
   const [language, setLanguage] = useState(() => {
     // Priority: URL > Cookie > Browser > Default
     const urlLang = detectLangFromUrl();
@@ -175,3 +175,6 @@ export function LanguageProvider({ children }) {
     </LanguageContext.Provider>
   );
 }
+
+// Export as default for compatibility
+export const LanguageProvider = LanguageProviderV3;
