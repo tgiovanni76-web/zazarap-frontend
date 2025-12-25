@@ -55,12 +55,19 @@ export default function NewListing() {
         setIsUploading(false);
       }
 
-      return base44.entities.Listing.create({
+      const listing = await base44.entities.Listing.create({
         ...data,
         images: imageUrls,
         status: 'active',
         moderationStatus: 'pending'
       });
+
+      // Trigger AI moderation in background
+      base44.functions.invoke('moderateListing', { listingId: listing.id }).catch(err => {
+        console.error('Moderation error:', err);
+      });
+
+      return listing;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
