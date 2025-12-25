@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TrendingUp, Calendar, Euro, Eye, MessageSquare, Star, RefreshCw, AlertCircle, Plus } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
+import { TrendingUp, Calendar, Euro, Eye, MessageSquare, Star, RefreshCw, AlertCircle, Plus, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
 import CustomPackageBuilder from '../components/promotions/CustomPackageBuilder';
 
@@ -32,6 +33,23 @@ function PromotionCard({ promo, onExtend }) {
         toast.success(`Verlängerung vorbereitet: ${data.extensionDays} Tage für €${data.amount.toFixed(2)}`);
         setPaymentUrl(data.clientSecret);
       }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
+  const toggleAutoRenewalMutation = useMutation({
+    mutationFn: async ({ promotionId, autoRenew }) => {
+      const res = await base44.functions.invoke('toggleAutoRenewal', {
+        promotionId,
+        autoRenew
+      });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries(['promotionAnalytics']);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -92,6 +110,32 @@ function PromotionCard({ promo, onExtend }) {
             </div>
           </div>
         </div>
+
+        {/* Auto-Renewal Toggle */}
+        {isActive && (
+          <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg mb-4">
+            <div className="flex items-center gap-2">
+              <RotateCw className="w-4 h-4 text-blue-600" />
+              <div>
+                <div className="font-medium text-sm">Automatischer Rinnovo</div>
+                <div className="text-xs text-slate-600">
+                  {promo.autoRenew 
+                    ? 'Si rinnova automaticamente alla scadenza'
+                    : 'Disattivato - scadrà senza rinnovo'}
+                </div>
+              </div>
+            </div>
+            <Switch
+              checked={promo.autoRenew || false}
+              onCheckedChange={(checked) => {
+                toggleAutoRenewalMutation.mutate({
+                  promotionId: promo.promotionId,
+                  autoRenew: checked
+                });
+              }}
+            />
+          </div>
+        )}
 
         {/* Metrics */}
         <div className="grid grid-cols-4 gap-3 p-3 bg-slate-50 rounded-lg mb-4">
