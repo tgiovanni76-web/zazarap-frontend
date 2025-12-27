@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
+import ListingOptimizationAssistant from '../components/seller/ListingOptimizationAssistant';
 
 export default function EditListing() {
   const { t } = useLanguage();
@@ -183,7 +184,14 @@ export default function EditListing() {
         <h2 className="text-3xl font-bold">{t('editListing')}</h2>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <ListingOptimizationAssistant 
+        listing={listing} 
+        onApplySuggestions={(updates) => {
+          setFormData(prev => ({ ...prev, ...updates }));
+        }}
+      />
+
+      <form onSubmit={handleSubmit} className="mt-6">
         <label className="zaza-form-label">{t('title')}</label>
         <input
           value={formData.title}
