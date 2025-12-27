@@ -7,6 +7,8 @@ import PerformanceChart from '../components/seller/PerformanceChart';
 import EventsCalendar from '../components/seller/EventsCalendar';
 import ListingsTable from '../components/seller/ListingsTable';
 import OffersList from '../components/seller/OffersList';
+import AIImprovementSuggestions from '../components/seller/AIImprovementSuggestions';
+import PromotionsManager from '../components/seller/PromotionsManager';
 
 export default function SellerDashboard() {
   const queryClient = useQueryClient();
@@ -47,11 +49,20 @@ export default function SellerDashboard() {
 
       <PerformanceChart data={data.sales?.monthly || []} />
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2">
+          <AIImprovementSuggestions listings={data.listings} />
+        </div>
+        <div>
+          <PromotionsManager listings={data.listings} />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <ListingsTable listings={data.listings} onUnfeature={(id) => unfeatureMutation.mutate(id)} />
         </div>
-        <div>
+        <div className="space-y-6">
           <EventsCalendar events={data.events} />
           <OffersList offers={data.offers} />
         </div>
