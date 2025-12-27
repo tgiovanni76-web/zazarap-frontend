@@ -50,6 +50,7 @@ import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import AdminModeration from './pages/AdminModeration';
 import ListingPerformance from './pages/ListingPerformance';
+import NotificationCenter from './pages/NotificationCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +107,7 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "AdminModeration": AdminModeration,
     "ListingPerformance": ListingPerformance,
+    "NotificationCenter": NotificationCenter,
 }
 
 export const pagesConfig = {
