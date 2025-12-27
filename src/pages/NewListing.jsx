@@ -14,6 +14,8 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 import PriceSuggestion from '../components/seller/PriceSuggestion';
 import DescriptionGenerator from '../components/seller/DescriptionGenerator';
+import TitleGenerator from '../components/seller/TitleGenerator';
+import ImageAnalyzer from '../components/seller/ImageAnalyzer';
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -142,11 +144,19 @@ export default function NewListing() {
       <h2 className="text-3xl font-bold mb-6">{t('publish')}</h2>
       <form onSubmit={handleSubmit}>
         <label className="zaza-form-label">{t('title')}</label>
+
+        <TitleGenerator
+          category={formData.category}
+          description={formData.description}
+          price={formData.price}
+          onTitleSelect={(title) => setFormData({ ...formData, title })}
+        />
+
         <input
           name="title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="zaza-input"
+          className="zaza-input mt-4"
           placeholder=""
         />
 
@@ -305,11 +315,15 @@ export default function NewListing() {
           </label>
         </div>
         {imagePreviews.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            {imagePreviews.map((preview, idx) => (
-              <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              {imagePreviews.map((preview, idx) => (
+                <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
+              ))}
+            </div>
+
+            <ImageAnalyzer images={imagePreviews} />
+          </>
         )}
 
         <div className="border-t pt-6 mt-6 mb-4">
