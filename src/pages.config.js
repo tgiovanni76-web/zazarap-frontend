@@ -55,6 +55,7 @@ import Cart from './pages/Cart';
 import MyOrders from './pages/MyOrders';
 import LoyaltyProgram from './pages/LoyaltyProgram';
 import RejectedListings from './pages/RejectedListings';
+import SellerHub from './pages/SellerHub';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +117,7 @@ export const PAGES = {
     "MyOrders": MyOrders,
     "LoyaltyProgram": LoyaltyProgram,
     "RejectedListings": RejectedListings,
+    "SellerHub": SellerHub,
 }
 
 export const pagesConfig = {
