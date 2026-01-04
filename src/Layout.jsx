@@ -793,6 +793,7 @@ function LayoutInner({ children, currentPageName }) {
                           <li><Link to={createPageUrl('Blog')} className="text-white hover:text-slate-300">Blog</Link></li>
                           <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">{t('contactUs')}</Link></li>
                           <li><Link to={createPageUrl('Transactions')} className="text-white hover:text-slate-300">Transaktionen</Link></li>
+                          <li><Link to={createPageUrl('ReferralDashboard')} className="text-yellow-400 hover:text-yellow-300">🎁 Referral</Link></li>
                           <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">{t('completeProfile')}</Link></li>
                           </ul>
                           <p className="mt-3">
