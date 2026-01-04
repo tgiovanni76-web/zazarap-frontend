@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Loader2, Check } from 'lucide-react';
+import { ShoppingCart, Loader2, Check, Heart } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-export default function CartButton({ listing, className = "" }) {
+export default function CartButton({ listing, className = "", showSaveOption = true }) {
   const [justAdded, setJustAdded] = useState(false);
   const queryClient = useQueryClient();
 
@@ -88,24 +88,52 @@ export default function CartButton({ listing, className = "" }) {
     }
   });
 
+  const saveForLaterMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.SavedItem.create({
+        userId: user.email,
+        listingId: listing.id,
+        listingTitle: listing.title,
+        listingImage: listing.images?.[0] || '',
+        price: listing.offerPrice || listing.price
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['savedItems'] });
+      toast.success('Articolo salvato per dopo');
+    }
+  });
+
   if (!user) return null;
   if (listing.created_by === user.email) return null;
   if (listing.status === 'sold') return null;
 
   return (
-    <Button
-      onClick={() => addToCartMutation.mutate()}
-      disabled={addToCartMutation.isPending || justAdded}
-      className={className}
-    >
-      {addToCartMutation.isPending ? (
-        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-      ) : justAdded ? (
-        <Check className="h-4 w-4 mr-2" />
-      ) : (
-        <ShoppingCart className="h-4 w-4 mr-2" />
+    <div className="flex gap-2">
+      <Button
+        onClick={() => addToCartMutation.mutate()}
+        disabled={addToCartMutation.isPending || justAdded}
+        className={className}
+      >
+        {addToCartMutation.isPending ? (
+          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+        ) : justAdded ? (
+          <Check className="h-4 w-4 mr-2" />
+        ) : (
+          <ShoppingCart className="h-4 w-4 mr-2" />
+        )}
+        {justAdded ? 'Aggiunto!' : 'Aggiungi al carrello'}
+      </Button>
+      {showSaveOption && (
+        <Button
+          onClick={() => saveForLaterMutation.mutate()}
+          disabled={saveForLaterMutation.isPending}
+          variant="outline"
+          className="px-3"
+        >
+          <Heart className="h-4 w-4" />
+        </Button>
       )}
-      {justAdded ? 'Aggiunto!' : 'Aggiungi al carrello'}
-    </Button>
+    </div>
   );
 }
