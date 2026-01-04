@@ -16,6 +16,7 @@ import PriceSuggestion from '../components/seller/PriceSuggestion';
 import DescriptionGenerator from '../components/seller/DescriptionGenerator';
 import TitleGenerator from '../components/seller/TitleGenerator';
 import ImageAnalyzer from '../components/seller/ImageAnalyzer';
+import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -323,10 +324,22 @@ export default function NewListing() {
             </div>
 
             <ImageAnalyzer images={imagePreviews} />
-          </>
-        )}
+              </>
+            )}
 
-        <div className="border-t pt-6 mt-6 mb-4">
+            {formData.title && formData.description && (
+              <div className="mb-6">
+                <PreSubmitCheck 
+                  title={formData.title}
+                  description={formData.description}
+                  category={formData.category}
+                  price={formData.price}
+                  enabled={true}
+                />
+              </div>
+            )}
+
+            <div className="border-t pt-6 mt-6 mb-4">
           <h3 className="text-lg font-semibold mb-3">{t('newListing.promoOptions')}</h3>
           <div className="grid grid-cols-1 gap-3">
             <div className="flex items-center gap-2">

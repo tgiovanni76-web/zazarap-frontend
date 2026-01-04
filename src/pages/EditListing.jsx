@@ -11,6 +11,7 @@ import { ArrowLeft, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 import ListingOptimizationAssistant from '../components/seller/ListingOptimizationAssistant';
+import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
 
 export default function EditListing() {
   const { t } = useLanguage();
@@ -326,6 +327,18 @@ export default function EditListing() {
             {imagePreviews.map((preview, idx) => (
               <img key={idx} src={preview} alt={`Nuova ${idx + 1}`} className="w-full rounded" />
             ))}
+          </div>
+        )}
+
+        {formData.title && formData.description && (
+          <div className="mb-6">
+            <PreSubmitCheck 
+              title={formData.title}
+              description={formData.description}
+              category={formData.category}
+              price={formData.price}
+              enabled={true}
+            />
           </div>
         )}
 

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { XCircle, Edit, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
+import AISuggestions from '../components/moderation/AISuggestions';
 
 export default function RejectedListings() {
   const { data: user } = useQuery({
@@ -127,7 +128,9 @@ export default function RejectedListings() {
                   <p className="text-sm text-slate-600 line-clamp-3">{listing.description}</p>
                 </div>
 
-                <div className="flex gap-3">
+                <AISuggestions listing={listing} />
+
+                <div className="flex gap-3 mt-4">
                   <Link to={createPageUrl('EditListing') + '?id=' + listing.id} className="flex-1">
                     <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
                       <Edit className="h-4 w-4 mr-2" />
