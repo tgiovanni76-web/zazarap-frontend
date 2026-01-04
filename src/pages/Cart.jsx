@@ -12,6 +12,9 @@ import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShoppingBag, Heart,
 import { toast } from 'sonner';
 import SavedItems from '../components/cart/SavedItems';
 import AddressManager from '../components/cart/AddressManager';
+import AIRecommendations from '../components/checkout/AIRecommendations';
+import SmartShipping from '../components/checkout/SmartShipping';
+import FraudDetection from '../components/checkout/FraudDetection';
 
 export default function Cart() {
   const navigate = useNavigate();
