@@ -54,6 +54,7 @@ import Widerrufsrecht from './pages/Widerrufsrecht';
 import Cart from './pages/Cart';
 import MyOrders from './pages/MyOrders';
 import LoyaltyProgram from './pages/LoyaltyProgram';
+import RejectedListings from './pages/RejectedListings';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "Cart": Cart,
     "MyOrders": MyOrders,
     "LoyaltyProgram": LoyaltyProgram,
+    "RejectedListings": RejectedListings,
 }
 
 export const pagesConfig = {
