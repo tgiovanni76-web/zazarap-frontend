@@ -11,6 +11,7 @@ import AdminSettings from './pages/AdminSettings';
 import AdminTickets from './pages/AdminTickets';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Cart from './pages/Cart';
 import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
 import Contact from './pages/Contact';
@@ -25,12 +26,14 @@ import Home from './pages/Home';
 import Impressum from './pages/Impressum';
 import ListingDetail from './pages/ListingDetail';
 import ListingPerformance from './pages/ListingPerformance';
+import LoyaltyProgram from './pages/LoyaltyProgram';
 import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
 import Marketplace from './pages/Marketplace';
 import MarketplaceDashboard from './pages/MarketplaceDashboard';
 import Messages from './pages/Messages';
 import ModerateListings from './pages/ModerateListings';
+import MyOrders from './pages/MyOrders';
 import MyPurchases from './pages/MyPurchases';
 import MySales from './pages/MySales';
 import MySubscriptions from './pages/MySubscriptions';
@@ -43,7 +46,9 @@ import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import PromoteListing from './pages/PromoteListing';
 import Recommendations from './pages/Recommendations';
+import RejectedListings from './pages/RejectedListings';
 import SellerDashboard from './pages/SellerDashboard';
+import SellerHub from './pages/SellerHub';
 import SystemCheckup from './pages/SystemCheckup';
 import SystemLogs from './pages/SystemLogs';
 import TermsOfService from './pages/TermsOfService';
@@ -51,11 +56,6 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import Cart from './pages/Cart';
-import MyOrders from './pages/MyOrders';
-import LoyaltyProgram from './pages/LoyaltyProgram';
-import RejectedListings from './pages/RejectedListings';
-import SellerHub from './pages/SellerHub';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +73,7 @@ export const PAGES = {
     "AdminTickets": AdminTickets,
     "Blog": Blog,
     "BlogPost": BlogPost,
+    "Cart": Cart,
     "Category": Category,
     "CompleteProfile": CompleteProfile,
     "Contact": Contact,
@@ -87,12 +88,14 @@ export const PAGES = {
     "Impressum": Impressum,
     "ListingDetail": ListingDetail,
     "ListingPerformance": ListingPerformance,
+    "LoyaltyProgram": LoyaltyProgram,
     "ManageCategories": ManageCategories,
     "ManageUsers": ManageUsers,
     "Marketplace": Marketplace,
     "MarketplaceDashboard": MarketplaceDashboard,
     "Messages": Messages,
     "ModerateListings": ModerateListings,
+    "MyOrders": MyOrders,
     "MyPurchases": MyPurchases,
     "MySales": MySales,
     "MySubscriptions": MySubscriptions,
@@ -105,7 +108,9 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "PromoteListing": PromoteListing,
     "Recommendations": Recommendations,
+    "RejectedListings": RejectedListings,
     "SellerDashboard": SellerDashboard,
+    "SellerHub": SellerHub,
     "SystemCheckup": SystemCheckup,
     "SystemLogs": SystemLogs,
     "TermsOfService": TermsOfService,
@@ -113,11 +118,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "Cart": Cart,
-    "MyOrders": MyOrders,
-    "LoyaltyProgram": LoyaltyProgram,
-    "RejectedListings": RejectedListings,
-    "SellerHub": SellerHub,
 }
 
 export const pagesConfig = {
