@@ -53,6 +53,7 @@ import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import Cart from './pages/Cart';
 import MyOrders from './pages/MyOrders';
+import LoyaltyProgram from './pages/LoyaltyProgram';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "Cart": Cart,
     "MyOrders": MyOrders,
+    "LoyaltyProgram": LoyaltyProgram,
 }
 
 export const pagesConfig = {

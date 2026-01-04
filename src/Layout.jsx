@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home, ShoppingCart, Trophy } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -716,6 +716,9 @@ function LayoutInner({ children, currentPageName }) {
                             </Link>
                             <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
                               <Megaphone className="h-5 w-5" aria-hidden="true" focusable="false" />
+                            </Link>
+                            <Link to={createPageUrl('LoyaltyProgram')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Programma Fedeltà" aria-label="Loyalty Program">
+                              <Trophy className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
                             <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
                               <Plus className="h-5 w-5" aria-hidden="true" focusable="false" />
