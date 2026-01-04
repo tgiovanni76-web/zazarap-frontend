@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { DollarSign, Package, TrendingUp, Clock } from 'lucide-react';
+import { DollarSign, Package, TrendingUp, Clock, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
@@ -97,7 +97,15 @@ export default function MySales() {
 
   return (
     <div className="py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">{t('mySales')}</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold">{t('mySales')}</h2>
+        <Link to={createPageUrl('RejectedListings')}>
+          <Button variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">
+            <XCircle className="h-4 w-4 mr-2" />
+            Annunci rifiutati
+          </Button>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
