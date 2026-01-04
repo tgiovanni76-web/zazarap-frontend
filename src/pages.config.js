@@ -3,6 +3,7 @@ import AccessibilityAudit from './pages/AccessibilityAudit';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDisputes from './pages/AdminDisputes';
+import AdminModeration from './pages/AdminModeration';
 import AdminPayments from './pages/AdminPayments';
 import AdminReports from './pages/AdminReports';
 import AdminSEO from './pages/AdminSEO';
@@ -23,6 +24,7 @@ import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Impressum from './pages/Impressum';
 import ListingDetail from './pages/ListingDetail';
+import ListingPerformance from './pages/ListingPerformance';
 import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
 import Marketplace from './pages/Marketplace';
@@ -33,6 +35,7 @@ import MyPurchases from './pages/MyPurchases';
 import MySales from './pages/MySales';
 import MySubscriptions from './pages/MySubscriptions';
 import NewListing from './pages/NewListing';
+import NotificationCenter from './pages/NotificationCenter';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
 import PayPalWebhook from './pages/PayPalWebhook';
@@ -48,9 +51,7 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import AdminModeration from './pages/AdminModeration';
-import ListingPerformance from './pages/ListingPerformance';
-import NotificationCenter from './pages/NotificationCenter';
+import Cart from './pages/Cart';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "AdminAnalytics": AdminAnalytics,
     "AdminDashboard": AdminDashboard,
     "AdminDisputes": AdminDisputes,
+    "AdminModeration": AdminModeration,
     "AdminPayments": AdminPayments,
     "AdminReports": AdminReports,
     "AdminSEO": AdminSEO,
@@ -80,6 +82,7 @@ export const PAGES = {
     "Home": Home,
     "Impressum": Impressum,
     "ListingDetail": ListingDetail,
+    "ListingPerformance": ListingPerformance,
     "ManageCategories": ManageCategories,
     "ManageUsers": ManageUsers,
     "Marketplace": Marketplace,
@@ -90,6 +93,7 @@ export const PAGES = {
     "MySales": MySales,
     "MySubscriptions": MySubscriptions,
     "NewListing": NewListing,
+    "NotificationCenter": NotificationCenter,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
     "PayPalWebhook": PayPalWebhook,
@@ -105,9 +109,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "AdminModeration": AdminModeration,
-    "ListingPerformance": ListingPerformance,
-    "NotificationCenter": NotificationCenter,
+    "Cart": Cart,
 }
 
 export const pagesConfig = {

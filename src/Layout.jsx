@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home, ShoppingCart } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -77,7 +77,23 @@ function LayoutInner({ children, currentPageName }) {
     enabled: !!user,
   });
 
+  const { data: cart } = useQuery({
+    queryKey: ['cart', user?.email],
+    queryFn: async () => {
+      const carts = await base44.entities.Cart.filter({ userId: user.email, status: 'active' });
+      return carts[0] || null;
+    },
+    enabled: !!user,
+  });
+
+  const { data: cartItems = [] } = useQuery({
+    queryKey: ['cartItems', cart?.id],
+    queryFn: () => base44.entities.CartItem.filter({ cartId: cart.id }),
+    enabled: !!cart,
+  });
+
   const unreadCount = notifications.length;
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <ErrorBoundary>
@@ -690,6 +706,14 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <ErrorBoundary>
+                            <Link to={createPageUrl('Cart')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title="Carrello" aria-label={`Carrello${cartCount > 0 ? `, ${cartCount} articoli` : ''}`}>
+                              <ShoppingCart className="h-5 w-5" aria-hidden="true" focusable="false" />
+                              {cartCount > 0 && (
+                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
+                                  {cartCount}
+                                </Badge>
+                              )}
+                            </Link>
                             <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
                               <Megaphone className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
