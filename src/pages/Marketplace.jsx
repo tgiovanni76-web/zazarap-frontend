@@ -13,6 +13,8 @@ import MapView from '../components/marketplace/MapView';
 import { toast } from 'sonner';
 import AIRecommendations from '../components/marketplace/AIRecommendations';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
+import PersonalizedRecommendations from '../components/marketplace/PersonalizedRecommendations';
+import ProductSearchAssistant from '../components/marketplace/ProductSearchAssistant';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
 import FollowButton from '../components/profile/FollowButton';
