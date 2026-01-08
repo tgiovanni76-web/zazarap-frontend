@@ -729,6 +729,9 @@ function LayoutInner({ children, currentPageName }) {
                             <Link to={createPageUrl('MySales')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Verkäufe" aria-label="My sales">
                               <TrendingUp className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
+                            <Link to={createPageUrl('SellerAITools')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="AI Tools" aria-label="AI Tools for Sellers">
+                              <Sparkles className="h-5 w-5" aria-hidden="true" focusable="false" />
+                            </Link>
                             <Link to={createPageUrl('MyPurchases')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Käufe" aria-label="My purchases">
                               <Package className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
