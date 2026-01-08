@@ -12,15 +12,17 @@ import {
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../LanguageProvider';
 
 export default function AdvancedImageAnalyzer({ images, category, onReorderImages }) {
+  const { t } = useLanguage();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
   const analyzeImages = async () => {
     if (!images || images.length === 0) {
-      toast.error('Carica almeno un\'immagine');
+      toast.error(t('aiImg.uploadFirst'));
       return;
     }
 
@@ -33,11 +35,11 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
 
       if (response.data?.success) {
         setAnalysis(response.data);
-        toast.success('Analisi completata!');
+        toast.success(t('aiImg.completed'));
       }
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Errore nell\'analisi');
+      toast.error(t('aiImg.analysisError'));
     } finally {
       setIsAnalyzing(false);
     }
@@ -57,10 +59,10 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
 
   const getRatingLabel = (rating) => {
     const labels = {
-      'eccellente': { label: 'Eccellente', color: 'bg-green-500' },
-      'buono': { label: 'Buono', color: 'bg-blue-500' },
-      'sufficiente': { label: 'Sufficiente', color: 'bg-yellow-500' },
-      'da_migliorare': { label: 'Da migliorare', color: 'bg-red-500' }
+      'eccellente': { label: t('aiImg.rating.excellent'), color: 'bg-green-500' },
+      'buono': { label: t('aiImg.rating.good'), color: 'bg-blue-500' },
+      'sufficiente': { label: t('aiImg.rating.sufficient'), color: 'bg-yellow-500' },
+      'da_migliorare': { label: t('aiImg.rating.needsWork'), color: 'bg-red-500' }
     };
     return labels[rating] || labels.sufficiente;
   };
@@ -70,7 +72,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Camera className="h-5 w-5 text-cyan-600" />
-          Analisi Avanzata Immagini
+          {t('aiImg.title')}
           <Badge className="ml-2 bg-cyan-100 text-cyan-700">AI</Badge>
         </CardTitle>
       </CardHeader>
@@ -81,13 +83,13 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
               <Camera className="h-8 w-8 text-cyan-600" />
             </div>
             <p className="text-slate-600 mb-2">
-              L'AI analizzerà le tue foto e ti dirà:
+              {t('aiDemand.willAnalyze')}
             </p>
             <ul className="text-sm text-slate-500 mb-6 space-y-1">
-              <li>✓ Quale foto usare come principale</li>
-              <li>✓ Come migliorare ogni immagine</li>
-              <li>✓ Quali angolazioni mancano</li>
-              <li>✓ Tips per foto professionali</li>
+              <li>✓ {t('aiImg.bestMainPhoto').replace('{index}', '...')}</li>
+              <li>✓ {t('aiImg.tab.quickFixes')}</li>
+              <li>✓ {t('aiImg.tab.missing')}</li>
+              <li>✓ {t('aiImg.tab.tips')}</li>
             </ul>
             <Button 
               onClick={analyzeImages} 
@@ -97,12 +99,12 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
               {isAnalyzing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Analisi in corso...
+                  {t('aiImg.analyzing')}
                 </>
               ) : (
                 <>
                   <Zap className="h-4 w-4 mr-2" />
-                  Analizza {images?.length || 0} immagini
+                  {t('aiImg.analyzeBtn').replace('{count}', images?.length || 0)}
                 </>
               )}
             </Button>
@@ -112,7 +114,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
             {/* Overall score */}
             <div className="bg-white p-4 rounded-xl border-2 border-cyan-200">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-slate-600">Punteggio complessivo</span>
+                <span className="text-sm font-medium text-slate-600">{t('aiImg.overallScore')}</span>
                 <Badge className={getRatingLabel(analysis.overallRating).color + ' text-white'}>
                   {getRatingLabel(analysis.overallRating).label}
                 </Badge>
@@ -135,10 +137,10 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                   <Trophy className="h-5 w-5 text-yellow-600" />
                   <div>
                     <p className="font-semibold text-yellow-800">
-                      Foto principale consigliata: Immagine {analysis.bestMainPhoto.index + 1}
+                      {t('aiImg.bestMainPhoto').replace('{index}', analysis.bestMainPhoto.index + 1)}
                     </p>
                     <p className="text-sm text-yellow-700">
-                      Punteggio: {analysis.bestMainPhoto.score}/100
+                      {t('aiImg.score')}: {analysis.bestMainPhoto.score}/100
                     </p>
                   </div>
                 </div>
@@ -150,19 +152,19 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="overview">
                   <ImageIcon className="h-3 w-3 mr-1" />
-                  Foto
+                  {t('aiImg.tab.photos')}
                 </TabsTrigger>
                 <TabsTrigger value="missing">
                   <Layout className="h-3 w-3 mr-1" />
-                  Mancanti
+                  {t('aiImg.tab.missing')}
                 </TabsTrigger>
                 <TabsTrigger value="fixes">
                   <Lightbulb className="h-3 w-3 mr-1" />
-                  Fix Rapidi
+                  {t('aiImg.tab.quickFixes')}
                 </TabsTrigger>
                 <TabsTrigger value="tips">
                   <Smartphone className="h-3 w-3 mr-1" />
-                  Tips
+                  {t('aiImg.tab.tips')}
                 </TabsTrigger>
               </TabsList>
 
@@ -186,7 +188,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">Foto {idx + 1}</span>
+                          <span className="font-medium">{t('aiImg.photo')} {idx + 1}</span>
                           <Badge className={getScoreBg(img.overallScore)}>
                             {img.overallScore}/100
                           </Badge>
@@ -196,26 +198,26 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                           {img.lighting && (
                             <div className="flex items-center gap-1">
                               <Sun className={`h-3 w-3 ${img.lighting.score >= 70 ? 'text-green-500' : 'text-yellow-500'}`} />
-                              <span>Luce: {img.lighting.score}</span>
+                              <span>{t('aiImg.light')}: {img.lighting.score}</span>
                             </div>
                           )}
                           {img.technicalQuality && (
                             <div className="flex items-center gap-1">
                               <Focus className={`h-3 w-3 ${img.technicalQuality.score >= 70 ? 'text-green-500' : 'text-yellow-500'}`} />
-                              <span>Qualità: {img.technicalQuality.score}</span>
+                              <span>{t('aiImg.quality')}: {img.technicalQuality.score}</span>
                             </div>
                           )}
                           {img.composition && (
                             <div className="flex items-center gap-1">
                               <Layout className={`h-3 w-3 ${img.composition.score >= 70 ? 'text-green-500' : 'text-yellow-500'}`} />
-                              <span>Comp: {img.composition.score}</span>
+                              <span>{t('aiImg.composition')}: {img.composition.score}</span>
                             </div>
                           )}
                         </div>
 
                         {img.productPresentation?.missingDetails?.length > 0 && (
                           <p className="text-xs text-orange-600 mt-2">
-                            ⚠️ Dettagli mancanti: {img.productPresentation.missingDetails.slice(0, 2).join(', ')}
+                            ⚠️ {t('aiImg.missingDetails')}: {img.productPresentation.missingDetails.slice(0, 2).join(', ')}
                           </p>
                         )}
                       </div>
@@ -237,7 +239,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                       </div>
                       <p className="text-sm text-slate-600 mb-2">{shot.reason}</p>
                       <div className="p-2 bg-blue-50 rounded text-sm">
-                        <p className="font-medium text-blue-800 mb-1">Come scattarla:</p>
+                        <p className="font-medium text-blue-800 mb-1">{t('aiImg.howToShoot')}</p>
                         <p className="text-blue-700">{shot.howToShoot}</p>
                       </div>
                       {shot.compositionTip && (
@@ -250,13 +252,13 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                 ) : (
                   <div className="text-center py-6 text-slate-500">
                     <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-green-500" />
-                    <p>Hai tutte le angolazioni essenziali!</p>
+                    <p>{t('aiImg.noMissing')}</p>
                   </div>
                 )}
 
                 {analysis.recommendations?.lifestyleShots?.length > 0 && (
                   <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                    <p className="font-medium text-purple-800 mb-2">📸 Idee per foto lifestyle</p>
+                    <p className="font-medium text-purple-800 mb-2">📸 {t('aiImg.lifestyleIdeas')}</p>
                     <ul className="text-sm text-purple-700 space-y-1">
                       {analysis.recommendations.lifestyleShots.map((shot, idx) => (
                         <li key={idx} className="flex items-start gap-2">
@@ -277,7 +279,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                       <span className="font-medium">{fix.title}</span>
                       <div className="flex gap-2">
                         <Badge variant="outline" className="text-xs">
-                          Impatto: {fix.impact}
+                          {t('aiImg.impact')}: {t(`aiImg.impact.${fix.impact}`)}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
                           ⏱️ {fix.timeRequired}
@@ -306,7 +308,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                   <div className="bg-white rounded-lg border p-4">
                     <p className="font-medium mb-3 flex items-center gap-2">
                       <Smartphone className="h-4 w-4 text-cyan-600" />
-                      Tips per smartphone
+                      {t('aiImg.smartphoneTips')}
                     </p>
                     <ul className="space-y-2">
                       {analysis.smartphoneTips.map((tip, idx) => (
@@ -321,7 +323,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
 
                 {analysis.freeTools?.length > 0 && (
                   <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 p-4">
-                    <p className="font-medium mb-3">🛠️ App gratuite consigliate</p>
+                    <p className="font-medium mb-3">🛠️ {t('aiImg.freeApps')}</p>
                     <div className="space-y-2">
                       {analysis.freeTools.map((tool, idx) => (
                         <div key={idx} className="flex items-center justify-between bg-white p-2 rounded">
@@ -345,7 +347,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {analysis.summary.strengths?.length > 0 && (
                   <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-sm font-semibold text-green-800 mb-2">✅ Punti di forza</p>
+                    <p className="text-sm font-semibold text-green-800 mb-2">✅ {t('aiImg.strengths')}</p>
                     <ul className="text-xs text-green-700 space-y-1">
                       {analysis.summary.strengths.map((s, idx) => (
                         <li key={idx}>• {s}</li>
@@ -356,7 +358,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                 
                 {analysis.summary.criticalIssues?.length > 0 && (
                   <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                    <p className="text-sm font-semibold text-red-800 mb-2">⚠️ Da correggere</p>
+                    <p className="text-sm font-semibold text-red-800 mb-2">⚠️ {t('aiImg.toFix')}</p>
                     <ul className="text-xs text-red-700 space-y-1">
                       {analysis.summary.criticalIssues.map((i, idx) => (
                         <li key={idx}>• {i}</li>
