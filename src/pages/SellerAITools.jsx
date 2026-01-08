@@ -69,24 +69,24 @@ export default function SellerAITools() {
   const tools = [
     {
       id: 'description',
-      title: 'Assistente Descrizioni AI',
-      description: 'Genera descrizioni accattivanti e ottimizzate SEO',
+      title: t('aiTools.descriptionAssistant.title'),
+      description: t('aiTools.descriptionAssistant.desc'),
       icon: Wand2,
       color: 'from-purple-600 to-pink-600',
       bgColor: 'from-purple-50 to-pink-50'
     },
     {
       id: 'images',
-      title: 'Analisi Immagini AI',
-      description: 'Ottimizza le foto per vendere di più',
+      title: t('aiTools.imageAnalyzer.title'),
+      description: t('aiTools.imageAnalyzer.desc'),
       icon: Camera,
       color: 'from-cyan-600 to-blue-600',
       bgColor: 'from-cyan-50 to-blue-50'
     },
     {
       id: 'demand',
-      title: 'Previsione Domanda',
-      description: 'Analizza il mercato e ottimizza i prezzi',
+      title: t('aiTools.demandPredictor.title'),
+      description: t('aiTools.demandPredictor.desc'),
       icon: TrendingUp,
       color: 'from-emerald-600 to-teal-600',
       bgColor: 'from-emerald-50 to-teal-50'
@@ -101,10 +101,10 @@ export default function SellerAITools() {
           <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
             <Sparkles className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-3xl font-bold">Strumenti AI per Venditori</h1>
+          <h1 className="text-3xl font-bold">{t('aiTools.pageTitle')}</h1>
         </div>
         <p className="text-slate-600">
-          Utilizza l'intelligenza artificiale per creare annunci perfetti e massimizzare le vendite
+          {t('aiTools.pageDesc')}
         </p>
       </div>
 
@@ -132,29 +132,29 @@ export default function SellerAITools() {
       {/* Test product input */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-lg">Prova gli strumenti</CardTitle>
+          <CardTitle className="text-lg">{t('aiTools.testProduct')}</CardTitle>
           <CardDescription>
-            Inserisci i dati di un prodotto per testare le funzionalità AI
+            {t('aiTools.testProductDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 block">Titolo prodotto</label>
+              <label className="text-sm font-medium mb-1 block">{t('title')}</label>
               <Input
-                placeholder="es. iPhone 13 Pro 128GB"
+                placeholder="iPhone 13 Pro 128GB"
                 value={testProduct.title}
                 onChange={(e) => setTestProduct({...testProduct, title: e.target.value})}
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Categoria</label>
+              <label className="text-sm font-medium mb-1 block">{t('category')}</label>
               <Select 
                 value={testProduct.category} 
                 onValueChange={(v) => setTestProduct({...testProduct, category: v})}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleziona..." />
+                  <SelectValue placeholder={t('selectCategory')} />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.filter(c => c.active).map(cat => (
@@ -166,7 +166,7 @@ export default function SellerAITools() {
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Prezzo (€)</label>
+              <label className="text-sm font-medium mb-1 block">{t('price')} (€)</label>
               <Input
                 type="number"
                 placeholder="0.00"
@@ -175,9 +175,9 @@ export default function SellerAITools() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Città</label>
+              <label className="text-sm font-medium mb-1 block">{t('city')}</label>
               <Input
-                placeholder="es. Milano"
+                placeholder="München"
                 value={testProduct.city}
                 onChange={(e) => setTestProduct({...testProduct, city: e.target.value})}
               />
@@ -186,7 +186,7 @@ export default function SellerAITools() {
 
           {/* Image upload */}
           <div className="mt-4">
-            <label className="text-sm font-medium mb-2 block">Immagini (max 4)</label>
+            <label className="text-sm font-medium mb-2 block">{t('images')} (max 4)</label>
             <div className="flex items-center gap-4">
               <label className="flex-1 border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">
                 <input
@@ -198,7 +198,7 @@ export default function SellerAITools() {
                 />
                 <Upload className="h-6 w-6 mx-auto mb-2 text-slate-400" />
                 <span className="text-sm text-slate-500">
-                  Clicca per caricare
+                  {t('aiTools.clickToUpload')}
                 </span>
               </label>
               {imagePreviews.length > 0 && (
@@ -224,7 +224,7 @@ export default function SellerAITools() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Wand2 className="h-5 w-5 text-purple-600" />
-              <h2 className="text-xl font-bold">Assistente Descrizioni AI</h2>
+              <h2 className="text-xl font-bold">{t('aiTools.descriptionAssistant.title')}</h2>
             </div>
             <AdvancedDescriptionAssistant
               title={testProduct.title}
@@ -232,8 +232,8 @@ export default function SellerAITools() {
               condition={testProduct.condition}
               price={testProduct.price}
               images={imagePreviews}
-              onDescriptionSelect={(desc) => toast.success('Descrizione pronta! Usala nel tuo annuncio.')}
-              onSeoSelect={(seo) => toast.success('SEO applicato!')}
+              onDescriptionSelect={(desc) => toast.success(t('aiDesc.generated'))}
+              onSeoSelect={(seo) => toast.success(t('aiDesc.applySeo'))}
             />
           </div>
         )}
@@ -242,7 +242,7 @@ export default function SellerAITools() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Camera className="h-5 w-5 text-cyan-600" />
-              <h2 className="text-xl font-bold">Analisi Immagini AI</h2>
+              <h2 className="text-xl font-bold">{t('aiTools.imageAnalyzer.title')}</h2>
             </div>
             {imagePreviews.length > 0 ? (
               <AdvancedImageAnalyzer
@@ -254,7 +254,7 @@ export default function SellerAITools() {
                 <CardContent className="py-12 text-center">
                   <Camera className="h-12 w-12 mx-auto mb-4 text-slate-300" />
                   <p className="text-slate-500">
-                    Carica almeno un'immagine per analizzarla
+                    {t('aiImg.uploadFirst')}
                   </p>
                 </CardContent>
               </Card>
@@ -266,7 +266,7 @@ export default function SellerAITools() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="h-5 w-5 text-emerald-600" />
-              <h2 className="text-xl font-bold">Previsione Domanda di Mercato</h2>
+              <h2 className="text-xl font-bold">{t('aiTools.demandPredictor.title')}</h2>
             </div>
             <MarketDemandPredictor
               productTitle={testProduct.title}
@@ -276,7 +276,7 @@ export default function SellerAITools() {
               location={testProduct.city}
               onPriceSelect={(price) => {
                 setTestProduct({...testProduct, price: price.toString()});
-                toast.success(`Prezzo aggiornato: ${price}€`);
+                toast.success(`${t('price')}: ${price}€`);
               }}
             />
           </div>
@@ -291,12 +291,12 @@ export default function SellerAITools() {
               <Lightbulb className="h-5 w-5 text-yellow-600" />
             </div>
             <div>
-              <h3 className="font-bold mb-2">Consigli per vendere di più</h3>
+              <h3 className="font-bold mb-2">{t('aiTools.tips.title')}</h3>
               <ul className="text-sm text-slate-600 space-y-1">
-                <li>• Usa l'AI per creare descrizioni uniche che si distinguono dalla concorrenza</li>
-                <li>• Carica foto di alta qualità analizzate dal nostro sistema</li>
-                <li>• Consulta le previsioni di mercato prima di fissare il prezzo</li>
-                <li>• Pubblica nei momenti suggeriti dall'analisi per massimizzare la visibilità</li>
+                <li>• {t('aiDesc.useDescription')}</li>
+                <li>• {t('aiImg.title')}</li>
+                <li>• {t('aiDemand.optimalPrice')}</li>
+                <li>• {t('aiDemand.bestTime')}</li>
               </ul>
             </div>
           </div>

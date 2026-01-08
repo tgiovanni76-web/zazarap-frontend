@@ -13,6 +13,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
+import { useLanguage } from '../LanguageProvider';
 
 export default function AdvancedImageAnalyzer({ images, category, onReorderImages }) {
   const { t } = useLanguage();
@@ -376,7 +377,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                 variant="outline"
                 className="flex-1"
               >
-                Rianalizza
+                {t('aiImg.reanalyze')}
               </Button>
             </div>
           </div>
