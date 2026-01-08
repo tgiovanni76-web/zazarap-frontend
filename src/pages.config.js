@@ -59,6 +59,7 @@ import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import UserSettings from './pages/UserSettings';
+import AdminAutoModeration from './pages/AdminAutoModeration';
 import __Layout from './Layout.jsx';
 
 
@@ -124,6 +125,7 @@ export const PAGES = {
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
     "UserSettings": UserSettings,
+    "AdminAutoModeration": AdminAutoModeration,
 }
 
 export const pagesConfig = {
