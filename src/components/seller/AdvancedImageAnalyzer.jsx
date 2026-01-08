@@ -13,7 +13,6 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
-import { useLanguage } from '../LanguageProvider';
 
 export default function AdvancedImageAnalyzer({ images, category, onReorderImages }) {
   const { t } = useLanguage();
@@ -183,7 +182,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                       <div className="w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
                         <img 
                           src={img.imageUrl} 
-                          alt={`Foto ${idx + 1}`}
+                          alt={`${t('aiImg.photo')} ${idx + 1}`}
                           className="w-full h-full object-cover"
                         />
                       </div>
