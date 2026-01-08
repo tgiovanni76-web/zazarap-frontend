@@ -1,44 +1,58 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-// Run this periodically to check for price drops on favorited listings
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Get all active listings with offerPrice
-    const listings = await base44.asServiceRole.entities.Listing.filter({
-      status: 'active',
-    });
+    // Get all favorites
+    const favorites = await base44.asServiceRole.entities.Favorite.list();
+    
+    let notificationsSent = 0;
 
-    const priceDropListings = listings.filter(l => l.offerPrice && l.offerPrice < l.price);
-
-    for (const listing of priceDropListings) {
-      // Find all users who favorited this listing
-      const favorites = await base44.asServiceRole.entities.Favorite.filter({
-        listing_id: listing.id,
+    for (const fav of favorites) {
+      // Get current listing
+      const listings = await base44.asServiceRole.entities.Listing.filter({
+        id: fav.listing_id
       });
 
-      for (const fav of favorites) {
-        // Send notification
-        await base44.asServiceRole.functions.invoke('sendNotification', {
+      if (listings.length === 0) continue;
+      const listing = listings[0];
+
+      // Check if price dropped
+      if (fav.price && listing.price < fav.price) {
+        const priceDrop = fav.price - listing.price;
+        const percentDrop = ((priceDrop / fav.price) * 100).toFixed(0);
+
+        await base44.functions.invoke('generateSmartNotifications', {
           userId: fav.user_email,
           type: 'price_drop',
-          title: 'Preissenkung!',
-          message: `"${listing.title}" ist jetzt günstiger: €${listing.offerPrice} (vorher €${listing.price})`,
-          linkUrl: `/listing/${listing.id}`,
-          relatedId: listing.id,
-          sendEmail: true,
+          context: {
+            listingTitle: listing.title,
+            oldPrice: fav.price,
+            newPrice: listing.price,
+            priceDrop,
+            percentDrop,
+            actionUrl: `/listing?id=${listing.id}`
+          }
         });
+
+        // Update favorite with new price
+        await base44.asServiceRole.entities.Favorite.update(fav.id, {
+          price: listing.price
+        });
+
+        notificationsSent++;
       }
     }
 
-    return Response.json({ 
-      success: true, 
-      checked: listings.length,
-      notified: priceDropListings.length 
+    return Response.json({
+      success: true,
+      favoritesChecked: favorites.length,
+      notificationsSent
     });
+
   } catch (error) {
-    console.error('checkPriceDrops error:', error);
+    console.error('Price drops check error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

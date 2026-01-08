@@ -3,56 +3,74 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { userId, type, title, message, linkUrl, relatedId, sendEmail = false } = await req.json();
 
-    if (!userId || !type || !title || !message) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    const { userId, type, title, message, actionUrl, metadata } = await req.json();
 
-    // Check user's notification preferences
-    const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({ userId });
-    const userPrefs = prefs[0];
+    // Get user preferences
+    const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({
+      userId
+    });
 
-    // Check if this type of notification is enabled
-    const notificationEnabled = {
-      message: userPrefs?.messageReplies ?? true,
-      purchase: userPrefs?.statusUpdates ?? true,
-      shipping: userPrefs?.statusUpdates ?? true,
-      price_drop: userPrefs?.newOfferOnFavorite ?? true,
-      offer: userPrefs?.newOfferOnFavorite ?? true,
-      status_update: userPrefs?.statusUpdates ?? true,
+    const userPrefs = prefs[0] || {
+      emailNotifications: true,
+      newOfferOnFavorite: true,
+      messageReplies: true,
+      statusUpdates: true,
+      purchaseNotifications: true,
+      shippingNotifications: true,
+      priceDropNotifications: true
     };
 
-    if (!notificationEnabled[type]) {
-      return Response.json({ message: 'Notification disabled by user preferences' });
+    // Map notification types to preference keys
+    const prefMapping = {
+      order_shipped: 'shippingNotifications',
+      order_delivered: 'shippingNotifications',
+      order_update: 'statusUpdates',
+      message_received: 'messageReplies',
+      new_offer: 'newOfferOnFavorite',
+      price_drop: 'priceDropNotifications',
+      purchase_complete: 'purchaseNotifications'
+    };
+
+    // Check if notification type is enabled
+    if (prefMapping[type] && !userPrefs[prefMapping[type]]) {
+      return Response.json({ 
+        success: false, 
+        message: 'Notification disabled by user preferences' 
+      });
     }
 
-    // Create in-app notification
+    // Create notification
     const notification = await base44.asServiceRole.entities.Notification.create({
       userId,
       type,
       title,
       message,
-      linkUrl,
-      relatedId,
-      read: false,
+      actionUrl: actionUrl || '',
+      metadata: metadata ? JSON.stringify(metadata) : null,
+      read: false
     });
 
-    // Send email if enabled and user has email notifications on
-    if (sendEmail && userPrefs?.emailNotifications) {
-      const user = await base44.asServiceRole.entities.User.filter({ email: userId });
-      if (user[0]) {
-        await base44.asServiceRole.integrations.Core.SendEmail({
+    // Send email if enabled
+    if (userPrefs.emailNotifications && type !== 'message_received') {
+      try {
+        await base44.integrations.Core.SendEmail({
           to: userId,
           subject: title,
-          body: `${message}\n\n${linkUrl ? `Link: ${linkUrl}` : ''}`,
+          body: `${message}\n\n${actionUrl ? `Visualizza: ${actionUrl}` : ''}`
         });
+      } catch (e) {
+        console.log('Email send failed:', e);
       }
     }
 
-    return Response.json({ success: true, notification });
+    return Response.json({
+      success: true,
+      notification
+    });
+
   } catch (error) {
-    console.error('sendNotification error:', error);
+    console.error('Send notification error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

@@ -4,54 +4,60 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Neue Follower in den letzten 24h
-    const recentFollows = await base44.asServiceRole.entities.Follow.filter(
-      { created_date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() } },
-      '-created_date',
-      100
-    );
+    // Get recent follows (last 24h)
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const allFollows = await base44.asServiceRole.entities.Follow.list('-created_date');
+    const recentFollows = allFollows.filter(f => f.created_date >= oneDayAgo);
 
     for (const follow of recentFollows) {
       if (follow.targetType === 'user') {
-        // Benachrichtige den gefolgten Nutzer
-        await base44.asServiceRole.functions.invoke('sendNotification', {
-          userId: follow.targetId,
-          type: 'status_update',
-          title: '👤 Neuer Follower!',
-          message: `${follow.created_by} folgt dir jetzt`,
-          linkUrl: `/UserProfile?email=${follow.created_by}`
-        });
-      } else if (follow.targetType === 'category') {
-        // Neue Listings in verfolgter Kategorie
-        const newListingsInCategory = await base44.asServiceRole.entities.Listing.filter({
-          category: follow.targetId,
-          created_date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() },
-          status: 'active',
-          moderationStatus: 'approved'
+        // Notify seller about new follower
+        const followerInfo = await base44.asServiceRole.entities.User.filter({
+          email: follow.userId
         });
 
-        if (newListingsInCategory.length > 0) {
-          await base44.asServiceRole.functions.invoke('sendNotification', {
-            userId: follow.created_by,
-            type: 'offer',
-            title: `🔔 Neue Anzeigen in "${follow.targetId}"`,
-            message: `${newListingsInCategory.length} neue Anzeigen in deiner verfolgten Kategorie`,
-            linkUrl: `/Marketplace?category=${follow.targetId}`
+        await base44.functions.invoke('generateSmartNotifications', {
+          userId: follow.targetId,
+          type: 'new_offer',
+          context: {
+            followerName: followerInfo[0]?.full_name || 'Un utente',
+            message: `${followerInfo[0]?.full_name || 'Un utente'} ha iniziato a seguirti!`,
+            actionUrl: `/profile?user=${follow.userId}`
+          }
+        });
+
+        // Get seller's new listings
+        const newListings = await base44.asServiceRole.entities.Listing.filter({
+          created_by: follow.targetId
+        });
+
+        const veryRecentListings = newListings.filter(l => 
+          new Date(l.created_date) >= new Date(oneDayAgo)
+        );
+
+        // Notify follower about new listings
+        for (const listing of veryRecentListings) {
+          await base44.functions.invoke('generateSmartNotifications', {
+            userId: follow.userId,
+            type: 'new_offer',
+            context: {
+              listingTitle: listing.title,
+              listingPrice: listing.price,
+              listingCategory: listing.category,
+              actionUrl: `/listing?id=${listing.id}`
+            }
           });
         }
       }
     }
 
-    return Response.json({
+    return Response.json({ 
       success: true,
       processed: recentFollows.length
     });
 
   } catch (error) {
-    console.error('Follower notification error:', error);
-    return Response.json({ 
-      error: error.message,
-      success: false 
-    }, { status: 500 });
+    console.error('Notify followers error:', error);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });

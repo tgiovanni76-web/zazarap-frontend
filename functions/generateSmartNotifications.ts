@@ -3,202 +3,128 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    
+    const { userId, type, context } = await req.json();
 
-    // 1. VERKÄUFER: Neue Nachrichten/Angebote
-    const recentChats = await base44.asServiceRole.entities.Chat.filter(
-      { updatedAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() } },
-      '-updatedAt',
-      100
-    );
+    // Get user preferences
+    const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({
+      userId
+    });
+    const userPrefs = prefs[0] || {
+      emailNotifications: true,
+      newOfferOnFavorite: true,
+      messageReplies: true,
+      statusUpdates: true,
+      purchaseNotifications: true,
+      shippingNotifications: true,
+      priceDropNotifications: true
+    };
 
-    for (const chat of recentChats) {
-      if (chat.unreadSeller > 0) {
-        const listing = await base44.asServiceRole.entities.Listing.filter({ id: chat.listingId });
-        if (listing[0]) {
-          await base44.asServiceRole.functions.invoke('sendNotification', {
-            userId: chat.sellerId,
-            type: 'message',
-            title: '💬 Neue Nachricht zu deiner Anzeige',
-            message: `"${listing[0].title}" - ${chat.unreadSeller} neue Nachricht(en)`,
-            linkUrl: `/Messages?chatId=${chat.id}`
-          });
-        }
-      }
+    // Check if this notification type is enabled
+    const notificationEnabled = {
+      order_update: userPrefs.statusUpdates || userPrefs.shippingNotifications,
+      new_offer: userPrefs.newOfferOnFavorite,
+      product_suggestion: true, // Always allow AI suggestions
+      cart_reminder: userPrefs.purchaseNotifications,
+      security_alert: true, // Always send security alerts
+      price_drop: userPrefs.priceDropNotifications
+    };
+
+    if (!notificationEnabled[type]) {
+      return Response.json({ 
+        success: false, 
+        message: 'Notification type disabled by user' 
+      });
     }
 
-    // 2. NUTZER: Ähnliche Produkte zu Interessen
-    const users = await base44.asServiceRole.entities.User.list();
-    const activities = await base44.asServiceRole.entities.UserActivity.filter(
-      { created_date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() } },
-      '-created_date',
-      1000
-    );
-
-    // Gruppiere Activities nach Nutzer
-    const userInterests = {};
-    for (const activity of activities) {
-      if (!userInterests[activity.userId]) {
-        userInterests[activity.userId] = { categories: new Set(), searches: [] };
-      }
-      if (activity.category) userInterests[activity.userId].categories.add(activity.category);
-      if (activity.searchTerm) userInterests[activity.userId].searches.push(activity.searchTerm);
+    // Generate AI-powered notification content
+    let prompt = '';
+    
+    switch(type) {
+      case 'order_update':
+        prompt = `Genera una notifica per aggiornamento ordine.
+Contesto: ${JSON.stringify(context)}
+Scrivi un messaggio chiaro, personalizzato e utile che informi l'utente dello stato del suo ordine.`;
+        break;
+        
+      case 'new_offer':
+        prompt = `Un venditore seguito ha pubblicato un nuovo annuncio.
+Contesto: ${JSON.stringify(context)}
+Crea una notifica accattivante che invogli l'utente a visualizzare il prodotto.`;
+        break;
+        
+      case 'product_suggestion':
+        prompt = `Suggerisci un prodotto all'utente basandoti sui suoi interessi.
+Contesto: ${JSON.stringify(context)}
+Crea una notifica personalizzata che spieghi perché questo prodotto potrebbe interessargli.`;
+        break;
+        
+      case 'cart_reminder':
+        prompt = `Promemoria carrello abbandonato.
+Contesto: ${JSON.stringify(context)}
+Scrivi un messaggio persuasivo ma non invadente per ricordare all'utente di completare l'acquisto.`;
+        break;
+        
+      case 'security_alert':
+        prompt = `Avviso di sicurezza account.
+Contesto: ${JSON.stringify(context)}
+Scrivi un messaggio chiaro e rassicurante che spieghi il problema e le azioni da intraprendere.`;
+        break;
+        
+      case 'price_drop':
+        prompt = `Notifica riduzione prezzo su un prodotto nei preferiti.
+Contesto: ${JSON.stringify(context)}
+Crea una notifica entusiasta che comunichi l'opportunità di risparmio.`;
+        break;
     }
 
-    // Neue Listings der letzten 24h
-    const newListings = await base44.asServiceRole.entities.Listing.filter(
-      { 
-        created_date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() },
-        status: 'active',
-        moderationStatus: 'approved'
-      },
-      '-created_date',
-      50
-    );
-
-    for (const [userId, interests] of Object.entries(userInterests)) {
-      const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({ userId });
-      if (prefs.length === 0 || !prefs[0].emailNotifications) continue;
-
-      // Finde relevante neue Listings
-      const relevantListings = newListings.filter(listing => 
-        listing.created_by !== userId && 
-        (interests.categories.has(listing.category) || 
-         interests.searches.some(search => 
-           listing.title.toLowerCase().includes(search.toLowerCase())
-         ))
-      );
-
-      if (relevantListings.length > 0) {
-        // KI entscheidet welches Listing am relevantesten ist
-        const aiPrompt = `Analysiere diese Listings und wähle die 3 relevantesten für den Nutzer aus.
-
-Nutzer-Interessen:
-- Kategorien: ${Array.from(interests.categories).join(', ')}
-- Suchanfragen: ${interests.searches.slice(0, 5).join(', ')}
-
-Neue Listings:
-${relevantListings.slice(0, 10).map(l => `- "${l.title}" (${l.category}, ${l.price}€)`).join('\n')}
-
-Wähle die Top 3 relevantesten aus.`;
-
-        try {
-          const aiResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
-            prompt: aiPrompt,
-            response_json_schema: {
-              type: 'object',
-              properties: {
-                selectedTitles: { 
-                  type: 'array', 
-                  items: { type: 'string' },
-                  description: 'Titles der Top 3 Listings'
-                },
-                reason: { type: 'string', description: 'Begründung' }
-              }
-            }
-          });
-
-          const topListings = relevantListings.filter(l => 
-            aiResult.selectedTitles?.some(title => l.title.includes(title))
-          ).slice(0, 3);
-
-          if (topListings.length > 0) {
-            await base44.asServiceRole.functions.invoke('sendNotification', {
-              userId,
-              type: 'offer',
-              title: '✨ Neue Produkte für dich',
-              message: `${topListings.length} neue Anzeigen passend zu deinen Interessen: ${topListings.map(l => l.title).join(', ')}`,
-              linkUrl: '/Marketplace'
-            });
+    const aiResponse = await base44.integrations.Core.InvokeLLM({
+      prompt,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          message: { type: "string" },
+          actionText: { type: "string" },
+          urgency: { 
+            type: "string",
+            enum: ["low", "medium", "high"]
           }
-        } catch (err) {
-          console.error('AI matching error:', err);
         }
-      }
-    }
-
-    // 3. ERINNERUNGEN: Auslaufende Listings
-    const expiringListings = await base44.asServiceRole.entities.Listing.filter({
-      status: 'active',
-      expiresAt: {
-        $gte: new Date().toISOString(),
-        $lte: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
-      },
-      expiryReminderSent: false
-    });
-
-    for (const listing of expiringListings) {
-      await base44.asServiceRole.functions.invoke('sendNotification', {
-        userId: listing.created_by,
-        type: 'reminder',
-        title: '⏰ Anzeige läuft bald ab',
-        message: `"${listing.title}" läuft in weniger als 48 Stunden ab. Verlängern oder neue Anzeige erstellen?`,
-        linkUrl: `/EditListing?id=${listing.id}`
-      });
-
-      await base44.asServiceRole.entities.Listing.update(listing.id, { 
-        expiryReminderSent: true 
-      });
-    }
-
-    // Auslaufende Promotions
-    const expiringPromos = await base44.asServiceRole.entities.ListingPromotion.filter({
-      status: 'paid',
-      endDate: {
-        $gte: new Date().toISOString(),
-        $lte: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
       }
     });
 
-    for (const promo of expiringPromos) {
-      await base44.asServiceRole.functions.invoke('sendNotification', {
-        userId: promo.created_by,
-        type: 'reminder',
-        title: '⭐ Promotion läuft bald ab',
-        message: `Deine ${promo.type}-Promotion endet in weniger als 48 Stunden. Jetzt verlängern?`,
-        linkUrl: `/MySubscriptions`
-      });
-    }
+    // Create notification
+    const notification = await base44.asServiceRole.entities.Notification.create({
+      userId,
+      type,
+      title: aiResponse.title,
+      message: aiResponse.message,
+      actionUrl: context.actionUrl || '',
+      read: false,
+      priority: aiResponse.urgency
+    });
 
-    // 4. PRICE DROPS auf Favoriten
-    const favorites = await base44.asServiceRole.entities.Favorite.list();
-    const userFavorites = {};
-    for (const fav of favorites) {
-      if (!userFavorites[fav.user_email]) userFavorites[fav.user_email] = [];
-      userFavorites[fav.user_email].push(fav.listing_id);
-    }
-
-    for (const [userEmail, listingIds] of Object.entries(userFavorites)) {
-      const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({ userId: userEmail });
-      if (prefs.length === 0 || !prefs[0].priceDropNotifications) continue;
-
-      for (const listingId of listingIds) {
-        const listing = await base44.asServiceRole.entities.Listing.filter({ id: listingId });
-        if (listing[0] && listing[0].offerPrice && listing[0].offerPrice < listing[0].price) {
-          await base44.asServiceRole.functions.invoke('sendNotification', {
-            userId: userEmail,
-            type: 'offer',
-            title: '💰 Preissenkung bei Favorit!',
-            message: `"${listing[0].title}" - Jetzt ${listing[0].offerPrice}€ statt ${listing[0].price}€!`,
-            linkUrl: `/ListingDetail?id=${listingId}`
-          });
-        }
+    // Send email if enabled
+    if (userPrefs.emailNotifications && aiResponse.urgency !== 'low') {
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: userId,
+          subject: aiResponse.title,
+          body: `${aiResponse.message}\n\n${context.actionUrl ? `Vai a: ${context.actionUrl}` : ''}`
+        });
+      } catch (e) {
+        console.log('Email send failed:', e);
       }
     }
 
-    return Response.json({ 
+    return Response.json({
       success: true,
-      processed: {
-        sellerNotifications: recentChats.length,
-        userRecommendations: Object.keys(userInterests).length,
-        expiryReminders: expiringListings.length + expiringPromos.length
-      }
+      notification
     });
 
   } catch (error) {
-    console.error('Smart notifications error:', error);
-    return Response.json({ 
-      error: error.message,
-      success: false 
-    }, { status: 500 });
+    console.error('Smart notification error:', error);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });
