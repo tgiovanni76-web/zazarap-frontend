@@ -5,13 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Package, Search, FileText, Truck, CheckCircle2, XCircle, Clock, Download } from 'lucide-react';
+import { Package, Search, FileText, Truck, CheckCircle2, XCircle, Clock, Download, MapPin, Star } from 'lucide-react';
 import OrderDetails from '../components/orders/OrderDetails';
+import RealTimeTrackingMap from '../components/orders/RealTimeTrackingMap';
+import DeliveryFeedbackModal from '../components/orders/DeliveryFeedbackModal';
 import { format } from 'date-fns';
 
 export default function MyOrders() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [trackingOrder, setTrackingOrder] = useState(null);
+  const [feedbackOrder, setFeedbackOrder] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -21,6 +25,18 @@ export default function MyOrders() {
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders', user?.email],
     queryFn: () => base44.entities.Order.filter({ userId: user.email }, '-created_date'),
+    enabled: !!user
+  });
+
+  const { data: shippings = [] } = useQuery({
+    queryKey: ['shippings'],
+    queryFn: () => base44.entities.Shipping.list(),
+    enabled: !!user
+  });
+
+  const { data: feedbacks = [] } = useQuery({
+    queryKey: ['deliveryFeedbacks', user?.email],
+    queryFn: () => base44.entities.DeliveryFeedback.filter({ userId: user.email }),
     enabled: !!user
   });
 
@@ -59,6 +75,22 @@ export default function MyOrders() {
 
   if (selectedOrder) {
     return <OrderDetails order={selectedOrder} onBack={() => setSelectedOrder(null)} />;
+  }
+
+  if (trackingOrder) {
+    const shipping = shippings.find(s => s.orderId === trackingOrder.id);
+    return (
+      <div className="py-8 max-w-5xl mx-auto">
+        <Button 
+          variant="outline" 
+          onClick={() => setTrackingOrder(null)}
+          className="mb-4"
+        >
+          ← Torna agli ordini
+        </Button>
+        <RealTimeTrackingMap shipping={shipping} order={trackingOrder} />
+      </div>
+    );
   }
 
   return (
@@ -145,14 +177,25 @@ export default function MyOrders() {
                     </div>
                   )}
 
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <Button
                       onClick={() => setSelectedOrder(order)}
-                      className="flex-1"
+                      className="col-span-2"
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       Dettagli ordine
                     </Button>
+                    
+                    {(order.status === 'shipped' || order.status === 'delivered') && (
+                      <Button
+                        variant="outline"
+                        onClick={() => setTrackingOrder(order)}
+                      >
+                        <MapPin className="h-4 w-4 mr-2" />
+                        Traccia
+                      </Button>
+                    )}
+                    
                     <Button
                       variant="outline"
                       onClick={() => handleDownloadInvoice(order.id)}
@@ -160,12 +203,32 @@ export default function MyOrders() {
                       <Download className="h-4 w-4 mr-2" />
                       Fattura
                     </Button>
+
+                    {order.status === 'delivered' && !feedbacks.find(f => f.orderId === order.id) && (
+                      <Button
+                        variant="outline"
+                        className="col-span-2 border-purple-200 text-purple-700 hover:bg-purple-50"
+                        onClick={() => setFeedbackOrder(order)}
+                      >
+                        <Star className="h-4 w-4 mr-2" />
+                        Valuta consegna
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
+      )}
+
+      {feedbackOrder && (
+        <DeliveryFeedbackModal
+          open={!!feedbackOrder}
+          onClose={() => setFeedbackOrder(null)}
+          order={feedbackOrder}
+          shipping={shippings.find(s => s.orderId === feedbackOrder.id)}
+        />
       )}
     </div>
   );
