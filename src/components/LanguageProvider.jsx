@@ -226,6 +226,196 @@ const i18n = {
   "notificationSettings.priceDrops.title": { de: "Preissenkungen", it: "Riduzioni prezzo", en: "Price drops", fr: "Baisses de prix", pl: "Obniżki cen", tr: "Fiyat düşüşleri", uk: "Зниження цін" },
   "notificationSettings.priceDrops.desc": { de: "Benachrichtigungen, wenn beobachtete Artikel günstiger werden", it: "Notifiche quando gli articoli osservati diventano più economici", en: "Notifications when watched items become cheaper", fr: "Notifications lorsque les articles surveillés deviennent moins chers", pl: "Powiadomienia, gdy obserwowane przedmioty stają się tańsze", tr: "İzlenen öğeler ucuzladığında bildirimler", uk: "Сповіщення, коли відстежувані товари дешевшають" },
 
+  // AI Tools for Sellers
+  "aiTools.pageTitle": { de: "KI-Tools für Verkäufer", it: "Strumenti AI per Venditori", en: "AI Tools for Sellers", fr: "Outils IA pour vendeurs", pl: "Narzędzia AI dla sprzedawców", tr: "Satıcılar için AI Araçları", uk: "AI-інструменти для продавців" },
+  "aiTools.pageDesc": { de: "Nutzen Sie Künstliche Intelligenz, um perfekte Anzeigen zu erstellen und Ihren Umsatz zu maximieren", it: "Utilizza l'intelligenza artificiale per creare annunci perfetti e massimizzare le vendite", en: "Use artificial intelligence to create perfect listings and maximize sales", fr: "Utilisez l'intelligence artificielle pour créer des annonces parfaites et maximiser les ventes", pl: "Wykorzystaj sztuczną inteligencję do tworzenia idealnych ogłoszeń i maksymalizacji sprzedaży", tr: "Mükemmel ilanlar oluşturmak ve satışları artırmak için yapay zekayı kullanın", uk: "Використовуйте штучний інтелект для створення ідеальних оголошень та максимізації продажів" },
+  
+  "aiTools.descriptionAssistant.title": { de: "Beschreibungs-Assistent", it: "Assistente Descrizioni", en: "Description Assistant", fr: "Assistant descriptions", pl: "Asystent opisów", tr: "Açıklama Asistanı", uk: "Асистент описів" },
+  "aiTools.descriptionAssistant.desc": { de: "Generiere verkaufsstarke und SEO-optimierte Beschreibungen", it: "Genera descrizioni accattivanti e ottimizzate SEO", en: "Generate compelling and SEO-optimized descriptions", fr: "Générez des descriptions convaincantes et optimisées SEO", pl: "Generuj przekonujące opisy zoptymalizowane pod SEO", tr: "Etkileyici ve SEO optimize edilmiş açıklamalar oluşturun", uk: "Генеруйте переконливі та SEO-оптимізовані описи" },
+  
+  "aiTools.imageAnalyzer.title": { de: "Bildanalyse", it: "Analisi Immagini", en: "Image Analysis", fr: "Analyse d'images", pl: "Analiza obrazów", tr: "Görsel Analizi", uk: "Аналіз зображень" },
+  "aiTools.imageAnalyzer.desc": { de: "Optimiere Fotos für mehr Verkäufe", it: "Ottimizza le foto per vendere di più", en: "Optimize photos for more sales", fr: "Optimisez les photos pour plus de ventes", pl: "Optymalizuj zdjęcia dla większej sprzedaży", tr: "Daha fazla satış için fotoğrafları optimize edin", uk: "Оптимізуйте фото для більших продажів" },
+  
+  "aiTools.demandPredictor.title": { de: "Nachfragevorhersage", it: "Previsione Domanda", en: "Demand Prediction", fr: "Prévision de la demande", pl: "Prognoza popytu", tr: "Talep Tahmini", uk: "Прогноз попиту" },
+  "aiTools.demandPredictor.desc": { de: "Analysiere den Markt und optimiere Preise", it: "Analizza il mercato e ottimizza i prezzi", en: "Analyze market and optimize prices", fr: "Analysez le marché et optimisez les prix", pl: "Analizuj rynek i optymalizuj ceny", tr: "Pazarı analiz edin ve fiyatları optimize edin", uk: "Аналізуйте ринок та оптимізуйте ціни" },
+  
+  "aiTools.testProduct": { de: "Prova gli strumenti", it: "Prova gli strumenti", en: "Test the tools", fr: "Testez les outils", pl: "Przetestuj narzędzia", tr: "Araçları test edin", uk: "Тестуйте інструменти" },
+  "aiTools.testProductDesc": { de: "Füge Produktdaten ein, um die KI-Funktionen zu testen", it: "Inserisci i dati di un prodotto per testare le funzionalità AI", en: "Enter product data to test AI features", fr: "Entrez les données du produit pour tester les fonctionnalités IA", pl: "Wprowadź dane produktu, aby przetestować funkcje AI", tr: "AI özelliklerini test etmek için ürün verilerini girin", uk: "Введіть дані продукту для тестування AI-функцій" },
+  
+  "aiTools.uploadImages": { de: "Bilder hochladen", it: "Carica immagini", en: "Upload images", fr: "Télécharger des images", pl: "Prześlij zdjęcia", tr: "Görselleri yükle", uk: "Завантажити зображення" },
+  "aiTools.clickToUpload": { de: "Klicken zum Hochladen", it: "Clicca per caricare", en: "Click to upload", fr: "Cliquez pour télécharger", pl: "Kliknij, aby przesłać", tr: "Yüklemek için tıklayın", uk: "Натисніть для завантаження" },
+  "aiTools.tips.title": { de: "Tipps für mehr Verkäufe", it: "Consigli per vendere di più", en: "Tips for more sales", fr: "Conseils pour plus de ventes", pl: "Wskazówki dla większej sprzedaży", tr: "Daha fazla satış için ipuçları", uk: "Поради для більших продажів" },
+  
+  // Advanced Description Assistant
+  "aiDesc.mainKeywords": { de: "Hauptschlüsselwörter", it: "Parole chiave principali", en: "Main keywords", fr: "Mots-clés principaux", pl: "Główne słowa kluczowe", tr: "Ana anahtar kelimeler", uk: "Основні ключові слова" },
+  "aiDesc.keywordsPlaceholder": { de: "z.B. neu, original, Garantie...", it: "es. nuovo, originale, garanzia...", en: "e.g. new, original, warranty...", fr: "ex. neuf, original, garantie...", pl: "np. nowy, oryginalny, gwarancja...", tr: "örn. yeni, orijinal, garanti...", uk: "напр. новий, оригінал, гарантія..." },
+  "aiDesc.specificFeatures": { de: "Spezifische Merkmale", it: "Caratteristiche specifiche", en: "Specific features", fr: "Caractéristiques spécifiques", pl: "Specyficzne cechy", tr: "Özel özellikler", uk: "Специфічні особливості" },
+  "aiDesc.featuresPlaceholder": { de: "z.B. 128GB, schwarz, Baujahr 2023...", it: "es. 128GB, colore nero, anno 2023...", en: "e.g. 128GB, black, year 2023...", fr: "ex. 128GB, noir, année 2023...", pl: "np. 128GB, czarny, rok 2023...", tr: "örn. 128GB, siyah, yıl 2023...", uk: "напр. 128GB, чорний, рік 2023..." },
+  "aiDesc.advancedOptions": { de: "Erweiterte Optionen", it: "Opzioni avanzate", en: "Advanced options", fr: "Options avancées", pl: "Opcje zaawansowane", tr: "Gelişmiş seçenekler", uk: "Розширені параметри" },
+  "aiDesc.target": { de: "Zielgruppe", it: "Target", en: "Target audience", fr: "Public cible", pl: "Grupa docelowa", tr: "Hedef kitle", uk: "Цільова аудиторія" },
+  "aiDesc.target.general": { de: "Allgemein", it: "Generale", en: "General", fr: "Général", pl: "Ogólny", tr: "Genel", uk: "Загальний" },
+  "aiDesc.target.young": { de: "Jugendliche (18-30)", it: "Giovani (18-30)", en: "Young (18-30)", fr: "Jeunes (18-30)", pl: "Młodzi (18-30)", tr: "Gençler (18-30)", uk: "Молодь (18-30)" },
+  "aiDesc.target.families": { de: "Familien", it: "Famiglie", en: "Families", fr: "Familles", pl: "Rodziny", tr: "Aileler", uk: "Сім'ї" },
+  "aiDesc.target.professionals": { de: "Fachleute", it: "Professionisti", en: "Professionals", fr: "Professionnels", pl: "Profesjonaliści", tr: "Profesyoneller", uk: "Професіонали" },
+  "aiDesc.target.collectors": { de: "Sammler", it: "Collezionisti", en: "Collectors", fr: "Collectionneurs", pl: "Kolekcjonerzy", tr: "Koleksiyoncular", uk: "Колекціонери" },
+  "aiDesc.tone": { de: "Tonalität", it: "Tono", en: "Tone", fr: "Ton", pl: "Ton", tr: "Ton", uk: "Тон" },
+  "aiDesc.tone.friendly": { de: "Freundlich", it: "Amichevole", en: "Friendly", fr: "Amical", pl: "Przyjazny", tr: "Arkadaşça", uk: "Дружній" },
+  "aiDesc.tone.professional": { de: "Professionell", it: "Professionale", en: "Professional", fr: "Professionnel", pl: "Profesjonalny", tr: "Profesyonel", uk: "Професійний" },
+  "aiDesc.tone.urgent": { de: "Dringend", it: "Urgente", en: "Urgent", fr: "Urgent", pl: "Pilny", tr: "Acil", uk: "Терміновий" },
+  "aiDesc.tone.luxury": { de: "Luxus/Premium", it: "Lusso/Premium", en: "Luxury/Premium", fr: "Luxe/Premium", pl: "Luksus/Premium", tr: "Lüks/Premium", uk: "Люкс/Преміум" },
+  "aiDesc.tone.dynamic": { de: "Jugendlich/Dynamisch", it: "Giovane/Dinamico", en: "Young/Dynamic", fr: "Jeune/Dynamique", pl: "Młodzieżowy/Dynamiczny", tr: "Genç/Dinamik", uk: "Молодіжний/Динамічний" },
+  
+  "aiDesc.generateBtn": { de: "KI-Beschreibungen generieren", it: "Genera Descrizioni AI", en: "Generate AI Descriptions", fr: "Générer descriptions IA", pl: "Generuj opisy AI", tr: "AI Açıklamaları Oluştur", uk: "Генерувати AI-описи" },
+  "aiDesc.generating": { de: "KI-Generierung läuft...", it: "Generazione AI in corso...", en: "AI generation in progress...", fr: "Génération IA en cours...", pl: "Generowanie AI w toku...", tr: "AI oluşturma devam ediyor...", uk: "AI-генерація в процесі..." },
+  "aiDesc.enterTitle": { de: "Gib zuerst einen Titel ein", it: "Inserisci prima un titolo", en: "Enter a title first", fr: "Entrez d'abord un titre", pl: "Najpierw wprowadź tytuł", tr: "Önce bir başlık girin", uk: "Спочатку введіть назву" },
+  "aiDesc.generated": { de: "Erfolgreich generiert!", it: "Generato con successo!", en: "Generated successfully!", fr: "Généré avec succès!", pl: "Wygenerowano pomyślnie!", tr: "Başarıyla oluşturuldu!", uk: "Успішно згенеровано!" },
+  "aiDesc.error": { de: "Generierungsfehler", it: "Errore nella generazione", en: "Generation error", fr: "Erreur de génération", pl: "Błąd generowania", tr: "Oluşturma hatası", uk: "Помилка генерації" },
+  
+  "aiDesc.version.short": { de: "Kurz", it: "Breve", en: "Short", fr: "Court", pl: "Krótki", tr: "Kısa", uk: "Короткий" },
+  "aiDesc.version.standard": { de: "Standard", it: "Standard", en: "Standard", fr: "Standard", pl: "Standardowy", tr: "Standart", uk: "Стандартний" },
+  "aiDesc.version.detailed": { de: "Detailliert", it: "Dettagliata", en: "Detailed", fr: "Détaillé", pl: "Szczegółowy", tr: "Detaylı", uk: "Детальний" },
+  "aiDesc.words": { de: "Wörter", it: "parole", en: "words", fr: "mots", pl: "słów", tr: "kelime", uk: "слів" },
+  "aiDesc.altHeadline": { de: "Alternativer Titel vorgeschlagen", it: "Titolo alternativo suggerito", en: "Alternative headline suggested", fr: "Titre alternatif suggéré", pl: "Sugerowany tytuł alternatywny", tr: "Alternatif başlık önerildi", uk: "Запропонований альтернативний заголовок" },
+  "aiDesc.strengths": { de: "Stärken", it: "Punti di forza", en: "Strengths", fr: "Points forts", pl: "Mocne strony", tr: "Güçlü yönler", uk: "Сильні сторони" },
+  "aiDesc.targetEmotions": { de: "Zielemotionen", it: "Emozioni target", en: "Target emotions", fr: "Émotions cibles", pl: "Docelowe emocje", tr: "Hedef duygular", uk: "Цільові емоції" },
+  "aiDesc.seoOptimization": { de: "SEO-Optimierung", it: "Ottimizzazione SEO", en: "SEO Optimization", fr: "Optimisation SEO", pl: "Optymalizacja SEO", tr: "SEO Optimizasyonu", uk: "SEO-оптимізація" },
+  "aiDesc.metaTitle": { de: "Meta-Titel", it: "Meta Title", en: "Meta Title", fr: "Meta Title", pl: "Meta Title", tr: "Meta Başlık", uk: "Meta Title" },
+  "aiDesc.metaDesc": { de: "Meta-Beschreibung", it: "Meta Description", en: "Meta Description", fr: "Meta Description", pl: "Meta Description", tr: "Meta Açıklama", uk: "Meta Description" },
+  "aiDesc.keywords": { de: "Schlüsselwörter", it: "Keywords", en: "Keywords", fr: "Mots-clés", pl: "Słowa kluczowe", tr: "Anahtar Kelimeler", uk: "Ключові слова" },
+  "aiDesc.socialHashtags": { de: "Social-Media-Hashtags", it: "Hashtag Social", en: "Social Media Hashtags", fr: "Hashtags réseaux sociaux", pl: "Hashtagi mediów społecznościowych", tr: "Sosyal Medya Hashtag'leri", uk: "Хештеги соцмереж" },
+  "aiDesc.applySeo": { de: "SEO anwenden", it: "Applica SEO", en: "Apply SEO", fr: "Appliquer SEO", pl: "Zastosuj SEO", tr: "SEO Uygula", uk: "Застосувати SEO" },
+  "aiDesc.persuasionElements": { de: "Überzeugende Elemente", it: "Elementi persuasivi", en: "Persuasion elements", fr: "Éléments persuasifs", pl: "Elementy perswazji", tr: "İkna edici öğeler", uk: "Переконливі елементи" },
+  "aiDesc.urgencyPhrases": { de: "Dringlichkeitsphrasen", it: "Frasi di urgenza", en: "Urgency phrases", fr: "Phrases d'urgence", pl: "Zwroty pilności", tr: "Aciliyet ifadeleri", uk: "Фрази терміновості" },
+  "aiDesc.trustSignals": { de: "Vertrauenssignale", it: "Segnali di fiducia", en: "Trust signals", fr: "Signaux de confiance", pl: "Sygnały zaufania", tr: "Güven sinyalleri", uk: "Сигнали довіри" },
+  "aiDesc.useDescription": { de: "Diese Beschreibung verwenden", it: "Usa questa descrizione", en: "Use this description", fr: "Utiliser cette description", pl: "Użyj tego opisu", tr: "Bu açıklamayı kullan", uk: "Використати цей опис" },
+  "aiDesc.regenerate": { de: "Neu generieren", it: "Rigenera", en: "Regenerate", fr: "Régénérer", pl: "Wygeneruj ponownie", tr: "Yeniden oluştur", uk: "Перегенерувати" },
+  "aiDesc.copied": { de: "In Zwischenablage kopiert", it: "Copiato negli appunti", en: "Copied to clipboard", fr: "Copié dans le presse-papiers", pl: "Skopiowano do schowka", tr: "Panoya kopyalandı", uk: "Скопійовано в буфер" },
+
+  // Advanced Image Analyzer
+  "aiImg.title": { de: "Erweiterte Bildanalyse", it: "Analisi Avanzata Immagini", en: "Advanced Image Analysis", fr: "Analyse d'images avancée", pl: "Zaawansowana analiza obrazów", tr: "Gelişmiş Görsel Analizi", uk: "Розширений аналіз зображень" },
+  "aiImg.analyzeBtn": { de: "{count} Bilder analysieren", it: "Analizza {count} immagini", en: "Analyze {count} images", fr: "Analyser {count} images", pl: "Analizuj {count} zdjęć", tr: "{count} görseli analiz et", uk: "Проаналізувати {count} зображень" },
+  "aiImg.analyzing": { de: "Analyse läuft...", it: "Analisi in corso...", en: "Analysis in progress...", fr: "Analyse en cours...", pl: "Analiza w toku...", tr: "Analiz devam ediyor...", uk: "Аналіз триває..." },
+  "aiImg.uploadFirst": { de: "Lade mindestens ein Bild hoch", it: "Carica almeno un'immagine", en: "Upload at least one image", fr: "Téléchargez au moins une image", pl: "Prześlij przynajmniej jedno zdjęcie", tr: "En az bir görsel yükleyin", uk: "Завантажте хоча б одне зображення" },
+  "aiImg.completed": { de: "Analyse abgeschlossen!", it: "Analisi completata!", en: "Analysis completed!", fr: "Analyse terminée!", pl: "Analiza zakończona!", tr: "Analiz tamamlandı!", uk: "Аналіз завершено!" },
+  "aiImg.analysisError": { de: "Analysefehler", it: "Errore nell'analisi", en: "Analysis error", fr: "Erreur d'analyse", pl: "Błąd analizy", tr: "Analiz hatası", uk: "Помилка аналізу" },
+  
+  "aiImg.overallScore": { de: "Gesamtbewertung", it: "Punteggio complessivo", en: "Overall score", fr: "Score global", pl: "Wynik ogólny", tr: "Genel puan", uk: "Загальний бал" },
+  "aiImg.rating.excellent": { de: "Ausgezeichnet", it: "Eccellente", en: "Excellent", fr: "Excellent", pl: "Doskonały", tr: "Mükemmel", uk: "Відмінно" },
+  "aiImg.rating.good": { de: "Gut", it: "Buono", en: "Good", fr: "Bon", pl: "Dobry", tr: "İyi", uk: "Добре" },
+  "aiImg.rating.sufficient": { de: "Ausreichend", it: "Sufficiente", en: "Sufficient", fr: "Suffisant", pl: "Wystarczający", tr: "Yeterli", uk: "Достатньо" },
+  "aiImg.rating.needsWork": { de: "Verbesserungsbedürftig", it: "Da migliorare", en: "Needs improvement", fr: "À améliorer", pl: "Do poprawy", tr: "İyileştirme gerekli", uk: "Потребує поліпшення" },
+  
+  "aiImg.bestMainPhoto": { de: "Empfohlenes Hauptfoto: Bild {index}", it: "Foto principale consigliata: Immagine {index}", en: "Recommended main photo: Image {index}", fr: "Photo principale recommandée: Image {index}", pl: "Zalecane główne zdjęcie: Obraz {index}", tr: "Önerilen ana fotoğraf: Görsel {index}", uk: "Рекомендоване основне фото: Зображення {index}" },
+  "aiImg.score": { de: "Punktzahl", it: "Punteggio", en: "Score", fr: "Score", pl: "Wynik", tr: "Puan", uk: "Бал" },
+  
+  "aiImg.tab.photos": { de: "Fotos", it: "Foto", en: "Photos", fr: "Photos", pl: "Zdjęcia", tr: "Fotoğraflar", uk: "Фото" },
+  "aiImg.tab.missing": { de: "Fehlend", it: "Mancanti", en: "Missing", fr: "Manquantes", pl: "Brakujące", tr: "Eksik", uk: "Відсутні" },
+  "aiImg.tab.quickFixes": { de: "Schnelle Korrekturen", it: "Fix Rapidi", en: "Quick Fixes", fr: "Corrections rapides", pl: "Szybkie poprawki", tr: "Hızlı Düzeltmeler", uk: "Швидкі виправлення" },
+  "aiImg.tab.tips": { de: "Tipps", it: "Tips", en: "Tips", fr: "Conseils", pl: "Wskazówki", tr: "İpuçları", uk: "Поради" },
+  
+  "aiImg.photo": { de: "Foto", it: "Foto", en: "Photo", fr: "Photo", pl: "Zdjęcie", tr: "Fotoğraf", uk: "Фото" },
+  "aiImg.light": { de: "Licht", it: "Luce", en: "Light", fr: "Lumière", pl: "Światło", tr: "Işık", uk: "Світло" },
+  "aiImg.quality": { de: "Qualität", it: "Qualità", en: "Quality", fr: "Qualité", pl: "Jakość", tr: "Kalite", uk: "Якість" },
+  "aiImg.composition": { de: "Komposition", it: "Composizione", en: "Composition", fr: "Composition", pl: "Kompozycja", tr: "Kompozisyon", uk: "Композиція" },
+  "aiImg.missingDetails": { de: "Fehlende Details", it: "Dettagli mancanti", en: "Missing details", fr: "Détails manquants", pl: "Brakujące szczegóły", tr: "Eksik detaylar", uk: "Відсутні деталі" },
+  
+  "aiImg.noMissing": { de: "Du hast alle wesentlichen Perspektiven!", it: "Hai tutte le angolazioni essenziali!", en: "You have all essential angles!", fr: "Vous avez tous les angles essentiels!", pl: "Masz wszystkie istotne kąty!", tr: "Tüm temel açılara sahipsiniz!", uk: "У вас є всі необхідні ракурси!" },
+  "aiImg.lifestyleIdeas": { de: "Lifestyle-Foto-Ideen", it: "Idee per foto lifestyle", en: "Lifestyle photo ideas", fr: "Idées de photos lifestyle", pl: "Pomysły na zdjęcia lifestyle", tr: "Yaşam tarzı fotoğraf fikirleri", uk: "Ідеї для лайфстайл-фото" },
+  "aiImg.howToShoot": { de: "So fotografierst du es:", it: "Come scattarla:", en: "How to shoot it:", fr: "Comment la prendre:", pl: "Jak zrobić:", tr: "Nasıl çekilir:", uk: "Як зробити:" },
+  
+  "aiImg.impact": { de: "Auswirkung", it: "Impatto", en: "Impact", fr: "Impact", pl: "Wpływ", tr: "Etki", uk: "Вплив" },
+  "aiImg.impact.high": { de: "Hoch", it: "Alto", en: "High", fr: "Élevé", pl: "Wysoki", tr: "Yüksek", uk: "Високий" },
+  "aiImg.impact.medium": { de: "Mittel", it: "Medio", en: "Medium", fr: "Moyen", pl: "Średni", tr: "Orta", uk: "Середній" },
+  "aiImg.impact.low": { de: "Niedrig", it: "Basso", en: "Low", fr: "Faible", pl: "Niski", tr: "Düşük", uk: "Низький" },
+  
+  "aiImg.smartphoneTips": { de: "Smartphone-Tipps", it: "Tips per smartphone", en: "Smartphone tips", fr: "Conseils smartphone", pl: "Wskazówki smartfona", tr: "Akıllı telefon ipuçları", uk: "Поради для смартфона" },
+  "aiImg.freeApps": { de: "Kostenlose Apps empfohlen", it: "App gratuite consigliate", en: "Recommended free apps", fr: "Apps gratuites recommandées", pl: "Polecane darmowe aplikacje", tr: "Önerilen ücretsiz uygulamalar", uk: "Рекомендовані безкоштовні додатки" },
+  "aiImg.strengths": { de: "Stärken", it: "Punti di forza", en: "Strengths", fr: "Points forts", pl: "Mocne strony", tr: "Güçlü yönler", uk: "Сильні сторони" },
+  "aiImg.toFix": { de: "Zu korrigieren", it: "Da correggere", en: "To fix", fr: "À corriger", pl: "Do naprawy", tr: "Düzeltilecek", uk: "Виправити" },
+  "aiImg.reanalyze": { de: "Neu analysieren", it: "Rianalizza", en: "Reanalyze", fr: "Réanalyser", pl: "Przeanalizuj ponownie", tr: "Yeniden analiz et", uk: "Переаналізувати" },
+  
+  // Market Demand Predictor
+  "aiDemand.title": { de: "Markt-Nachfragevorhersage", it: "Previsione Domanda di Mercato", en: "Market Demand Prediction", fr: "Prévision de la demande du marché", pl: "Prognoza popytu rynkowego", tr: "Pazar Talebi Tahmini", uk: "Прогноз ринкового попиту" },
+  "aiDemand.analyzeBtn": { de: "Nachfrage analysieren", it: "Analizza Domanda", en: "Analyze Demand", fr: "Analyser la demande", pl: "Analizuj popyt", tr: "Talebi Analiz Et", uk: "Проаналізувати попит" },
+  "aiDemand.analyzing": { de: "Marktanalyse läuft...", it: "Analisi mercato in corso...", en: "Market analysis in progress...", fr: "Analyse de marché en cours...", pl: "Analiza rynku w toku...", tr: "Pazar analizi devam ediyor...", uk: "Аналіз ринку триває..." },
+  "aiDemand.enterProductTitle": { de: "Gib zuerst den Produkttitel ein", it: "Inserisci prima il titolo del prodotto", en: "Enter product title first", fr: "Entrez d'abord le titre du produit", pl: "Najpierw wprowadź tytuł produktu", tr: "Önce ürün başlığını girin", uk: "Спочатку введіть назву продукту" },
+  "aiDemand.completed": { de: "Marktanalyse abgeschlossen!", it: "Analisi di mercato completata!", en: "Market analysis completed!", fr: "Analyse de marché terminée!", pl: "Analiza rynku zakończona!", tr: "Pazar analizi tamamlandı!", uk: "Аналіз ринку завершено!" },
+  "aiDemand.error": { de: "Analysefehler", it: "Errore nell'analisi", en: "Analysis error", fr: "Erreur d'analyse", pl: "Błąd analizy", tr: "Analiz hatası", uk: "Помилка аналізу" },
+  
+  "aiDemand.willAnalyze": { de: "Die KI analysiert den Markt und liefert:", it: "L'AI analizzerà il mercato e ti fornirà:", en: "AI will analyze the market and provide:", fr: "L'IA analysera le marché et fournira:", pl: "AI przeanalizuje rynek i dostarczy:", tr: "AI pazarı analiz edecek ve sağlayacak:", uk: "AI проаналізує ринок і надасть:" },
+  "aiDemand.currentDemand": { de: "Aktuelle Nachfrage-Schätzung", it: "Stima della domanda attuale", en: "Current demand estimate", fr: "Estimation de la demande actuelle", pl: "Aktualna ocena popytu", tr: "Mevcut talep tahmini", uk: "Поточна оцінка попиту" },
+  "aiDemand.optimalPrice": { de: "Optimaler empfohlener Preis", it: "Prezzo ottimale consigliato", en: "Optimal recommended price", fr: "Prix optimal recommandé", pl: "Optymalnie zalecana cena", tr: "Önerilen optimal fiyat", uk: "Оптимальна рекомендована ціна" },
+  "aiDemand.expectedTime": { de: "Voraussichtliche Verkaufszeit", it: "Tempo di vendita previsto", en: "Expected sale time", fr: "Temps de vente prévu", pl: "Przewidywany czas sprzedaży", tr: "Beklenen satış süresi", uk: "Очікуваний час продажу" },
+  "aiDemand.trendsSeason": { de: "Trends und Saisonalität", it: "Trend e stagionalità", en: "Trends and seasonality", fr: "Tendances et saisonnalité", pl: "Trendy i sezonowość", tr: "Trendler ve mevsimsellik", uk: "Тренди та сезонність" },
+  "aiDemand.inventoryTips": { de: "Tipps für Lager und Vorrat", it: "Consigli per scorte e inventory", en: "Inventory and stock tips", fr: "Conseils pour stock et inventaire", pl: "Wskazówki dotyczące zapasów", tr: "Stok ve envanter ipuçları", uk: "Поради щодо запасів" },
+  
+  "aiDemand.demandLevel": { de: "Nachfragestufe", it: "Livello di domanda", en: "Demand level", fr: "Niveau de demande", pl: "Poziom popytu", tr: "Talep seviyesi", uk: "Рівень попиту" },
+  "aiDemand.level.veryHigh": { de: "Sehr hoch", it: "Molto Alta", en: "Very High", fr: "Très élevée", pl: "Bardzo wysoki", tr: "Çok Yüksek", uk: "Дуже високий" },
+  "aiDemand.level.high": { de: "Hoch", it: "Alta", en: "High", fr: "Élevée", pl: "Wysoki", tr: "Yüksek", uk: "Високий" },
+  "aiDemand.level.medium": { de: "Mittel", it: "Media", en: "Medium", fr: "Moyenne", pl: "Średni", tr: "Orta", uk: "Середній" },
+  "aiDemand.level.low": { de: "Niedrig", it: "Bassa", en: "Low", fr: "Faible", pl: "Niski", tr: "Düşük", uk: "Низький" },
+  "aiDemand.level.veryLow": { de: "Sehr niedrig", it: "Molto Bassa", en: "Very Low", fr: "Très faible", pl: "Bardzo niski", tr: "Çok Düşük", uk: "Дуже низький" },
+  
+  "aiDemand.similarListings": { de: "Ähnliche Anzeigen", it: "Annunci simili", en: "Similar listings", fr: "Annonces similaires", pl: "Podobne ogłoszenia", tr: "Benzer ilanlar", uk: "Схожі оголошення" },
+  "aiDemand.avgPrice": { de: "Durchschnittspreis", it: "Prezzo medio", en: "Average price", fr: "Prix moyen", pl: "Średnia cena", tr: "Ortalama fiyat", uk: "Середня ціна" },
+  "aiDemand.recentSearches": { de: "Kürzliche Suchen", it: "Ricerche recenti", en: "Recent searches", fr: "Recherches récentes", pl: "Ostatnie wyszukiwania", tr: "Son aramalar", uk: "Останні пошуки" },
+  "aiDemand.recentViews": { de: "Kürzliche Aufrufe", it: "Visualizzazioni", en: "Recent views", fr: "Vues récentes", pl: "Ostatnie wyświetlenia", tr: "Son görüntülemeler", uk: "Останні перегляди" },
+  
+  "aiDemand.tab.pricing": { de: "Preise", it: "Prezzi", en: "Pricing", fr: "Prix", pl: "Ceny", tr: "Fiyatlandırma", uk: "Ціноутворення" },
+  "aiDemand.tab.timing": { de: "Timing", it: "Timing", en: "Timing", fr: "Timing", pl: "Timing", tr: "Zamanlama", uk: "Час" },
+  "aiDemand.tab.trends": { de: "Trends", it: "Trend", en: "Trends", fr: "Tendances", pl: "Trendy", tr: "Trendler", uk: "Тренди" },
+  "aiDemand.tab.inventory": { de: "Lagerbestand", it: "Scorte", en: "Inventory", fr: "Stock", pl: "Zapasy", tr: "Envanter", uk: "Запаси" },
+  
+  "aiDemand.price.quickSale": { de: "Schnellverkauf", it: "Vendita rapida", en: "Quick sale", fr: "Vente rapide", pl: "Szybka sprzedaż", tr: "Hızlı satış", uk: "Швидкий продаж" },
+  "aiDemand.price.recommended": { de: "Empfohlen", it: "Consigliato", en: "Recommended", fr: "Recommandé", pl: "Zalecany", tr: "Önerilen", uk: "Рекомендовано" },
+  "aiDemand.price.premium": { de: "Premium", it: "Premium", en: "Premium", fr: "Premium", pl: "Premium", tr: "Premium", uk: "Преміум" },
+  "aiDemand.price.best": { de: "Optimal", it: "Best", en: "Best", fr: "Optimal", pl: "Najlepszy", tr: "En iyi", uk: "Найкраще" },
+  
+  "aiDemand.time.optimistic": { de: "Optimistisch", it: "Ottimista", en: "Optimistic", fr: "Optimiste", pl: "Optymistyczny", tr: "İyimser", uk: "Оптимістичний" },
+  "aiDemand.time.realistic": { de: "Realistisch", it: "Realistico", en: "Realistic", fr: "Réaliste", pl: "Realistyczny", tr: "Gerçekçi", uk: "Реалістичний" },
+  "aiDemand.time.pessimistic": { de: "Pessimistisch", it: "Pessimista", en: "Pessimistic", fr: "Pessimiste", pl: "Pesymistyczny", tr: "Kötümser", uk: "Песимістичний" },
+  
+  "aiDemand.bestTime": { de: "Bester Verkaufszeitpunkt", it: "Momento migliore per vendere", en: "Best time to sell", fr: "Meilleur moment pour vendre", pl: "Najlepszy czas na sprzedaż", tr: "Satış için en iyi zaman", uk: "Найкращий час для продажу" },
+  "aiDemand.days": { de: "Tage", it: "Giorni", en: "Days", fr: "Jours", pl: "Dni", tr: "Günler", uk: "Дні" },
+  "aiDemand.hours": { de: "Uhrzeiten", it: "Orari", en: "Hours", fr: "Heures", pl: "Godziny", tr: "Saatler", uk: "Години" },
+  
+  "aiDemand.marketTrend": { de: "Markttrend", it: "Trend di mercato", en: "Market trend", fr: "Tendance du marché", pl: "Trend rynkowy", tr: "Pazar trendi", uk: "Ринковий тренд" },
+  "aiDemand.trend.rising": { de: "Steigend", it: "Crescente", en: "Rising", fr: "En hausse", pl: "Rosnący", tr: "Yükseliş", uk: "Зростаючий" },
+  "aiDemand.trend.stable": { de: "Stabil", it: "Stabile", en: "Stable", fr: "Stable", pl: "Stabilny", tr: "Sabit", uk: "Стабільний" },
+  "aiDemand.trend.falling": { de: "Fallend", it: "Decrescente", en: "Falling", fr: "En baisse", pl: "Spadający", tr: "Düşüş", uk: "Спадний" },
+  "aiDemand.forecast3M": { de: "3-Monats-Prognose", it: "Previsione 3 mesi", en: "3-month forecast", fr: "Prévision 3 mois", pl: "Prognoza 3-miesięczna", tr: "3 aylık tahmin", uk: "Прогноз на 3 місяці" },
+  
+  "aiDemand.competition": { de: "Wettbewerbsanalyse", it: "Analisi competizione", en: "Competition analysis", fr: "Analyse de la concurrence", pl: "Analiza konkurencji", tr: "Rekabet analizi", uk: "Аналіз конкуренції" },
+  "aiDemand.competition.high": { de: "Hoch", it: "Alta", en: "High", fr: "Élevée", pl: "Wysoka", tr: "Yüksek", uk: "Висока" },
+  "aiDemand.competition.medium": { de: "Mittel", it: "Media", en: "Medium", fr: "Moyenne", pl: "Średnia", tr: "Orta", uk: "Середня" },
+  "aiDemand.competition.low": { de: "Niedrig", it: "Bassa", en: "Low", fr: "Faible", pl: "Niska", tr: "Düşük", uk: "Низька" },
+  "aiDemand.activeCompetitors": { de: "aktive Konkurrenten", it: "competitor attivi", en: "active competitors", fr: "concurrents actifs", pl: "aktywnych konkurentów", tr: "aktif rakip", uk: "активних конкурентів" },
+  "aiDemand.howToDifferentiate": { de: "Wie differenzieren:", it: "Come differenziarti:", en: "How to differentiate:", fr: "Comment se différencier:", pl: "Jak się wyróżnić:", tr: "Nasıl farklılaşılır:", uk: "Як виділитись:" },
+  
+  "aiDemand.buyerProfile": { de: "Typisches Käuferprofil", it: "Profilo acquirente tipico", en: "Typical buyer profile", fr: "Profil d'acheteur typique", pl: "Typowy profil kupującego", tr: "Tipik alıcı profili", uk: "Типовий профіль покупця" },
+  
+  "aiDemand.opportunities": { de: "Chancen", it: "Opportunità", en: "Opportunities", fr: "Opportunités", pl: "Szanse", tr: "Fırsatlar", uk: "Можливості" },
+  "aiDemand.risks": { de: "Risiken", it: "Rischi", en: "Risks", fr: "Risques", pl: "Ryzyko", tr: "Riskler", uk: "Ризики" },
+  
+  "aiDemand.stockManagement": { de: "Lagerverwaltung", it: "Gestione scorte", en: "Stock management", fr: "Gestion des stocks", pl: "Zarządzanie zapasami", tr: "Stok yönetimi", uk: "Управління запасами" },
+  "aiDemand.optimalQuantity": { de: "Optimale Menge", it: "Quantità ottimale", en: "Optimal quantity", fr: "Quantité optimale", pl: "Optymalna ilość", tr: "Optimal miktar", uk: "Оптимальна кількість" },
+  "aiDemand.restockTrigger": { de: "Wiederauffüllung bei", it: "Trigger rifornimento", en: "Restock trigger", fr: "Déclencheur réapprovisionnement", pl: "Wyzwalacz uzupełnienia", tr: "Yeniden stok tetikleyicisi", uk: "Тригер поповнення" },
+  
+  "aiDemand.complementary": { de: "Ergänzende Produkte", it: "Prodotti complementari", en: "Complementary products", fr: "Produits complémentaires", pl: "Produkty komplementarne", tr: "Tamamlayıcı ürünler", uk: "Комплементарні продукти" },
+  "aiDemand.priceAlerts": { de: "Preisalarme empfohlen", it: "Alert prezzo consigliati", en: "Recommended price alerts", fr: "Alertes de prix recommandées", pl: "Zalecane alerty cenowe", tr: "Önerilen fiyat uyarıları", uk: "Рекомендовані цінові сповіщення" },
+  
+  "aiDemand.actionableInsights": { de: "Handlungsempfehlungen", it: "Azioni consigliate", en: "Actionable insights", fr: "Recommandations d'action", pl: "Zalecenia do działania", tr: "Eyleme dönüştürülebilir içgörüler", uk: "Рекомендації до дій" },
+  "aiDemand.effort.easy": { de: "Einfach", it: "Facile", en: "Easy", fr: "Facile", pl: "Łatwe", tr: "Kolay", uk: "Легко" },
+  "aiDemand.effort.medium": { de: "Mittel", it: "Medio", en: "Medium", fr: "Moyen", pl: "Średnie", tr: "Orta", uk: "Середньо" },
+  "aiDemand.effort.hard": { de: "Schwierig", it: "Difficile", en: "Hard", fr: "Difficile", pl: "Trudne", tr: "Zor", uk: "Складно" },
+  
+  "aiDemand.confidence": { de: "Zuverlässigkeit", it: "Affidabilità", en: "Confidence", fr: "Fiabilité", pl: "Pewność", tr: "Güvenilirlik", uk: "Надійність" },
+  "aiDemand.confidence.high": { de: "Hoch", it: "Alta", en: "High", fr: "Élevée", pl: "Wysoka", tr: "Yüksek", uk: "Висока" },
+  "aiDemand.confidence.medium": { de: "Mittel", it: "Media", en: "Medium", fr: "Moyenne", pl: "Średnia", tr: "Orta", uk: "Середня" },
+  "aiDemand.confidence.low": { de: "Niedrig", it: "Bassa", en: "Low", fr: "Faible", pl: "Niska", tr: "Düşük", uk: "Низька" },
+  "aiDemand.basedOnDataPoints": { de: "Basierend auf {count} Datenpunkten", it: "Basato su {count} punti dati", en: "Based on {count} data points", fr: "Basé sur {count} points de données", pl: "Na podstawie {count} punktów danych", tr: "{count} veri noktasına dayalı", uk: "На основі {count} точок даних" },
+  "aiDemand.updateAnalysis": { de: "Analyse aktualisieren", it: "Aggiorna analisi", en: "Update analysis", fr: "Mettre à jour l'analyse", pl: "Zaktualizuj analizę", tr: "Analizi güncelle", uk: "Оновити аналіз" },
+
   "notificationSettings.email.title": { de: "E-Mail-Benachrichtigungen", it: "Notifiche email", en: "Email notifications", fr: "Notifications par email", pl: "Powiadomienia e-mail", tr: "E-posta bildirimleri", uk: "Сповіщення електронною поштою" },
   "notificationSettings.email.desc": { de: "Benachrichtigungen auch per E-Mail erhalten", it: "Ricevi una copia delle notifiche anche via email", en: "Receive notifications via email as well", fr: "Recevoir également des notifications par email", pl: "Otrzymuj powiadomienia również e-mailem", tr: "Bildirimleri e-posta ile de alın", uk: "Отримувати сповіщення також електронною поштою" },
 
