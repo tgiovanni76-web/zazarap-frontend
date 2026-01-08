@@ -743,9 +743,12 @@ function LayoutInner({ children, currentPageName }) {
                                 </Badge>
                               )}
                             </Link>
+                            <Link to={createPageUrl('UserSettings')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
+                              <Settings className="h-5 w-5" aria-hidden="true" focusable="false" />
+                            </Link>
                             {user?.role === 'admin' && (
-                                                                <Link to={createPageUrl('AdminDashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
-                                <Settings className="h-5 w-5" aria-hidden="true" focusable="false" />
+                              <Link to={createPageUrl('AdminDashboard')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
+                                <LayoutDashboard className="h-5 w-5" aria-hidden="true" focusable="false" />
                               </Link>
                             )}
                           </ErrorBoundary>

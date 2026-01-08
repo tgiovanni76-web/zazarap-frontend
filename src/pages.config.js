@@ -48,6 +48,7 @@ import PromoteListing from './pages/PromoteListing';
 import Recommendations from './pages/Recommendations';
 import ReferralDashboard from './pages/ReferralDashboard';
 import RejectedListings from './pages/RejectedListings';
+import SellerAITools from './pages/SellerAITools';
 import SellerDashboard from './pages/SellerDashboard';
 import SellerHub from './pages/SellerHub';
 import SystemCheckup from './pages/SystemCheckup';
@@ -57,7 +58,7 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import SellerAITools from './pages/SellerAITools';
+import UserSettings from './pages/UserSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "Recommendations": Recommendations,
     "ReferralDashboard": ReferralDashboard,
     "RejectedListings": RejectedListings,
+    "SellerAITools": SellerAITools,
     "SellerDashboard": SellerDashboard,
     "SellerHub": SellerHub,
     "SystemCheckup": SystemCheckup,
@@ -121,7 +123,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "SellerAITools": SellerAITools,
+    "UserSettings": UserSettings,
 }
 
 export const pagesConfig = {
