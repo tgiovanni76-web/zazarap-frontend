@@ -14,6 +14,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
+import { useLanguage } from '../LanguageProvider';
 
 export default function MarketDemandPredictor({ 
   productTitle, 
