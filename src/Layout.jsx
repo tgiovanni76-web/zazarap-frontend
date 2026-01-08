@@ -23,6 +23,7 @@ const SEOHead = lazy(() => import('@/components/SEOHead'));
 const LanguageSwitcher = lazy(() => import('@/components/LanguageSwitcher'));
 const NewsletterForm = lazy(() => import('@/components/NewsletterForm'));
 const CookieBanner = lazy(() => import('@/components/CookieBanner'));
+const ChatbotButton = lazy(() => import('@/components/support/ChatbotButton'));
 
 
 
