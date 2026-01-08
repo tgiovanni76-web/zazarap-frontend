@@ -20,6 +20,7 @@ import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
 import AdvancedDescriptionAssistant from '../components/seller/AdvancedDescriptionAssistant';
 import AdvancedImageAnalyzer from '../components/seller/AdvancedImageAnalyzer';
 import MarketDemandPredictor from '../components/seller/MarketDemandPredictor';
+import TagGenerator from '../components/seller/TagGenerator';
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -34,6 +35,7 @@ export default function NewListing() {
     category: '',
     city: '',
     listingType: 'fixed',
+    tags: [],
     seo_title: '',
     seo_description: '',
     seo_keywords: ''
@@ -284,6 +286,19 @@ export default function NewListing() {
           className="zaza-input"
           placeholder=""
         />
+
+        {formData.tags && formData.tags.length > 0 && (
+          <div className="mb-4">
+            <label className="zaza-form-label">Tag Selezionati ({formData.tags.length})</label>
+            <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg">
+              {formData.tags.map((tag, idx) => (
+                <span key={idx} className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <label className="zaza-form-label">{t('listingType')}</label>
         <select

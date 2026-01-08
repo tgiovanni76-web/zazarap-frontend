@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 import ListingOptimizationAssistant from '../components/seller/ListingOptimizationAssistant';
 import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
+import TagGenerator from '../components/seller/TagGenerator';
 
 export default function EditListing() {
   const { t } = useLanguage();
@@ -28,6 +29,7 @@ export default function EditListing() {
     expiresAt: '',
     category: '',
     city: '',
+    tags: [],
     seo_title: '',
     seo_description: '',
     seo_keywords: ''
@@ -59,6 +61,7 @@ export default function EditListing() {
         expiresAt: listing.expiresAt ? new Date(listing.expiresAt).toISOString().slice(0,16) : '',
         category: listing.category || '',
         city: listing.city || '',
+        tags: listing.tags || [],
         seo_title: listing.seo_title || '',
         seo_description: listing.seo_description || '',
         seo_keywords: listing.seo_keywords || ''
@@ -254,6 +257,32 @@ export default function EditListing() {
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           className="zaza-input"
         />
+
+        {formData.title && formData.category && (
+          <div className="mt-4">
+            <TagGenerator
+              title={formData.title}
+              description={formData.description}
+              category={formData.category}
+              price={formData.price}
+              images={[...existingImages, ...imagePreviews]}
+              onTagsSelect={(tags) => setFormData({ ...formData, tags })}
+            />
+          </div>
+        )}
+
+        {formData.tags && formData.tags.length > 0 && (
+          <div className="mb-4">
+            <label className="zaza-form-label">Tag Selezionati ({formData.tags.length})</label>
+            <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg">
+              {formData.tags.map((tag, idx) => (
+                <span key={idx} className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="border-t pt-6 mt-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 text-slate-700">SEO Optimization (Opzionale)</h3>

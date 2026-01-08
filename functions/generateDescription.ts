@@ -9,89 +9,115 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { title, category, condition, features, price, images } = await req.json();
+    const { title, category, condition, price, images, features } = await req.json();
 
     if (!title) {
       return Response.json({ error: 'Title required' }, { status: 400 });
     }
 
-    // Analyze image if provided
-    let imageInsights = null;
+    // Analyze images if provided
+    let imageInsights = '';
     if (images && images.length > 0) {
       try {
-        imageInsights = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analysiere dieses Produktbild detailliert. Beschreibe: Produkttyp, Zustand, Farbe, Besonderheiten, sichtbare Features, Marke (falls erkennbar).`,
-          file_urls: [images[0]],
+        const imageAnalysis = await base44.integrations.Core.InvokeLLM({
+          prompt: `Analizza queste immagini di prodotto e descrivi cosa vedi in modo conciso.`,
+          file_urls: images.slice(0, 2),
           response_json_schema: {
-            type: 'object',
+            type: "object",
             properties: {
-              productType: { type: 'string' },
-              condition: { type: 'string' },
-              colors: { type: 'array', items: { type: 'string' } },
-              features: { type: 'array', items: { type: 'string' } },
-              brand: { type: 'string' }
+              description: { type: "string" }
             }
           }
         });
+        imageInsights = imageAnalysis.description;
       } catch (err) {
-        console.error('Image analysis error:', err);
+        console.error('Image analysis failed:', err);
       }
     }
 
-    // Generate compelling description
-    const descriptionPrompt = `Du bist ein professioneller Texter für Kleinanzeigen. Erstelle eine überzeugende, verkaufsstarke Produktbeschreibung.
+    // Get market insights for better descriptions
+    const allListings = await base44.asServiceRole.entities.Listing.list();
+    const categoryListings = allListings
+      .filter(l => l.category === category && l.status === 'active')
+      .slice(0, 20);
 
-Produkt:
-Titel: ${title}
-Kategorie: ${category || 'Nicht angegeben'}
-Zustand: ${condition || 'Gebraucht'}
-Preis: ${price ? price + '€' : 'Zu verhandeln'}
-Features: ${features || 'Keine angegeben'}
+    const avgPrice = categoryListings.length > 0
+      ? categoryListings.reduce((sum, l) => sum + (l.price || 0), 0) / categoryListings.length
+      : price;
 
-${imageInsights ? `Bildanalyse: ${JSON.stringify(imageInsights)}` : ''}
+    const pricePosition = price < avgPrice * 0.8 ? 'ottimo affare' :
+                          price > avgPrice * 1.2 ? 'premium' : 'competitivo';
 
-Anforderungen:
-1. Schreibe einen ansprechenden, informativen Text (ca. 100-150 Wörter)
-2. Hebe wichtige Features und Vorteile hervor
-3. Beschreibe den Zustand ehrlich
-4. Verwende verkaufsfördernde, aber authentische Sprache
-5. Füge einen Call-to-Action am Ende hinzu
-6. Nutze Emojis sparsam für wichtige Punkte
-7. Strukturiere mit Absätzen für bessere Lesbarkeit
+    // AI prompt for persuasive description
+    const prompt = `Sei un copywriter esperto di e-commerce. Crea una descrizione di prodotto PERSUASIVA e DETTAGLIATA.
 
-Stil: Freundlich, professionell, vertrauenswürdig`;
+PRODOTTO:
+Titolo: ${title}
+Categoria: ${category}
+Condizione: ${condition || 'usato'}
+Prezzo: ${price}€ (${pricePosition} - media categoria: ${avgPrice.toFixed(2)}€)
+${features ? `Caratteristiche specifiche: ${features}` : ''}
+${imageInsights ? `Dalle immagini: ${imageInsights}` : ''}
 
-    const aiResponse = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt: descriptionPrompt,
+OBIETTIVO:
+Creare una descrizione che:
+1. Catturi l'attenzione nei primi 2 secondi
+2. Evidenzi i benefici chiave (non solo caratteristiche)
+3. Crei urgenza e desiderio
+4. Anticipi e risolva obiezioni comuni
+5. Includa call-to-action efficace
+
+STRUTTURA:
+- Hook iniziale accattivante (1 frase)
+- Descrizione dettagliata con benefici
+- Specifiche tecniche (se pertinenti)
+- Condizioni e dettagli d'uso
+- Invito all'azione
+
+TONO:
+- Professionale ma amichevole
+- Onesto e trasparente
+- Entusiasta ma credibile
+- Ottimizzato per conversione
+
+LUNGHEZZA: 150-250 parole
+
+Scrivi SOLO la descrizione, senza titoli o formattazione speciale.`;
+
+    const aiResponse = await base44.integrations.Core.InvokeLLM({
+      prompt,
       response_json_schema: {
-        type: 'object',
+        type: "object",
         properties: {
-          description: { type: 'string', description: 'Generierte Beschreibung' },
-          highlights: { 
-            type: 'array', 
-            items: { type: 'string' },
-            description: 'Wichtigste Verkaufsargumente (3-5 Punkte)' 
+          description: { type: "string" },
+          highlights: {
+            type: "array",
+            items: { type: "string" }
           },
-          seoKeywords: {
-            type: 'array',
-            items: { type: 'string' },
-            description: 'SEO-Keywords für bessere Auffindbarkeit'
-          }
+          keywords: {
+            type: "array",
+            items: { type: "string" }
+          },
+          callToAction: { type: "string" }
         }
       }
     });
 
     return Response.json({
       success: true,
-      ...aiResponse,
-      imageInsights
+      description: aiResponse.description,
+      highlights: aiResponse.highlights || [],
+      keywords: aiResponse.keywords || [],
+      callToAction: aiResponse.callToAction,
+      imageInsights: imageInsights || null,
+      marketPosition: pricePosition
     });
 
   } catch (error) {
     console.error('Description generation error:', error);
     return Response.json({ 
       error: error.message,
-      success: false 
+      description: ''
     }, { status: 500 });
   }
 });
