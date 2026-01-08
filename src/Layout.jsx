@@ -763,8 +763,11 @@ function LayoutInner({ children, currentPageName }) {
       <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4">
         {children}
       </main>
-      
-      <Suspense fallback={null}><CookieBanner /></Suspense>
+
+      <Suspense fallback={null}>
+        <CookieBanner />
+        <ChatbotButton />
+      </Suspense>
       
       <footer className="bg-[#0c1526] text-white mt-20 py-10">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
