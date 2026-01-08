@@ -17,6 +17,9 @@ import DescriptionGenerator from '../components/seller/DescriptionGenerator';
 import TitleGenerator from '../components/seller/TitleGenerator';
 import ImageAnalyzer from '../components/seller/ImageAnalyzer';
 import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
+import AdvancedDescriptionAssistant from '../components/seller/AdvancedDescriptionAssistant';
+import AdvancedImageAnalyzer from '../components/seller/AdvancedImageAnalyzer';
+import MarketDemandPredictor from '../components/seller/MarketDemandPredictor';
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -153,6 +156,20 @@ export default function NewListing() {
           onTitleSelect={(title) => setFormData({ ...formData, title })}
         />
 
+        {/* Market Demand Predictor - show early for pricing strategy */}
+        {formData.title && formData.category && (
+          <div className="mt-4">
+            <MarketDemandPredictor
+              productTitle={formData.title}
+              category={formData.category}
+              currentPrice={formData.price}
+              condition="gebraucht"
+              location={formData.city}
+              onPriceSelect={(price) => setFormData({ ...formData, price: price.toString() })}
+            />
+          </div>
+        )}
+
         <input
           name="title"
           value={formData.title}
@@ -163,14 +180,27 @@ export default function NewListing() {
 
         <label className="zaza-form-label">{t('description')}</label>
 
-        <DescriptionGenerator
+        <AdvancedDescriptionAssistant
           title={formData.title}
           category={formData.category}
           condition="gebraucht"
           price={formData.price}
           images={imagePreviews}
           onDescriptionSelect={(desc) => setFormData({ ...formData, description: desc })}
+          onSeoSelect={(seo) => setFormData({ ...formData, ...seo })}
         />
+
+        {/* Keep original for simple use case */}
+        <div className="mt-4">
+          <DescriptionGenerator
+            title={formData.title}
+            category={formData.category}
+            condition="gebraucht"
+            price={formData.price}
+            images={imagePreviews}
+            onDescriptionSelect={(desc) => setFormData({ ...formData, description: desc })}
+          />
+        </div>
 
         <textarea
           name="description"
@@ -323,7 +353,16 @@ export default function NewListing() {
               ))}
             </div>
 
-            <ImageAnalyzer images={imagePreviews} />
+            {/* Advanced Image Analyzer with detailed suggestions */}
+            <AdvancedImageAnalyzer 
+              images={imagePreviews} 
+              category={formData.category}
+            />
+
+            {/* Original Image Analyzer for quick feedback */}
+            <div className="mt-4">
+              <ImageAnalyzer images={imagePreviews} />
+            </div>
               </>
             )}
 

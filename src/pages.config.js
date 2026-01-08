@@ -46,6 +46,7 @@ import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import PromoteListing from './pages/PromoteListing';
 import Recommendations from './pages/Recommendations';
+import ReferralDashboard from './pages/ReferralDashboard';
 import RejectedListings from './pages/RejectedListings';
 import SellerDashboard from './pages/SellerDashboard';
 import SellerHub from './pages/SellerHub';
@@ -56,7 +57,6 @@ import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import ReferralDashboard from './pages/ReferralDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +109,7 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "PromoteListing": PromoteListing,
     "Recommendations": Recommendations,
+    "ReferralDashboard": ReferralDashboard,
     "RejectedListings": RejectedListings,
     "SellerDashboard": SellerDashboard,
     "SellerHub": SellerHub,
@@ -119,7 +120,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
-    "ReferralDashboard": ReferralDashboard,
 }
 
 export const pagesConfig = {
