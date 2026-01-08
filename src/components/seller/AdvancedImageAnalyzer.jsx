@@ -13,7 +13,6 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
-import { useLanguage } from '../LanguageProvider';
 
 export default function AdvancedImageAnalyzer({ images, category, onReorderImages }) {
   const { t } = useLanguage();
@@ -280,7 +279,7 @@ export default function AdvancedImageAnalyzer({ images, category, onReorderImage
                       <span className="font-medium">{fix.title}</span>
                       <div className="flex gap-2">
                         <Badge variant="outline" className="text-xs">
-                          {t('aiImg.impact')}: {t(`aiImg.impact.${fix.impact}`)}
+                          {t('aiImg.impact')}: {fix.impact === 'alto' ? t('aiImg.impact.high') : fix.impact === 'medio' ? t('aiImg.impact.medium') : t('aiImg.impact.low')}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
                           ⏱️ {fix.timeRequired}

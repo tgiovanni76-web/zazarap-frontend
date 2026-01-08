@@ -14,7 +14,6 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
-import { useLanguage } from '../LanguageProvider';
 
 export default function MarketDemandPredictor({ 
   productTitle, 
@@ -322,7 +321,7 @@ export default function MarketDemandPredictor({
                         {getTrendIcon(prediction.prediction.marketTrend.direction)}
                       </p>
                       <Badge variant="outline">
-                        {t(`aiDemand.trend.${prediction.prediction.marketTrend.direction}`)}
+                       {prediction.prediction.marketTrend.direction === 'crescente' ? t('aiDemand.trend.rising') : prediction.prediction.marketTrend.direction === 'stabile' ? t('aiDemand.trend.stable') : t('aiDemand.trend.falling')}
                       </Badge>
                     </div>
                     <p className="text-sm text-slate-600 mb-2">
@@ -344,7 +343,7 @@ export default function MarketDemandPredictor({
                         prediction.prediction.competitionAnalysis.level === 'media' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-green-100 text-green-800'
                       }>
-                        {t('aiDemand.competition')}: {t(`aiDemand.competition.${prediction.prediction.competitionAnalysis.level}`)}
+                        {t('aiDemand.competition')}: {prediction.prediction.competitionAnalysis.level === 'alta' ? t('aiDemand.competition.high') : prediction.prediction.competitionAnalysis.level === 'media' ? t('aiDemand.competition.medium') : t('aiDemand.competition.low')}
                       </Badge>
                       <span className="text-sm text-slate-600">
                         ~{prediction.prediction.competitionAnalysis.activeCompetitors} {t('aiDemand.activeCompetitors')}
@@ -484,10 +483,10 @@ export default function MarketDemandPredictor({
             {prediction.confidence && (
               <div className="text-center text-xs text-slate-500">
                 <Badge variant="outline">
-                  {t('aiDemand.confidence')}: {t(`aiDemand.confidence.${prediction.confidence.level}`)}
+                  {t('aiDemand.confidence')}: {prediction.confidence.level === 'alta' ? t('aiDemand.confidence.high') : prediction.confidence.level === 'media' ? t('aiDemand.confidence.medium') : t('aiDemand.confidence.low')}
                 </Badge>
                 <span className="ml-2">
-                  {t('aiDemand.basedOnDataPoints', { count: prediction.confidence.dataPoints })}
+                  {t('aiDemand.basedOnDataPoints').replace('{count}', prediction.confidence.dataPoints)}
                 </span>
               </div>
             )}

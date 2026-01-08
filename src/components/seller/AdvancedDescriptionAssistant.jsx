@@ -15,7 +15,6 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageProvider';
-import { useLanguage } from '../LanguageProvider';
 
 export default function AdvancedDescriptionAssistant({ 
   title, 
