@@ -569,9 +569,13 @@ export default function Marketplace() {
       )}
 
       {user && (
-        <div className="mb-8">
-          <AIRecommendations user={user} />
-        </div>
+        <>
+          <ProductSearchAssistant />
+          <PersonalizedRecommendations user={user} />
+          <div className="mb-8">
+            <AIRecommendations user={user} />
+          </div>
+        </>
       )}
 
       <FeaturedListings listings={listings} />
