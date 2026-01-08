@@ -1,50 +1,110 @@
-import React from "react";
-import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Star, Package, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
 
-function useCounts(userEmail) {
-  const { data: activeListings = [] } = useQuery({
-    queryKey: ["stats", "activeListings", userEmail],
-    queryFn: () => base44.entities.Listing.filter({ created_by: userEmail, status: "active" }),
-    enabled: !!userEmail,
-  });
-  const { data: soldListings = [] } = useQuery({
-    queryKey: ["stats", "soldListings", userEmail],
-    queryFn: () => base44.entities.Listing.filter({ created_by: userEmail, status: "sold" }),
-    enabled: !!userEmail,
-  });
-  const { data: purchases = [] } = useQuery({
-    queryKey: ["stats", "purchases", userEmail],
-    queryFn: () => base44.entities.Payment.filter({ buyerId: userEmail }),
-    enabled: !!userEmail,
-  });
-  const { data: ratings = [] } = useQuery({
-    queryKey: ["stats", "ratings", userEmail],
-    queryFn: () => base44.entities.UserRating.filter({ ratedEmail: userEmail }, "-created_date", 200),
-    enabled: !!userEmail,
-  });
-
-  const avg = ratings.length ? (ratings.reduce((s, r) => s + (r.overallRating || 0), 0) / ratings.length) : 0;
-
-  return {
-    active: activeListings.length,
-    sold: soldListings.length,
-    purchases: purchases.length,
-    avgRating: Number.isFinite(avg) ? avg.toFixed(1) : "0.0",
-    reviewsCount: ratings.length,
-  };
-}
-
-export default function UserStats({ userEmail }) {
-  const counts = useCounts(userEmail);
+export default function UserStats({ user, isOwnProfile }) {
+  const sellerStats = user.sellerStats || {};
+  const buyerStats = user.buyerStats || {};
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <Card><CardContent className="p-4"><div className="text-xs text-slate-500">Annunci attivi</div><div className="text-2xl font-bold">{counts.active}</div></CardContent></Card>
-      <Card><CardContent className="p-4"><div className="text-xs text-slate-500">Vendite concluse</div><div className="text-2xl font-bold">{counts.sold}</div></CardContent></Card>
-      <Card><CardContent className="p-4"><div className="text-xs text-slate-500">Acquisti</div><div className="text-2xl font-bold">{counts.purchases}</div></CardContent></Card>
-      <Card><CardContent className="p-4"><div className="text-xs text-slate-500">Valutazione</div><div className="text-2xl font-bold">{counts.avgRating}<span className="text-sm text-slate-500"> /5 ({counts.reviewsCount})</span></div></CardContent></Card>
+    <div className="space-y-4">
+      {/* Seller Stats */}
+      {(isOwnProfile || sellerStats.totalSales > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5 text-blue-600" />
+              Statistiche Venditore
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <p className="text-sm text-slate-600">Vendite</p>
+                <p className="text-2xl font-bold">{sellerStats.totalSales || 0}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Fatturato</p>
+                <p className="text-2xl font-bold">{(sellerStats.totalRevenue || 0).toFixed(0)}€</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Valutazione</p>
+                <div className="flex items-center gap-1">
+                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                  <p className="text-2xl font-bold">{(sellerStats.averageRating || 0).toFixed(1)}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Recensioni</p>
+                <p className="text-2xl font-bold">{sellerStats.totalReviews || 0}</p>
+              </div>
+            </div>
+            {sellerStats.responseTime && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="h-4 w-4" />
+                Tempo di risposta medio: {sellerStats.responseTime}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Buyer Stats */}
+      {(isOwnProfile || buyerStats.totalPurchases > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShoppingBag className="h-5 w-5 text-green-600" />
+              Statistiche Acquirente
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <p className="text-sm text-slate-600">Acquisti</p>
+                <p className="text-2xl font-bold">{buyerStats.totalPurchases || 0}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Speso</p>
+                <p className="text-2xl font-bold">{(buyerStats.totalSpent || 0).toFixed(0)}€</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Valutazione</p>
+                <div className="flex items-center gap-1">
+                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                  <p className="text-2xl font-bold">{(buyerStats.averageRating || 0).toFixed(1)}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Recensioni</p>
+                <p className="text-2xl font-bold">{buyerStats.totalReviews || 0}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Badges */}
+      {user.badges && user.badges.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-purple-600" />
+              Badge e Riconoscimenti
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {user.badges.map((badge, idx) => (
+                <Badge key={idx} className="text-sm px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-900 border-purple-300">
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
