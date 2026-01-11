@@ -32,46 +32,110 @@ Deno.serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // Get user context
+    // Get comprehensive user context for better support
     const listings = await base44.entities.Listing.filter({ created_by: user.email }, '-created_date', 5);
     const orders = await base44.entities.Order.filter({ userId: user.email }, '-created_date', 5);
-    const faqs = await base44.asServiceRole.entities.FAQ.list();
+    const tickets = await base44.entities.SupportTicket.filter({ userId: user.email }, '-created_date', 3);
+    const faqs = await base44.asServiceRole.entities.FAQ.filter({ active: true });
+    
+    // Get platform documentation/knowledge base
+    const knowledgeBase = `
+COME FUNZIONA ZAZARAP:
+- Zazarap è un marketplace sicuro per comprare e vendere prodotti usati
+- Protezione acquirenti con PayPal ed Escrow
+- Sistema di moderazione AI per sicurezza
+- Chat integrata tra acquirenti e venditori
 
-    // Build context for AI
+PUBBLICARE ANNUNCI:
+- Crea annuncio con titolo, descrizione, prezzo e foto
+- Annunci gratuiti, opzioni premium disponibili
+- Moderazione automatica per contenuti appropriati
+- Suggerimenti AI per ottimizzare annunci
+
+COMPRARE PRODOTTI:
+- Cerca prodotti per categoria, prezzo, località
+- Contatta venditori tramite chat interna
+- Pagamento sicuro con PayPal o Escrow
+- Tracking spedizione in tempo reale
+
+PAGAMENTI E SICUREZZA:
+- PayPal: protezione acquirenti integrata
+- Escrow: fondi trattenuti fino a consegna confermata
+- Sistema anti-frode AI
+- Valutazioni e recensioni verificate
+
+SPEDIZIONI:
+- Accordo diretto con venditore
+- Tracking automatico disponibile
+- Feedback consegna per migliorare servizio
+
+PROBLEMI E DISPUTE:
+- Centro dispute per risolvere controversie
+- Supporto ticket per problemi complessi
+- Rimborsi gestiti tramite PayPal/Escrow
+
+PROGRAMMA FEDELTÀ:
+- Guadagna punti con acquisti e vendite
+- Livelli Bronze, Silver, Gold, Platinum
+- Sconti e vantaggi esclusivi
+
+PROMOZIONI ANNUNCI:
+- Annunci in evidenza: maggiore visibilità
+- Top Anzeige: posizionamento prioritario
+- Piani giornalieri, settimanali o mensili
+`;
+
+
+    // Build comprehensive context for AI
     const context = {
       userEmail: user.email,
       userRole: user.role,
       recentListings: listings.length,
       recentOrders: orders.length,
+      openTickets: tickets.filter(t => t.status === 'open').length,
       conversationHistory: messages.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n')
     };
 
-    // AI Prompt
-    const prompt = `Sei un assistente AI per Zazarap, un marketplace online. Aiuta l'utente con professionalità e gentilezza.
+    // Enhanced AI Prompt with knowledge base
+    const prompt = `Sei Zazarap AI Assistant, un assistente virtuale esperto per il marketplace Zazarap. Sei disponibile 24/7 e sei addestrato su tutta la documentazione della piattaforma.
 
 CONTESTO UTENTE:
 - Email: ${context.userEmail}
 - Ruolo: ${context.userRole}
-- Annunci recenti: ${context.recentListings}
-- Ordini recenti: ${context.recentOrders}
+- Annunci pubblicati: ${context.recentListings}
+- Ordini effettuati: ${context.recentOrders}
+- Ticket aperti: ${context.openTickets}
 
-CONVERSAZIONE PRECEDENTE:
+CONVERSAZIONE CORRENTE:
 ${context.conversationHistory}
 
-FAQ DISPONIBILI:
-${faqs.slice(0, 10).map(faq => `Q: ${faq.question}\nA: ${faq.answer}`).join('\n\n')}
+KNOWLEDGE BASE PIATTAFORMA:
+${knowledgeBase}
 
-RICHIESTA UTENTE: ${message}
+FAQ PIÙ COMUNI:
+${faqs.slice(0, 15).map(faq => `Q: ${faq.question}\nA: ${faq.answer}`).join('\n\n')}
 
-COMPITI:
-1. Rispondi alla domanda dell'utente in modo chiaro e completo
-2. Se la richiesta è complessa o richiede intervento umano, suggerisci di aprire un ticket
-3. Usa le FAQ quando pertinenti
-4. Fornisci link utili quando appropriato
+DOMANDA UTENTE: "${message}"
 
-IMPORTANTE: Se l'utente ha problemi complessi (dispute, pagamenti, account security), consiglia di aprire un ticket di supporto.
+ISTRUZIONI OPERATIVE:
+1. Analizza la domanda e identifica l'intento (informazioni, problema tecnico, dispute, pagamenti, etc.)
+2. Rispondi utilizzando la knowledge base e le FAQ quando pertinenti
+3. Fornisci risposte complete, chiare e actionable con passi specifici
+4. Se la domanda riguarda problemi complessi (dispute, pagamenti, sicurezza account, problemi tecnici gravi), suggerisci di creare un ticket
+5. Mantieni tono professionale, cordiale e rassicurante
+6. Usa emoji occasionalmente per essere friendly (max 1-2 per messaggio)
+7. Fornisci link interni utili quando appropriato (es: /ListingDetail, /UserSettings, /FAQ)
+8. Se l'utente è frustrato o arrabbiato, mostra empatia e offri soluzioni immediate
 
-Rispondi in italiano, in modo cordiale e professionale.`;
+CRITERI ESCALATION:
+- Dispute di pagamento → ESCALATE
+- Problemi di sicurezza account → ESCALATE  
+- Frodi sospette → ESCALATE
+- Bug tecnici critici → ESCALATE
+- Richieste di rimborso → ESCALATE
+- Problemi irrisolti dopo 3+ messaggi → ESCALATE
+
+Rispondi in italiano con un approccio customer-first.`;
 
     const aiResponse = await base44.integrations.Core.InvokeLLM({
       prompt,
