@@ -1,143 +1,49 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Package, TrendingUp, DollarSign, MapPin } from 'lucide-react';
-import StatCard from '../components/marketplace/StatCard';
-import ListingsChart from '../components/marketplace/ListingsChart';
-import CategoryBreakdown from '../components/marketplace/CategoryBreakdown';
-import RecentListings from '../components/marketplace/RecentListings';
-import DashboardFilters from '../components/marketplace/DashboardFilters';
-import { useLanguage } from '../components/LanguageProvider';
+import { Package, TrendingUp, DollarSign } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function MarketplaceDashboard() {
-  const { t } = useLanguage();
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => base44.entities.Listing.list('-created_date'),
   });
 
-  const filteredListings = useMemo(() => {
-    return listings.filter(listing => {
-      const statusMatch = statusFilter === 'all' || listing.status === statusFilter;
-      const categoryMatch = categoryFilter === 'all' || listing.category === categoryFilter;
-      return statusMatch && categoryMatch;
-    });
-  }, [listings, statusFilter, categoryFilter]);
+  const active = listings.filter(l => l.status === 'active').length;
+  const sold = listings.filter(l => l.status === 'sold').length;
+  const totalRevenue = listings.filter(l => l.status === 'sold').reduce((sum, l) => sum + (l.price || 0), 0);
 
-  const stats = useMemo(() => {
-    const active = filteredListings.filter(l => l.status === 'active').length;
-    const sold = filteredListings.filter(l => l.status === 'sold').length;
-    const totalRevenue = filteredListings
-      .filter(l => l.status === 'sold')
-      .reduce((sum, l) => sum + (l.price || 0), 0);
-    const uniqueCities = [...new Set(filteredListings.map(l => l.city).filter(Boolean))].length;
-
-    return {
-      active,
-      sold,
-      totalRevenue,
-      uniqueCities
-    };
-  }, [filteredListings]);
-
-  const handleExport = () => {
-    const csvContent = [
-      ['Title', 'Price', 'Category', 'Status', 'Views', 'Inquiries', 'Created Date'].join(','),
-      ...filteredListings.map(listing => [
-        `"${listing.title}"`,
-        listing.price,
-        listing.category,
-        listing.status,
-        listing.views || 0,
-        listing.inquiries || 0,
-        new Date(listing.created_date).toLocaleDateString()
-      ].join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `marketplace-report-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-  const handleReset = () => {
-    setStatusFilter('all');
-    setCategoryFilter('all');
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="p-6 text-center">Caricamento...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">{t('dashboard.title') || 'Zazarap Dashboard'}</h1>
-          <p className="text-slate-600">{t('dashboard.subtitle') || 'Monitora le performance del tuo marketplace'}</p>
-        </div>
-
-        {/* Filters */}
-        <DashboardFilters
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          categoryFilter={categoryFilter}
-          setCategoryFilter={setCategoryFilter}
-          onExport={handleExport}
-          onReset={handleReset}
-        />
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            title={t('dashboard.activeListings') || 'Annunci attivi'}
-            value={stats.active}
-            icon={Package}
-            color="bg-blue-500"
-            index={0}
-          />
-          <StatCard
-            title={t('dashboard.soldItems') || 'Venduti'}
-            value={stats.sold}
-            icon={TrendingUp}
-            color="bg-green-500"
-            index={1}
-          />
-          <StatCard
-            title={t('dashboard.totalRevenue') || 'Ricavi totali'}
-            value={`€${stats.totalRevenue.toLocaleString()}`}
-            icon={DollarSign}
-            color="bg-purple-500"
-            index={2}
-          />
-          <StatCard
-            title={t('city') || 'Città'}
-            value={stats.uniqueCities}
-            icon={MapPin}
-            color="bg-orange-500"
-            index={3}
-          />
-        </div>
-
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ListingsChart listings={filteredListings} />
-          <CategoryBreakdown listings={filteredListings} />
-        </div>
-
-        {/* Recent Listings */}
-        <RecentListings listings={filteredListings} />
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <Package className="h-8 w-8 text-blue-600 mb-2" />
+            <p className="text-sm text-slate-600">Attivi</p>
+            <p className="text-2xl font-bold">{active}</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <TrendingUp className="h-8 w-8 text-green-600 mb-2" />
+            <p className="text-sm text-slate-600">Venduti</p>
+            <p className="text-2xl font-bold">{sold}</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <DollarSign className="h-8 w-8 text-purple-600 mb-2" />
+            <p className="text-sm text-slate-600">Ricavi</p>
+            <p className="text-2xl font-bold">€{totalRevenue.toLocaleString()}</p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
