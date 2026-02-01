@@ -9,7 +9,7 @@ export default function AGB() {
   return (
     <div className="py-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">{t('agb.title')}</h1>
-      <p className="text-sm text-slate-600 mb-6">{t('agb.validFrom')}: {new Date().toLocaleDateString('de-DE')}</p>
+      <p className="text-sm text-slate-600 mb-6">{t('agb.validFrom')}: 01.02.2026</p>
       <p className="text-sm text-slate-600 mb-6">
         <strong>{t('agb.operator')}:</strong> zazarap GmbH, Musterstraße 123, 10115 Berlin, Deutschland<br />
         <strong>E-Mail:</strong> info@zazarap.com
@@ -114,6 +114,18 @@ export default function AGB() {
           <p>{t('agb.section6b.p1')}</p>
           <p>{t('agb.section6b.p2')}</p>
           <p>{t('agb.section6b.p3')}</p>
+          <p>{t('agb.section6b.p4')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('agb.section6c.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('agb.section6c.p1')}</p>
+          <p>{t('agb.section6c.p2')}</p>
+          <p>{t('agb.section6c.p3')}</p>
           <p>
             <Link to={createPageUrl('Widerrufsrecht')} className="text-blue-600 hover:underline">
               → {t('agb.section6b.linkWithdrawal')}
@@ -160,13 +172,7 @@ export default function AGB() {
           <CardTitle>{t('agb.section9.title')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700">
-          <p>
-            {t('agb.section9.p1')}{' '}
-            <Link to={createPageUrl('PrivacyPolicy')} className="text-blue-600 hover:underline">
-              {t('agb.section9.linkPrivacy')}
-            </Link>
-            {' '}{t('agb.section9.p2')}
-          </p>
+          <p>{t('agb.section9.p1')}</p>
         </CardContent>
       </Card>
 
