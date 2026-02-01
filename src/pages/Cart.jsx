@@ -12,9 +12,6 @@ import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShoppingBag, Heart,
 import { toast } from 'sonner';
 import SavedItems from '../components/cart/SavedItems';
 import AddressManager from '../components/cart/AddressManager';
-import AIRecommendations from '../components/checkout/AIRecommendations';
-import SmartShipping from '../components/checkout/SmartShipping';
-import FraudDetection from '../components/checkout/FraudDetection';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -336,25 +333,6 @@ export default function Cart() {
             </div>
 
             <div className="lg:col-span-1 space-y-4">
-              <AIRecommendations cartItems={cartItems} />
-
-              <FraudDetection 
-                cartTotal={total}
-                shippingAddress={addresses.find(a => a.id === selectedAddressId)}
-                paymentMethod="card"
-                enabled={cartItems.length > 0}
-              />
-
-              {selectedAddressId && (
-                <SmartShipping 
-                  address={addresses.find(a => a.id === selectedAddressId)}
-                  cartTotal={total}
-                  onSelectCarrier={(carrier, cost) => {
-                    // Handle carrier selection
-                  }}
-                />
-              )}
-
               <Card className="sticky top-4">
                 <CardHeader>
                   <CardTitle>Riepilogo ordine</CardTitle>
