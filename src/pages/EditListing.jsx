@@ -10,9 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
-import ListingOptimizationAssistant from '../components/seller/ListingOptimizationAssistant';
-import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
-import TagGenerator from '../components/seller/TagGenerator';
 
 export default function EditListing() {
   const { t } = useLanguage();
@@ -188,13 +185,6 @@ export default function EditListing() {
         <h2 className="text-3xl font-bold">{t('editListing')}</h2>
       </div>
 
-      <ListingOptimizationAssistant 
-        listing={listing} 
-        onApplySuggestions={(updates) => {
-          setFormData(prev => ({ ...prev, ...updates }));
-        }}
-      />
-
       <form onSubmit={handleSubmit} className="mt-6">
         <label className="zaza-form-label">{t('title')}</label>
         <input
@@ -258,31 +248,7 @@ export default function EditListing() {
           className="zaza-input"
         />
 
-        {formData.title && formData.category && (
-          <div className="mt-4">
-            <TagGenerator
-              title={formData.title}
-              description={formData.description}
-              category={formData.category}
-              price={formData.price}
-              images={[...existingImages, ...imagePreviews]}
-              onTagsSelect={(tags) => setFormData({ ...formData, tags })}
-            />
-          </div>
-        )}
 
-        {formData.tags && formData.tags.length > 0 && (
-          <div className="mb-4">
-            <label className="zaza-form-label">Tag Selezionati ({formData.tags.length})</label>
-            <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg">
-              {formData.tags.map((tag, idx) => (
-                <span key={idx} className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="border-t pt-6 mt-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 text-slate-700">SEO Optimization (Opzionale)</h3>
@@ -359,17 +325,7 @@ export default function EditListing() {
           </div>
         )}
 
-        {formData.title && formData.description && (
-          <div className="mb-6">
-            <PreSubmitCheck 
-              title={formData.title}
-              description={formData.description}
-              category={formData.category}
-              price={formData.price}
-              enabled={true}
-            />
-          </div>
-        )}
+
 
         <div className="border-t pt-6 mt-6 mb-4">
           <h3 className="text-lg font-semibold mb-3">Werbeoptionen</h3>
