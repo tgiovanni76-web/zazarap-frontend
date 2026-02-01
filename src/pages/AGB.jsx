@@ -99,23 +99,13 @@ export default function AGB() {
           <CardTitle>{t('agb.section6b.title')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
-          <p><strong>{t('agb.section6b.commercialSellers')}:</strong></p>
           <p>{t('agb.section6b.p1')}</p>
-          <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>{t('agb.section6b.li1')}</li>
-            <li>{t('agb.section6b.li2')}</li>
-            <li>{t('agb.section6b.li3')}</li>
-          </ul>
           <p>{t('agb.section6b.p2')}</p>
-          <p><strong>{t('agb.section6b.privateSellers')}:</strong></p>
-          <p>{t('agb.section6b.p3')}</p>
-          <p>{t('agb.section6b.p4')}</p>
           <p>
             <Link to={createPageUrl('Widerrufsrecht')} className="text-blue-600 hover:underline">
               → {t('agb.section6b.linkWithdrawal')}
             </Link>
           </p>
-          <p className="mt-4 font-semibold text-slate-800">{t('agb.section6b.summary')}</p>
         </CardContent>
       </Card>
 
@@ -185,6 +175,7 @@ export default function AGB() {
             <li>{t('agb.section10.li9')}</li>
             <li>{t('agb.section10.li10')}</li>
             <li>{t('agb.section10.li11')}</li>
+            <li>{t('agb.section10.li12')}</li>
           </ol>
         </CardContent>
       </Card>
