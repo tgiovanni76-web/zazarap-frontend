@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -75,23 +75,7 @@ function LayoutInner({ children, currentPageName }) {
     enabled: !!user,
   });
 
-  const { data: cart } = useQuery({
-    queryKey: ['cart', user?.email],
-    queryFn: async () => {
-      const carts = await base44.entities.Cart.filter({ userId: user.email, status: 'active' });
-      return carts[0] || null;
-    },
-    enabled: !!user,
-  });
-
-  const { data: cartItems = [] } = useQuery({
-    queryKey: ['cartItems', cart?.id],
-    queryFn: () => base44.entities.CartItem.filter({ cartId: cart.id }),
-    enabled: !!cart,
-  });
-
   const unreadCount = notifications.length;
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <ErrorBoundary>
