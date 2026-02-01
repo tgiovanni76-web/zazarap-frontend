@@ -115,6 +115,14 @@ export default function AGB() {
           <p>{t('agb.section6b.p2')}</p>
           <p>{t('agb.section6b.p3')}</p>
           <p>{t('agb.section6b.p4')}</p>
+          <p>{t('agb.section6b.p5')}</p>
+          <p>{t('agb.section6b.p6')}</p>
+          <p>{t('agb.section6b.p7')}</p>
+          <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <p className="font-medium">{t('agb.section6b.consent')}</p>
+            <p className="mt-2 text-xs text-slate-600">{t('agb.section6b.waiver')}</p>
+          </div>
+          <p className="mt-4 text-xs text-slate-600 italic">{t('agb.section6b.moderation')}</p>
         </CardContent>
       </Card>
 
