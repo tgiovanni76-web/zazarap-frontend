@@ -24,6 +24,7 @@ export default function AGB() {
           <p>{t('agb.section1.p2')}</p>
           <p><strong>{t('agb.section1.important')}:</strong> {t('agb.section1.p3')}</p>
           <p>{t('agb.section1.p4')}</p>
+          <p>{t('agb.section1.p5')}</p>
         </CardContent>
       </Card>
 
@@ -64,6 +65,7 @@ export default function AGB() {
             <li>{t('agb.section4.li5')}</li>
           </ul>
           <p>{t('agb.section4.p2')}</p>
+          <p>{t('agb.section4.p3')}</p>
         </CardContent>
       </Card>
 
@@ -111,6 +113,7 @@ export default function AGB() {
         <CardContent className="text-sm text-slate-700 space-y-2">
           <p>{t('agb.section6b.p1')}</p>
           <p>{t('agb.section6b.p2')}</p>
+          <p>{t('agb.section6b.p3')}</p>
           <p>
             <Link to={createPageUrl('Widerrufsrecht')} className="text-blue-600 hover:underline">
               → {t('agb.section6b.linkWithdrawal')}
