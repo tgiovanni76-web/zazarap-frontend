@@ -1,134 +1,168 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function PrivacyPolicy() {
+  const { t } = useLanguage();
+  
   return (
     <div className="py-8 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
+      <h1 className="text-4xl font-bold mb-6">{t('privacy.title')}</h1>
+      <p className="text-slate-600 mb-6">{t('privacy.validFrom')}: 21. November 2024</p>
       
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>1. Raccolta Dati</CardTitle>
+          <CardTitle>{t('privacy.section1.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>Raccogliamo i seguenti dati personali:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Dati di registrazione:</strong> nome, email, password criptata</li>
-            <li><strong>Dati transazionali:</strong> cronologia acquisti, vendite, messaggi</li>
-            <li><strong>Dati tecnici:</strong> indirizzo IP, browser, cookie</li>
-            <li><strong>Dati opzionali:</strong> foto profilo, numero telefono, indirizzo</li>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section1.intro')}</p>
+          <p className="mt-2">
+            zazarap GmbH<br />
+            Musterstraße 123<br />
+            10115 Berlin<br />
+            Deutschland<br />
+            E-Mail: privacy@zazarap.com
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('privacy.section2.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section2.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section2.li1')}</li>
+            <li>{t('privacy.section2.li2')}</li>
+            <li>{t('privacy.section2.li3')}</li>
+            <li>{t('privacy.section2.li4')}</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>2. Utilizzo Dati</CardTitle>
+          <CardTitle>{t('privacy.section3.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>I tuoi dati vengono utilizzati per:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Fornire e migliorare i servizi della piattaforma</li>
-            <li>Elaborare transazioni e pagamenti</li>
-            <li>Comunicazioni relative agli ordini e supporto clienti</li>
-            <li>Prevenire frodi e garantire la sicurezza</li>
-            <li>Analisi statistiche anonime (opzionale)</li>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section3.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section3.li1')}</li>
+            <li>{t('privacy.section3.li2')}</li>
+            <li>{t('privacy.section3.li3')}</li>
+            <li>{t('privacy.section3.li4')}</li>
+            <li>{t('privacy.section3.li5')}</li>
           </ul>
+          <p className="mt-3">{t('privacy.section3.consent')}</p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>3. Cookie</CardTitle>
+          <CardTitle>{t('privacy.section4.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p><strong>Cookie Essenziali (necessari):</strong></p>
-          <ul className="list-disc pl-6 space-y-1 mb-4">
-            <li>Autenticazione e sessione utente</li>
-            <li>Sicurezza e prevenzione frodi</li>
-            <li>Preferenze di base</li>
-          </ul>
-          <p><strong>Cookie Opzionali (richiedono consenso):</strong></p>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section4.intro')}</p>
+          <p className="mt-2"><strong>{t('privacy.section4.necessary')}</strong></p>
           <ul className="list-disc pl-6 space-y-1">
-            <li>Analytics e statistiche di utilizzo</li>
-            <li>Personalizzazione contenuti</li>
-            <li>Marketing (se accettato)</li>
+            <li>{t('privacy.section4.nec1')}</li>
+            <li>{t('privacy.section4.nec2')}</li>
+            <li>{t('privacy.section4.nec3')}</li>
+          </ul>
+          <p className="mt-3"><strong>{t('privacy.section4.optional')}</strong></p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>{t('privacy.section4.opt1')}</li>
+            <li>{t('privacy.section4.opt2')}</li>
+            <li>{t('privacy.section4.opt3')}</li>
+          </ul>
+          <p className="mt-3">{t('privacy.section4.revoke')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('privacy.section5.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section5.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section5.li1')}</li>
+            <li>{t('privacy.section5.li2')}</li>
+            <li>{t('privacy.section5.li3')}</li>
+          </ul>
+          <p className="mt-3">{t('privacy.section5.noSale')}</p>
+          <p className="mt-2 italic text-slate-600">{t('privacy.section5.notice')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('privacy.section6.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section6.p1')}</p>
+          <p>{t('privacy.section6.p2')}</p>
+          <p>{t('privacy.section6.p3')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('privacy.section7.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section7.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section7.li1')}</li>
+            <li>{t('privacy.section7.li2')}</li>
+            <li>{t('privacy.section7.li3')}</li>
+            <li>{t('privacy.section7.li4')}</li>
+            <li>{t('privacy.section7.li5')}</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>4. Condivisione Dati</CardTitle>
+          <CardTitle>{t('privacy.section8.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>I tuoi dati NON vengono venduti a terzi. Condividiamo dati solo con:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>PayPal:</strong> per processare pagamenti (solo dati necessari)</li>
-            <li><strong>Corrieri:</strong> nome e indirizzo per spedizioni</li>
-            <li><strong>Autorità:</strong> se richiesto per legge</li>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section8.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section8.li1')}</li>
+            <li>{t('privacy.section8.li2')}</li>
+            <li>{t('privacy.section8.li3')}</li>
           </ul>
+          <p className="mt-3">{t('privacy.section8.deletion')}</p>
         </CardContent>
       </Card>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>5. I Tuoi Diritti (GDPR)</CardTitle>
+          <CardTitle>{t('privacy.section9.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>Hai diritto a:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Accesso:</strong> richiedere copia dei tuoi dati</li>
-            <li><strong>Rettifica:</strong> correggere dati inesatti</li>
-            <li><strong>Cancellazione:</strong> eliminare il tuo account e dati</li>
-            <li><strong>Portabilità:</strong> esportare i tuoi dati</li>
-            <li><strong>Opposizione:</strong> rifiutare marketing</li>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('privacy.section9.intro')}</p>
+          <ul className="list-disc pl-6 space-y-1 mt-2">
+            <li>{t('privacy.section9.li1')}</li>
+            <li>{t('privacy.section9.li2')}</li>
+            <li>{t('privacy.section9.li3')}</li>
+            <li>{t('privacy.section9.li4')}</li>
+            <li>{t('privacy.section9.li5')}</li>
+            <li>{t('privacy.section9.li6')}</li>
           </ul>
-          <p className="mt-4">Per esercitare i tuoi diritti, contatta: <strong>privacy@zazarap.com</strong></p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>6. Sicurezza</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>Implementiamo misure di sicurezza tra cui:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Crittografia SSL/TLS per tutte le comunicazioni</li>
-            <li>Password criptate con algoritmi sicuri</li>
-            <li>Sistema escrow per proteggere i pagamenti</li>
-            <li>Backup regolari dei dati</li>
-            <li>Monitoraggio anti-frode</li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>7. Conservazione Dati</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p>Conserviamo i tuoi dati per:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Account attivo:</strong> per tutta la durata dell'utilizzo</li>
-            <li><strong>Transazioni:</strong> 10 anni (obbligo fiscale)</li>
-            <li><strong>Log sicurezza:</strong> 12 mesi</li>
-            <li><strong>Dopo cancellazione:</strong> 30 giorni (backup), poi eliminazione permanente</li>
-          </ul>
+          <p className="mt-3">{t('privacy.section9.contact')}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>8. Modifiche</CardTitle>
+          <CardTitle>{t('privacy.section10.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm">
-          <p>
-            Ci riserviamo il diritto di modificare questa Privacy Policy. 
-            Le modifiche saranno comunicate via email e pubblicate su questa pagina.
-          </p>
-          <p className="mt-3"><strong>Ultimo aggiornamento:</strong> 21 Novembre 2024</p>
+        <CardContent className="text-sm text-slate-700">
+          <p>{t('privacy.section10.p1')}</p>
+          <p className="mt-3"><strong>{t('privacy.validFrom')}:</strong> 21. November 2024</p>
         </CardContent>
       </Card>
     </div>
