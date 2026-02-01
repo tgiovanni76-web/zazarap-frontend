@@ -45,8 +45,9 @@ export default function AGB() {
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
           <p>{t('agb.section3.p1')}</p>
-          <p><strong>{t('agb.section3.important')}:</strong> {t('agb.section3.p2')}</p>
-          <p>{t('agb.section3.p3')}</p>
+          <p>{t('agb.section3.p2')}</p>
+          <p><strong>{t('agb.section3.important')}:</strong> {t('agb.section3.p3')}</p>
+          <p>{t('agb.section3.p4')}</p>
         </CardContent>
       </Card>
 
@@ -175,7 +176,7 @@ export default function AGB() {
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
           <p>{t('agb.section10.intro')}</p>
-          <ol className="list-decimal list-inside space-y-1 ml-4">
+          <ul className="list-disc list-inside space-y-1 ml-4">
             <li>{t('agb.section10.li1')}</li>
             <li>{t('agb.section10.li2')}</li>
             <li>{t('agb.section10.li3')}</li>
@@ -185,10 +186,7 @@ export default function AGB() {
             <li>{t('agb.section10.li7')}</li>
             <li>{t('agb.section10.li8')}</li>
             <li>{t('agb.section10.li9')}</li>
-            <li>{t('agb.section10.li10')}</li>
-            <li>{t('agb.section10.li11')}</li>
-            <li>{t('agb.section10.li12')}</li>
-          </ol>
+          </ul>
         </CardContent>
       </Card>
 
