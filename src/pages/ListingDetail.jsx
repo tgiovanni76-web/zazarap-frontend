@@ -17,7 +17,7 @@ import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
 import FollowButton from '../components/profile/FollowButton';
 import SimilarProducts from '../components/marketplace/SimilarProducts';
-import CartButton from '../components/cart/CartButton';
+
 
 export default function ListingDetail() {
   const { t } = useLanguage();
@@ -312,10 +312,6 @@ export default function ListingDetail() {
             </>
           ) : (
             <>
-              <CartButton 
-                listing={listing} 
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
-              />
               <button 
                 onClick={handleContactSeller}
                 disabled={isContactingLoading}
