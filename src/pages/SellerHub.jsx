@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Package, DollarSign, Eye, Sparkles, LifeBuoy, Zap, AlertCircle } from 'lucide-react';
 import SellerMetrics from '../components/seller/SellerMetrics';
 import ProductsQuickManager from '../components/seller/ProductsQuickManager';
-import AIOptimizationTools from '../components/seller/AIOptimizationTools';
 import PrioritySupport from '../components/seller/PrioritySupport';
 
 export default function SellerHub() {
@@ -99,7 +98,7 @@ export default function SellerHub() {
       </div>
 
       <Tabs defaultValue="metrics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="metrics">
             <TrendingUp className="h-4 w-4 mr-2" />
             Metriche
@@ -107,10 +106,6 @@ export default function SellerHub() {
           <TabsTrigger value="products">
             <Package className="h-4 w-4 mr-2" />
             Prodotti
-          </TabsTrigger>
-          <TabsTrigger value="ai">
-            <Sparkles className="h-4 w-4 mr-2" />
-            AI Tools
           </TabsTrigger>
           <TabsTrigger value="support">
             <LifeBuoy className="h-4 w-4 mr-2" />
@@ -124,10 +119,6 @@ export default function SellerHub() {
 
         <TabsContent value="products">
           <ProductsQuickManager listings={listings} />
-        </TabsContent>
-
-        <TabsContent value="ai">
-          <AIOptimizationTools listings={listings} />
         </TabsContent>
 
         <TabsContent value="support">

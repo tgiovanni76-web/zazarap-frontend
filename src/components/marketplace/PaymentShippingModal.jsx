@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CreditCard, Truck, X, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { checkAntifraud, checkRateLimit } from './AntifraudCheck';
-import { trackPurchase } from '@/components/Analytics';
 
 export default function PaymentShippingModal({ chat, listing, onClose }) {
   const [paymentMethod, setPaymentMethod] = useState('paypal');
@@ -110,14 +109,6 @@ export default function PaymentShippingModal({ chat, listing, onClose }) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['chats'] });
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      
-      // Track purchase in analytics
-      trackPurchase(data.payment.id, totalAmount, [{
-        item_id: listing.id,
-        item_name: listing.title,
-        price: listing.price,
-        quantity: 1
-      }]);
       
       toast.success('Acquisto completato con successo!');
       onClose();

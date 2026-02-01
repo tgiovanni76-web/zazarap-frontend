@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight } from 'lucide-react';
-import AIRecommendations from '../components/marketplace/AIRecommendations';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import { useLanguage } from '../components/LanguageProvider';
 
@@ -62,11 +61,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* AI Recommendations - Prominent placement for logged-in users */}
-      {user && (
-        <AIRecommendations user={user} />
-      )}
 
       {/* Features */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
