@@ -285,45 +285,7 @@ export default function Marketplace() {
 
               className="pl-10 h-12 text-lg border-2 border-red-600"
             />
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-auto">
-                {suggestions.map((s) => (
-                  <button
-                    type="button"
-                    key={s}
-                    onMouseDown={async () => {
-                      setSearchTerm(s);
-                      setShowSuggestions(false);
-                      if (user) {
-                        base44.entities.UserActivity.create({ userId: user.email, activityType: 'search', searchTerm: s });
-                      }
-                      // Trigger semantic search
-                      if (s.trim().length > 3) {
-                        setIsSemanticSearching(true);
-                        try {
-                          const response = await base44.functions.invoke('semanticSearch', {
-                            query: s.trim(),
-                            limit: 50
-                          });
-                          if (response.data?.results) {
-                            setSemanticResults(response.data);
-                            setUseSemanticSearch(true);
-                          }
-                        } catch (err) {
-                          console.error('Semantic search error:', err);
-                        } finally {
-                          setIsSemanticSearching(false);
-                        }
-                      }
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
-                  >
-                    <Search className="h-3 w-3 text-slate-400" />
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
+
           </div>
         </div>
 
