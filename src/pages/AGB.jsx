@@ -69,6 +69,16 @@ export default function AGB() {
 
       <Card className="mb-6">
         <CardHeader>
+          <CardTitle>{t('agb.section4a.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('agb.section4a.p1')}</p>
+          <p>{t('agb.section4a.p2')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
           <CardTitle>{t('agb.section5.title')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
