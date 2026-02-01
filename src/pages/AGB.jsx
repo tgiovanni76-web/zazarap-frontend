@@ -195,6 +195,21 @@ export default function AGB() {
 
       <Card className="mb-6">
         <CardHeader>
+          <CardTitle>{t('agb.section10a.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('agb.section10a.p1')}</p>
+          <ul className="list-disc list-inside space-y-1 ml-4">
+            <li>{t('agb.section10a.li1')}</li>
+            <li>{t('agb.section10a.li2')}</li>
+            <li>{t('agb.section10a.li3')}</li>
+          </ul>
+          <p>{t('agb.section10a.p2')}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
           <CardTitle>{t('agb.section11.title')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-700 space-y-2">
@@ -205,6 +220,17 @@ export default function AGB() {
             <li>{t('agb.section11.li3')}</li>
             <li>{t('agb.section11.li4')}</li>
           </ul>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t('agb.section11a.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-slate-700 space-y-2">
+          <p>{t('agb.section11a.p1')}</p>
+          <p>{t('agb.section11a.p2')}</p>
+          <p>{t('agb.section11a.p3')}</p>
         </CardContent>
       </Card>
 
