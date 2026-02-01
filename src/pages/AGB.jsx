@@ -24,7 +24,6 @@ export default function AGB() {
           <p>{t('agb.section1.p2')}</p>
           <p><strong>{t('agb.section1.important')}:</strong> {t('agb.section1.p3')}</p>
           <p>{t('agb.section1.p4')}</p>
-          <p>{t('agb.section1.p5')}</p>
         </CardContent>
       </Card>
 
