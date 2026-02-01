@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, ShoppingBag, Plus, Bell, Heart, MessageSquare, Settings, TrendingUp, Package, Megaphone, Home, ShoppingCart, Trophy, Briefcase, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, ShoppingCart } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -17,13 +17,10 @@ import { initAuditLogger } from '@/components/auditLogger';
 
 
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
-const Analytics = lazy(() => import('@/components/Analytics'));
 const StructuredData = lazy(() => import('@/components/marketplace/StructuredData'));
 const SEOHead = lazy(() => import('@/components/SEOHead'));
 const LanguageSwitcher = lazy(() => import('@/components/LanguageSwitcher'));
-const NewsletterForm = lazy(() => import('@/components/NewsletterForm'));
 const CookieBanner = lazy(() => import('@/components/CookieBanner'));
-const ChatbotButton = lazy(() => import('@/components/support/ChatbotButton'));
 
 
 
@@ -103,10 +100,9 @@ function LayoutInner({ children, currentPageName }) {
         <GlobalErrorListener />
         <PerformanceMonitor />
         <Suspense fallback={null}>
-          <Analytics />
-          <SEOHead googleVerification={seoSettings?.googleSiteVerification} />
-          <StructuredData type="organization" data={{}} />
-        </Suspense>
+            <SEOHead googleVerification={seoSettings?.googleSiteVerification} />
+            <StructuredData type="organization" data={{}} />
+          </Suspense>
       <style>{`
           :root {
             --z-gray-light: #F2F2F2;
@@ -707,33 +703,13 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <ErrorBoundary>
-                            <Link to={createPageUrl('Cart')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title="Carrello" aria-label={`Carrello${cartCount > 0 ? `, ${cartCount} articoli` : ''}`}>
-                              <ShoppingCart className="h-5 w-5" aria-hidden="true" focusable="false" />
-                              {cartCount > 0 && (
-                                <Badge className="absolute -top-2 -right-2 bg-white text-[#d62828] px-1.5 py-0.5 text-xs" aria-hidden="true">
-                                  {cartCount}
-                                </Badge>
-                              )}
-                            </Link>
-                            <Link to={createPageUrl('Werbung')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Werbung & Premium" aria-label="Advertising & Premium">
-                              <Megaphone className="h-5 w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('LoyaltyProgram')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Programma Fedeltà" aria-label="Loyalty Program">
-                              <Trophy className="h-5 w-5" aria-hidden="true" focusable="false" />
-                            </Link>
                             <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
                               <Plus className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('SellerHub')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Hub Venditore" aria-label="Seller Hub">
-                              <Briefcase className="h-5 w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('MySales')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Verkäufe" aria-label="My sales">
+                            <Link to={createPageUrl('MySales')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Vendite" aria-label="My sales">
                               <TrendingUp className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('SellerAITools')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="AI Tools" aria-label="AI Tools for Sellers">
-                              <Sparkles className="h-5 w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Käufe" aria-label="My purchases">
+                            <Link to={createPageUrl('MyPurchases')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Acquisti" aria-label="My purchases">
                               <Package className="h-5 w-5" aria-hidden="true" focusable="false" />
                             </Link>
                             <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-8 w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
@@ -767,7 +743,6 @@ function LayoutInner({ children, currentPageName }) {
 
       <Suspense fallback={null}>
         <CookieBanner />
-        <ChatbotButton />
       </Suspense>
       
       <footer className="bg-[#0c1526] text-white mt-20 py-10">
@@ -777,9 +752,7 @@ function LayoutInner({ children, currentPageName }) {
                         <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap</h2>
                         <p>{t('tagline')}</p>
 
-                        <h3 className="font-semibold mt-6 mb-1">{t('newsletter')}</h3>
-                        <p className="text-sm text-slate-300 mb-3">{t('newsletterDesc')}</p>
-                        <Suspense fallback={null}><NewsletterForm source="footer" /></Suspense>
+
                       </div>
 
                       {/* Rechtliches */}
@@ -791,7 +764,7 @@ function LayoutInner({ children, currentPageName }) {
                           <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">{t('privacy')}</Link></li>
                           <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">{t('rightOfWithdrawal')}</Link></li>
                           <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">{t('disputeResolution')}</Link></li>
-                          <li><Link to={createPageUrl('Werbung')} className="text-[#f9d65c] font-bold hover:text-white">Werbung & Premium</Link></li>
+
                         </ul>
                       </div>
 
@@ -800,10 +773,10 @@ function LayoutInner({ children, currentPageName }) {
                         <h3 className="font-semibold mb-3">{t('support')}</h3>
                         <ul className="space-y-2">
                           <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
-                          <li><Link to={createPageUrl('Blog')} className="text-white hover:text-slate-300">Blog</Link></li>
+
                           <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">{t('contactUs')}</Link></li>
                           <li><Link to={createPageUrl('Transactions')} className="text-white hover:text-slate-300">Transaktionen</Link></li>
-                          <li><Link to={createPageUrl('ReferralDashboard')} className="text-yellow-400 hover:text-yellow-300">🎁 Referral</Link></li>
+
                           <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">{t('completeProfile')}</Link></li>
                           </ul>
                           <p className="mt-3">

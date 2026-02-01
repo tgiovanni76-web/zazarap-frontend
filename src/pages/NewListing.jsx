@@ -12,15 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
-import PriceSuggestion from '../components/seller/PriceSuggestion';
-import DescriptionGenerator from '../components/seller/DescriptionGenerator';
-import TitleGenerator from '../components/seller/TitleGenerator';
-import ImageAnalyzer from '../components/seller/ImageAnalyzer';
-import PreSubmitCheck from '../components/moderation/PreSubmitCheck';
-import AdvancedDescriptionAssistant from '../components/seller/AdvancedDescriptionAssistant';
-import AdvancedImageAnalyzer from '../components/seller/AdvancedImageAnalyzer';
-import MarketDemandPredictor from '../components/seller/MarketDemandPredictor';
-import TagGenerator from '../components/seller/TagGenerator';
+
 
 export default function NewListing() {
   const { t } = useLanguage();
@@ -150,28 +142,6 @@ export default function NewListing() {
       <h2 className="text-3xl font-bold mb-6">{t('publish')}</h2>
       <form onSubmit={handleSubmit}>
         <label className="zaza-form-label">{t('title')}</label>
-
-        <TitleGenerator
-          category={formData.category}
-          description={formData.description}
-          price={formData.price}
-          onTitleSelect={(title) => setFormData({ ...formData, title })}
-        />
-
-        {/* Market Demand Predictor - show early for pricing strategy */}
-        {formData.title && formData.category && (
-          <div className="mt-4">
-            <MarketDemandPredictor
-              productTitle={formData.title}
-              category={formData.category}
-              currentPrice={formData.price}
-              condition="gebraucht"
-              location={formData.city}
-              onPriceSelect={(price) => setFormData({ ...formData, price: price.toString() })}
-            />
-          </div>
-        )}
-
         <input
           name="title"
           value={formData.title}
@@ -181,29 +151,6 @@ export default function NewListing() {
         />
 
         <label className="zaza-form-label">{t('description')}</label>
-
-        <AdvancedDescriptionAssistant
-          title={formData.title}
-          category={formData.category}
-          condition="gebraucht"
-          price={formData.price}
-          images={imagePreviews}
-          onDescriptionSelect={(desc) => setFormData({ ...formData, description: desc })}
-          onSeoSelect={(seo) => setFormData({ ...formData, ...seo })}
-        />
-
-        {/* Keep original for simple use case */}
-        <div className="mt-4">
-          <DescriptionGenerator
-            title={formData.title}
-            category={formData.category}
-            condition="gebraucht"
-            price={formData.price}
-            images={imagePreviews}
-            onDescriptionSelect={(desc) => setFormData({ ...formData, description: desc })}
-          />
-        </div>
-
         <textarea
           name="description"
           value={formData.description}
@@ -214,16 +161,6 @@ export default function NewListing() {
         />
 
         <label className="zaza-form-label">{t('price')} (€)</label>
-
-        <PriceSuggestion
-          title={formData.title}
-          description={formData.description}
-          category={formData.category}
-          condition="gebraucht"
-          images={imagePreviews}
-          onPriceSelect={(price) => setFormData({ ...formData, price: price.toString() })}
-        />
-
         <input
           name="price"
           type="number"
@@ -287,18 +224,7 @@ export default function NewListing() {
           placeholder=""
         />
 
-        {formData.tags && formData.tags.length > 0 && (
-          <div className="mb-4">
-            <label className="zaza-form-label">Tag Selezionati ({formData.tags.length})</label>
-            <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg">
-              {formData.tags.map((tag, idx) => (
-                <span key={idx} className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+
 
         <label className="zaza-form-label">{t('listingType')}</label>
         <select
@@ -361,64 +287,14 @@ export default function NewListing() {
           </label>
         </div>
         {imagePreviews.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {imagePreviews.map((preview, idx) => (
-                <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
-              ))}
-            </div>
-
-            {/* Advanced Image Analyzer with detailed suggestions */}
-            <AdvancedImageAnalyzer 
-              images={imagePreviews} 
-              category={formData.category}
-            />
-
-            {/* Original Image Analyzer for quick feedback */}
-            <div className="mt-4">
-              <ImageAnalyzer images={imagePreviews} />
-            </div>
-              </>
-            )}
-
-            {formData.title && formData.description && (
-              <div className="mb-6">
-                <PreSubmitCheck 
-                  title={formData.title}
-                  description={formData.description}
-                  category={formData.category}
-                  price={formData.price}
-                  enabled={true}
-                />
-              </div>
-            )}
-
-            <div className="border-t pt-6 mt-6 mb-4">
-          <h3 className="text-lg font-semibold mb-3">{t('newListing.promoOptions')}</h3>
-          <div className="grid grid-cols-1 gap-3">
-            <div className="flex items-center gap-2">
-              <input type="radio" id="promo-none" name="promoType" checked={promoType==='none'} onChange={()=>setPromoType('none')} />
-              <label htmlFor="promo-none">{t('newListing.promoNone')}</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="radio" id="promo-featured" name="promoType" checked={promoType==='featured'} onChange={()=>setPromoType('featured')} />
-              <label htmlFor="promo-featured">{t('newListing.promoFeatured')}</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="radio" id="promo-top" name="promoType" checked={promoType==='top'} onChange={()=>setPromoType('top')} />
-              <label htmlFor="promo-top">{t('newListing.promoTop')}</label>
-            </div>
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {imagePreviews.map((preview, idx) => (
+              <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
+            ))}
           </div>
-          {promoType !== 'none' && (
-            <div className="mt-3 flex items-center gap-3">
-              <select className="zaza-input" value={promoBilling} onChange={(e)=>setPromoBilling(e.target.value)}>
-                <option value="day">{t('newListing.perDay')}</option>
-                <option value="week">{t('newListing.perWeek')}</option>
-              </select>
-              <input className="zaza-input" type="number" min={1} max={52} value={promoQty} onChange={(e)=>setPromoQty(e.target.value)} style={{maxWidth:'120px'}} />
-            </div>
-          )}
-        </div>
+        )}
+
+
 
         <button type="submit" disabled={isLoading} className="zaza-submit">
           {isLoading ? t('loading') : t('submit')}
