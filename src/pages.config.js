@@ -98,6 +98,7 @@ import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import WarumPremium from './pages/WarumPremium';
+import LegalReview from './pages/LegalReview';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +154,7 @@ export const PAGES = {
     "UserSettings": UserSettings,
     "Widerrufsrecht": Widerrufsrecht,
     "WarumPremium": WarumPremium,
+    "LegalReview": LegalReview,
 }
 
 export const pagesConfig = {

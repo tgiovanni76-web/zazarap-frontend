@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="py-8 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-6">{t('privacy.title')}</h1>
-      <p className="text-slate-600 mb-6">{t('privacy.validFrom')}: 21. November 2024</p>
+      <p className="text-slate-600 mb-6">{t('privacy.validFrom')}: 01. Februar 2026</p>
       
       <Card className="mb-6">
         <CardHeader>
@@ -162,7 +162,7 @@ export default function PrivacyPolicy() {
         </CardHeader>
         <CardContent className="text-sm text-slate-700">
           <p>{t('privacy.section10.p1')}</p>
-          <p className="mt-3"><strong>{t('privacy.validFrom')}:</strong> 21. November 2024</p>
+          <p className="mt-3"><strong>{t('privacy.validFrom')}:</strong> 01. Februar 2026</p>
         </CardContent>
       </Card>
     </div>
