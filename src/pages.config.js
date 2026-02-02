@@ -97,8 +97,8 @@ import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
-import Widerrufsrecht from './pages/Widerrufsrecht';
 import Werbung from './pages/Werbung';
+import Widerrufsrecht from './pages/Widerrufsrecht';
 import __Layout from './Layout.jsx';
 
 
@@ -153,8 +153,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
-    "Widerrufsrecht": Widerrufsrecht,
     "Werbung": Werbung,
+    "Widerrufsrecht": Widerrufsrecht,
 }
 
 export const pagesConfig = {

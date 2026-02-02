@@ -1,11 +1,5 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Sparkles, TrendingUp, Star, CheckCircle2, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { t, formatEUR } from '../components/lib/i18n';
 import { base44 } from '@/api/base44Client';
 
@@ -41,6 +35,29 @@ const PACKAGES = [
 
 export default function Werbung() {
   const { language } = useLanguage();
+  const [loadingKey, setLoadingKey] = useState(null);
+
+  const money = useMemo(() => {
+    return {
+      once: (amt) => formatEUR(language, amt),
+      month: (amt) => formatMonthly(language, amt),
+      week: (amt) => formatWeekly(language, amt),
+    };
+  }, [language]);
+
+  async function goCheckout(productKey) {
+    setLoadingKey(productKey);
+    try {
+      const { data } = await base44.functions.invoke('createPremiumPackageOrder', { packageKey: productKey });
+      if (data.approveUrl) {
+        window.location.href = data.approveUrl;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert(language === "it" ? "Errore durante la creazione dell'ordine" : "Fehler bei der Bestellung");
+      setLoadingKey(null);
+    }
+  }
 
   return (
     <div style={{ background: "#f6f7fb", minHeight: "100vh", marginLeft: -16, marginRight: -16, paddingLeft: 16, paddingRight: 16 }}>
