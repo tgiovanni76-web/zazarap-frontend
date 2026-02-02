@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, TrendingUp, Star, CheckCircle2, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { t, formatEUR } from '@/lib/i18n';
+import { t, formatEUR } from '@/components/lib/i18n';
 
 const PACKAGES = [
   {
