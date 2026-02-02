@@ -97,7 +97,6 @@ import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
-import WarumPremium from './pages/WarumPremium';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import Werbung from './pages/Werbung';
 import __Layout from './Layout.jsx';
@@ -154,7 +153,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
-    "WarumPremium": WarumPremium,
     "Widerrufsrecht": Widerrufsrecht,
     "Werbung": Werbung,
 }
