@@ -7,6 +7,7 @@ import { Sparkles, TrendingUp, Star, CheckCircle2, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { t, formatEUR } from '../components/lib/i18n';
+import { base44 } from '@/api/base44Client';
 
 const PACKAGES = [
   {
@@ -120,11 +121,22 @@ export default function Werbung() {
                       <span className="text-sm">Höhere Verkaufschancen</span>
                     </li>
                   </ul>
-                  <Link to={createPageUrl('Marketplace')}>
-                    <Button className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white">
-                      {t(language, "buy")}
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white"
+                    onClick={async () => {
+                      try {
+                        const { data } = await base44.functions.invoke('createPremiumPackageOrder', { packageKey: pkg.key });
+                        if (data.approveUrl) {
+                          window.location.href = data.approveUrl;
+                        }
+                      } catch (error) {
+                        console.error('Error:', error);
+                        alert('Errore durante la creazione dell\'ordine');
+                      }
+                    }}
+                  >
+                    {t(language, "buy")}
+                  </Button>
                 </CardContent>
               </Card>
             ))}
