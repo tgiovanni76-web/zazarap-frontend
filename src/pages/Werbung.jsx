@@ -3,33 +3,78 @@ import { useLanguage } from '@/components/LanguageProvider';
 import { t, formatEUR } from '../components/lib/i18n';
 import { base44 } from '@/api/base44Client';
 
-const PACKAGES = [
+function formatMonthly(lang, amount) {
+  const price = formatEUR(lang, amount);
+  const suffix = lang === "it" ? "/ mese" : "/ Monat";
+  return `${price} ${suffix}`;
+}
+
+function formatWeekly(lang, amount) {
+  const price = formatEUR(lang, amount);
+  const suffix = lang === "it" ? "/ settimana" : "/ Woche";
+  return `${price} ${suffix}`;
+}
+
+const PRIVATE_PACKAGES = [
+  { key: "top_7", titleKey: "topTitle", descKey: "topDesc", price: 4.99, ctaKey: "ctaBuy" },
+  { key: "highlight", titleKey: "highlightTitle", descKey: "highlightDesc", price: 2.49, ctaKey: "ctaBuy" },
+  { key: "premium_14", titleKey: "premium14Title", descKey: "premium14Desc", price: 8.99, ctaKey: "ctaBuy" },
+];
+
+const SHOP_PACKAGES = [
   {
-    key: "top_7",
-    price: 4.99,
-    titleKey: "topTitle",
-    descKey: "topDesc",
-    icon: <TrendingUp className="h-8 w-8" />,
-    color: "from-red-500 to-orange-500",
-    badge: "Beliebt",
+    key: "shop_basic",
+    titleKey: "shopBasicTitle",
+    price: 14.99,
+    period: "month",
+    ctaKey: "ctaSubscribe",
+    features: ["shopBasicF1", "shopBasicF2", "shopBasicF3"],
+    bestseller: false,
   },
   {
-    key: "highlight",
-    price: 2.49,
-    titleKey: "highlightTitle",
-    descKey: "highlightDesc",
-    icon: <Star className="h-8 w-8" />,
-    color: "from-yellow-500 to-amber-500",
-    badge: "Starter",
+    key: "shop_business",
+    titleKey: "shopBusinessTitle",
+    price: 39.99,
+    period: "month",
+    ctaKey: "ctaSubscribe",
+    features: ["shopBusinessF1", "shopBusinessF2", "shopBusinessF3"],
+    bestseller: true,
   },
   {
-    key: "premium_14",
-    price: 8.99,
-    titleKey: "premium14Title",
-    descKey: "premium14Desc",
-    icon: <Sparkles className="h-8 w-8" />,
-    color: "from-purple-500 to-pink-500",
-    badge: "Best Value",
+    key: "shop_premium",
+    titleKey: "shopPremiumTitle",
+    price: 79.99,
+    period: "month",
+    ctaKey: "ctaSubscribe",
+    features: ["shopPremiumF1", "shopPremiumF2", "shopPremiumF3"],
+    bestseller: false,
+  },
+];
+
+const BANNER_PACKAGES = [
+  {
+    key: "banner_home",
+    titleKey: "bannerHomeTitle",
+    descKey: "bannerHomeDesc",
+    price: 149.0,
+    period: "week",
+    ctaKey: "ctaBookBanner",
+  },
+  {
+    key: "banner_category",
+    titleKey: "bannerCategoryTitle",
+    descKey: "bannerCategoryDesc",
+    price: 79.0,
+    period: "week",
+    ctaKey: "ctaBookBanner",
+  },
+  {
+    key: "banner_sidebar",
+    titleKey: "bannerSidebarTitle",
+    descKey: "bannerSidebarDesc",
+    price: 39.0,
+    period: "week",
+    ctaKey: "ctaBookBanner",
   },
 ];
 
@@ -59,147 +104,152 @@ export default function Werbung() {
     }
   }
 
+  const styles = {
+    page: { background: "#f6f7fb", minHeight: "100vh" },
+    wrap: { maxWidth: 780, margin: "0 auto", padding: "22px 14px 60px" },
+    section: { marginTop: 26 },
+    h2: { margin: "0 0 10px", fontSize: 22, fontWeight: 950 },
+    p: { margin: "0 0 16px", color: "#64748b", lineHeight: 1.55 },
+    card: {
+      background: "#fff",
+      borderRadius: 16,
+      padding: "22px 18px 18px",
+      boxShadow: "0 10px 25px rgba(2,6,23,.10)",
+      border: "1px solid rgba(15,23,42,.06)",
+      marginBottom: 18,
+      position: "relative",
+      overflow: "hidden",
+    },
+    title: { margin: 0, fontSize: 18, fontWeight: 950, textAlign: "center" },
+    desc: { margin: "10px 0 0", color: "#64748b", textAlign: "center", lineHeight: 1.55 },
+    price: {
+      margin: "16px 0 18px",
+      color: "#d61b1b",
+      fontWeight: 950,
+      textAlign: "center",
+      fontSize: 30,
+      letterSpacing: 0.2,
+    },
+    btn: {
+      width: "100%",
+      height: 52,
+      borderRadius: 14,
+      border: 0,
+      background: "#d61b1b",
+      color: "#fff",
+      fontWeight: 950,
+      cursor: "pointer",
+      boxShadow: "0 12px 18px rgba(214,27,27,.22)",
+    },
+    features: { margin: "14px 0 0", padding: 0, listStyle: "none" },
+    feature: { display: "flex", gap: 10, alignItems: "flex-start", marginTop: 10, color: "#0f172a" },
+    check: { color: "#d61b1b", fontWeight: 950, marginTop: 1 },
+    bestsellerBar: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 28,
+      background: "#d61b1b",
+      color: "#fff",
+      fontWeight: 950,
+      fontSize: 12,
+      letterSpacing: 0.4,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    bestsellerBorder: {
+      border: "2px solid #d61b1b",
+      paddingTop: 46,
+    },
+  };
+
   return (
-    <div style={{ background: "#f6f7fb", minHeight: "100vh", marginLeft: -16, marginRight: -16, paddingLeft: 16, paddingRight: 16 }}>
-      {/* Hero Banner */}
-      <section
-        style={{
-          marginTop: -32,
-          background: "linear-gradient(180deg,#d71d1d 0%,#ff4a4a 100%)",
-          borderRadius: 14,
-          boxShadow: "0 10px 30px rgba(2,6,23,.10)",
-          padding: "54px 22px",
-          textAlign: "center",
-        }}
-      >
-        <h1 style={{ margin: 0, color: "#fff", fontWeight: 900, fontSize: "clamp(28px,4vw,44px)" }}>
-          {t(language, "pageTitle")}
-        </h1>
-        <p style={{ margin: "10px 0 0", color: "#fff", opacity: 0.92, fontWeight: 700, fontSize: 18 }}>
-          {t(language, "pageSubtitle")}
-        </p>
-      </section>
+    <div style={styles.page}>
+      <div style={styles.wrap}>
+        {/* 1) PRIVATE */}
+        <section style={styles.section}>
+          <h2 style={styles.h2}>{t(language, "sectionPrivate")}</h2>
+          <p style={styles.p}>{t(language, "sectionPrivateDesc")}</p>
 
-      {/* Main Content */}
-      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 0 60px" }}>
-        {/* Section Title */}
-        <section style={{ marginTop: 34 }}>
-          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-            <span
-              aria-hidden="true"
-              style={{ width: 6, height: 32, marginTop: 4, borderRadius: 4, background: "#d61b1b" }}
-            />
-            <div>
-              <h2 style={{ margin: 0, fontSize: "clamp(20px,2.6vw,28px)", fontWeight: 900 }}>
-                {t(language, "sectionTitle")}
-              </h2>
-              <p style={{ margin: "8px 0 0", color: "#64748b", lineHeight: 1.55 }}>
-                {t(language, "sectionDesc")}
-              </p>
+          {PRIVATE_PACKAGES.map((x) => (
+            <div key={x.key} style={styles.card}>
+              <h3 style={styles.title}>{t(language, x.titleKey)}</h3>
+              <p style={styles.desc}>{t(language, x.descKey)}</p>
+              <div style={styles.price}>{money.once(x.price)}</div>
+              <button
+                style={{ ...styles.btn, opacity: loadingKey === x.key ? 0.8 : 1 }}
+                disabled={loadingKey === x.key}
+                onClick={() => goCheckout(x.key)}
+              >
+                {loadingKey === x.key ? "…" : t(language, x.ctaKey)}
+              </button>
             </div>
-          </div>
-
-          {/* Packages Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mt-8">
-            {PACKAGES.map((pkg) => (
-              <Card key={pkg.key} className="relative overflow-hidden hover:shadow-2xl transition-all duration-300 border-2">
-                <div className={`absolute top-0 right-0 bg-gradient-to-br ${pkg.color} text-white px-3 py-1 text-xs font-bold rounded-bl-lg`}>
-                  {pkg.badge}
-                </div>
-                <CardHeader>
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${pkg.color} text-white mb-4`}>
-                    {pkg.icon}
-                  </div>
-                  <CardTitle className="text-2xl mb-2">{t(language, pkg.titleKey)}</CardTitle>
-                  <p className="text-slate-600 text-sm">{t(language, pkg.descKey)}</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-6">
-                    <div className="text-4xl font-bold text-[#d62828] mb-1">
-                      {formatEUR(language, pkg.price)}
-                    </div>
-                    <div className="text-sm text-slate-500">7 Tage</div>
-                  </div>
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Vorrangige Platzierung</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Bis zu 10x mehr Aufrufe</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Farbliche Hervorhebung</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Höhere Verkaufschancen</span>
-                    </li>
-                  </ul>
-                  <Button 
-                    className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white"
-                    onClick={async () => {
-                      try {
-                        const { data } = await base44.functions.invoke('createPremiumPackageOrder', { packageKey: pkg.key });
-                        if (data.approveUrl) {
-                          window.location.href = data.approveUrl;
-                        }
-                      } catch (error) {
-                        console.error('Error:', error);
-                        alert('Errore durante la creazione dell\'ordine');
-                      }
-                    }}
-                  >
-                    {t(language, "buy")}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          ))}
         </section>
 
-        {/* How it Works */}
-        <section className="bg-slate-50 rounded-2xl p-10 mt-12">
-          <h3 className="text-3xl font-bold text-center mb-10">So funktioniert's</h3>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#d62828] text-white rounded-full text-2xl font-bold mb-4">
-                1
-              </div>
-              <h4 className="text-xl font-bold mb-2">Paket wählen</h4>
-              <p className="text-slate-600">Wählen Sie das passende Premium-Paket für Ihre Anzeige</p>
+        {/* 2) SHOP */}
+        <section style={styles.section}>
+          <h2 style={styles.h2}>{t(language, "sectionShop")}</h2>
+          <p style={styles.p}>{t(language, "sectionShopDesc")}</p>
+
+          {SHOP_PACKAGES.map((x) => (
+            <div
+              key={x.key}
+              style={{
+                ...styles.card,
+                ...(x.bestseller ? styles.bestsellerBorder : {}),
+                paddingTop: x.bestseller ? 46 : 22,
+              }}
+            >
+              {x.bestseller && <div style={styles.bestsellerBar}>{t(language, "bestseller")}</div>}
+
+              <h3 style={styles.title}>{t(language, x.titleKey)}</h3>
+
+              <ul style={styles.features}>
+                {x.features.map((f) => (
+                  <li key={f} style={styles.feature}>
+                    <span style={styles.check}>✓</span>
+                    <span>{t(language, f)}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div style={styles.price}>{money.month(x.price)}</div>
+
+              <button
+                style={{ ...styles.btn, opacity: loadingKey === x.key ? 0.8 : 1 }}
+                disabled={loadingKey === x.key}
+                onClick={() => goCheckout(x.key)}
+              >
+                {loadingKey === x.key ? "…" : t(language, x.ctaKey)}
+              </button>
             </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#f77f00] text-white rounded-full text-2xl font-bold mb-4">
-                2
-              </div>
-              <h4 className="text-xl font-bold mb-2">Bezahlen</h4>
-              <p className="text-slate-600">Sichere Zahlung per PayPal oder Stripe</p>
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#fcbf49] text-white rounded-full text-2xl font-bold mb-4">
-                3
-              </div>
-              <h4 className="text-xl font-bold mb-2">Sofort aktiv</h4>
-              <p className="text-slate-600">Ihre Anzeige wird sofort hervorgehoben</p>
-            </div>
-          </div>
+          ))}
         </section>
 
-        {/* CTA Section */}
-        <section className="text-center bg-gradient-to-r from-[#d62828] to-[#f77f00] text-white rounded-2xl p-12 mt-12">
-          <Zap className="h-16 w-16 mx-auto mb-4" />
-          <h3 className="text-3xl font-bold mb-4">Bereit, mehr zu verkaufen?</h3>
-          <p className="text-lg mb-6 opacity-90">Starten Sie noch heute mit Premium-Werbung</p>
-          <Link to={createPageUrl('Marketplace')}>
-            <Button size="lg" className="bg-white text-[#d62828] hover:bg-slate-100 font-bold px-8">
-              Jetzt loslegen
-            </Button>
-          </Link>
+        {/* 3) BANNERS */}
+        <section style={styles.section}>
+          <h2 style={styles.h2}>{t(language, "sectionBanner")}</h2>
+          <p style={styles.p}>{t(language, "sectionBannerDesc")}</p>
+
+          {BANNER_PACKAGES.map((x) => (
+            <div key={x.key} style={styles.card}>
+              <h3 style={styles.title}>{t(language, x.titleKey)}</h3>
+              <p style={styles.desc}>{t(language, x.descKey)}</p>
+              <div style={styles.price}>{money.week(x.price)}</div>
+              <button
+                style={{ ...styles.btn, opacity: loadingKey === x.key ? 0.8 : 1 }}
+                disabled={loadingKey === x.key}
+                onClick={() => goCheckout(x.key)}
+              >
+                {loadingKey === x.key ? "…" : t(language, x.ctaKey)}
+              </button>
+            </div>
+          ))}
         </section>
-      </main>
+      </div>
     </div>
   );
 }
