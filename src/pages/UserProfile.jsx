@@ -45,6 +45,8 @@ export default function UserProfile() {
     enabled: !!profileUser,
   });
 
+  const isOwnProfile = !profileUserId || profileUserId === currentUser?.email;
+
   const { data: orders = [] } = useQuery({
     queryKey: ['userOrders', profileUser?.email],
     queryFn: () => base44.entities.Order.filter({ userId: profileUser.email }, '-created_date'),
@@ -88,8 +90,6 @@ export default function UserProfile() {
       </div>
     );
   }
-
-  const isOwnProfile = !profileUserId || profileUserId === currentUser.email;
 
   const handleSaveProfile = () => {
     updateProfileMutation.mutate(editData);
