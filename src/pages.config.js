@@ -57,6 +57,7 @@ import AdminReports from './pages/AdminReports';
 import AdminSEO from './pages/AdminSEO';
 import AdminSettings from './pages/AdminSettings';
 import AdminTickets from './pages/AdminTickets';
+import AppStoreGuide from './pages/AppStoreGuide';
 import Cart from './pages/Cart';
 import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
@@ -76,6 +77,7 @@ import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
 import Marketplace from './pages/Marketplace';
 import Messages from './pages/Messages';
+import MobileAppChecklist from './pages/MobileAppChecklist';
 import ModerateListings from './pages/ModerateListings';
 import MyOrders from './pages/MyOrders';
 import MyPurchases from './pages/MyPurchases';
@@ -97,10 +99,8 @@ import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
-import Widerrufsrecht from './pages/Widerrufsrecht';
 import WarumPremium from './pages/WarumPremium';
-import MobileAppChecklist from './pages/MobileAppChecklist';
-import AppStoreGuide from './pages/AppStoreGuide';
+import Widerrufsrecht from './pages/Widerrufsrecht';
 import __Layout from './Layout.jsx';
 
 
@@ -115,6 +115,7 @@ export const PAGES = {
     "AdminSEO": AdminSEO,
     "AdminSettings": AdminSettings,
     "AdminTickets": AdminTickets,
+    "AppStoreGuide": AppStoreGuide,
     "Cart": Cart,
     "Category": Category,
     "CompleteProfile": CompleteProfile,
@@ -134,6 +135,7 @@ export const PAGES = {
     "ManageUsers": ManageUsers,
     "Marketplace": Marketplace,
     "Messages": Messages,
+    "MobileAppChecklist": MobileAppChecklist,
     "ModerateListings": ModerateListings,
     "MyOrders": MyOrders,
     "MyPurchases": MyPurchases,
@@ -155,10 +157,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
-    "Widerrufsrecht": Widerrufsrecht,
     "WarumPremium": WarumPremium,
-    "MobileAppChecklist": MobileAppChecklist,
-    "AppStoreGuide": AppStoreGuide,
+    "Widerrufsrecht": Widerrufsrecht,
 }
 
 export const pagesConfig = {

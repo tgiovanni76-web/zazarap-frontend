@@ -45,7 +45,7 @@ export default function WarumPremium() {
         t('premium.package.featured.feat2'),
         t('premium.package.featured.feat3')
       ],
-      color: 'bg-yellow-50 border-yellow-400'
+      color: 'bg-[#FFF8E5] border-[#FFD500]'
     },
     {
       type: 'top',
@@ -63,7 +63,7 @@ export default function WarumPremium() {
         t('premium.package.top.feat3'),
         t('premium.package.top.feat4')
       ],
-      color: 'bg-red-50 border-red-400',
+      color: 'bg-[#FFEDD5] border-[#E10600]',
       recommended: true
     }
   ];
@@ -83,11 +83,15 @@ export default function WarumPremium() {
 
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <Badge className="mb-4 bg-gradient-to-r from-yellow-400 to-red-500 text-white">
+        <Badge className="mb-4 bg-[#E10600] text-[#FFD500] border-2 border-[#FFD500]">
           <Zap className="h-3 w-3 mr-1" />
           {t('premium.badge')}
         </Badge>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{
+          background: 'linear-gradient(90deg, #E10600 0%, #FFD500 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}>
           {t('premium.title')}
         </h1>
         <p className="text-xl text-slate-600 max-w-2xl mx-auto">
@@ -100,10 +104,10 @@ export default function WarumPremium() {
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <Card key={idx} className="text-center">
+            <Card key={idx} className="text-center border-2 border-[#FFD500]">
               <CardContent className="pt-6">
-                <Icon className="h-8 w-8 text-red-600 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-red-600 mb-1">{stat.value}</div>
+                <Icon className="h-8 w-8 text-[#E10600] mx-auto mb-3" />
+                <div className="text-3xl font-bold text-[#E10600] mb-1">{stat.value}</div>
                 <div className="text-sm text-slate-600">{stat.label}</div>
               </CardContent>
             </Card>
@@ -139,15 +143,19 @@ export default function WarumPremium() {
           </Card>
 
           {/* Premium Plan */}
-          <Card className="border-2 border-yellow-400 shadow-lg relative overflow-hidden">
+          <Card className="border-2 border-[#FFD500] shadow-lg relative overflow-hidden">
             <div className="absolute top-4 right-4">
-              <Badge className="bg-gradient-to-r from-yellow-400 to-red-500 text-white">
+              <Badge className="bg-[#E10600] text-[#FFD500] border-2 border-[#FFD500]">
                 {t('premium.recommended')}
               </Badge>
             </div>
-            <CardHeader className="bg-gradient-to-r from-yellow-50 to-red-50">
+            <CardHeader style={{ background: 'linear-gradient(135deg, #FFF8E5 0%, #FFEDD5 100%)' }}>
               <CardTitle className="text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
+                <div className="text-2xl font-bold" style={{
+                  background: 'linear-gradient(90deg, #E10600 0%, #FFD500 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>
                   {t('premium.comparison.premium')}
                 </div>
                 <div className="text-sm font-normal text-slate-600 mt-2">{t('premium.comparison.from')} 2,99 €</div>
@@ -159,7 +167,7 @@ export default function WarumPremium() {
                   const Icon = feature.icon;
                   return (
                     <li key={idx} className={`flex items-start gap-3 ${feature.highlight ? 'font-medium' : ''}`}>
-                      <Icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${feature.highlight ? 'text-yellow-500' : 'text-green-600'}`} />
+                      <Icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${feature.highlight ? 'text-[#FFD500]' : 'text-green-600'}`} />
                       <span className="text-sm">{feature.text}</span>
                     </li>
                   );
@@ -180,14 +188,14 @@ export default function WarumPremium() {
               <Card key={pkg.type} className={`border-2 ${pkg.color} ${pkg.recommended ? 'shadow-xl' : ''} relative`}>
                 {pkg.recommended && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-red-600 text-white px-4 py-1">
+                    <Badge className="bg-[#E10600] text-[#FFD500] border-2 border-[#FFD500] px-4 py-1">
                       {t('premium.recommended')}
                     </Badge>
                   </div>
                 )}
                 <CardHeader>
                   <div className="flex items-center gap-3 mb-2">
-                    <Icon className="h-6 w-6 text-red-600" />
+                    <Icon className="h-6 w-6 text-[#E10600]" />
                     <CardTitle className="text-xl">{pkg.name}</CardTitle>
                   </div>
                   <p className="text-sm text-slate-600">{pkg.description}</p>
@@ -197,9 +205,9 @@ export default function WarumPremium() {
                     <div className="text-sm font-medium text-slate-700 mb-2">{t('premium.packages.pricing')}:</div>
                     <div className="space-y-2">
                       {pkg.prices.map((price, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-sm bg-white p-2 rounded">
+                        <div key={idx} className="flex justify-between items-center text-sm bg-white p-2 rounded border border-[#FFD500]">
                           <span className="text-slate-600">{price.duration}</span>
-                          <span className="font-bold text-red-600">{price.price}</span>
+                          <span className="font-bold text-[#E10600]">{price.price}</span>
                         </div>
                       ))}
                     </div>
@@ -209,14 +217,14 @@ export default function WarumPremium() {
                     <ul className="space-y-2">
                       {pkg.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-sm">
-                          <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <Check className="h-4 w-4 text-[#E10600] mt-0.5 flex-shrink-0" />
                           <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   <Link to={createPageUrl('Marketplace')}>
-                    <Button className="w-full bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white">
+                    <Button className="w-full bg-[#E10600] hover:bg-[#c30500] text-white border-2 border-[#FFD500]">
                       {t('premium.packages.cta')}
                     </Button>
                   </Link>
@@ -235,21 +243,21 @@ export default function WarumPremium() {
         <CardContent>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+              <div className="bg-[#E10600] text-[#FFD500] rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold border-2 border-[#FFD500]">
                 1
               </div>
               <h3 className="font-semibold mb-2">{t('premium.howto.step1.title')}</h3>
               <p className="text-sm text-slate-600">{t('premium.howto.step1.desc')}</p>
             </div>
             <div className="text-center">
-              <div className="bg-yellow-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+              <div className="bg-[#FFD500] text-[#E10600] rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold border-2 border-[#E10600]">
                 2
               </div>
               <h3 className="font-semibold mb-2">{t('premium.howto.step2.title')}</h3>
               <p className="text-sm text-slate-600">{t('premium.howto.step2.desc')}</p>
             </div>
             <div className="text-center">
-              <div className="bg-green-600 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+              <div className="bg-[#E10600] text-[#FFD500] rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3 text-xl font-bold border-2 border-[#FFD500]">
                 3
               </div>
               <h3 className="font-semibold mb-2">{t('premium.howto.step3.title')}</h3>
