@@ -100,6 +100,7 @@ import UserSettings from './pages/UserSettings';
 import Widerrufsrecht from './pages/Widerrufsrecht';
 import WarumPremium from './pages/WarumPremium';
 import MobileAppChecklist from './pages/MobileAppChecklist';
+import AppStoreGuide from './pages/AppStoreGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -157,6 +158,7 @@ export const PAGES = {
     "Widerrufsrecht": Widerrufsrecht,
     "WarumPremium": WarumPremium,
     "MobileAppChecklist": MobileAppChecklist,
+    "AppStoreGuide": AppStoreGuide,
 }
 
 export const pagesConfig = {
