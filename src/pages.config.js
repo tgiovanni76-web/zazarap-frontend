@@ -70,7 +70,6 @@ import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Impressum from './pages/Impressum';
-import LegalReview from './pages/LegalReview';
 import ListingDetail from './pages/ListingDetail';
 import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
@@ -97,8 +96,9 @@ import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
-import Werbung from './pages/Werbung';
 import Widerrufsrecht from './pages/Widerrufsrecht';
+import WarumPremium from './pages/WarumPremium';
+import LegalReview from './pages/LegalReview';
 import __Layout from './Layout.jsx';
 
 
@@ -126,7 +126,6 @@ export const PAGES = {
     "Favorites": Favorites,
     "Home": Home,
     "Impressum": Impressum,
-    "LegalReview": LegalReview,
     "ListingDetail": ListingDetail,
     "ManageCategories": ManageCategories,
     "ManageUsers": ManageUsers,
@@ -153,8 +152,9 @@ export const PAGES = {
     "Transactions": Transactions,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
-    "Werbung": Werbung,
     "Widerrufsrecht": Widerrufsrecht,
+    "WarumPremium": WarumPremium,
+    "LegalReview": LegalReview,
 }
 
 export const pagesConfig = {
