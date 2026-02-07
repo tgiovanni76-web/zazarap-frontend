@@ -262,10 +262,10 @@ export default function UserSettings() {
                     <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
                     <SelectItem value="it">🇮🇹 Italiano</SelectItem>
                     <SelectItem value="en">🇬🇧 English</SelectItem>
-                    <SelectItem value="es">🇪🇸 Español</SelectItem>
                     <SelectItem value="fr">🇫🇷 Français</SelectItem>
-                    <SelectItem value="pt">🇵🇹 Português</SelectItem>
-                    <SelectItem value="nl">🇳🇱 Nederlands</SelectItem>
+                    <SelectItem value="pl">🇵🇱 Polski</SelectItem>
+                    <SelectItem value="tr">🇹🇷 Türkçe</SelectItem>
+                    <SelectItem value="uk">🇺🇦 Українська</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

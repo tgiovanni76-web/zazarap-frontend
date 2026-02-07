@@ -36,16 +36,16 @@ export default function Home() {
       <div className="bg-gradient-to-br from-[#d62828] via-[#b82020] to-[#8a1818] text-white py-16 px-4 rounded-2xl mb-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">
-            Willkommen bei Zazarap
+            {t('home.hero.title')}
           </h1>
           <p className="text-xl mb-8 text-white/90">
-            Deutschlands sicherer Kleinanzeigen-Marktplatz mit KI-Empfehlungen
+            {t('home.hero.subtitle')}
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Marketplace')}>
               <Button size="lg" className="bg-[#f9d65c] text-[#d62828] hover:bg-yellow-300 font-bold text-lg px-8">
                 <Search className="h-5 w-5 mr-2" />
-                Jetzt durchsuchen
+                {t('home.search.button')}
               </Button>
             </Link>
             {!user && (
@@ -55,7 +55,7 @@ export default function Home() {
                 className="bg-white/10 border-white text-white hover:bg-white/20"
                 onClick={() => base44.auth.redirectToLogin()}
               >
-                Kostenlos registrieren
+                {t('header.nav.register')}
               </Button>
             )}
           </div>
@@ -69,9 +69,9 @@ export default function Home() {
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Zap className="h-6 w-6 text-purple-600" />
             </div>
-            <h3 className="font-bold mb-2">KI-Empfehlungen</h3>
+            <h3 className="font-bold mb-2">{t('aiRecommendations')}</h3>
             <p className="text-sm text-slate-600">
-              Intelligente Vorschläge basierend auf deinem Suchverhalten
+              {t('exploreToGetSuggestions')}
             </p>
           </CardContent>
         </Card>
@@ -80,9 +80,9 @@ export default function Home() {
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Shield className="h-6 w-6 text-green-600" />
             </div>
-            <h3 className="font-bold mb-2">Sicher kaufen</h3>
+            <h3 className="font-bold mb-2">{t('home.feature.safe.title') || 'Sicher kaufen'}</h3>
             <p className="text-sm text-slate-600">
-              PayPal-Schutz und sichere Zahlungsabwicklung
+              {t('home.feature.safe.desc') || 'PayPal-Schutz und sichere Zahlungsabwicklung'}
             </p>
           </CardContent>
         </Card>
@@ -91,9 +91,9 @@ export default function Home() {
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Heart className="h-6 w-6 text-red-600" />
             </div>
-            <h3 className="font-bold mb-2">Favoriten speichern</h3>
+            <h3 className="font-bold mb-2">{t('favorites')}</h3>
             <p className="text-sm text-slate-600">
-              Merke dir interessante Anzeigen für später
+              {t('home.feature.favorites.desc') || 'Merke dir interessante Anzeigen für später'}
             </p>
           </CardContent>
         </Card>
@@ -104,7 +104,7 @@ export default function Home() {
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-[#d62828]" />
-            Beliebte Kategorien
+            {t('home.section.categories')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {mainCategories.map(cat => (
@@ -130,10 +130,10 @@ export default function Home() {
       {/* Recent Listings Preview */}
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Neue Anzeigen</h2>
+          <h2 className="text-2xl font-bold">{t('dashboard.recentListings')}</h2>
           <Link to={createPageUrl('Marketplace')}>
             <Button variant="ghost" className="text-[#d62828]">
-              Alle anzeigen
+              {t('home.section.viewAll') || 'Alle anzeigen'}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </Link>
@@ -169,17 +169,17 @@ export default function Home() {
         <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
           <CardContent className="py-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
-              Bereit loszulegen?
+              {t('home.cta.title') || 'Bereit loszulegen?'}
             </h2>
             <p className="text-lg mb-6 text-white/90">
-              Erstelle ein kostenloses Konto und erhalte personalisierte KI-Empfehlungen
+              {t('home.cta.subtitle') || 'Erstelle ein kostenloses Konto und erhalte personalisierte KI-Empfehlungen'}
             </p>
             <Button 
               size="lg" 
               className="bg-white text-purple-600 hover:bg-slate-100 font-bold"
               onClick={() => base44.auth.redirectToLogin()}
             >
-              Jetzt kostenlos registrieren
+              {t('home.cta.button') || 'Jetzt kostenlos registrieren'}
             </Button>
           </CardContent>
         </Card>

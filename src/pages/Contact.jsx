@@ -7,8 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Mail, Send, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,13 +28,13 @@ export default function Contact() {
       try {
         await base44.integrations.Core.SendEmail({
           to: 'admin@zazarap.com',
-          subject: `Nuovo messaggio di contatto: ${data.subject}`,
+          subject: `Contact message: ${data.subject}`,
           body: `
-Nome: ${data.name}
+Name: ${data.name}
 Email: ${data.email}
-Oggetto: ${data.subject}
+Subject: ${data.subject}
 
-Messaggio:
+Message:
 ${data.message}
           `
         });
@@ -42,11 +44,11 @@ ${data.message}
     },
     onSuccess: () => {
       setSubmitted(true);
-      toast.success('Messaggio inviato con successo!');
+      toast.success(t('contact.success') || 'Message sent successfully!');
       setFormData({ name: '', email: '', subject: '', message: '' });
     },
     onError: (error) => {
-      toast.error('Errore nell\'invio del messaggio');
+      toast.error(t('contact.error') || 'Error sending message');
       console.error(error);
     }
   });
@@ -66,12 +68,12 @@ ${data.message}
         <Card className="max-w-md w-full text-center">
           <CardContent className="pt-12 pb-8">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Messaggio Inviato!</h2>
+            <h2 className="text-2xl font-bold mb-2">{t('contact.sent.title') || 'Message Sent!'}</h2>
             <p className="text-slate-600 mb-6">
-              Grazie per averci contattato. Ti risponderemo al più presto.
+              {t('contact.sent.desc') || 'Thank you for contacting us. We will get back to you soon.'}
             </p>
             <Button onClick={() => setSubmitted(false)} variant="outline">
-              Invia un altro messaggio
+              {t('contact.sent.another') || 'Send another message'}
             </Button>
           </CardContent>
         </Card>
@@ -84,64 +86,64 @@ ${data.message}
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <Mail className="w-12 h-12 text-red-600 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold mb-2">Contattaci</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('contactUs')}</h1>
           <p className="text-slate-600">
-            Hai domande o suggerimenti? Inviaci un messaggio!
+            {t('contact.desc') || 'Have questions or suggestions? Send us a message!'}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Modulo di Contatto</CardTitle>
+            <CardTitle>{t('contact.form.title') || 'Contact Form'}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Nome *
+                  {t('firstName')} *
                 </label>
                 <Input
                   required
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Il tuo nome"
+                  placeholder={t('firstName')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Email *
+                  {t('settings.profile.email')} *
                 </label>
                 <Input
                   required
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="tua@email.com"
+                  placeholder="email@example.com"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Oggetto *
+                  {t('contact.subject') || 'Subject'} *
                 </label>
                 <Input
                   required
                   value={formData.subject}
                   onChange={(e) => handleChange('subject', e.target.value)}
-                  placeholder="Di cosa vuoi parlare?"
+                  placeholder={t('contact.subject.ph') || 'What do you want to talk about?'}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Messaggio *
+                  {t('contact.message') || 'Message'} *
                 </label>
                 <Textarea
                   required
                   value={formData.message}
                   onChange={(e) => handleChange('message', e.target.value)}
-                  placeholder="Scrivi qui il tuo messaggio..."
+                  placeholder={t('contact.message.ph') || 'Write your message here...'}
                   className="min-h-[150px]"
                 />
               </div>
@@ -152,11 +154,11 @@ ${data.message}
                 disabled={submitMutation.isPending}
               >
                 {submitMutation.isPending ? (
-                  <>Invio in corso...</>
+                  <>{t('contact.sending') || 'Sending...'}</>
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
-                    Invia Messaggio
+                    {t('contact.send') || 'Send Message'}
                   </>
                 )}
               </Button>
@@ -165,7 +167,7 @@ ${data.message}
         </Card>
 
         <div className="mt-8 text-center text-sm text-slate-600">
-          <p>Oppure scrivici direttamente a: <a href="mailto:support@zazarap.com" className="text-red-600 hover:underline">support@zazarap.com</a></p>
+          <p>{t('contact.directEmail') || 'Or write to us directly at'}: <a href="mailto:support@zazarap.com" className="text-red-600 hover:underline">support@zazarap.com</a></p>
         </div>
       </div>
     </div>
