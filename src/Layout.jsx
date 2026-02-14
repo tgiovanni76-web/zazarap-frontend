@@ -714,7 +714,7 @@ function LayoutInner({ children, currentPageName }) {
                             )}
                           </ErrorBoundary>
                         )}
-                        <div className="inline-flex items-center justify-center h-8 w-8" title={t('aria.language')} aria-label={t('aria.language')}><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
+                        <div className="inline-flex items-center justify-center" title={t('aria.language')} aria-label={t('aria.language')}><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
                     </div>
                   </header>
