@@ -95,56 +95,32 @@ function LayoutInner({ children, currentPageName }) {
             --z-black: #333333;
           }
 
-          /* FIX COMPLETO PAGINA REGISTRAZIONE */
-          header, .navbar, .topbar, section, .container, .page-wrapper {
-            overflow: visible !important;
+          /* TEST: se non vedi il bordo, il CSS non è applicato */
+          body { outline: 4px solid rgba(0,255,0,.6) !important; }
+
+          /* Spaziatura safe-area + respiro sotto */
+          form { padding-bottom: 32px !important; }
+          @supports (padding: env(safe-area-inset-bottom)) {
+            form { padding-bottom: calc(env(safe-area-inset-bottom) + 32px) !important; }
           }
 
-          .dropdown-menu, .select-options, .menu-popover {
-            position: fixed !important;
-            z-index: 9999 !important;
-          }
-
-          form, .form-container, .page {
-            padding-bottom: calc(env(safe-area-inset-bottom) + 24px) !important;
-          }
-
-          input, select, textarea {
+          /* Input più usabili su iOS (no zoom) */
+          input, select, textarea, button {
             font-size: 16px !important;
-            border-radius: 10px !important;
-            padding: 14px !important;
           }
 
-          .form-group, .input-group {
-            margin-bottom: 18px !important;
-          }
+          /* Card/form più stabile */
+          form, form * { box-sizing: border-box; }
 
-          button[type="submit"], .primary-button {
-            height: 52px !important;
+          /* Bottone submit più chiaro e grande */
+          form button[type="submit"], form [type="submit"] {
+            min-height: 52px !important;
             border-radius: 12px !important;
-            margin-top: 10px !important;
-            margin-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
-            font-weight: 600 !important;
           }
 
-          input[name="address"], input[type="text"] {
-            -webkit-text-size-adjust: 100%;
-          }
-
-          * {
-            box-sizing: border-box;
-          }
-
-          body {
-            overflow-x: hidden;
-          }
-
-          @media (max-width: 768px) {
-            .grid, .row {
-              display: flex !important;
-              flex-direction: column !important;
-              gap: 12px !important;
-            }
+          /* Evita che contenitori taglino menu/overlay */
+          body, main, header, form, section, div {
+            overflow: visible !important;
           }
 
           /* HEADER */
