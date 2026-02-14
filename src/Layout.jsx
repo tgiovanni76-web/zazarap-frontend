@@ -654,7 +654,7 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl max-w-full overflow-x-hidden">
+      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl max-w-full overflow-x-hidden overflow-y-visible">
                     <div className="flex items-center justify-between text-[#f9d65c] max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
