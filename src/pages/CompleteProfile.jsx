@@ -105,6 +105,9 @@ export default function CompleteProfile() {
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   className={errors.firstName ? "border-red-500" : ""}
                   style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                  spellCheck="false"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                 />
               </div>
               <div className="space-y-2">
@@ -115,6 +118,9 @@ export default function CompleteProfile() {
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   className={errors.lastName ? "border-red-500" : ""}
                   style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                  spellCheck="false"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                 />
               </div>
             </div>
@@ -128,6 +134,9 @@ export default function CompleteProfile() {
                 onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
                 className={errors.birthDate ? "border-red-500" : ""}
                 style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                spellCheck="false"
+                autoCapitalize="none"
+                autoCorrect="off"
               />
               {errors.birthDate && <p className="text-sm text-red-500">{errors.birthDate}</p>}
             </div>
@@ -140,6 +149,9 @@ export default function CompleteProfile() {
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 className={errors.address ? "border-red-500" : ""}
                 style={{ fontSize: '16px', padding: '14px', borderRadius: '10px', WebkitTextSizeAdjust: '100%' }}
+                spellCheck="false"
+                autoCapitalize="none"
+                autoCorrect="off"
               />
             </div>
 
@@ -152,6 +164,9 @@ export default function CompleteProfile() {
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                   className={errors.country ? "border-red-500" : ""}
                   style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                  spellCheck="false"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                 />
               </div>
               <div className="space-y-2">
@@ -162,6 +177,9 @@ export default function CompleteProfile() {
                   onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                   className={errors.region ? "border-red-500" : ""}
                   style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                  spellCheck="false"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                 />
               </div>
             </div>
@@ -174,6 +192,9 @@ export default function CompleteProfile() {
                 onChange={(e) => setFormData({ ...formData, province: e.target.value })}
                 className={errors.province ? "border-red-500" : ""}
                 style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
+                spellCheck="false"
+                autoCapitalize="none"
+                autoCorrect="off"
               />
             </div>
 
