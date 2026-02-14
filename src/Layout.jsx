@@ -79,7 +79,7 @@ function LayoutInner({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 overflow-x-hidden max-w-full">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 bg-white text-black px-3 py-2 rounded">Salta al contenuto</a>
         <GlobalErrorListener />
         <PerformanceMonitor />
@@ -654,8 +654,8 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl">
-                    <div className="flex items-center justify-between text-[#f9d65c]">
+      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl max-w-full overflow-x-hidden">
+                    <div className="flex items-center justify-between text-[#f9d65c] max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
@@ -721,7 +721,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4">
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden">
         {children}
       </main>
 

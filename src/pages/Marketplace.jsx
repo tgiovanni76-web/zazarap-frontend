@@ -267,7 +267,7 @@ export default function Marketplace() {
         </Button>
       </div>
 
-      <div className="mb-6 flex flex-col md:flex-row gap-4 items-stretch">
+      <div className="mb-6 flex flex-col md:flex-row gap-4 items-stretch max-w-full">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" aria-hidden="true" />
           <div className="relative">
