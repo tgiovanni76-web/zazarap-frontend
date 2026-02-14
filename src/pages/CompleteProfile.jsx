@@ -83,8 +83,8 @@ export default function CompleteProfile() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8" style={{ overflow: 'visible' }}>
+      <Card className="w-full max-w-md" style={{ overflow: 'visible' }}>
         <div className="absolute top-4 right-4">
             <LanguageSwitcher />
         </div>
@@ -95,8 +95,8 @@ export default function CompleteProfile() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">{t('firstName')}</Label>
                 <Input
@@ -104,6 +104,7 @@ export default function CompleteProfile() {
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   className={errors.firstName ? "border-red-500" : ""}
+                  style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
                 />
               </div>
               <div className="space-y-2">
@@ -113,6 +114,7 @@ export default function CompleteProfile() {
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   className={errors.lastName ? "border-red-500" : ""}
+                  style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
                 />
               </div>
             </div>
@@ -125,6 +127,7 @@ export default function CompleteProfile() {
                 value={formData.birthDate}
                 onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
                 className={errors.birthDate ? "border-red-500" : ""}
+                style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
               />
               {errors.birthDate && <p className="text-sm text-red-500">{errors.birthDate}</p>}
             </div>
@@ -136,10 +139,11 @@ export default function CompleteProfile() {
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 className={errors.address ? "border-red-500" : ""}
+                style={{ fontSize: '16px', padding: '14px', borderRadius: '10px', WebkitTextSizeAdjust: '100%' }}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="country">{t('country')}</Label>
                 <Input
@@ -147,6 +151,7 @@ export default function CompleteProfile() {
                   value={formData.country}
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                   className={errors.country ? "border-red-500" : ""}
+                  style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
                 />
               </div>
               <div className="space-y-2">
@@ -156,6 +161,7 @@ export default function CompleteProfile() {
                   value={formData.region}
                   onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                   className={errors.region ? "border-red-500" : ""}
+                  style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
                 />
               </div>
             </div>
@@ -167,6 +173,7 @@ export default function CompleteProfile() {
                 value={formData.province}
                 onChange={(e) => setFormData({ ...formData, province: e.target.value })}
                 className={errors.province ? "border-red-500" : ""}
+                style={{ fontSize: '16px', padding: '14px', borderRadius: '10px' }}
               />
             </div>
 
@@ -207,7 +214,8 @@ export default function CompleteProfile() {
 
             <Button 
               type="submit" 
-              className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="w-full bg-[#d62828] hover:bg-[#b91c1c] text-white font-bold rounded focus:outline-none focus:shadow-outline"
+              style={{ height: '52px', borderRadius: '12px', marginTop: '10px', marginBottom: 'calc(env(safe-area-inset-bottom) + 12px)', fontWeight: '600' }}
               disabled={updateProfileMutation.isPending}
             >
               {updateProfileMutation.isPending ? t('loading') : t('completeProfile')}
