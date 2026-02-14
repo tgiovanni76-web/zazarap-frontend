@@ -95,6 +95,58 @@ function LayoutInner({ children, currentPageName }) {
             --z-black: #333333;
           }
 
+          /* FIX COMPLETO PAGINA REGISTRAZIONE */
+          header, .navbar, .topbar, section, .container, .page-wrapper {
+            overflow: visible !important;
+          }
+
+          .dropdown-menu, .select-options, .menu-popover {
+            position: fixed !important;
+            z-index: 9999 !important;
+          }
+
+          form, .form-container, .page {
+            padding-bottom: calc(env(safe-area-inset-bottom) + 24px) !important;
+          }
+
+          input, select, textarea {
+            font-size: 16px !important;
+            border-radius: 10px !important;
+            padding: 14px !important;
+          }
+
+          .form-group, .input-group {
+            margin-bottom: 18px !important;
+          }
+
+          button[type="submit"], .primary-button {
+            height: 52px !important;
+            border-radius: 12px !important;
+            margin-top: 10px !important;
+            margin-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
+            font-weight: 600 !important;
+          }
+
+          input[name="address"], input[type="text"] {
+            -webkit-text-size-adjust: 100%;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          body {
+            overflow-x: hidden;
+          }
+
+          @media (max-width: 768px) {
+            .grid, .row {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 12px !important;
+            }
+          }
+
           /* HEADER */
           .zaza-header {
             background: #ffffff;
