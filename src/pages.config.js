@@ -86,6 +86,7 @@ import NewListing from './pages/NewListing';
 import NotificationCenter from './pages/NotificationCenter';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
+import OTPLogin from './pages/OTPLogin';
 import PayPalWebhook from './pages/PayPalWebhook';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -101,7 +102,6 @@ import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
 import WarumPremium from './pages/WarumPremium';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import OTPLogin from './pages/OTPLogin';
 import __Layout from './Layout.jsx';
 
 
@@ -145,6 +145,7 @@ export const PAGES = {
     "NotificationCenter": NotificationCenter,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
+    "OTPLogin": OTPLogin,
     "PayPalWebhook": PayPalWebhook,
     "PreLaunchChecklist": PreLaunchChecklist,
     "PrivacyPolicy": PrivacyPolicy,
@@ -160,7 +161,6 @@ export const PAGES = {
     "UserSettings": UserSettings,
     "WarumPremium": WarumPremium,
     "Widerrufsrecht": Widerrufsrecht,
-    "OTPLogin": OTPLogin,
 }
 
 export const pagesConfig = {

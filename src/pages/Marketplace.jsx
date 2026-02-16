@@ -231,7 +231,7 @@ export default function Marketplace() {
   return (
     <div className="py-8">
       <SEOHead 
-        title="Zazarap - Marketplace Italiano Sicuro | Compra e Vendi Usato"
+        title="Zazarap.de - Marketplace Italiano Sicuro | Compra e Vendi Usato"
         description="Il miglior marketplace per comprare e vendere usato in sicurezza con protezione acquisti PayPal ed Escrow. Abbigliamento, Elettronica, Auto e altro."
       />
 

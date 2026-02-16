@@ -766,7 +766,7 @@ function LayoutInner({ children, currentPageName }) {
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
                       {/* Logo + Newsletter */}
                       <div className="flex-1 min-w-[260px]">
-                        <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap</h2>
+                        <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap.de</h2>
                         <p>{t('tagline')}</p>
 
 
@@ -805,7 +805,7 @@ function LayoutInner({ children, currentPageName }) {
                       <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
 
                       <div className="text-center">
-                      <p>© 2025 Zazarap. {t('allRightsReserved')}.</p>
+                      <p>© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
                       <p className="mt-1">
                         <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
                           {t('euDispute')}

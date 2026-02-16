@@ -251,7 +251,7 @@ export default function OTPLogin() {
 
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            <strong>ℹ️ Neu bei Zazarap?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
+            <strong>ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
           </p>
         </div>
 

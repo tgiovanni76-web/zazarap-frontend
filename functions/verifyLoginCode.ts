@@ -71,9 +71,9 @@ Deno.serve(async (req) => {
         
         // Send welcome email with instructions
         await base44.asServiceRole.integrations.Core.SendEmail({
-          from_name: 'Zazarap',
+          from_name: 'Zazarap.de',
           to: email,
-          subject: '🎉 Willkommen bei Zazarap!',
+          subject: '🎉 Willkommen bei Zazarap.de!',
           body: `Hallo!
 
 Dein Konto wurde erfolgreich erstellt! 🎉
@@ -83,7 +83,7 @@ Du hast eine separate E-Mail mit einem Login-Link erhalten. Klicke auf den Link,
 Falls du keine E-Mail erhalten hast, prüfe bitte deinen Spam-Ordner.
 
 Viel Spaß beim Kaufen und Verkaufen!
-Dein Zazarap Team
+Dein Zazarap.de Team
 
 ---
 Zazarap.de - Dein sicherer Kleinanzeigen-Marktplatz`
