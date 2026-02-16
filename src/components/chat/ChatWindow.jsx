@@ -594,7 +594,7 @@ export default function ChatWindow({
     }
   });
 
-  // Accept offer mutation  
+  // Accept offer mutation (Reserve)
   const acceptOfferMutation = useMutation({
     mutationFn: async (offerId) => {
       // Validation: Only seller can accept
@@ -607,30 +607,34 @@ export default function ChatWindow({
         throw new Error('Angebot ist nicht mehr gültig');
       }
 
-      // Update offer status to accepted
-      await base44.entities.Offer.update(offerId, { status: 'accepted' });
+      // Check if listing is already reserved
+      if (listing?.status === 'reserved') {
+        throw new Error('Anzeige ist bereits reserviert');
+      }
+
+      // Update offer status to accepted_reserved
+      await base44.entities.Offer.update(offerId, { status: 'accepted_reserved' });
 
       // Create system message
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
-        text: `✅ Angebot von ${offerToAccept.amount}€ angenommen! Käufer kann jetzt bezahlen.`,
+        text: `✅ Angebot von ${offerToAccept.amount}€ angenommen – Anzeige reserviert! Käufer hat 48h Zeit zum Bezahlen.`,
         messageType: 'system'
       });
 
       // Update chat status
       await base44.entities.Chat.update(chat.id, {
         status: 'accettata',
-        lastMessage: '✅ Angebot angenommen',
+        lastMessage: '✅ Angebot angenommen - Reserviert',
         lastPrice: offerToAccept.amount,
         updatedAt: new Date().toISOString()
       });
 
-      // Optional: Set listing to reserved/sold (configurable)
-      const AUTO_RESERVE_ON_ACCEPT = true;
-      if (AUTO_RESERVE_ON_ACCEPT && listing) {
+      // Set listing to reserved
+      if (listing) {
         await base44.entities.Listing.update(listing.id, { 
-          status: 'sold' 
+          status: 'reserved' 
         });
       }
 
@@ -638,8 +642,8 @@ export default function ChatWindow({
       await base44.entities.Notification.create({
         userId: offerToAccept.senderId,
         type: 'status_update',
-        title: '✅ Angebot angenommen!',
-        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title}" wurde angenommen! Schließe jetzt die Zahlung ab.`,
+        title: '✅ Angebot angenommen - Reserviert!',
+        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title}" wurde angenommen! Anzeige ist für dich reserviert. Schließe die Zahlung innerhalb von 48h ab.`,
         linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
@@ -651,7 +655,7 @@ export default function ChatWindow({
       queryClient.invalidateQueries({ queryKey: ['chats'] });
       queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      toast.success('Angebot angenommen!');
+      toast.success('Angebot angenommen - Anzeige reserviert!');
     },
     onError: (error) => {
       toast.error(error.message || 'Fehler beim Annehmen des Angebots');
