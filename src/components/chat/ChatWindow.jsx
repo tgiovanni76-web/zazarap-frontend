@@ -12,6 +12,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useLanguage } from '../LanguageProvider';
+import { createPageUrl } from '@/utils';
 import OfferModal from './OfferModal';
 import OfferHistory from './OfferHistory';
 import ReviewForm from '../reviews/ReviewForm';
@@ -224,6 +225,20 @@ export default function ChatWindow({
 
   const isSeller = chat?.sellerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+
+  const goBack = useCallback(() => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      const targetId = listing?.id || chat?.listingId;
+      if (targetId) {
+        window.location.href = createPageUrl(`ListingDetail?listingId=${targetId}`);
+      } else {
+        window.location.href = createPageUrl('Marketplace');
+      }
+    }
+    setTimeout(() => window.scrollTo(0, 0), 0);
+  }, [listing?.id, chat?.listingId]);
 
   // Translate message function
   const handleTranslateMessage = async (msgId, text) => {
@@ -836,8 +851,8 @@ export default function ChatWindow({
           variant="ghost" 
           size="sm" 
           className="md:hidden text-white hover:bg-white/20"
-          onClick={onBack}
-          aria-label="Zurück zur Chat-Liste"
+          onClick={goBack}
+          aria-label="Zurück"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
