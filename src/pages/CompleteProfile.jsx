@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -228,9 +228,9 @@ export default function CompleteProfile() {
             <CardTitle className="text-2xl">
               {step === 1 ? t('profile.step1.title') : t('profile.step2.title')}
             </CardTitle>
-            <p className="text-sm text-white/90 mt-1">
+            <CardDescription className="text-sm text-white/90 mt-1">
               {step === 1 ? t('profile.step1.subtitle') : t('profile.step2.subtitle')}
-            </p>
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-6 pb-8">
