@@ -64,8 +64,13 @@ function LayoutInner({ children, currentPageName }) {
   const { data: seoSettings } = useQuery({
     queryKey: ['seoSettings'],
     queryFn: async () => {
-      const res = await base44.entities.SEOSettings.list();
-      return res[0] || {};
+      try {
+        const res = await base44.entities.SEOSettings.list();
+        return res[0] || {};
+      } catch (error) {
+        console.log('SEO Settings not available:', error);
+        return {};
+      }
     }
   });
 
