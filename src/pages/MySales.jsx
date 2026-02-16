@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { DollarSign, Package, TrendingUp, Clock, XCircle } from 'lucide-react';
+import { DollarSign, Package, TrendingUp, Clock, XCircle, Check, Archive, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
@@ -30,8 +30,35 @@ export default function MySales() {
   });
 
   const { data: listings = [] } = useQuery({
-    queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.list(),
+    queryKey: ['myListings', user?.email],
+    queryFn: () => base44.entities.Listing.filter({ created_by: user.email }, '-created_date'),
+    enabled: !!user,
+  });
+
+  const markAsSoldMutation = useMutation({
+    mutationFn: async (listingId) => {
+      return await base44.entities.Listing.update(listingId, { status: 'sold' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myListings'] });
+      toast.success('✓ Anzeige als verkauft markiert');
+    },
+    onError: (error) => {
+      toast.error('Fehler: ' + error.message);
+    }
+  });
+
+  const archiveListingMutation = useMutation({
+    mutationFn: async (listingId) => {
+      return await base44.entities.Listing.update(listingId, { status: 'archived' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myListings'] });
+      toast.success('Anzeige archiviert');
+    },
+    onError: (error) => {
+      toast.error('Fehler: ' + error.message);
+    }
   });
 
   const { data: payments = [] } = useQuery({
@@ -176,14 +203,22 @@ export default function MySales() {
                   )}
                   
                   <div className="flex-1 space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-lg">{listing?.title}</h3>
-                        <p className="text-sm text-slate-600">{t('buyer')}: {chat.buyerId}</p>
-                        <p className="text-lg font-bold text-red-600 mt-1">
-                          {chat.lastPrice || listing?.price}€
-                        </p>
-                      </div>
+                   <div className="flex justify-between items-start">
+                     <div>
+                       <div className="flex items-center gap-2 mb-1">
+                         <h3 className="font-bold text-lg">{listing?.title}</h3>
+                         {listing?.status === 'sold' && (
+                           <Badge className="bg-red-600 text-white">✓ Verkauft</Badge>
+                         )}
+                         {listing?.status === 'archived' && (
+                           <Badge variant="secondary">Archiviert</Badge>
+                         )}
+                       </div>
+                       <p className="text-sm text-slate-600">{t('buyer')}: {chat.buyerId}</p>
+                       <p className="text-lg font-bold text-red-600 mt-1">
+                         {chat.lastPrice || listing?.price}€
+                       </p>
+                     </div>
                       <div className="text-right">
                         <Badge className={
                           payment?.status === 'held_in_escrow' ? 'bg-yellow-100 text-yellow-800' :
@@ -234,11 +269,54 @@ export default function MySales() {
                       </div>
                     )}
 
-                    <Link to={createPageUrl('Messages')}>
-                      <Button variant="outline" size="sm">
-                        {t('goToChat')}
-                      </Button>
-                    </Link>
+                    <div className="flex gap-2 flex-wrap">
+                      <Link to={createPageUrl('Messages')}>
+                        <Button variant="outline" size="sm">
+                          {t('goToChat')}
+                        </Button>
+                      </Link>
+                      
+                      {listing?.status === 'active' && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-red-600 text-red-600 hover:bg-red-50"
+                          onClick={() => {
+                            if (confirm('Möchtest du diese Anzeige als verkauft markieren? Sie wird aus den öffentlichen Suchergebnissen entfernt.')) {
+                              markAsSoldMutation.mutate(listing.id);
+                            }
+                          }}
+                          disabled={markAsSoldMutation.isPending}
+                        >
+                          {markAsSoldMutation.isPending ? (
+                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                          ) : (
+                            <Check className="h-3 w-3 mr-1" />
+                          )}
+                          Als verkauft
+                        </Button>
+                      )}
+                      
+                      {listing?.status === 'sold' && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            if (confirm('Möchtest du diese verkaufte Anzeige archivieren?')) {
+                              archiveListingMutation.mutate(listing.id);
+                            }
+                          }}
+                          disabled={archiveListingMutation.isPending}
+                        >
+                          {archiveListingMutation.isPending ? (
+                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                          ) : (
+                            <Archive className="h-3 w-3 mr-1" />
+                          )}
+                          Archivieren
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>

@@ -244,7 +244,19 @@ export default function ListingDetail() {
         </div>
       )}
 
-      <div className="zaza-detail-category">{t(listing.category)}</div>
+      <div className="flex items-center gap-3 flex-wrap mb-2">
+        <div className="zaza-detail-category">{t(listing.category)}</div>
+        {listing.status === 'sold' && (
+          <Badge className="bg-red-600 text-white text-sm px-3 py-1">
+            ✓ Verkauft
+          </Badge>
+        )}
+        {listing.status === 'archived' && (
+          <Badge variant="secondary" className="text-sm px-3 py-1">
+            Archiviert
+          </Badge>
+        )}
+      </div>
       <h2 className="zaza-detail-title">{listing.title}</h2>
       {listing.offerPrice ? (
         <div className="zaza-detail-price">
