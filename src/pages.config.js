@@ -79,6 +79,7 @@ import Marketplace from './pages/Marketplace';
 import Messages from './pages/Messages';
 import MobileAppChecklist from './pages/MobileAppChecklist';
 import ModerateListings from './pages/ModerateListings';
+import MyListings from './pages/MyListings';
 import MyOrders from './pages/MyOrders';
 import MyPurchases from './pages/MyPurchases';
 import MySales from './pages/MySales';
@@ -102,7 +103,6 @@ import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
 import WarumPremium from './pages/WarumPremium';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import MyListings from './pages/MyListings';
 import __Layout from './Layout.jsx';
 
 
@@ -139,6 +139,7 @@ export const PAGES = {
     "Messages": Messages,
     "MobileAppChecklist": MobileAppChecklist,
     "ModerateListings": ModerateListings,
+    "MyListings": MyListings,
     "MyOrders": MyOrders,
     "MyPurchases": MyPurchases,
     "MySales": MySales,
@@ -162,7 +163,6 @@ export const PAGES = {
     "UserSettings": UserSettings,
     "WarumPremium": WarumPremium,
     "Widerrufsrecht": Widerrufsrecht,
-    "MyListings": MyListings,
 }
 
 export const pagesConfig = {
