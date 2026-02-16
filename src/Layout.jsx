@@ -3,7 +3,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import ErrorBoundary from '@/components/core/ErrorBoundary';
 import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
 import GlobalErrorListener from '@/components/core/GlobalErrorListener';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,17 +46,9 @@ export default function Layout({ children, currentPageName }) {
 function LayoutInner({ children, currentPageName }) {
         const { t } = useLanguage();
         const navigate = useNavigate();
-        const location = useLocation();
 
         // Initialize global audit logger once
         useEffect(() => { initAuditLogger(base44); }, []);
-
-        // Scroll to top on route change (except for Messages page - chat handles its own scroll)
-        useEffect(() => {
-          if (currentPageName !== 'Messages') {
-            window.scrollTo(0, 0);
-          }
-        }, [location.pathname, currentPageName]);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -93,7 +85,7 @@ function LayoutInner({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 overflow-x-hidden max-w-full">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 bg-white text-black px-3 py-2 rounded">Salta al contenuto</a>
         <GlobalErrorListener />
         <PerformanceMonitor />
@@ -765,7 +757,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4">
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden">
         {children}
       </main>
 
