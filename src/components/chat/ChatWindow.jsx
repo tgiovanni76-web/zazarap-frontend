@@ -837,6 +837,7 @@ export default function ChatWindow({
           size="sm" 
           className="md:hidden text-white hover:bg-white/20"
           onClick={onBack}
+          aria-label="Zurück zur Chat-Liste"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
