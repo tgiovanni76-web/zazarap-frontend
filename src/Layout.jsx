@@ -723,6 +723,9 @@ function LayoutInner({ children, currentPageName }) {
                             <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
                               <Plus className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
+                            <Link to={createPageUrl('MyListings')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Meine Anzeigen" aria-label="My listings">
+                              <Package className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
+                            </Link>
                             <Link to={createPageUrl('MySales')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Vendite" aria-label="My sales">
                               <TrendingUp className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
