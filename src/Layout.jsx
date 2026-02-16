@@ -61,13 +61,7 @@ function LayoutInner({ children, currentPageName }) {
     }
   }, [user, currentPageName, navigate]);
 
-  const { data: seoSettings } = useQuery({
-    queryKey: ['seoSettings'],
-    queryFn: async () => {
-      const res = await base44.entities.SEOSettings.list();
-      return res[0] || {};
-    }
-  });
+  const seoSettings = {};
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
