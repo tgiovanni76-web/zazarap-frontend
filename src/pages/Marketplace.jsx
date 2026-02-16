@@ -167,12 +167,12 @@ export default function Marketplace() {
       }
     }
 
-    // Status filter - exclude sold/archived from public view (unless admin filtering)
+    // Status filter - exclude sold/archived/reserved from public view (unless admin filtering)
     const matchesStatus = statusFilter === 'all' 
       ? (user?.role === 'admin' ? true : listing.status === 'active')
       : listing.status === statusFilter;
     
-    // Always hide sold and archived from public marketplace (non-owners)
+    // Always hide sold, archived, and reserved from public marketplace (non-owners)
     const isPubliclyVisible = user?.role === 'admin' || 
       listing.status === 'active' || 
       (user && listing.created_by === user.email);
@@ -530,6 +530,9 @@ export default function Marketplace() {
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
                 <div className="flex items-center gap-2 flex-wrap">
                   <div className="zaza-category">{t(listing.category)}</div>
+                  {listing.status === 'reserved' && (
+                    <Badge className="bg-yellow-600 text-white text-xs">🔒 Reserviert</Badge>
+                  )}
                   {listing.status === 'sold' && (
                     <Badge className="bg-red-600 text-white text-xs">✓ Verkauft</Badge>
                   )}

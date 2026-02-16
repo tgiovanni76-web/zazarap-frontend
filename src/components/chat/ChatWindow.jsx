@@ -264,6 +264,7 @@ export default function ChatWindow({
   });
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
+  const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
 
   // Check if user already left a review for this chat
   const { data: existingReviews = [] } = useQuery({
@@ -662,6 +663,107 @@ export default function ChatWindow({
     }
   });
 
+  // Unreserve listing mutation
+  const unreserveMutation = useMutation({
+    mutationFn: async () => {
+      if (!isSeller) {
+        throw new Error('Nur der Verkäufer kann die Reservierung aufheben');
+      }
+
+      if (listing?.status !== 'reserved') {
+        throw new Error('Anzeige ist nicht reserviert');
+      }
+
+      // Set listing back to active
+      await base44.entities.Listing.update(listing.id, {
+        status: 'active'
+      });
+
+      // Set all accepted_reserved offers to withdrawn
+      const reservedOffers = offers.filter(o => o.status === 'accepted_reserved');
+      for (const offer of reservedOffers) {
+        await base44.entities.Offer.update(offer.id, { status: 'withdrawn' });
+      }
+
+      // Create system message
+      await base44.entities.ChatMessage.create({
+        chatId: chat.id,
+        senderId: user.email,
+        text: '🔓 Reservierung wurde vom Verkäufer aufgehoben. Anzeige ist wieder verfügbar.',
+        messageType: 'system'
+      });
+
+      // Notify buyer
+      await base44.entities.Notification.create({
+        userId: chat.buyerId,
+        type: 'status_update',
+        title: '🔓 Reservierung aufgehoben',
+        message: `Die Reservierung für "${listing?.title}" wurde aufgehoben. Die Anzeige ist wieder verfügbar.`,
+        linkUrl: '/Messages?chatId=' + chat.id,
+        relatedId: chat.id
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success('Reservierung aufgehoben');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Fehler beim Aufheben der Reservierung');
+    }
+  });
+
+  // Mark as sold mutation
+  const markAsSoldMutation = useMutation({
+    mutationFn: async () => {
+      if (!isSeller) {
+        throw new Error('Nur der Verkäufer kann als verkauft markieren');
+      }
+
+      // Set listing to sold
+      await base44.entities.Listing.update(listing.id, {
+        status: 'sold'
+      });
+
+      // Create system message
+      await base44.entities.ChatMessage.create({
+        chatId: chat.id,
+        senderId: user.email,
+        text: '✅ Anzeige wurde als verkauft markiert.',
+        messageType: 'system'
+      });
+
+      // Update chat status
+      await base44.entities.Chat.update(chat.id, {
+        status: 'completata',
+        lastMessage: '✅ Verkauft',
+        updatedAt: new Date().toISOString()
+      });
+
+      // Notify buyer
+      await base44.entities.Notification.create({
+        userId: chat.buyerId,
+        type: 'status_update',
+        title: '✅ Verkauft',
+        message: `"${listing?.title}" wurde als verkauft markiert.`,
+        linkUrl: '/Messages?chatId=' + chat.id,
+        relatedId: chat.id
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success('Als verkauft markiert');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Fehler beim Markieren als verkauft');
+    }
+  });
+
   // Reject offer mutation
   const rejectOfferMutation = useMutation({
     mutationFn: async (offerId) => {
@@ -792,11 +894,13 @@ export default function ChatWindow({
               <History className="h-4 w-4 mr-1" />
               {offers.length}
             </Button>
-            {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && (
+            {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
               <Button 
                 size="sm" 
                 onClick={handleMakeOffer}
                 className="bg-green-600 hover:bg-green-700 text-xs"
+                disabled={listing?.status === 'reserved'}
+                title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
               >
                 <DollarSign className="h-4 w-4 mr-1" />
                 {ct.offer}
@@ -936,13 +1040,13 @@ export default function ChatWindow({
                         <div className="mt-2">
                           <Badge 
                             variant={
-                              linkedOffer.status === 'accepted' ? 'default' : 
+                              linkedOffer.status === 'accepted_reserved' ? 'default' : 
                               linkedOffer.status === 'rejected' ? 'destructive' : 
                               'secondary'
                             }
                             className="text-xs"
                           >
-                            {linkedOffer.status === 'accepted' && '✓ Angenommen'}
+                            {linkedOffer.status === 'accepted_reserved' && '✓ Angenommen - Reserviert'}
                             {linkedOffer.status === 'rejected' && '✕ Abgelehnt'}
                             {linkedOffer.status === 'countered' && '🔄 Kontriert'}
                             {linkedOffer.status === 'withdrawn' && '🚫 Zurückgezogen'}
@@ -994,6 +1098,33 @@ export default function ChatWindow({
 
 
 
+      {/* Seller Actions for Reserved Listing */}
+      {hasActiveReservation && isSeller && (
+        <div className="p-3 bg-yellow-50 border-t space-y-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-yellow-800 font-medium">🔒 Anzeige reserviert</span>
+            <span className="text-xs text-yellow-600">48h Timeout aktiv</span>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => unreserveMutation.mutate()}
+              disabled={unreserveMutation.isPending}
+              variant="outline"
+              className="flex-1"
+            >
+              🔓 Reservierung aufheben
+            </Button>
+            <Button 
+              onClick={() => markAsSoldMutation.mutate()}
+              disabled={markAsSoldMutation.isPending}
+              className="flex-1 bg-green-600 hover:bg-green-700"
+            >
+              ✅ Als verkauft markieren
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Payment Button (for buyer after acceptance) */}
       {chat.status === 'accettata' && !isSeller && (
         <div className="p-3 bg-green-50 border-t animate-pulse">
@@ -1003,6 +1134,9 @@ export default function ChatWindow({
           </Button>
           <p className="text-center text-xs text-green-700 mt-2">
             {ct.offerAcceptedDesc}
+          </p>
+          <p className="text-center text-xs text-yellow-600 mt-1">
+            ⏰ Reservierung läuft 48h - danach wird die Anzeige automatisch freigegeben
           </p>
         </div>
       )}
