@@ -17,6 +17,7 @@ import { initAuditLogger } from '@/components/auditLogger';
 
 
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider';
+import ScrollToTop from '@/components/core/ScrollToTop';
 const StructuredData = lazy(() => import('@/components/marketplace/StructuredData'));
 const SEOHead = lazy(() => import('@/components/SEOHead'));
 const LanguageSwitcher = lazy(() => import('@/components/LanguageSwitcher'));
@@ -38,6 +39,7 @@ function LayoutContent({ children, currentPageName, user, unreadCount }) {
 export default function Layout({ children, currentPageName }) {
   return (
     <LanguageProvider>
+      <ScrollToTop />
       <LayoutInner children={children} currentPageName={currentPageName} />
     </LanguageProvider>
   );
