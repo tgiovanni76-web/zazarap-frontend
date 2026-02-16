@@ -464,15 +464,36 @@ export default function ChatWindow({
     }
   };
 
-  const handleAcceptOffer = () => acceptOfferMutation.mutate();
-  const handleRejectOffer = () => rejectOfferMutation.mutate();
+  const handleAcceptOffer = (offerId) => {
+    if (!isSeller) {
+      toast.error('Nur der Verkäufer kann Angebote annehmen');
+      return;
+    }
+    acceptOfferMutation.mutate(offerId);
+  };
+  
+  const handleRejectOffer = (offerId) => {
+    if (!isSeller) {
+      toast.error('Nur der Verkäufer kann Angebote ablehnen');
+      return;
+    }
+    rejectOfferMutation.mutate(offerId);
+  };
 
-  const handleCounterOffer = () => {
+  const handleCounterOffer = (offerToCounter) => {
+    if (!isSeller) {
+      toast.error('Nur der Verkäufer kann Gegenangebote machen');
+      return;
+    }
     setIsCounterOffer(true);
     setShowOfferModal(true);
   };
 
   const handleMakeOffer = () => {
+    if (isSeller) {
+      toast.error('Nur Käufer können initiale Angebote senden');
+      return;
+    }
     setIsCounterOffer(false);
     setShowOfferModal(true);
   };
@@ -480,6 +501,27 @@ export default function ChatWindow({
   // Create offer mutation
   const createOfferMutation = useMutation({
     mutationFn: async ({ amount, message, type }) => {
+      // Validation: Amount must be > 0
+      if (amount <= 0) {
+        throw new Error('Betrag muss größer als 0 sein');
+      }
+
+      // Validation: Amount must be <= listingPrice * MAX_OFFER_MULTIPLIER
+      const MAX_OFFER_MULTIPLIER = 1.5; // Configurable
+      if (amount > (listing?.price || 0) * MAX_OFFER_MULTIPLIER) {
+        throw new Error(`Betrag darf nicht mehr als ${MAX_OFFER_MULTIPLIER}x des Listenpreises (${listing?.price}€) sein`);
+      }
+
+      // Validation: Only buyer can make initial offers
+      if (type === 'initial' && isSeller) {
+        throw new Error('Nur Käufer können initiale Angebote senden');
+      }
+
+      // Validation: Only seller can make counter offers
+      if (type === 'counter' && !isSeller) {
+        throw new Error('Nur Verkäufer können Gegenangebote machen');
+      }
+
       // Update previous pending offers to 'countered'
       const pendingOffers = offers.filter(o => o.status === 'pending');
       for (const offer of pendingOffers) {
@@ -501,16 +543,21 @@ export default function ChatWindow({
 
       // Create chat message of type 'offer' - this will be visible to both parties
       const offerText = message 
-        ? `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€\n"${message}"` 
-        : `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€`;
+        ? `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€\n"${message}"` 
+        : `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€`;
       
-      await base44.entities.ChatMessage.create({
+      const offerMessage = await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
         text: offerText,
         price: amount,
         messageType: 'offer',
         read: false
+      });
+
+      // Store offer ID in message for later reference
+      await base44.entities.ChatMessage.update(offerMessage.id, {
+        text: offerText + `\n[OFFER_ID:${offer.id}]`
       });
 
       // Update chat with new offer price and increment unread counter for receiver
@@ -527,8 +574,8 @@ export default function ChatWindow({
       await base44.entities.Notification.create({
         userId: otherUser,
         type: 'offer',
-        title: type === 'counter' ? '🔄 Nuova controproposta!' : '💰 Nuova offerta!',
-        message: `${user.email.split('@')[0]} ha ${type === 'counter' ? 'fatto una controproposta di' : 'offerto'} ${amount}€ per "${listing?.title}"`,
+        title: type === 'counter' ? '🔄 Neues Gegenangebot!' : '💰 Neues Angebot!',
+        message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title}" gemacht`,
         linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
@@ -540,82 +587,128 @@ export default function ChatWindow({
       queryClient.invalidateQueries({ queryKey: ['chats'] });
       queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
       setShowOfferModal(false);
-      toast.success('Offerta inviata!');
+      toast.success('Angebot gesendet!');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Fehler beim Senden des Angebots');
     }
   });
 
   // Accept offer mutation  
   const acceptOfferMutation = useMutation({
-    mutationFn: async () => {
-      // Update offer status
-      if (lastOffer) {
-        await base44.entities.Offer.update(lastOffer.id, { status: 'accepted' });
+    mutationFn: async (offerId) => {
+      // Validation: Only seller can accept
+      if (!isSeller) {
+        throw new Error('Nur der Verkäufer kann Angebote annehmen');
       }
 
+      const offerToAccept = offers.find(o => o.id === offerId);
+      if (!offerToAccept || offerToAccept.status !== 'pending') {
+        throw new Error('Angebot ist nicht mehr gültig');
+      }
+
+      // Update offer status to accepted
+      await base44.entities.Offer.update(offerId, { status: 'accepted' });
+
+      // Create system message
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
-        text: `✅ Offerta di ${chat.lastPrice}€ accettata! Procedi al pagamento.`,
+        text: `✅ Angebot von ${offerToAccept.amount}€ angenommen! Käufer kann jetzt bezahlen.`,
         messageType: 'system'
       });
 
+      // Update chat status
       await base44.entities.Chat.update(chat.id, {
         status: 'accettata',
-        lastMessage: '✅ Offerta accettata',
+        lastMessage: '✅ Angebot angenommen',
+        lastPrice: offerToAccept.amount,
         updatedAt: new Date().toISOString()
       });
 
+      // Optional: Set listing to reserved/sold (configurable)
+      const AUTO_RESERVE_ON_ACCEPT = true;
+      if (AUTO_RESERVE_ON_ACCEPT && listing) {
+        await base44.entities.Listing.update(listing.id, { 
+          status: 'sold' 
+        });
+      }
+
+      // Notify buyer
       await base44.entities.Notification.create({
-        userId: chat.buyerId,
+        userId: offerToAccept.senderId,
         type: 'status_update',
-        title: '✅ Offerta accettata!',
-        message: `La tua offerta di ${chat.lastPrice}€ per "${listing?.title}" è stata accettata! Procedi al pagamento.`,
-        linkUrl: '/Messages',
+        title: '✅ Angebot angenommen!',
+        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title}" wurde angenommen! Schließe jetzt die Zahlung ab.`,
+        linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
+
+      return offerToAccept;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
       queryClient.invalidateQueries({ queryKey: ['chats'] });
-      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
-      toast.success('Offerta accettata!');
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success('Angebot angenommen!');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Fehler beim Annehmen des Angebots');
     }
   });
 
   // Reject offer mutation
   const rejectOfferMutation = useMutation({
-    mutationFn: async () => {
-      if (lastOffer) {
-        await base44.entities.Offer.update(lastOffer.id, { status: 'rejected' });
+    mutationFn: async (offerId) => {
+      // Validation: Only seller can reject
+      if (!isSeller) {
+        throw new Error('Nur der Verkäufer kann Angebote ablehnen');
       }
 
+      const offerToReject = offers.find(o => o.id === offerId);
+      if (!offerToReject || offerToReject.status !== 'pending') {
+        throw new Error('Angebot ist nicht mehr gültig');
+      }
+
+      // Update offer status to rejected
+      await base44.entities.Offer.update(offerId, { status: 'rejected' });
+
+      // Create system message
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
-        text: `❌ Offerta di ${chat.lastPrice}€ rifiutata`,
+        text: `❌ Angebot von ${offerToReject.amount}€ abgelehnt`,
         messageType: 'system'
       });
 
+      // Update chat status
       await base44.entities.Chat.update(chat.id, {
         status: 'rifiutata',
-        lastMessage: '❌ Offerta rifiutata',
+        lastMessage: '❌ Angebot abgelehnt',
         updatedAt: new Date().toISOString()
       });
 
+      // Notify buyer
       await base44.entities.Notification.create({
-        userId: chat.buyerId,
+        userId: offerToReject.senderId,
         type: 'status_update',
-        title: '❌ Offerta rifiutata',
-        message: `La tua offerta di ${chat.lastPrice}€ per "${listing?.title}" è stata rifiutata.`,
-        linkUrl: '/Messages',
+        title: '❌ Angebot abgelehnt',
+        message: `Dein Angebot von ${offerToReject.amount}€ für "${listing?.title}" wurde abgelehnt.`,
+        linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
+
+      return offerToReject;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
       queryClient.invalidateQueries({ queryKey: ['chats'] });
-      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
-      toast.info('Offerta rifiutata');
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
+      toast.info('Angebot abgelehnt');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Fehler beim Ablehnen des Angebots');
     }
   });
 
@@ -749,6 +842,12 @@ export default function ChatWindow({
                 );
               }
 
+              // Extract offer ID from message text
+              const offerIdMatch = msg.text?.match(/\[OFFER_ID:([^\]]+)\]/);
+              const linkedOfferId = offerIdMatch ? offerIdMatch[1] : null;
+              const linkedOffer = linkedOfferId ? offers.find(o => o.id === linkedOfferId) : null;
+              const displayText = msg.text?.replace(/\[OFFER_ID:[^\]]+\]/, '').trim();
+
               return (
                 <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
@@ -768,14 +867,14 @@ export default function ChatWindow({
                       )}
 
                       {/* Text */}
-                      {msg.text && (
+                      {displayText && (
                         <div>
                           <p className="text-sm whitespace-pre-wrap">
-                            {translatedMessages[msg.id] || msg.text}
+                            {translatedMessages[msg.id] || displayText}
                           </p>
-                          {msg.text && msg.senderId !== user?.email && msg.messageType !== 'system' && (
+                          {displayText && msg.senderId !== user?.email && msg.messageType !== 'system' && (
                             <button
-                              onClick={() => handleTranslateMessage(msg.id, msg.text)}
+                              onClick={() => handleTranslateMessage(msg.id, displayText)}
                               disabled={translatingId === msg.id}
                               className={`text-xs mt-1 flex items-center gap-1 ${isOwn ? 'text-white/60 hover:text-white/80' : 'text-slate-400 hover:text-slate-600'}`}
                             >
@@ -797,6 +896,57 @@ export default function ChatWindow({
                         </div>
                       )}
 
+                      {/* Offer Action Buttons (only for pending offers and receiver) */}
+                      {msg.messageType === 'offer' && linkedOffer && linkedOffer.status === 'pending' && !isOwn && isSeller && (
+                        <div className="flex gap-2 mt-3">
+                          <Button
+                            size="sm"
+                            onClick={() => handleAcceptOffer(linkedOffer.id)}
+                            disabled={acceptOfferMutation.isPending}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            ✓ Annehmen
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleCounterOffer(linkedOffer)}
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            🔄 Gegenangebot
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleRejectOffer(linkedOffer.id)}
+                            disabled={rejectOfferMutation.isPending}
+                            variant="destructive"
+                            className="flex-1"
+                          >
+                            ✕ Ablehnen
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Offer Status Badge */}
+                      {msg.messageType === 'offer' && linkedOffer && linkedOffer.status !== 'pending' && (
+                        <div className="mt-2">
+                          <Badge 
+                            variant={
+                              linkedOffer.status === 'accepted' ? 'default' : 
+                              linkedOffer.status === 'rejected' ? 'destructive' : 
+                              'secondary'
+                            }
+                            className="text-xs"
+                          >
+                            {linkedOffer.status === 'accepted' && '✓ Angenommen'}
+                            {linkedOffer.status === 'rejected' && '✕ Abgelehnt'}
+                            {linkedOffer.status === 'countered' && '🔄 Kontriert'}
+                            {linkedOffer.status === 'withdrawn' && '🚫 Zurückgezogen'}
+                            {linkedOffer.status === 'expired' && '⏰ Abgelaufen'}
+                          </Badge>
+                        </div>
+                      )}
+
                       {/* Moderation Flag */}
                       {msg.flagged && (
                         <div className={`mt-1 flex items-center gap-1 ${isOwn ? 'text-yellow-200' : 'text-red-600'} text-xs`}>
@@ -804,6 +954,7 @@ export default function ChatWindow({
                           In review
                         </div>
                       )}
+                      
                       {/* Time & Read Status */}
                       <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-white/70' : 'text-slate-400'}`}>
                         <span className="text-xs">
@@ -837,29 +988,7 @@ export default function ChatWindow({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Offer Actions (for seller) */}
-      {chat.status === 'in_attesa' && isSeller && chat.lastPrice && (
-        <div className="flex gap-2 p-3 bg-yellow-50 border-t">
-          <Button 
-            onClick={handleAcceptOffer} 
-            disabled={acceptOfferMutation.isPending}
-            className="flex-1 bg-green-600 hover:bg-green-700"
-          >
-            ✓ {ct.accept}
-          </Button>
-          <Button onClick={handleCounterOffer} variant="outline" className="flex-1">
-            🔄 {ct.counterOffer}
-          </Button>
-          <Button 
-            onClick={handleRejectOffer} 
-            disabled={rejectOfferMutation.isPending}
-            variant="destructive" 
-            className="flex-1"
-          >
-            ✕ {ct.reject}
-          </Button>
-        </div>
-      )}
+
 
       {/* Payment Button (for buyer after acceptance) */}
       {chat.status === 'accettata' && !isSeller && (
