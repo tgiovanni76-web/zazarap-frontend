@@ -35,19 +35,9 @@ export default function Messages() {
   const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
 
-  // Load chats where user is participant (RLS handles filtering by buyerId/sellerId)
   const { data: chats = [], isLoading: chatsLoading } = useQuery({
-    queryKey: ['chats', user?.email],
-    queryFn: async () => {
-      try {
-        const allChats = await base44.entities.Chat.list('-updatedAt');
-        console.log('[MESSAGES] Loaded chats:', allChats.length, allChats);
-        return allChats;
-      } catch (error) {
-        console.error('[MESSAGES] Error loading chats:', error);
-        return [];
-      }
-    },
+    queryKey: ['chats'],
+    queryFn: () => base44.entities.Chat.list('-updatedAt'),
     enabled: !!user,
   });
 
@@ -56,7 +46,6 @@ export default function Messages() {
     if (!user) return;
 
     const unsubscribe = base44.entities.Chat.subscribe((event) => {
-      console.log('[MESSAGES] Chat subscription event:', event);
       queryClient.invalidateQueries({ queryKey: ['chats'] });
     });
 
@@ -65,16 +54,7 @@ export default function Messages() {
 
   const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id],
-    queryFn: async () => {
-      try {
-        const messages = await base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date');
-        console.log('[MESSAGES] Loaded messages:', messages.length);
-        return messages;
-      } catch (error) {
-        console.error('[MESSAGES] Error loading messages:', error);
-        return [];
-      }
-    },
+    queryFn: () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date'),
     enabled: !!selectedChat,
   });
 
@@ -83,7 +63,6 @@ export default function Messages() {
     if (!selectedChat?.id) return;
 
     const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
-      console.log('[MESSAGES] Message subscription event:', event);
       if (event.data?.chatId === selectedChat.id) {
         queryClient.invalidateQueries({ queryKey: ['chatMessages', selectedChat.id] });
         queryClient.invalidateQueries({ queryKey: ['chats'] });
@@ -98,13 +77,10 @@ export default function Messages() {
     queryFn: () => base44.entities.Listing.list(),
   });
 
-  // RLS already filters chats, no need for additional filtering
-  // But keep this as a safeguard
+  // Filter chats where user is buyer or seller
   const myChats = chats.filter(
     c => c.buyerId === user?.email || c.sellerId === user?.email
   );
-  
-  console.log('[MESSAGES] User:', user?.email, 'Total chats:', chats.length, 'My chats:', myChats.length);
 
   // Auto-select chat from URL parameter
   useEffect(() => {
@@ -172,11 +148,11 @@ export default function Messages() {
     );
   }
 
-  // Mobile: show only sidebar or chat (Full viewport layout)
+  // Mobile: show only sidebar or chat
   if (isMobileView) {
     if (selectedChat) {
       return (
-        <div className="fixed inset-0 top-[70px] bottom-0 flex flex-col bg-white">
+        <div className="h-[calc(100vh-140px)]">
           <ChatWindow
             chat={selectedChat}
             messages={chatMessages}
@@ -210,7 +186,7 @@ export default function Messages() {
     }
 
     return (
-      <div className="fixed inset-0 top-[70px] bottom-0 flex flex-col bg-white">
+      <div className="h-[calc(100vh-140px)]">
         <ChatSidebar
           chats={myChats}
           selectedChat={selectedChat}
@@ -223,12 +199,12 @@ export default function Messages() {
     );
   }
 
-  // Desktop: show both sidebar and chat (Full viewport layout)
+  // Desktop: show both sidebar and chat
   return (
-    <div className="fixed inset-0 top-[90px] bottom-0 flex flex-col bg-slate-50">
-      <div className="flex-1 grid grid-cols-3 gap-4 p-4 overflow-hidden">
+    <div className="py-6">
+      <div className="grid grid-cols-3 gap-4 h-[calc(100vh-180px)]">
         {/* Sidebar */}
-        <div className="col-span-1 h-full overflow-hidden">
+        <div className="col-span-1">
           <ChatSidebar
             chats={myChats}
             selectedChat={selectedChat}
@@ -240,7 +216,7 @@ export default function Messages() {
         </div>
 
         {/* Chat Window */}
-        <div className="col-span-2 h-full overflow-hidden">
+        <div className="col-span-2">
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}
