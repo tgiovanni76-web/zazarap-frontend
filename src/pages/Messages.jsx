@@ -39,15 +39,38 @@ export default function Messages() {
     queryKey: ['chats'],
     queryFn: () => base44.entities.Chat.list('-updatedAt'),
     enabled: !!user,
-    refetchInterval: 2000, // Poll every 2 seconds for real-time updates
   });
+
+  // Real-time subscription for chats
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribe = base44.entities.Chat.subscribe((event) => {
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+    });
+
+    return () => unsubscribe();
+  }, [user, queryClient]);
 
   const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id],
     queryFn: () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date'),
     enabled: !!selectedChat,
-    refetchInterval: 1500, // Poll every 1.5 seconds for real-time messages
   });
+
+  // Real-time subscription for messages
+  useEffect(() => {
+    if (!selectedChat?.id) return;
+
+    const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
+      if (event.data?.chatId === selectedChat.id) {
+        queryClient.invalidateQueries({ queryKey: ['chatMessages', selectedChat.id] });
+        queryClient.invalidateQueries({ queryKey: ['chats'] });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [selectedChat?.id, queryClient]);
 
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],

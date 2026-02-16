@@ -486,7 +486,7 @@ export default function ChatWindow({
         await base44.entities.Offer.update(offer.id, { status: 'countered' });
       }
 
-      // Create new offer
+      // Create new offer in DB
       const offer = await base44.entities.Offer.create({
         chatId: chat.id,
         listingId: chat.listingId,
@@ -499,27 +499,37 @@ export default function ChatWindow({
         message
       });
 
-      // Send chat message
-      await sendMessageMutation.mutateAsync({
-        text: message ? `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€\n"${message}"` : `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€`,
+      // Create chat message of type 'offer' - this will be visible to both parties
+      const offerText = message 
+        ? `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€\n"${message}"` 
+        : `${type === 'counter' ? '🔄 Controproposta' : '💰 Offerta'}: ${amount}€`;
+      
+      await base44.entities.ChatMessage.create({
+        chatId: chat.id,
+        senderId: user.email,
+        text: offerText,
         price: amount,
-        messageType: 'offer'
+        messageType: 'offer',
+        read: false
       });
 
-      // Update chat status
+      // Update chat with new offer price and increment unread counter for receiver
+      const unreadField = isSeller ? 'unreadBuyer' : 'unreadSeller';
       await base44.entities.Chat.update(chat.id, {
         lastPrice: amount,
+        lastMessage: `💰 ${amount}€`,
         status: 'in_attesa',
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        [unreadField]: (chat[unreadField] || 0) + 1
       });
 
-      // Send detailed notification
+      // Create notification for receiver
       await base44.entities.Notification.create({
         userId: otherUser,
         type: 'offer',
         title: type === 'counter' ? '🔄 Nuova controproposta!' : '💰 Nuova offerta!',
         message: `${user.email.split('@')[0]} ha ${type === 'counter' ? 'fatto una controproposta di' : 'offerto'} ${amount}€ per "${listing?.title}"`,
-        linkUrl: '/Messages',
+        linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
 
@@ -528,6 +538,7 @@ export default function ChatWindow({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
       queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
       setShowOfferModal(false);
       toast.success('Offerta inviata!');
     }
