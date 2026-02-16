@@ -366,20 +366,6 @@ export default function ChatWindow({
           linkUrl: '/Messages',
           relatedId: chat.id
         });
-
-        // Send email notification (non-blocking, with rate limiting)
-        try {
-          await base44.functions.invoke('sendChatEmailNotification', {
-            receiverEmail: otherUser,
-            type: price ? 'offer' : 'message',
-            listingTitle: listing?.title,
-            chatId: chat.id,
-            amount: price,
-            senderName: user.full_name || user.email.split('@')[0]
-          });
-        } catch (emailError) {
-          console.error('Email notification failed (non-blocking):', emailError);
-        }
       }
 
       // AI moderation (non-blocking)
@@ -607,22 +593,6 @@ export default function ChatWindow({
         relatedId: chat.id
       });
       console.log('[OFFER] Notification created');
-
-      // Send email notification (non-blocking, with rate limiting)
-      console.log('[OFFER] Triggering email notification...');
-      try {
-        await base44.functions.invoke('sendChatEmailNotification', {
-          receiverEmail: otherUser,
-          type: 'offer',
-          listingTitle: listing?.title,
-          chatId: chat.id,
-          amount: amount,
-          senderName: user.full_name || user.email.split('@')[0]
-        });
-        console.log('[OFFER] Email notification triggered');
-      } catch (emailError) {
-        console.error('[OFFER] Email notification failed (non-blocking):', emailError);
-      }
 
       console.log('[OFFER] ✅ Offer flow completed successfully - DB insert done, realtime event should fire now');
       return offer;
