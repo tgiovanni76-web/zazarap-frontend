@@ -112,6 +112,20 @@ export default function ListingDetail() {
     }
   });
 
+  const markAsSoldMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Listing.update(listingId, { status: 'sold' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['listing'] });
+      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success('Anzeige als verkauft markiert');
+    },
+    onError: () => {
+      toast.error('Fehler beim Markieren');
+    }
+  });
+
   const handleAddReview = () => {
     if (!reviewComment.trim()) return;
     addReviewMutation.mutate({
@@ -314,6 +328,15 @@ export default function ListingDetail() {
               <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
                 <button className="zaza-contact-btn">{t('editListing')}</button>
               </Link>
+              {listing.status === 'active' && (
+                <button
+                  onClick={() => markAsSoldMutation.mutate()}
+                  disabled={markAsSoldMutation.isPending}
+                  className="w-full p-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg disabled:opacity-50"
+                >
+                  {markAsSoldMutation.isPending ? 'Wird markiert...' : '✓ Als verkauft markieren'}
+                </button>
+              )}
               {!listing.featured && listing.status === 'active' && (
                 <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
                   <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
