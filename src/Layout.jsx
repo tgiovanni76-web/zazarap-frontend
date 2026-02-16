@@ -710,7 +710,7 @@ function LayoutInner({ children, currentPageName }) {
                         </Link>
                         {!user && (
                           <Button 
-                            onClick={() => base44.auth.redirectToLogin()}
+                            onClick={() => window.location.href = createPageUrl('OTPLogin')}
                             className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
                             aria-label="Login"
                             >
