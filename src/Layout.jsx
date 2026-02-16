@@ -95,8 +95,7 @@ function LayoutInner({ children, currentPageName }) {
             --z-black: #333333;
           }
 
-          /* TEST: se non vedi il bordo, il CSS non è applicato */
-          body { outline: 4px solid rgba(0,255,0,.6) !important; }
+
 
           /* Spaziatura safe-area + respiro sotto */
           form { padding-bottom: 32px !important; }
