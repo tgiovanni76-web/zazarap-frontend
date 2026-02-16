@@ -56,8 +56,9 @@ function LayoutInner({ children, currentPageName }) {
   });
 
   useEffect(() => {
-    if (user && (!user.birthDate || !user.privacyAccepted) && currentPageName !== 'CompleteProfile') {
-      navigate(createPageUrl('CompleteProfile'));
+    if (user && (!user.birthDate || !user.privacyAccepted) && currentPageName !== 'CompleteProfile' && currentPageName !== 'OTPLogin') {
+      console.log('[Layout] User needs to complete profile, redirecting...');
+      navigate(createPageUrl('CompleteProfile'), { replace: true });
     }
   }, [user, currentPageName, navigate]);
 

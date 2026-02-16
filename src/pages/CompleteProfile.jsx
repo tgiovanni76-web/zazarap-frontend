@@ -54,16 +54,22 @@ export default function CompleteProfile() {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      return await base44.auth.updateMe(data);
+      console.log('[CompleteProfile] Saving profile data:', data);
+      const result = await base44.auth.updateMe(data);
+      console.log('[CompleteProfile] Profile saved successfully:', result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('[CompleteProfile] Mutation success, navigating to Marketplace');
       toast.success(t('profile.success'));
       setTimeout(() => {
-        navigate(createPageUrl('Marketplace'));
-      }, 1000);
+        navigate(createPageUrl('Marketplace'), { replace: true });
+        window.location.reload(); // Force reload to update auth state
+      }, 800);
     },
     onError: (error) => {
-      toast.error(error.message || 'Fehler beim Speichern');
+      console.error('[CompleteProfile] Profile save error:', error);
+      toast.error('Fehler beim Speichern: ' + (error.message || 'Unbekannter Fehler'));
     }
   });
 
@@ -179,14 +185,35 @@ export default function CompleteProfile() {
 
   // Handle Step 1 Next
   const handleStep1Next = () => {
+    console.log('[CompleteProfile] Step 1 validation...');
     if (validateStep1()) {
+      console.log('[CompleteProfile] Step 1 valid, moving to step 2');
       setStep(2);
+    } else {
+      console.log('[CompleteProfile] Step 1 validation failed:', errors);
+      toast.error('Bitte alle Pflichtfelder ausfüllen');
+      // Focus first error field
+      const firstErrorField = Object.keys(errors)[0];
+      if (firstErrorField) {
+        document.getElementById(firstErrorField)?.focus();
+      }
     }
   };
 
   // Handle Step 2 Next (to verification)
   const handleStep2Next = () => {
-    if (!validateStep2()) return;
+    console.log('[CompleteProfile] Step 2 validation...');
+    if (!validateStep2()) {
+      console.log('[CompleteProfile] Step 2 validation failed:', errors);
+      toast.error('Bitte alle Pflichtfelder ausfüllen');
+      // Focus first error field
+      const firstErrorField = Object.keys(errors)[0];
+      if (firstErrorField) {
+        document.getElementById(firstErrorField)?.focus();
+      }
+      return;
+    }
+    console.log('[CompleteProfile] Step 2 valid, moving to step 3');
     setStep(3);
   };
 
@@ -254,12 +281,14 @@ export default function CompleteProfile() {
 
   // Handle Final Submit
   const handleFinalSubmit = async () => {
+    console.log('[CompleteProfile] Final submit triggered');
+    
     const profileData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
       birthDate: formData.birthDate,
-      postalCode: formData.postalCode,
-      street: formData.street,
+      postalCode: formData.postalCode.trim(),
+      street: formData.street.trim(),
       country: formData.country,
       region: formData.region,
       province: formData.province,
@@ -270,16 +299,18 @@ export default function CompleteProfile() {
       longitude: formData.longitude,
       privacyAccepted: formData.privacyAccepted,
       marketingConsent: formData.marketingConsent,
-      phoneNumber: formData.phoneNumber || undefined,
+      phoneNumber: formData.phoneNumber?.trim() || undefined,
       verifiedEmail: formData.verifiedEmail || false,
       verifiedPhone: formData.verifiedPhone || false
     };
 
+    console.log('[CompleteProfile] Submitting profile data:', profileData);
     updateProfileMutation.mutate(profileData);
   };
 
   // Skip verification and complete profile
   const skipVerification = () => {
+    console.log('[CompleteProfile] Skipping verification, proceeding to final submit');
     handleFinalSubmit();
   };
 
@@ -399,7 +430,11 @@ export default function CompleteProfile() {
 
             {/* STEP 2: Location Data */}
             {step === 2 && (
-              <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-5">
+              <form onSubmit={(e) => { 
+                e.preventDefault(); 
+                console.log('[CompleteProfile] Step 2 form submitted');
+                handleStep2Next(); 
+              }} className="space-y-5">
                 
                 <div>
                   <Label htmlFor="postalCode" className="text-base font-semibold mb-2 block">
@@ -587,15 +622,17 @@ export default function CompleteProfile() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      console.log('[CompleteProfile] Going back to step 1');
+                      setStep(1);
+                    }}
                     className="flex-1 h-14 text-base font-semibold rounded-xl"
                   >
                     <ChevronLeft className="mr-2 h-5 w-5" /> {t('profile.btn.back')}
                   </Button>
-                  
+
                   <Button
-                    type="button"
-                    onClick={handleStep2Next}
+                    type="submit"
                     className="flex-1 bg-[#d62828] hover:bg-[#c91f23] text-white h-14 text-lg font-bold rounded-xl"
                   >
                     {t('profile.btn.next')} <ChevronRight className="ml-2 h-5 w-5" />
@@ -755,13 +792,12 @@ export default function CompleteProfile() {
                       type="button"
                       onClick={skipVerification}
                       disabled={updateProfileMutation.isPending}
-                      variant="outline"
-                      className="flex-1 h-14 text-base font-semibold rounded-xl"
+                      className="flex-1 h-14 text-base font-bold rounded-xl bg-[#d62828] hover:bg-[#c91f23] text-white"
                     >
                       {updateProfileMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          {t('profile.creating')}
+                          Profil wird erstellt...
                         </>
                       ) : (
                         t('profile.btn.skip')
