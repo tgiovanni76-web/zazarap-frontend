@@ -148,11 +148,11 @@ export default function Messages() {
     );
   }
 
-  // Mobile: show only sidebar or chat
+  // Mobile: show only sidebar or chat (Full viewport layout)
   if (isMobileView) {
     if (selectedChat) {
       return (
-        <div className="h-[calc(100vh-140px)]">
+        <div className="fixed inset-0 top-[70px] bottom-0 flex flex-col bg-white">
           <ChatWindow
             chat={selectedChat}
             messages={chatMessages}
@@ -186,7 +186,7 @@ export default function Messages() {
     }
 
     return (
-      <div className="h-[calc(100vh-140px)]">
+      <div className="fixed inset-0 top-[70px] bottom-0 flex flex-col bg-white">
         <ChatSidebar
           chats={myChats}
           selectedChat={selectedChat}
@@ -199,12 +199,12 @@ export default function Messages() {
     );
   }
 
-  // Desktop: show both sidebar and chat
+  // Desktop: show both sidebar and chat (Full viewport layout)
   return (
-    <div className="py-6">
-      <div className="grid grid-cols-3 gap-4 h-[calc(100vh-180px)]">
+    <div className="fixed inset-0 top-[90px] bottom-0 flex flex-col bg-slate-50">
+      <div className="flex-1 grid grid-cols-3 gap-4 p-4 overflow-hidden">
         {/* Sidebar */}
-        <div className="col-span-1">
+        <div className="col-span-1 h-full overflow-hidden">
           <ChatSidebar
             chats={myChats}
             selectedChat={selectedChat}
@@ -216,7 +216,7 @@ export default function Messages() {
         </div>
 
         {/* Chat Window */}
-        <div className="col-span-2">
+        <div className="col-span-2 h-full overflow-hidden">
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}

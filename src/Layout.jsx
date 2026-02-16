@@ -765,7 +765,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4">
+      <main id="main-content" role="main" tabIndex={-1} className={currentPageName === 'Messages' ? '' : 'container max-w-7xl mx-auto px-4'}>
         {children}
       </main>
 
@@ -773,6 +773,8 @@ function LayoutInner({ children, currentPageName }) {
         <CookieBanner />
       </Suspense>
       
+      {/* Hide footer on Messages page */}
+      {currentPageName !== 'Messages' && (
       <footer className="bg-[#141b2e] text-slate-400 mt-12 py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-5">
                       {/* Logo + Newsletter */}
@@ -824,6 +826,7 @@ function LayoutInner({ children, currentPageName }) {
                       </p>
                       </div>
                   </footer>
+      )}
       </div>
       </ErrorBoundary>
       );
