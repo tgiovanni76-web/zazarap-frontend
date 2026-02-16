@@ -762,52 +762,52 @@ function LayoutInner({ children, currentPageName }) {
         <CookieBanner />
       </Suspense>
       
-      <footer className="bg-[#0c1526] text-white mt-20 py-10">
-                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-10">
+      <footer className="bg-[#0c1526] text-slate-300 mt-20 py-6">
+                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-6">
                       {/* Logo + Newsletter */}
                       <div className="flex-1 min-w-[260px]">
-                        <h2 className="font-bold text-2xl mb-2 text-[#f9d65c]">Zazarap.de</h2>
-                        <p>{t('tagline')}</p>
+                        <h2 className="font-medium text-lg mb-1.5 text-[#f9d65c]">Zazarap.de</h2>
+                        <p className="text-sm text-slate-400">{t('tagline')}</p>
 
 
                       </div>
 
                       {/* Rechtliches */}
                       <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">{t('legal')}</h3>
-                        <ul className="space-y-2">
-                          <li><Link to={createPageUrl('Impressum')} className="text-white hover:text-slate-300">{t('impressum')}</Link></li>
-                          <li><Link to={createPageUrl('AGB')} className="text-white hover:text-slate-300">{t('agb')}</Link></li>
-                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-white hover:text-slate-300">{t('privacy')}</Link></li>
-                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-white hover:text-slate-300">{t('rightOfWithdrawal')}</Link></li>
-                          <li><Link to={createPageUrl('DisputeCenter')} className="text-white hover:text-slate-300">{t('disputeResolution')}</Link></li>
+                        <h3 className="font-medium text-sm mb-2 text-slate-200">{t('legal')}</h3>
+                        <ul className="space-y-1.5 text-sm">
+                          <li><Link to={createPageUrl('Impressum')} className="text-slate-400 hover:text-slate-200">{t('impressum')}</Link></li>
+                          <li><Link to={createPageUrl('AGB')} className="text-slate-400 hover:text-slate-200">{t('agb')}</Link></li>
+                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-400 hover:text-slate-200">{t('privacy')}</Link></li>
+                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-slate-400 hover:text-slate-200">{t('rightOfWithdrawal')}</Link></li>
+                          <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-400 hover:text-slate-200">{t('disputeResolution')}</Link></li>
 
                         </ul>
                       </div>
 
                       {/* Support */}
                       <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-semibold mb-3">{t('support')}</h3>
-                        <ul className="space-y-2">
-                          <li><Link to={createPageUrl('FAQ')} className="text-white hover:text-slate-300">FAQ</Link></li>
+                        <h3 className="font-medium text-sm mb-2 text-slate-200">{t('support')}</h3>
+                        <ul className="space-y-1.5 text-sm">
+                          <li><Link to={createPageUrl('FAQ')} className="text-slate-400 hover:text-slate-200">FAQ</Link></li>
 
-                          <li><Link to={createPageUrl('Contact')} className="text-white hover:text-slate-300">{t('contactUs')}</Link></li>
-                          <li><Link to={createPageUrl('Transactions')} className="text-white hover:text-slate-300">Transaktionen</Link></li>
+                          <li><Link to={createPageUrl('Contact')} className="text-slate-400 hover:text-slate-200">{t('contactUs')}</Link></li>
+                          <li><Link to={createPageUrl('Transactions')} className="text-slate-400 hover:text-slate-200">Transaktionen</Link></li>
 
-                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-4 block">{t('completeProfile')}</Link></li>
+                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-400 hover:text-yellow-300 mt-2 block">{t('completeProfile')}</Link></li>
                           </ul>
-                          <p className="mt-3">
-                          <a href="mailto:info@zazarap.com" className="text-white hover:text-slate-300">info@zazarap.com</a>
+                          <p className="mt-2.5 text-sm">
+                          <a href="mailto:info@zazarap.com" className="text-slate-400 hover:text-slate-200">info@zazarap.com</a>
                           </p>
                       </div>
                       </div>
 
-                      <hr className="border-0 border-t border-[#243246] my-10 mx-auto w-[90%]" />
+                      <hr className="border-0 border-t border-[#243246] my-5 mx-auto w-[90%]" />
 
-                      <div className="text-center">
-                      <p>© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
+                      <div className="text-center text-sm">
+                      <p className="text-slate-400">© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
                       <p className="mt-1">
-                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-[#9fbbe3] hover:text-white">
+                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-200">
                           {t('euDispute')}
                         </a>
                       </p>
