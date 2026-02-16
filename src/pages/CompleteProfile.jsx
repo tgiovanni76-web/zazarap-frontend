@@ -11,7 +11,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, MapPin, Loader2, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function CompleteProfile() {
