@@ -502,6 +502,8 @@ export default function ChatWindow({
   // Create offer mutation
   const createOfferMutation = useMutation({
     mutationFn: async ({ amount, message, type }) => {
+      console.log('[OFFER] Starting offer creation:', { amount, message, type, chatId: chat.id, listingId: chat.listingId, senderId: user.email, receiverId: otherUser });
+      
       // Validation: Amount must be > 0
       if (amount <= 0) {
         throw new Error('Betrag muss größer als 0 sein');
@@ -525,11 +527,13 @@ export default function ChatWindow({
 
       // Update previous pending offers to 'countered'
       const pendingOffers = offers.filter(o => o.status === 'pending');
+      console.log('[OFFER] Updating previous pending offers:', pendingOffers.length);
       for (const offer of pendingOffers) {
         await base44.entities.Offer.update(offer.id, { status: 'countered' });
       }
 
       // Create new offer in DB
+      console.log('[OFFER] Creating new offer in DB...');
       const offer = await base44.entities.Offer.create({
         chatId: chat.id,
         listingId: chat.listingId,
@@ -541,12 +545,14 @@ export default function ChatWindow({
         type,
         message
       });
+      console.log('[OFFER] Offer created in DB:', offer.id);
 
       // Create chat message of type 'offer' - this will be visible to both parties
       const offerText = message 
         ? `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€\n"${message}"` 
         : `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€`;
       
+      console.log('[OFFER] Creating ChatMessage of type offer...');
       const offerMessage = await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
@@ -555,14 +561,18 @@ export default function ChatWindow({
         messageType: 'offer',
         read: false
       });
+      console.log('[OFFER] ChatMessage created:', offerMessage.id);
 
       // Store offer ID in message for later reference
+      console.log('[OFFER] Linking offer ID to message...');
       await base44.entities.ChatMessage.update(offerMessage.id, {
         text: offerText + `\n[OFFER_ID:${offer.id}]`
       });
+      console.log('[OFFER] Offer ID linked to message');
 
       // Update chat with new offer price and increment unread counter for receiver
       const unreadField = isSeller ? 'unreadBuyer' : 'unreadSeller';
+      console.log('[OFFER] Updating chat - incrementing unreadField:', unreadField, 'current:', chat[unreadField]);
       await base44.entities.Chat.update(chat.id, {
         lastPrice: amount,
         lastMessage: `💰 ${amount}€`,
@@ -570,8 +580,10 @@ export default function ChatWindow({
         updatedAt: new Date().toISOString(),
         [unreadField]: (chat[unreadField] || 0) + 1
       });
+      console.log('[OFFER] Chat updated');
 
       // Create notification for receiver
+      console.log('[OFFER] Creating notification for receiver:', otherUser);
       await base44.entities.Notification.create({
         userId: otherUser,
         type: 'offer',
@@ -580,7 +592,9 @@ export default function ChatWindow({
         linkUrl: '/Messages?chatId=' + chat.id,
         relatedId: chat.id
       });
+      console.log('[OFFER] Notification created');
 
+      console.log('[OFFER] ✅ Offer flow completed successfully - DB insert done, realtime event should fire now');
       return offer;
     },
     onSuccess: () => {
