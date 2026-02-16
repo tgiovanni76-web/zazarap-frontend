@@ -468,9 +468,14 @@ export default function ListingDetail() {
 
       <SimilarProducts listingId={listingId} />
 
-      <Link to={createPageUrl('Marketplace')} className="text-indigo-600 hover:underline mt-6 inline-block">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center gap-2 text-indigo-600 hover:underline mt-6 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded px-2 py-1"
+        aria-label="Zurück zur vorherigen Seite"
+      >
+        <ArrowLeft className="h-4 w-4" />
         {t('back')}
-      </Link>
+      </button>
       </div>
       );
       }
