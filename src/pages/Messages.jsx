@@ -160,7 +160,10 @@ export default function Messages() {
             messages={chatMessages}
             user={user}
             listing={currentListing}
-            onBack={() => setSelectedChat(null)}
+            onBack={() => {
+              setSelectedChat(null);
+              window.scrollTo(0, 0);
+            }}
             onOpenPayment={() => setShowPaymentModal(true)}
             onReport={() => setShowReportModal(true)}
           />
@@ -225,7 +228,10 @@ export default function Messages() {
               messages={chatMessages}
               user={user}
               listing={currentListing}
-              onBack={() => setSelectedChat(null)}
+              onBack={() => {
+                setSelectedChat(null);
+                window.scrollTo(0, 0);
+              }}
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
             />
