@@ -11,12 +11,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, MapPin, Loader2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function CompleteProfile() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [verificationMethod, setVerificationMethod] = useState(''); // 'email' or 'phone'
+  const [verificationCode, setVerificationCode] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
 
   // Step 1 - Basic Info
   const [formData, setFormData] = useState({
@@ -35,7 +40,10 @@ export default function CompleteProfile() {
     zone: '',
     // Privacy
     privacyAccepted: false,
-    marketingConsent: false
+    marketingConsent: false,
+    // Step 3 - Verification (optional)
+    phoneNumber: '',
+    verificationEmail: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -177,10 +185,76 @@ export default function CompleteProfile() {
     }
   };
 
-  // Handle Final Submit
-  const handleSubmit = async () => {
+  // Handle Step 2 Next (to verification)
+  const handleStep2Next = () => {
     if (!validateStep2()) return;
+    setStep(3);
+  };
 
+  // Send verification code
+  const sendVerificationCode = async () => {
+    if (!verificationMethod) {
+      toast.error(t('profile.verification.selectMethod'));
+      return;
+    }
+
+    const value = verificationMethod === 'email' 
+      ? formData.verificationEmail 
+      : formData.phoneNumber;
+
+    if (!value || value.trim().length === 0) {
+      toast.error(t('profile.verification.enterValue'));
+      return;
+    }
+
+    setSendingCode(true);
+    try {
+      await base44.functions.invoke('sendVerificationCode', {
+        method: verificationMethod,
+        value: value.trim()
+      });
+      setCodeSent(true);
+      toast.success(t('profile.verification.codeSent'));
+    } catch (error) {
+      toast.error(error.message || t('profile.verification.sendError'));
+    }
+    setSendingCode(false);
+  };
+
+  // Verify code
+  const verifyCode = async () => {
+    if (!verificationCode || verificationCode.trim().length !== 6) {
+      toast.error(t('profile.verification.codeInvalid'));
+      return;
+    }
+
+    try {
+      const { data } = await base44.functions.invoke('verifyCode', {
+        method: verificationMethod,
+        code: verificationCode.trim()
+      });
+
+      if (data.verified) {
+        toast.success(t('profile.verification.success'));
+        // Update user with verified status
+        if (verificationMethod === 'email') {
+          formData.verifiedEmail = true;
+        } else {
+          formData.verifiedPhone = true;
+          formData.phoneNumber = formData.phoneNumber.trim();
+        }
+        // Proceed to final submit
+        await handleFinalSubmit();
+      } else {
+        toast.error(t('profile.verification.codeFailed'));
+      }
+    } catch (error) {
+      toast.error(error.message || t('profile.verification.verifyError'));
+    }
+  };
+
+  // Handle Final Submit
+  const handleFinalSubmit = async () => {
     const profileData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -196,10 +270,18 @@ export default function CompleteProfile() {
       latitude: formData.latitude,
       longitude: formData.longitude,
       privacyAccepted: formData.privacyAccepted,
-      marketingConsent: formData.marketingConsent
+      marketingConsent: formData.marketingConsent,
+      phoneNumber: formData.phoneNumber || undefined,
+      verifiedEmail: formData.verifiedEmail || false,
+      verifiedPhone: formData.verifiedPhone || false
     };
 
     updateProfileMutation.mutate(profileData);
+  };
+
+  // Skip verification and complete profile
+  const skipVerification = () => {
+    handleFinalSubmit();
   };
 
   return (
@@ -211,14 +293,21 @@ export default function CompleteProfile() {
           <div className="flex items-center justify-between mb-3">
             <div className={`flex items-center gap-2 ${step === 1 ? 'text-[#d62828] font-bold' : 'text-slate-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 1 ? 'bg-[#d62828] text-white' : 'bg-slate-200'}`}>1</div>
-              <span className="text-sm">{t('profile.step1.basicInfo')}</span>
+              <span className="text-sm hidden sm:inline">{t('profile.step1.basicInfo')}</span>
             </div>
-            <div className="flex-1 h-1 mx-4 bg-slate-200 rounded">
-              <div className={`h-full bg-[#d62828] rounded transition-all ${step === 2 ? 'w-full' : 'w-0'}`} />
+            <div className="flex-1 h-1 mx-2 bg-slate-200 rounded">
+              <div className={`h-full bg-[#d62828] rounded transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} />
             </div>
             <div className={`flex items-center gap-2 ${step === 2 ? 'text-[#d62828] font-bold' : 'text-slate-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 2 ? 'bg-[#d62828] text-white' : 'bg-slate-200'}`}>2</div>
-              <span className="text-sm">{t('profile.step2.title')}</span>
+              <span className="text-sm hidden sm:inline">{t('profile.step2.title')}</span>
+            </div>
+            <div className="flex-1 h-1 mx-2 bg-slate-200 rounded">
+              <div className={`h-full bg-[#d62828] rounded transition-all ${step === 3 ? 'w-full' : 'w-0'}`} />
+            </div>
+            <div className={`flex items-center gap-2 ${step === 3 ? 'text-[#d62828] font-bold' : 'text-slate-400'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 3 ? 'bg-[#d62828] text-white' : 'bg-slate-200'}`}>3</div>
+              <span className="text-sm hidden sm:inline">{t('profile.step3.title')}</span>
             </div>
           </div>
         </div>
@@ -226,10 +315,10 @@ export default function CompleteProfile() {
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-[#d62828] to-[#c91f23] text-white rounded-t-xl">
             <CardTitle className="text-2xl">
-              {step === 1 ? t('profile.step1.title') : t('profile.step2.title')}
+              {step === 1 ? t('profile.step1.title') : step === 2 ? t('profile.step2.title') : t('profile.step3.title')}
             </CardTitle>
             <CardDescription className="text-sm text-white/90 mt-1">
-              {step === 1 ? t('profile.step1.subtitle') : t('profile.step2.subtitle')}
+              {step === 1 ? t('profile.step1.subtitle') : step === 2 ? t('profile.step2.subtitle') : t('profile.step3.subtitle')}
             </CardDescription>
           </CardHeader>
 
@@ -506,21 +595,186 @@ export default function CompleteProfile() {
                   </Button>
                   
                   <Button
-                    type="submit"
-                    disabled={updateProfileMutation.isPending}
+                    type="button"
+                    onClick={handleStep2Next}
                     className="flex-1 bg-[#d62828] hover:bg-[#c91f23] text-white h-14 text-lg font-bold rounded-xl"
                   >
-                    {updateProfileMutation.isPending ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        {t('profile.creating')}
-                      </>
-                    ) : (
-                      t('profile.btn.create')
-                    )}
+                    {t('profile.btn.next')} <ChevronRight className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
               </form>
+            )}
+
+            {/* STEP 3: Account Verification (Optional) */}
+            {step === 3 && (
+              <div className="space-y-5">
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-blue-800">
+                    <strong>{t('profile.step3.optional')}</strong> {t('profile.step3.optionalDesc')}
+                  </p>
+                </div>
+
+                {!verificationMethod && (
+                  <div className="space-y-4">
+                    <Label className="text-base font-semibold">{t('profile.verification.choose')}</Label>
+                    
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setVerificationMethod('email')}
+                      className="w-full h-16 text-left flex items-center gap-4 hover:border-[#d62828]"
+                    >
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-2xl">📧</span>
+                      </div>
+                      <div>
+                        <div className="font-semibold">{t('profile.verification.email')}</div>
+                        <div className="text-sm text-slate-500">{t('profile.verification.emailDesc')}</div>
+                      </div>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setVerificationMethod('phone')}
+                      className="w-full h-16 text-left flex items-center gap-4 hover:border-[#d62828]"
+                    >
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <span className="text-2xl">📱</span>
+                      </div>
+                      <div>
+                        <div className="font-semibold">{t('profile.verification.phone')}</div>
+                        <div className="text-sm text-slate-500">{t('profile.verification.phoneDesc')}</div>
+                      </div>
+                    </Button>
+                  </div>
+                )}
+
+                {verificationMethod && !codeSent && (
+                  <div className="space-y-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setVerificationMethod('')}
+                      className="text-sm"
+                    >
+                      ← {t('profile.verification.changeMethod')}
+                    </Button>
+
+                    <div>
+                      <Label className="text-base font-semibold mb-2 block">
+                        {verificationMethod === 'email' ? t('profile.verification.emailLabel') : t('profile.verification.phoneLabel')}
+                      </Label>
+                      <Input
+                        type={verificationMethod === 'email' ? 'email' : 'tel'}
+                        value={verificationMethod === 'email' ? formData.verificationEmail : formData.phoneNumber}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          [verificationMethod === 'email' ? 'verificationEmail' : 'phoneNumber']: e.target.value
+                        })}
+                        placeholder={verificationMethod === 'email' ? 'beispiel@email.de' : '+49 123 456789'}
+                        className="h-12"
+                        style={{ fontSize: '16px', padding: '14px' }}
+                      />
+                    </div>
+
+                    <Button
+                      type="button"
+                      onClick={sendVerificationCode}
+                      disabled={sendingCode}
+                      className="w-full bg-[#d62828] hover:bg-[#c91f23] text-white h-14"
+                    >
+                      {sendingCode ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          {t('profile.verification.sending')}
+                        </>
+                      ) : (
+                        t('profile.verification.sendCode')
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {codeSent && (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <p className="text-sm text-green-800">
+                        {t('profile.verification.codeSentTo')} <strong>{verificationMethod === 'email' ? formData.verificationEmail : formData.phoneNumber}</strong>
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label className="text-base font-semibold mb-2 block">
+                        {t('profile.verification.enterCode')}
+                      </Label>
+                      <Input
+                        type="text"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        placeholder="123456"
+                        className="h-14 text-center text-2xl tracking-widest"
+                        maxLength={6}
+                        style={{ fontSize: '24px' }}
+                      />
+                    </div>
+
+                    <Button
+                      type="button"
+                      onClick={verifyCode}
+                      disabled={verificationCode.length !== 6}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white h-14 text-lg font-bold"
+                    >
+                      {t('profile.verification.verify')}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={sendVerificationCode}
+                      disabled={sendingCode}
+                      className="w-full text-sm"
+                    >
+                      {t('profile.verification.resend')}
+                    </Button>
+                  </div>
+                )}
+
+                <div className="border-t pt-6 mt-6">
+                  <div className="flex gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setStep(2)}
+                      className="flex-1 h-14 text-base font-semibold rounded-xl"
+                    >
+                      <ChevronLeft className="mr-2 h-5 w-5" /> {t('profile.btn.back')}
+                    </Button>
+                    
+                    <Button
+                      type="button"
+                      onClick={skipVerification}
+                      disabled={updateProfileMutation.isPending}
+                      variant="outline"
+                      className="flex-1 h-14 text-base font-semibold rounded-xl"
+                    >
+                      {updateProfileMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          {t('profile.creating')}
+                        </>
+                      ) : (
+                        t('profile.btn.skip')
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-center text-slate-500 mt-3">
+                    {t('profile.step3.laterInfo')}
+                  </p>
+                </div>
+
+              </div>
             )}
 
           </CardContent>
