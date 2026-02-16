@@ -167,10 +167,15 @@ export default function Marketplace() {
       }
     }
 
-    // Status filter - only show active by default to users, or filter by specific status
+    // Status filter - exclude sold/archived from public view (unless admin filtering)
     const matchesStatus = statusFilter === 'all' 
       ? (user?.role === 'admin' ? true : listing.status === 'active')
       : listing.status === statusFilter;
+    
+    // Always hide sold and archived from public marketplace (non-owners)
+    const isPubliclyVisible = user?.role === 'admin' || 
+      listing.status === 'active' || 
+      (user && listing.created_by === user.email);
     
     // Date filter
     const now = new Date();
@@ -189,7 +194,7 @@ export default function Marketplace() {
     // Only show approved listings to non-admin users
     const matchesModeration = user?.role === 'admin' || listing.moderationStatus === 'approved';
     
-    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesRadius && matchesStatus && matchesDate && matchesListingType && matchesModeration;
+    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice && matchesCity && matchesRadius && matchesStatus && matchesDate && matchesListingType && matchesModeration && isPubliclyVisible;
   });
 
   const uniqueCities = [...new Set(listings.map(l => l.city).filter(Boolean))].sort();
@@ -523,7 +528,15 @@ export default function Marketplace() {
               )}
 
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
-                <div className="zaza-category">{t(listing.category)}</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="zaza-category">{t(listing.category)}</div>
+                  {listing.status === 'sold' && (
+                    <Badge className="bg-red-600 text-white text-xs">✓ Verkauft</Badge>
+                  )}
+                  {listing.status === 'archived' && (
+                    <Badge variant="secondary" className="text-xs">Archiviert</Badge>
+                  )}
+                </div>
                 <div className="zaza-title">{listing.title}</div>
                 {listing.offerPrice ? (
                   <div className="zaza-price">
