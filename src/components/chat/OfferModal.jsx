@@ -141,9 +141,21 @@ export default function OfferModal({
   ] : [];
 
   const handleSubmit = () => {
-    if (!amount || amount <= 0) return;
+    const numAmount = parseFloat(amount);
+    
+    // Validation: Amount must be > 0
+    if (!amount || numAmount <= 0) {
+      return;
+    }
+    
+    // Validation: Amount must be <= listingPrice * MAX_OFFER_MULTIPLIER
+    const MAX_OFFER_MULTIPLIER = 1.5;
+    if (listingPrice && numAmount > listingPrice * MAX_OFFER_MULTIPLIER) {
+      return;
+    }
+    
     onSubmit({ 
-      amount: parseFloat(amount), 
+      amount: numAmount, 
       message: message.trim(),
       type: isCounter ? 'counter' : 'initial'
     });
@@ -219,6 +231,13 @@ export default function OfferModal({
             />
           </div>
 
+          {/* Validation Warning */}
+          {amount > 0 && listingPrice && parseFloat(amount) > listingPrice * 1.5 && (
+            <div className="bg-red-50 border border-red-200 p-3 rounded-lg text-sm text-red-700">
+              ⚠️ Betrag darf nicht mehr als 150% des Listenpreises ({(listingPrice * 1.5).toFixed(2)}€) sein
+            </div>
+          )}
+
           {/* Summary */}
           {amount > 0 && (
             <div className="bg-slate-50 p-3 rounded-lg">
@@ -241,7 +260,12 @@ export default function OfferModal({
           </Button>
           <Button 
             onClick={handleSubmit} 
-            disabled={!amount || amount <= 0 || isPending}
+            disabled={
+              !amount || 
+              parseFloat(amount) <= 0 || 
+              isPending || 
+              (listingPrice && parseFloat(amount) > listingPrice * 1.5)
+            }
             className="flex-1 bg-green-600 hover:bg-green-700"
           >
             {isPending ? (
