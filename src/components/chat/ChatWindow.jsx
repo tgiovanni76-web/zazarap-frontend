@@ -637,6 +637,7 @@ export default function ChatWindow({
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: `✅ Angebot von ${offerToAccept.amount}€ angenommen – Anzeige reserviert! Käufer hat 48h Zeit zum Bezahlen.`,
         messageType: 'system'
       });
@@ -706,6 +707,7 @@ export default function ChatWindow({
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: '🔓 Reservierung wurde vom Verkäufer aufgehoben. Anzeige ist wieder verfügbar.',
         messageType: 'system'
       });
@@ -748,6 +750,7 @@ export default function ChatWindow({
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: '✅ Anzeige wurde als verkauft markiert.',
         messageType: 'system'
       });
@@ -801,6 +804,7 @@ export default function ChatWindow({
       await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: `❌ Angebot von ${offerToReject.amount}€ abgelehnt`,
         messageType: 'system'
       });
