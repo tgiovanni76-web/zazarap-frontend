@@ -352,6 +352,7 @@ export default function ChatWindow({
       const message = await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: text || '',
         imageUrl,
         price,
@@ -565,6 +566,7 @@ export default function ChatWindow({
       const offerMessage = await base44.entities.ChatMessage.create({
         chatId: chat.id,
         senderId: user.email,
+        receiverId: otherUser,
         text: offerText,
         price: amount,
         messageType: 'offer',
