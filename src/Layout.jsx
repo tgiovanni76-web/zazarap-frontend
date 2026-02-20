@@ -125,8 +125,8 @@ function LayoutInner({ children, currentPageName }) {
             border-radius: 12px !important;
           }
 
-          /* Evita che contenitori taglino menu/overlay */
-          body, main, header, form, section, div {
+          /* Evita che contenitori taglino menu/overlay (scoped: non forzare sui div) */
+          body, main, header, form, section {
             overflow: visible !important;
           }
 
