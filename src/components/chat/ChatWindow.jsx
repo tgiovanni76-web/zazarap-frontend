@@ -1200,7 +1200,7 @@ export default function ChatWindow({
       )}
 
       {/* Input */}
-      <div className="flex items-center gap-2 p-3 border-t bg-slate-50">
+      <div className="flex items-center gap-2 p-3 border-t bg-slate-50 sticky bottom-0 z-30">
         <input
           type="file"
           ref={fileInputRef}
