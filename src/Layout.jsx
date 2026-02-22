@@ -8,7 +8,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut, User, ArrowLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -823,6 +823,21 @@ function LayoutInner({ children, currentPageName }) {
                   </header>
 
       {/* EmailVerificationBanner removed as requested */}
+      
+      {/* Admin back button */}
+      {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
+        'ManageUsers','ModerateListings','AdminModeration','AdminDisputes','AdminTickets','AdminReports','AdminPayments','AdminSettings','AdminSEO','SystemLogs','SystemCheckup','PreLaunchChecklist','AccessibilityAudit','ManageCategories','RejectedListings','AdminAnalytics','MarketplaceDashboard'
+      ].includes(currentPageName)) && (
+        <Link
+          to={createPageUrl('AdminDashboard')}
+          className="fixed left-3 top-[82px] z-[60] bg-[var(--z-primary)] text-white border-2 border-[var(--z-accent)] rounded-full px-3 py-1.5 shadow-lg hover:bg-[var(--z-primary-dark)] flex items-center gap-2"
+          aria-label="Zurück zum Admin-Panel"
+          title="Zurück zum Admin-Panel"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Admin-Panel</span>
+        </Link>
+      )}
       
       <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden pb-24">
         {children}
