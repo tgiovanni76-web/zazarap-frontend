@@ -837,7 +837,7 @@ function LayoutInner({ children, currentPageName }) {
                           <li><Link to={createPageUrl('CompleteProfile')} className="text-[var(--z-accent)] hover:text-[#E6BD00] mt-1.5 block">{t('completeProfile')}</Link></li>
                           </ul>
                           <p className="mt-2 text-xs">
-                          <a href="mailto:info@zazarap.com" className="text-slate-500 hover:text-slate-300">info@zazarap.com</a>
+                          <a href="mailto:info@zazarap.de" className="text-slate-500 hover:text-slate-300">info@zazarap.de</a>
                           </p>
                       </div>
                       </div>

@@ -38,14 +38,14 @@ export default function StructuredData({ type, data }) {
       schema = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Zazarap",
-        "url": "https://zazarap.com",
-        "logo": "https://zazarap.com/logo.png",
+        "name": "Zazarap.de",
+        "url": "https://zazarap.de",
+        "logo": "https://zazarap.de/logo.png",
         "description": "Marketplace italiano sicuro con sistema escrow",
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "Customer Support",
-          "email": "support@zazarap.com"
+          "email": "support@zazarap.de"
         }
       };
     }
