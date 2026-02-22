@@ -65,6 +65,18 @@ function LayoutInner({ children, currentPageName }) {
     }
   }, [user, currentPageName, navigate]);
 
+  // Redirect initial landing from AGB to Home (default start page)
+  useEffect(() => {
+    if (currentPageName === 'AGB') {
+      const path = window.location.pathname || '';
+      const hasRef = !!document.referrer;
+      const hasParams = (window.location.search && window.location.search !== '') || (window.location.hash && window.location.hash !== '');
+      if (path === '/' || (!hasRef && !hasParams)) {
+        navigate(createPageUrl('Home'), { replace: true });
+      }
+    }
+  }, [currentPageName, navigate]);
+
   const { data: seoSettings } = useQuery({
     queryKey: ['seoSettings'],
     queryFn: async () => {
