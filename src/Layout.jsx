@@ -736,11 +736,11 @@ function LayoutInner({ children, currentPageName }) {
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
                                           <span className="text-[18px] md:text-[26px] font-extrabold" style={{
-                                  background: 'linear-gradient(180deg, #000000 33%, #DD0000 33%, #DD0000 66%, #FFCC00 66%)',
+                                  background: 'linear-gradient(180deg, #162E6B 0%, #1F3C88 50%, #2A56C6 80%, #FFD200 100%)',
                                   WebkitBackgroundClip: 'text',
                                   WebkitTextFillColor: 'transparent',
                                   textShadow: '0 0 0 transparent',
-                                  filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
+                                  filter: 'drop-shadow(1px 1px 0 #00000020)'
                                 }}>Zazarap.de</span>
                                           <span className="text-[10px] md:text-xs tracking-wide text-white/80 mt-0.5">kleinanzeigen</span>
                                           </Link>
@@ -808,7 +808,7 @@ function LayoutInner({ children, currentPageName }) {
         <CookieBanner />
       </Suspense>
       
-      <footer className="bg-[#141b2e] text-slate-400 mt-12 py-5">
+      <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-5">
                       {/* Logo + Newsletter */}
                       <div className="flex-1 min-w-[260px]">
@@ -840,7 +840,7 @@ function LayoutInner({ children, currentPageName }) {
                           <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">{t('contactUs')}</Link></li>
                           <li><Link to={createPageUrl('Transactions')} className="text-slate-500 hover:text-slate-300">Transaktionen</Link></li>
 
-                          <li><Link to={createPageUrl('CompleteProfile')} className="text-yellow-500 hover:text-yellow-400 mt-1.5 block">{t('completeProfile')}</Link></li>
+                          <li><Link to={createPageUrl('CompleteProfile')} className="text-[var(--z-accent)] hover:text-[#E6BD00] mt-1.5 block">{t('completeProfile')}</Link></li>
                           </ul>
                           <p className="mt-2 text-xs">
                           <a href="mailto:info@zazarap.com" className="text-slate-500 hover:text-slate-300">info@zazarap.com</a>
