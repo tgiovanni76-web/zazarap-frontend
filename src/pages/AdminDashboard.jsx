@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Package, AlertTriangle, MessageSquare, ShoppingBag, TrendingUp, Settings, FileText, CheckSquare, Globe, Brain, BarChart3 } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AdminAssistantChat from "@/components/agents/AdminAssistantChat";
 
 const languages = [
   { code: 'de', name: 'Deutsch' },
@@ -256,16 +257,18 @@ export default function AdminDashboard() {
             <CardTitle>Zazarap Admin Assistent</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-slate-600 mb-3">Assistenza AI per attività amministrative ricorrenti.</p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={base44.agents.getWhatsAppConnectURL('zazarap_admin_assistent')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center rounded-[12px] bg-[var(--z-primary)] text-white px-4 py-2 hover:bg-[var(--z-primary-dark)]"
-              >
-                WhatsApp
-              </a>
+            <div className="grid gap-3">
+              <AdminAssistantChat />
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={base44.agents.getWhatsAppConnectURL('zazarap_admin_assistent')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-[12px] bg-[var(--z-primary)] text-white px-4 py-2 hover:bg-[var(--z-primary-dark)]"
+                >
+                  WhatsApp
+                </a>
+              </div>
             </div>
           </CardContent>
         </Card>
