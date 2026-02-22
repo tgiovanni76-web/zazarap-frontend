@@ -51,7 +51,7 @@ export default function ChatSidebar({
   return (
     <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b bg-gradient-to-r from-[#d62828] to-[#b82020]">
+      <div className="p-4 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)]">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
           {t('chats')}

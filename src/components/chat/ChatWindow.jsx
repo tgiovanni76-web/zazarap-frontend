@@ -852,7 +852,7 @@ export default function ChatWindow({
   return (
     <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 p-3 border-b bg-gradient-to-r from-[#d62828] to-[#b82020] text-white">
+      <div className="flex items-center gap-3 p-3 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)] text-white">
         <Button 
           variant="ghost" 
           size="sm" 
