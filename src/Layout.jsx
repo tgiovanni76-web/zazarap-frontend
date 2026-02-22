@@ -87,7 +87,7 @@ function LayoutInner({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-slate-50 overflow-x-hidden max-w-full">
+      <div className="min-h-screen bg-[var(--z-bg)] overflow-x-hidden max-w-full">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 bg-white text-black px-3 py-2 rounded">Salta al contenuto</a>
         <GlobalErrorListener />
         <PerformanceMonitor />
@@ -97,11 +97,52 @@ function LayoutInner({ children, currentPageName }) {
           </Suspense>
       <style>{`
           :root {
-            --z-gray-light: #F2F2F2;
-            --z-red: #E10600;
-            --z-yellow: #FFD500;
-            --z-black: #333333;
+            /* Global palette from app icon */
+            --z-gray-light: #F5F7FB;        /* Sfondo generale */
+            --z-red: #1F3C88;               /* Legacy var used across styles -> now Primary */
+            --z-yellow: #FFD200;            /* Accent (giallo Z) */
+            --z-black: #1A1A1A;             /* Testo principale */
+
+            /* New theme tokens */
+            --z-primary: #1F3C88;
+            --z-primary-dark: #162E6B;
+            --z-primary-light: #2A56C6;
+            --z-accent: #FFD200;
+            --z-bg: #F5F7FB;
+            --z-card: #FFFFFF;
+            --z-text: #1A1A1A;
+            --z-text-on-primary: #FFFFFF;
+            --z-text-secondary: #6B7280;
+            --z-border-soft: #E4E7EC;
+            --z-link: #2A56C6;
+            --z-link-hover: #1F3C88;
+
+            /* shadcn/ui semantic tokens */
+            --background: #F5F7FB;
+            --foreground: #1A1A1A;
+            --card: #FFFFFF;
+            --card-foreground: #1A1A1A;
+            --popover: #FFFFFF;
+            --popover-foreground: #1A1A1A;
+            --primary: #1F3C88;
+            --primary-foreground: #FFFFFF;
+            --secondary: #FFFFFF;
+            --secondary-foreground: #1A1A1A;
+            --muted: #F5F7FB;
+            --muted-foreground: #6B7280;
+            --accent: #FFD200;
+            --accent-foreground: #1A1A1A;
+            --destructive: #EF4444;
+            --destructive-foreground: #FFFFFF;
+            --border: #E4E7EC;
+            --input: #E4E7EC;
+            --ring: #1F3C88;
           }
+
+          /* Base typography & links */
+          body { background: var(--z-bg); color: var(--z-text); }
+          a { color: var(--z-link); }
+          a:hover { color: var(--z-link-hover); }
 
 
 
@@ -689,8 +730,8 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[#d62828] px-5 py-2.5 border-b-[3px] border-[#f9d65c] rounded-b-xl max-w-full overflow-x-hidden overflow-y-visible">
-                    <div className="flex items-center justify-between text-[#f9d65c] max-w-full">
+      <header className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl max-w-full overflow-x-hidden overflow-y-visible">
+                    <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
@@ -701,20 +742,20 @@ function LayoutInner({ children, currentPageName }) {
                                   textShadow: '0 0 0 transparent',
                                   filter: 'drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000)'
                                 }}>Zazarap.de</span>
-                                          <span className="text-[10px] md:text-xs tracking-wide text-[#ffeaa7] mt-0.5">kleinanzeigen</span>
+                                          <span className="text-[10px] md:text-xs tracking-wide text-white/80 mt-0.5">kleinanzeigen</span>
                                           </Link>
 
                                       </div>
 
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-1.5 md:gap-4" aria-label="Main navigation">
-                        <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
+                        <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
                           <Home className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                         </Link>
                         {!user && (
                           <Button 
                             onClick={() => window.location.href = createPageUrl('OTPLogin')}
-                            className="bg-[#f9d65c] hover:bg-yellow-300 text-[#d62828] font-bold px-4 py-1.5 text-sm"
+                            className="bg-[var(--z-accent)] hover:bg-[#E6BD00] text-[var(--z-text)] font-bold px-4 py-1.5 text-sm"
                             aria-label="Login"
                             >
                             {t('loginOrRegister')}
@@ -722,31 +763,31 @@ function LayoutInner({ children, currentPageName }) {
                         )}
                         {user && (
                           <ErrorBoundary>
-                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
+                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
                               <Plus className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('MyListings')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Meine Anzeigen" aria-label="My listings">
+                            <Link to={createPageUrl('MyListings')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Meine Anzeigen" aria-label="My listings">
                               <Package className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('MySales')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Vendite" aria-label="My sales">
+                            <Link to={createPageUrl('MySales')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Vendite" aria-label="My sales">
                               <TrendingUp className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Acquisti" aria-label="My purchases">
+                            <Link to={createPageUrl('MyPurchases')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Acquisti" aria-label="My purchases">
                               <Package className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
-                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
+                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
                               <Bell className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                               {unreadCount > 0 && (
-                                <Badge className="absolute -top-1 -right-1 bg-white text-[#d62828] px-1 py-0.5 text-[10px]" aria-hidden="true">
+                                <Badge className="absolute -top-1 -right-1 bg-white text-[var(--z-primary)] px-1 py-0.5 text-[10px]" aria-hidden="true">
                                   {unreadCount}
                                 </Badge>
                               )}
                             </Link>
-                            <Link to={createPageUrl('UserSettings')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
+                            <Link to={createPageUrl('UserSettings')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
                               <Settings className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
                             {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="hidden lg:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-[#f9d65c] hover:text-white rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
+                              <Link to={createPageUrl('AdminDashboard')} className="hidden lg:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
                                 <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                               </Link>
                             )}
@@ -771,7 +812,7 @@ function LayoutInner({ children, currentPageName }) {
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-5">
                       {/* Logo + Newsletter */}
                       <div className="flex-1 min-w-[260px]">
-                        <h2 className="font-normal text-base mb-1 text-[#f9d65c]">Zazarap.de</h2>
+                        <h2 className="font-normal text-base mb-1 text-white">Zazarap.de</h2>
                         <p className="text-xs text-slate-500">{t('tagline')}</p>
 
 
