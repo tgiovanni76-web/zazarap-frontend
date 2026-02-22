@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home } from 'lucide-react';
+import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
@@ -780,6 +780,15 @@ function LayoutInner({ children, currentPageName }) {
                             <Link to={createPageUrl('UserSettings')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
                               <Settings className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                             </Link>
+                            <button
+                              type="button"
+                              onClick={() => base44.auth.logout(createPageUrl('Home'))}
+                              className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white"
+                              title="Esci"
+                              aria-label="Esci"
+                            >
+                              <LogOut className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
+                            </button>
                             {user?.role === 'admin' && (
                               <Link to={createPageUrl('AdminDashboard')} className="hidden lg:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
                                 <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
