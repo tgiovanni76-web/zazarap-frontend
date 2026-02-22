@@ -745,13 +745,13 @@ function LayoutInner({ children, currentPageName }) {
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-3 md:gap-5" aria-label="Main navigation">
                         <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
-                          <Home className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                          <Home className="h-3 w-3 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                         </Link>
 
                         {/* Plus - sempre visibile */}
                         {user ? (
                           <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
-                            <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                            <Plus className="h-3 w-3 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                           </Link>
                         ) : (
                           <button
@@ -761,14 +761,14 @@ function LayoutInner({ children, currentPageName }) {
                             title={t('aria.create')}
                             aria-label={t('aria.create')}
                           >
-                            <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                            <Plus className="h-3 w-3 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                           </button>
                         )}
 
                         {/* Notifiche */}
                         {user ? (
                           <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
-                            <Bell className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                            <Bell className="h-3 w-3 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                             {unreadCount > 0 && (
                               <Badge className="absolute -top-1 -right-1 bg-white text-[var(--z-primary)] px-1 py-0.5 text-[10px]" aria-hidden="true">
                                 {unreadCount}
@@ -783,7 +783,7 @@ function LayoutInner({ children, currentPageName }) {
                             title={t('aria.notifications')}
                             aria-label={t('aria.notifications')}
                           >
-                            <Bell className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                            <Bell className="h-3 w-3 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                           </button>
                         )}
 
@@ -791,7 +791,7 @@ function LayoutInner({ children, currentPageName }) {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Account" aria-label="Account">
-                              <span className="text-base md:text-lg leading-none">👤</span>
+                              <span className="text-sm md:text-base leading-none">👤</span>
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="min-w-[220px]">
