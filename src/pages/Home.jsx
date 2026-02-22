@@ -43,7 +43,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Marketplace')}>
-              <Button size="lg" className="bg-[#f9d65c] text-[#d62828] hover:bg-yellow-300 font-bold text-lg px-8">
+              <Button size="lg" className="bg-[#f9d65c] text-[var(--z-primary)] hover:bg-yellow-300 font-bold text-lg px-8">
                 <Search className="h-5 w-5 mr-2" />
                 {t('home.search.button')}
               </Button>
@@ -103,7 +103,7 @@ export default function Home() {
       {mainCategories.length > 0 && (
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-[#d62828]" />
+            <TrendingUp className="h-6 w-6 text-[var(--z-primary)]" />
             {t('home.section.categories')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -132,7 +132,7 @@ export default function Home() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">{t('dashboard.recentListings')}</h2>
           <Link to={createPageUrl('Marketplace')}>
-            <Button variant="ghost" className="text-[#d62828]">
+            <Button variant="ghost" className="text-[var(--z-primary)]">
               {t('home.section.viewAll') || 'Alle anzeigen'}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>

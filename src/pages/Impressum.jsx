@@ -225,7 +225,7 @@ export default function Impressum() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p><strong>{content.phone}:</strong> +49 (0) 30 12345678</p>
-          <p><strong>{content.email}:</strong> <a href="mailto:info@zazarap.com" className="text-blue-600 hover:underline">info@zazarap.com</a></p>
+          <p><strong>{content.email}:</strong> <a href="mailto:info@zazarap.de" className="text-blue-600 hover:underline">info@zazarap.de</a></p>
           <p><strong>{content.website}:</strong> www.zazarap.de</p>
         </CardContent>
       </Card>

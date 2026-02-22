@@ -41,7 +41,7 @@ export default function StructuredData({ type, data }) {
         "name": "Zazarap.de",
         "url": "https://zazarap.de",
         "logo": "https://zazarap.de/logo.png",
-        "description": "Marketplace italiano sicuro con sistema escrow",
+        "description": "Zazarap.de - Kleinanzeigen-Marktplatz mit sicherem Handel",
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "Customer Support",

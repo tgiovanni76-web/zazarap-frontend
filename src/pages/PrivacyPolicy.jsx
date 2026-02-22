@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
             Musterstraße 123<br />
             10115 Berlin<br />
             Deutschland<br />
-            E-Mail: privacy@zazarap.com
+            E-Mail: privacy@zazarap.de
           </p>
         </CardContent>
       </Card>

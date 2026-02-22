@@ -12,7 +12,7 @@ export default function AGB() {
       <p className="text-sm text-slate-600 mb-6">{t('agb.validFrom')}: 01.02.2026</p>
       <p className="text-sm text-slate-600 mb-6">
         <strong>{t('agb.operator')}:</strong> zazarap GmbH, Musterstraße 123, 10115 Berlin, Deutschland<br />
-        <strong>E-Mail:</strong> info@zazarap.com
+        <strong>E-Mail:</strong> info@zazarap.de
       </p>
 
       <Card className="mb-6">
