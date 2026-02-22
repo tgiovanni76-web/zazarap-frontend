@@ -249,6 +249,28 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
+      {/* Admin AI Assistant */}
+      <div className="mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Zazarap Admin Assistent</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-slate-600 mb-3">Assistenza AI per attività amministrative ricorrenti.</p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={base44.agents.getWhatsAppConnectURL('zazarap_admin_assistent')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[12px] bg-[var(--z-primary)] text-white px-4 py-2 hover:bg-[var(--z-primary-dark)]"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {adminTools.map(tool => {
           const Icon = tool.icon;
