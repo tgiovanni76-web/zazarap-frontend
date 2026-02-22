@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#d62828] via-[#b82020] to-[#8a1818] text-white py-16 px-4 rounded-2xl mb-8">
+      <div className="bg-gradient-to-br from-[var(--z-primary)] via-[var(--z-primary-light)] to-[var(--z-primary-dark)] text-white py-16 px-4 rounded-2xl mb-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">
             {t('home.hero.title')}
@@ -112,7 +112,7 @@ export default function Home() {
                 key={cat.id} 
                 to={createPageUrl('Marketplace') + '?category=' + cat.name}
               >
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[#d62828]">
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
                   <CardContent className="pt-6 text-center">
                     <div className="text-4xl mb-2">{cat.icon || '📦'}</div>
                     <h3 className="font-semibold">{t(cat.name)}</h3>
