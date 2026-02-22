@@ -117,26 +117,26 @@ function LayoutInner({ children, currentPageName }) {
             --z-link: #2A56C6;
             --z-link-hover: #1F3C88;
 
-            /* shadcn/ui semantic tokens */
-            --background: #F5F7FB;
-            --foreground: #1A1A1A;
-            --card: #FFFFFF;
-            --card-foreground: #1A1A1A;
-            --popover: #FFFFFF;
-            --popover-foreground: #1A1A1A;
-            --primary: #1F3C88;
-            --primary-foreground: #FFFFFF;
-            --secondary: #FFFFFF;
-            --secondary-foreground: #1A1A1A;
-            --muted: #F5F7FB;
-            --muted-foreground: #6B7280;
-            --accent: #FFD200;
-            --accent-foreground: #1A1A1A;
-            --destructive: #EF4444;
-            --destructive-foreground: #FFFFFF;
-            --border: #E4E7EC;
-            --input: #E4E7EC;
-            --ring: #1F3C88;
+            /* shadcn/ui semantic tokens (HSL for Tailwind) */
+            --background: 219 42% 97%;
+            --foreground: 0 0% 10%;
+            --card: 0 0% 100%;
+            --card-foreground: 0 0% 10%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 0 0% 10%;
+            --primary: 223 63% 33%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 0 0% 100%;
+            --secondary-foreground: 0 0% 10%;
+            --muted: 219 42% 97%;
+            --muted-foreground: 221 9% 46%;
+            --accent: 49 100% 50%;
+            --accent-foreground: 0 0% 10%;
+            --destructive: 0 84% 60%;
+            --destructive-foreground: 0 0% 100%;
+            --border: 217 17% 91%;
+            --input: 217 17% 91%;
+            --ring: 223 63% 33%;
           }
 
           /* Base typography & links */
