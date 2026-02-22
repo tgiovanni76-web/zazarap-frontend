@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -742,60 +743,77 @@ function LayoutInner({ children, currentPageName }) {
                                       </div>
 
                       {/* Menu Icons */}
-                      <nav className="flex items-center gap-1.5 md:gap-4" aria-label="Main navigation">
+                      <nav className="flex items-center gap-3 md:gap-5" aria-label="Main navigation">
                         <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
-                          <Home className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
+                          <Home className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
                         </Link>
-                        {!user && (
-                          <Button 
-                            onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
-                            className="bg-[var(--z-accent)] hover:bg-[#E6BD00] text-[var(--z-text)] font-bold px-4 py-1.5 text-sm"
-                            aria-label="Login"
-                            >
-                            {t('loginOrRegister')}
-                            </Button>
+
+                        {/* Plus - sempre visibile */}
+                        {user ? (
+                          <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
+                            <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                          </Link>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => base44.auth.redirectToLogin(createPageUrl('NewListing'))}
+                            className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white"
+                            title={t('aria.create')}
+                            aria-label={t('aria.create')}
+                          >
+                            <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                          </button>
                         )}
-                        {user && (
-                          <ErrorBoundary>
-                            <Link to={createPageUrl('NewListing')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.create')} aria-label={t('aria.create')}>
-                              <Plus className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('MyListings')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Meine Anzeigen" aria-label="My listings">
-                              <Package className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('MySales')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Vendite" aria-label="My sales">
-                              <TrendingUp className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('MyPurchases')} className="hidden sm:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Acquisti" aria-label="My purchases">
-                              <Package className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
-                              <Bell className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                              {unreadCount > 0 && (
-                                <Badge className="absolute -top-1 -right-1 bg-white text-[var(--z-primary)] px-1 py-0.5 text-[10px]" aria-hidden="true">
-                                  {unreadCount}
-                                </Badge>
-                              )}
-                            </Link>
-                            <Link to={createPageUrl('UserSettings')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.settings')} aria-label={t('aria.settings')}>
-                              <Settings className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </Link>
-                            <button
-                              type="button"
-                              onClick={() => base44.auth.logout(createPageUrl('Home'))}
-                              className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white"
-                              title="Esci"
-                              aria-label="Esci"
-                            >
-                              <LogOut className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </button>
-                            {user?.role === 'admin' && (
-                              <Link to={createPageUrl('AdminDashboard')} className="hidden lg:inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Admin" aria-label="Admin Dashboard">
-                                <LayoutDashboard className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                              </Link>
+
+                        {/* Notifiche */}
+                        {user ? (
+                          <Link to={createPageUrl('Notifications')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white relative" title={t('aria.notifications')} aria-label={`${t('aria.notifications')}${unreadCount > 0 ? `, ${unreadCount} ungelesen` : ''}`}>
+                            <Bell className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                            {unreadCount > 0 && (
+                              <Badge className="absolute -top-1 -right-1 bg-white text-[var(--z-primary)] px-1 py-0.5 text-[10px]" aria-hidden="true">
+                                {unreadCount}
+                              </Badge>
                             )}
-                          </ErrorBoundary>
+                          </Link>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => base44.auth.redirectToLogin(createPageUrl('Notifications'))}
+                            className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white"
+                            title={t('aria.notifications')}
+                            aria-label={t('aria.notifications')}
+                          >
+                            <Bell className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" focusable="false" />
+                          </button>
                         )}
+
+                        {/* Menu profilo 👤 */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Account" aria-label="Account">
+                              <span className="text-base md:text-lg leading-none">👤</span>
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="min-w-[220px]">
+                            {user ? (
+                              <>
+                                <Link to={createPageUrl('UserProfile')}><DropdownMenuItem>Profilo / Mein Konto</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('UserSettings')}><DropdownMenuItem>Impostazioni / Einstellungen</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('MyListings')}><DropdownMenuItem>I miei annunci / Meine Anzeigen</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('Messages')}><DropdownMenuItem>Messaggi / Nachrichten</DropdownMenuItem></Link>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Cambia utente / Benutzer wechseln</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Home'))}>Esci / Abmelden</DropdownMenuItem>
+                              </>
+                            ) : (
+                              <>
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Anmelden</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Registrieren</DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+
                         <div className="inline-flex items-center justify-center" title={t('aria.language')} aria-label={t('aria.language')}><Suspense fallback={null}><LanguageSwitcher /></Suspense></div>
                       </nav>
                     </div>

@@ -62,13 +62,16 @@ import Cart from './pages/Cart';
 import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
 import Contact from './pages/Contact';
+import CookieRichtlinie from './pages/CookieRichtlinie';
 import CustomerSupport from './pages/CustomerSupport';
+import Datenschutz from './pages/Datenschutz';
 import DatenschutzDE from './pages/DatenschutzDE';
 import DisputeCenter from './pages/DisputeCenter';
 import EditListing from './pages/EditListing';
 import EditProfile from './pages/EditProfile';
 import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
+import Hilfe from './pages/Hilfe';
 import Home from './pages/Home';
 import Impressum from './pages/Impressum';
 import LegalReview from './pages/LegalReview';
@@ -87,30 +90,27 @@ import NewListing from './pages/NewListing';
 import NotificationCenter from './pages/NotificationCenter';
 import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
+import Nutzungsbedingungen from './pages/Nutzungsbedingungen';
 import OTPLogin from './pages/OTPLogin';
 import PayPalWebhook from './pages/PayPalWebhook';
+import Plattformregeln from './pages/Plattformregeln';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Recommendations from './pages/Recommendations';
 import RejectedListings from './pages/RejectedListings';
 import SellerDashboard from './pages/SellerDashboard';
 import SellerHub from './pages/SellerHub';
+import SicherheitsHinweise from './pages/SicherheitsHinweise';
+import Support from './pages/Support';
 import SystemCheckup from './pages/SystemCheckup';
 import SystemLogs from './pages/SystemLogs';
 import TermsOfService from './pages/TermsOfService';
 import Transactions from './pages/Transactions';
+import UeberUns from './pages/UeberUns';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
 import WarumPremium from './pages/WarumPremium';
 import Widerrufsrecht from './pages/Widerrufsrecht';
-import Datenschutz from './pages/Datenschutz';
-import Nutzungsbedingungen from './pages/Nutzungsbedingungen';
-import CookieRichtlinie from './pages/CookieRichtlinie';
-import SicherheitsHinweise from './pages/SicherheitsHinweise';
-import UeberUns from './pages/UeberUns';
-import Support from './pages/Support';
-import Hilfe from './pages/Hilfe';
-import Plattformregeln from './pages/Plattformregeln';
 import __Layout from './Layout.jsx';
 
 
@@ -130,13 +130,16 @@ export const PAGES = {
     "Category": Category,
     "CompleteProfile": CompleteProfile,
     "Contact": Contact,
+    "CookieRichtlinie": CookieRichtlinie,
     "CustomerSupport": CustomerSupport,
+    "Datenschutz": Datenschutz,
     "DatenschutzDE": DatenschutzDE,
     "DisputeCenter": DisputeCenter,
     "EditListing": EditListing,
     "EditProfile": EditProfile,
     "FAQ": FAQ,
     "Favorites": Favorites,
+    "Hilfe": Hilfe,
     "Home": Home,
     "Impressum": Impressum,
     "LegalReview": LegalReview,
@@ -155,30 +158,27 @@ export const PAGES = {
     "NotificationCenter": NotificationCenter,
     "NotificationSettings": NotificationSettings,
     "Notifications": Notifications,
+    "Nutzungsbedingungen": Nutzungsbedingungen,
     "OTPLogin": OTPLogin,
     "PayPalWebhook": PayPalWebhook,
+    "Plattformregeln": Plattformregeln,
     "PreLaunchChecklist": PreLaunchChecklist,
     "PrivacyPolicy": PrivacyPolicy,
     "Recommendations": Recommendations,
     "RejectedListings": RejectedListings,
     "SellerDashboard": SellerDashboard,
     "SellerHub": SellerHub,
+    "SicherheitsHinweise": SicherheitsHinweise,
+    "Support": Support,
     "SystemCheckup": SystemCheckup,
     "SystemLogs": SystemLogs,
     "TermsOfService": TermsOfService,
     "Transactions": Transactions,
+    "UeberUns": UeberUns,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
     "WarumPremium": WarumPremium,
     "Widerrufsrecht": Widerrufsrecht,
-    "Datenschutz": Datenschutz,
-    "Nutzungsbedingungen": Nutzungsbedingungen,
-    "CookieRichtlinie": CookieRichtlinie,
-    "SicherheitsHinweise": SicherheitsHinweise,
-    "UeberUns": UeberUns,
-    "Support": Support,
-    "Hilfe": Hilfe,
-    "Plattformregeln": Plattformregeln,
 }
 
 export const pagesConfig = {
