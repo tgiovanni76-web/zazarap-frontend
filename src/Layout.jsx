@@ -735,13 +735,7 @@ function LayoutInner({ children, currentPageName }) {
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
-                                          <span className="text-[18px] md:text-[26px] font-extrabold" style={{
-                                  background: 'linear-gradient(180deg, #162E6B 0%, #1F3C88 50%, #2A56C6 80%, #FFD200 100%)',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
-                                  textShadow: '0 0 0 transparent',
-                                  filter: 'drop-shadow(1px 1px 0 #00000020)'
-                                }}>Zazarap.de</span>
+                                          <span className="text-[18px] md:text-[26px] font-extrabold" style={{ color: 'var(--z-accent)', textShadow: '0 1px 0 rgba(0,0,0,0.25)' }}>Zazarap.de</span>
                                           <span className="text-[10px] md:text-xs tracking-wide text-white/80 mt-0.5">kleinanzeigen</span>
                                           </Link>
 
