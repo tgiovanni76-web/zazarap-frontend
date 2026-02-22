@@ -87,7 +87,7 @@ function LayoutInner({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-[var(--z-bg)] overflow-x-hidden max-w-full">
+      <div className="min-h-screen bg-[var(--z-bg)] text-[var(--z-text)] overflow-x-hidden max-w-full">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 bg-white text-black px-3 py-2 rounded">Salta al contenuto</a>
         <GlobalErrorListener />
         <PerformanceMonitor />
@@ -730,7 +730,7 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl max-w-full overflow-x-hidden overflow-y-visible">
+      <header className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl max-w-full overflow-x-hidden overflow-y-visible shadow-none">
                     <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
