@@ -802,7 +802,10 @@ function LayoutInner({ children, currentPageName }) {
                                 <Link to={createPageUrl('MyListings')}><DropdownMenuItem>Meine Anzeigen</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('Messages')}><DropdownMenuItem>Nachrichten</DropdownMenuItem></Link>
                                 {user?.role === 'admin' && (
-                                  <Link to={createPageUrl('ManageUsers')}><DropdownMenuItem>Benutzerverwaltung</DropdownMenuItem></Link>
+                                  <>
+                                    <Link to={createPageUrl('AdminPanel')}><DropdownMenuItem>Admin-Dashboard</DropdownMenuItem></Link>
+                                    <Link to={createPageUrl('ManageUsers')}><DropdownMenuItem>Benutzerverwaltung</DropdownMenuItem></Link>
+                                  </>
                                 )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Benutzer wechseln</DropdownMenuItem>
