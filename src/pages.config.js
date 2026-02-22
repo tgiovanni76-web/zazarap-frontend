@@ -103,6 +103,14 @@ import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
 import WarumPremium from './pages/WarumPremium';
 import Widerrufsrecht from './pages/Widerrufsrecht';
+import Datenschutz from './pages/Datenschutz';
+import Nutzungsbedingungen from './pages/Nutzungsbedingungen';
+import CookieRichtlinie from './pages/CookieRichtlinie';
+import SicherheitsHinweise from './pages/SicherheitsHinweise';
+import UeberUns from './pages/UeberUns';
+import Support from './pages/Support';
+import Hilfe from './pages/Hilfe';
+import Plattformregeln from './pages/Plattformregeln';
 import __Layout from './Layout.jsx';
 
 
@@ -163,6 +171,14 @@ export const PAGES = {
     "UserSettings": UserSettings,
     "WarumPremium": WarumPremium,
     "Widerrufsrecht": Widerrufsrecht,
+    "Datenschutz": Datenschutz,
+    "Nutzungsbedingungen": Nutzungsbedingungen,
+    "CookieRichtlinie": CookieRichtlinie,
+    "SicherheitsHinweise": SicherheitsHinweise,
+    "UeberUns": UeberUns,
+    "Support": Support,
+    "Hilfe": Hilfe,
+    "Plattformregeln": Plattformregeln,
 }
 
 export const pagesConfig = {

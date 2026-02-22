@@ -814,40 +814,49 @@ function LayoutInner({ children, currentPageName }) {
       <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-5">
                       {/* Logo + Newsletter */}
-                      <div className="flex-1 min-w-[260px]">
-                        <h2 className="font-normal text-base mb-1 text-white">Zazarap.de</h2>
-                        <p className="text-xs text-slate-500">{t('tagline')}</p>
-
-
-                      </div>
-
-                      {/* Rechtliches */}
-                      <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-medium text-xs mb-1.5 text-slate-300">{t('legal')}</h3>
-                        <ul className="space-y-1 text-xs">
-                          <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">{t('impressum')}</Link></li>
-                          <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">{t('agb')}</Link></li>
-                          <li><Link to={createPageUrl('PrivacyPolicy')} className="text-slate-500 hover:text-slate-300">{t('privacy')}</Link></li>
-                          <li><Link to={createPageUrl('Widerrufsrecht')} className="text-slate-500 hover:text-slate-300">{t('rightOfWithdrawal')}</Link></li>
-                          <li><Link to={createPageUrl('DisputeCenter')} className="text-slate-500 hover:text-slate-300">{t('disputeResolution')}</Link></li>
-
-                        </ul>
-                      </div>
-
-                      {/* Support */}
-                      <div className="flex-1 min-w-[200px]">
-                        <h3 className="font-medium text-xs mb-1.5 text-slate-300">{t('support')}</h3>
-                        <ul className="space-y-1 text-xs">
-                          <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">FAQ</Link></li>
-
-                          <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">{t('contactUs')}</Link></li>
-                          <li><Link to={createPageUrl('Transactions')} className="text-slate-500 hover:text-slate-300">Transaktionen</Link></li>
-
-                          <li><Link to={createPageUrl('CompleteProfile')} className="text-[var(--z-accent)] hover:text-[#E6BD00] mt-1.5 block">{t('completeProfile')}</Link></li>
+                      <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* Zazarap.de */}
+                        <div>
+                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Zazarap.de</h3>
+                          <ul className="space-y-1 text-xs">
+                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">Über uns</Link></li>
+                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">Kontakt</Link></li>
+                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">Sicherheit</Link></li>
+                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">FAQ</Link></li>
                           </ul>
-                          <p className="mt-2 text-xs">
-                          <a href="mailto:info@zazarap.de" className="text-slate-500 hover:text-slate-300">info@zazarap.de</a>
-                          </p>
+                        </div>
+
+                        {/* Rechtliches */}
+                        <div>
+                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Rechtliches</h3>
+                          <ul className="space-y-1 text-xs">
+                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">Impressum</Link></li>
+                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">Datenschutz</Link></li>
+                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">AGB</Link></li>
+                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">Nutzungsbedingungen</Link></li>
+                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">Cookies</Link></li>
+                          </ul>
+                        </div>
+
+                        {/* Service */}
+                        <div>
+                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Service</h3>
+                          <ul className="space-y-1 text-xs">
+                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">Support</Link></li>
+                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">Hilfe</Link></li>
+                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">Plattformregeln</Link></li>
+                          </ul>
+                        </div>
+
+                        {/* Folge uns */}
+                        <div>
+                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Folge uns</h3>
+                          <ul className="space-y-1 text-xs">
+                            <li className="text-slate-500">Twitter (bald)</li>
+                            <li className="text-slate-500">Instagram (bald)</li>
+                            <li className="text-slate-500">LinkedIn (bald)</li>
+                          </ul>
+                        </div>
                       </div>
                       </div>
 
