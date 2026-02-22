@@ -824,24 +824,26 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      {/* Admin back button */}
-      {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
-        'ManageUsers','ModerateListings','AdminModeration','AdminDisputes','AdminTickets','AdminReports','AdminPayments','AdminSettings','AdminSEO','SystemLogs','SystemCheckup','PreLaunchChecklist','AccessibilityAudit','ManageCategories','RejectedListings','AdminAnalytics','MarketplaceDashboard'
-      ].includes(currentPageName)) && (
-        <Link
-          to={createPageUrl('AdminDashboard')}
-          className="fixed left-3 top-[82px] z-[60] bg-[var(--z-primary)] text-white border-2 border-[var(--z-accent)] rounded-full px-3 py-1.5 shadow-lg hover:bg-[var(--z-primary-dark)] flex items-center gap-2"
-          aria-label="Zurück zum Admin-Panel"
-          title="Zurück zum Admin-Panel"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span className="hidden sm:inline">Admin-Panel</span>
-        </Link>
-      )}
-      
       <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden pb-24">
         {children}
       </main>
+
+      {/* Admin back button (bottom, aligned with content) */}
+      {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
+        'ManageUsers','ModerateListings','AdminModeration','AdminDisputes','AdminTickets','AdminReports','AdminPayments','AdminSettings','AdminSEO','SystemLogs','SystemCheckup','PreLaunchChecklist','AccessibilityAudit','ManageCategories','RejectedListings','AdminAnalytics','MarketplaceDashboard'
+      ].includes(currentPageName)) && (
+        <div className="container max-w-7xl mx-auto px-4 mb-4 -mt-4">
+          <Link
+            to={createPageUrl('AdminDashboard')}
+            className="inline-flex items-center gap-2 bg-white text-[var(--z-primary)] border border-[var(--z-primary)] rounded-full px-3 py-1.5 shadow-sm hover:bg-[var(--z-primary)] hover:text-white"
+            aria-label="Zurück zum Admin-Panel"
+            title="Zurück zum Admin-Panel"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Admin-Panel</span>
+          </Link>
+        </div>
+      )}
 
       <Suspense fallback={null}>
         <CookieBanner />
