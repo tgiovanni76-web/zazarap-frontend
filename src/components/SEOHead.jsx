@@ -17,6 +17,8 @@ export default function SEOHead({
     const finalKeywords = keywords || 'marketplace, compravendita, usato, sicuro, escrow, paypal, italia';
     setMetaTag('keywords', finalKeywords);
     setMetaTag('theme-color', '#1F3C88');
+    // Android status bar color
+    setMetaTag('apple-mobile-web-app-status-bar-style', '#1F3C88');
     
     // Open Graph
     setMetaTag('og:title', title, 'property');

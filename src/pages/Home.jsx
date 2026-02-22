@@ -53,7 +53,7 @@ export default function Home() {
                 size="lg" 
                 variant="outline" 
                 className="bg-white/10 border-white text-white hover:bg-white/20"
-                onClick={() => base44.auth.redirectToLogin()}
+                onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
               >
                 {t('header.nav.register')}
               </Button>
@@ -177,7 +177,7 @@ export default function Home() {
             <Button 
               size="lg" 
               className="bg-white text-purple-600 hover:bg-slate-100 font-bold"
-              onClick={() => base44.auth.redirectToLogin()}
+              onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
             >
               {t('home.cta.button') || 'Jetzt kostenlos registrieren'}
             </Button>
