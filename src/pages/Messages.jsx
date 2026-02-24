@@ -225,6 +225,8 @@ export default function Messages() {
 
         {/* Chat Window */}
         <div className="col-span-2 h-full overflow-hidden">
+          {/* The ChatWindow itself manages internal scrolling for messages; ensure no bleed */}
+        
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}
