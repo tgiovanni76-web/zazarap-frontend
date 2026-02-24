@@ -6,6 +6,11 @@ Deno.serve(async (req) => {
 
     const { userId, type, title, message, actionUrl, metadata } = await req.json();
 
+    // Basic payload validation
+    if (!userId || !title || !message) {
+      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
     // Get user preferences
     const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({
       userId
@@ -40,18 +45,18 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create notification
+    // Create notification (service role bypasses RLS)
     const notification = await base44.asServiceRole.entities.Notification.create({
-    userId,
-    type,
-    title,
-    message,
-    linkUrl: actionUrl || '',
-    relatedId: metadata && metadata.chatId ? String(metadata.chatId) : undefined,
-    read: false
+      userId,
+      type,
+      title,
+      message,
+      linkUrl: actionUrl || '',
+      relatedId: metadata && metadata.chatId ? String(metadata.chatId) : undefined,
+      read: false
     });
 
-    // Send email if enabled
+    // Send email if enabled or type is offer/status update
     if (userPrefs.emailNotifications && type !== 'message_received') {
       try {
         await base44.integrations.Core.SendEmail({
