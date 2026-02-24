@@ -27,19 +27,17 @@ export default function Messages() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Lock outer page scroll on mobile/tablet; scroll only inside chat panel
+  // Lock outer page scroll on this page; scroll only inside panels
   useEffect(() => {
-    if (isMobileView) {
-      const prevBodyOverflow = document.body.style.overflow;
-      const prevHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = prevBodyOverflow || '';
-        document.documentElement.style.overflow = prevHtmlOverflow || '';
-      };
-    }
-  }, [isMobileView]);
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevBodyOverflow || '';
+      document.documentElement.style.overflow = prevHtmlOverflow || '';
+    };
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -221,9 +219,9 @@ export default function Messages() {
   // Desktop: show both sidebar and chat
   return (
     <div className="py-0 md:py-6 overflow-hidden h-[calc(100dvh-60px)] md:h-[calc(100dvh-72px)]">
-      <div className="grid grid-cols-3 gap-4 h-full pb-2">
+      <div className="grid grid-cols-3 gap-4 h-full pb-2 overflow-hidden">
         {/* Sidebar */}
-        <div className="col-span-1">
+        <div className="col-span-1 h-full overflow-y-auto overscroll-contain">
           <ChatSidebar
             chats={myChats}
             selectedChat={selectedChat}
@@ -235,7 +233,7 @@ export default function Messages() {
         </div>
 
         {/* Chat Window */}
-        <div className="col-span-2">
+        <div className="col-span-2 h-full overflow-hidden">
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}
