@@ -83,21 +83,21 @@ export default function NewListing() {
   });
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files).slice(0, 8);
-    if (files.length > 0) {
-      setImageFiles(files);
-      const previews = [];
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          previews.push(reader.result);
-          if (previews.length === files.length) {
-            setImagePreviews(previews);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+    const picked = Array.from(e.target.files || []);
+    if (picked.length === 0) return;
+
+    const merged = [...imageFiles, ...picked].slice(0, 8);
+    setImageFiles(merged);
+
+    const readers = merged.map((file) => new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    }));
+    Promise.all(readers).then((urls) => setImagePreviews(urls));
+
+    // reset input to allow picking the same file again
+    e.target.value = '';
   };
 
   const handleSubmit = async (e) => {
@@ -270,7 +270,9 @@ export default function NewListing() {
           />
         </div>
 
-        <label className="zaza-form-label">{t('images')} (max 8)</label>
+        <label className="zaza-form-label">
+          {t('images')} (max 8){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/8`}
+        </label>
         <div className="zaza-upload">
           <input 
             type="file" 
