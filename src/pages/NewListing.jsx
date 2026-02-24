@@ -50,10 +50,10 @@ export default function NewListing() {
 
       if (imageFiles.length > 0) {
         setIsUploading(true);
-        for (const file of imageFiles) {
-          const uploadResult = await base44.integrations.Core.UploadFile({ file });
-          imageUrls.push(uploadResult.file_url);
-        }
+        const results = await Promise.all(
+          imageFiles.map((file) => base44.integrations.Core.UploadFile({ file }))
+        );
+        imageUrls = results.map(r => r.file_url);
         setIsUploading(false);
       }
 
@@ -83,7 +83,7 @@ export default function NewListing() {
   });
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files).slice(0, 4);
+    const files = Array.from(e.target.files).slice(0, 8);
     if (files.length > 0) {
       setImageFiles(files);
       const previews = [];
@@ -270,7 +270,7 @@ export default function NewListing() {
           />
         </div>
 
-        <label className="zaza-form-label">{t('images')} (max 4)</label>
+        <label className="zaza-form-label">{t('images')} (max 8)</label>
         <div className="zaza-upload">
           <input 
             type="file" 
@@ -287,7 +287,7 @@ export default function NewListing() {
           </label>
         </div>
         {imagePreviews.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             {imagePreviews.map((preview, idx) => (
               <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
             ))}
