@@ -27,6 +27,20 @@ export default function Messages() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Lock outer page scroll on mobile/tablet; scroll only inside chat panel
+  useEffect(() => {
+    if (isMobileView) {
+      const prevBodyOverflow = document.body.style.overflow;
+      const prevHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevBodyOverflow || '';
+        document.documentElement.style.overflow = prevHtmlOverflow || '';
+      };
+    }
+  }, [isMobileView]);
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -154,7 +168,7 @@ export default function Messages() {
   if (isMobileView) {
     if (selectedChat) {
       return (
-        <div className="min-h-[60vh] pb-6 overflow-x-hidden">
+        <div className="h-full overflow-hidden">
           <ChatWindow
             chat={selectedChat}
             messages={chatMessages}
@@ -206,7 +220,7 @@ export default function Messages() {
 
   // Desktop: show both sidebar and chat
   return (
-    <div className="py-6 overflow-x-hidden">
+    <div className="py-0 md:py-6 overflow-hidden h-[calc(100dvh-60px)] md:h-[calc(100dvh-72px)]">
       <div className="grid grid-cols-3 gap-4 min-h-[60vh] pb-2">
         {/* Sidebar */}
         <div className="col-span-1">
