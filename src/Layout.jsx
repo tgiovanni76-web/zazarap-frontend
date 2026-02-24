@@ -861,14 +861,14 @@ function LayoutInner({ children, currentPageName }) {
         <CookieBanner />
       </Suspense>
       
-      <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-5">
-                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-5">
+      <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-3 md:py-4 lg:py-5">
+                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-3 md:gap-5">
                       {/* Logo + Newsletter */}
-                      <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
                         {/* Zazarap.de */}
                         <div>
-                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Zazarap.de</h3>
-                          <ul className="space-y-1 text-xs">
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Zazarap.de</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
                             <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">Über uns</Link></li>
                             <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">Kontakt</Link></li>
                             <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">Sicherheit</Link></li>
@@ -878,8 +878,8 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Rechtliches */}
                         <div>
-                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Rechtliches</h3>
-                          <ul className="space-y-1 text-xs">
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Rechtliches</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
                             <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">Impressum</Link></li>
                             <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">Datenschutz</Link></li>
                             <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">AGB</Link></li>
@@ -890,8 +890,8 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Service */}
                         <div>
-                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Service</h3>
-                          <ul className="space-y-1 text-xs">
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Service</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
                             <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">Support</Link></li>
                             <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">Hilfe</Link></li>
                             <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">Plattformregeln</Link></li>
@@ -900,8 +900,8 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Folge uns */}
                         <div>
-                          <h3 className="font-medium text-xs mb-1.5 text-slate-300">Folge uns</h3>
-                          <ul className="space-y-1 text-xs">
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Folge uns</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
                             <li className="text-slate-500">Twitter (bald)</li>
                             <li className="text-slate-500">Instagram (bald)</li>
                             <li className="text-slate-500">LinkedIn (bald)</li>
@@ -910,9 +910,9 @@ function LayoutInner({ children, currentPageName }) {
                       </div>
                       </div>
 
-                      <hr className="border-0 border-t border-[#243246] my-3.5 mx-auto w-[90%]" />
+                      <hr className="border-0 border-t border-[#243246] my-2 md:my-3.5 mx-auto w-[92%]" />
 
-                      <div className="text-center text-xs pb-1">
+                      <div className="text-center text-[11px] md:text-xs pb-1">
                       <p className="text-slate-500">© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
                       <p className="mt-0.5">
                         <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-300">
