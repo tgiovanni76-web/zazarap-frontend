@@ -42,13 +42,13 @@ Deno.serve(async (req) => {
 
     // Create notification
     const notification = await base44.asServiceRole.entities.Notification.create({
-      userId,
-      type,
-      title,
-      message,
-      actionUrl: actionUrl || '',
-      metadata: metadata ? JSON.stringify(metadata) : null,
-      read: false
+    userId,
+    type,
+    title,
+    message,
+    linkUrl: actionUrl || '',
+    relatedId: metadata && metadata.chatId ? String(metadata.chatId) : undefined,
+    read: false
     });
 
     // Send email if enabled
