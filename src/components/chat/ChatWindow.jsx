@@ -852,7 +852,7 @@ export default function ChatWindow({
           variant="ghost" 
           size="sm" 
           className="md:hidden text-white hover:bg-white/20"
-          onClick={goBack}
+          onClick={() => (onBack ? onBack() : goBack())}
           aria-label="Zurück"
         >
           <ArrowLeft className="h-5 w-5" />
