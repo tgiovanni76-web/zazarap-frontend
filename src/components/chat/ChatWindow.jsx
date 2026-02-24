@@ -1213,15 +1213,15 @@ export default function ChatWindow({
         </Button>
         
         <Input
-          placeholder={ct.typeMessage}
-          value={messageText}
-          onChange={(e) => {
-            setMessageText(e.target.value);
-            handleTyping();
-          }}
-          onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-          className="flex-1"
-        />
+           placeholder={ct.typeMessage}
+           value={messageText}
+           onChange={(e) => {
+             setMessageText(e.target.value);
+             handleTyping();
+           }}
+           onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+           className="flex-1 min-w-0"
+         />
         
         <Button 
           onClick={handleSend} 
