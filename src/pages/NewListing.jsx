@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Upload, Loader2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
+import VehicleForm from "../components/listings/VehicleForm";
 
 
 export default function NewListing() {
@@ -38,6 +39,27 @@ export default function NewListing() {
   const [promoQty, setPromoQty] = useState(1);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [vehicle, setVehicle] = useState({
+    brand: '',
+    model: '',
+    registrationYear: '',
+    mileageKm: '',
+    fuelType: '',
+    transmission: '',
+    powerKw: '',
+    color: '',
+    condition: '',
+    tuvValidUntil: '',
+    equipment: []
+  });
+
+  useEffect(() => {
+    if ((formData.category || '').toLowerCase() !== 'auto') {
+      setVehicle({
+        brand: '', model: '', registrationYear: '', mileageKm: '', fuelType: '', transmission: '', powerKw: '', color: '', condition: '', tuvValidUntil: '', equipment: []
+      });
+    }
+  }, [formData.category]);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
@@ -134,11 +156,39 @@ export default function NewListing() {
       // Continua comunque se la validazione fallisce per errore tecnico
     }
 
+    const isAuto = (formData.category || '').toLowerCase() === 'auto';
+    const baseTitle = (formData.title || '').trim();
+    const baseDesc = (formData.description || '').trim();
+    const seoTitleRaw = isAuto && vehicle.brand && vehicle.model ? `${vehicle.brand} ${vehicle.model} - ${baseTitle}` : baseTitle;
+    const seo_title = seoTitleRaw.slice(0, 60);
+    const seo_description = baseDesc.slice(0, 160);
+    const keywordParts = [formData.title, formData.category];
+    if (isAuto) keywordParts.push(vehicle.brand, vehicle.model, vehicle.fuelType, vehicle.transmission, String(vehicle.registrationYear || ''));
+    const seo_keywords = keywordParts.filter(Boolean).join(', ').toLowerCase();
+
+    const vehiclePayload = isAuto ? {
+      brand: vehicle.brand || undefined,
+      model: vehicle.model || undefined,
+      registrationYear: vehicle.registrationYear ? parseInt(vehicle.registrationYear, 10) : undefined,
+      mileageKm: vehicle.mileageKm ? parseInt(vehicle.mileageKm, 10) : undefined,
+      fuelType: vehicle.fuelType || undefined,
+      transmission: vehicle.transmission || undefined,
+      powerKw: vehicle.powerKw ? parseFloat(vehicle.powerKw) : undefined,
+      color: vehicle.color || undefined,
+      condition: vehicle.condition || undefined,
+      tuvValidUntil: vehicle.tuvValidUntil || undefined,
+      equipment: (vehicle.equipment || []).length ? vehicle.equipment : undefined,
+    } : undefined;
+
     createListingMutation.mutate({
       ...formData,
+      seo_title,
+      seo_description,
+      seo_keywords,
       price: parseFloat(formData.price),
       offerPrice: formData.offerPrice ? parseFloat(formData.offerPrice) : undefined,
-      expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined
+      expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined,
+      vehicle: vehiclePayload
     });
   };
 
