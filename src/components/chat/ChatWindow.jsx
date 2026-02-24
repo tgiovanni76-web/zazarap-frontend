@@ -369,20 +369,15 @@ export default function ChatWindow({
         [unreadField]: (chat[unreadField] || 0) + 1
       });
 
-      // Send notification
-      const receiverPrefs = await base44.entities.NotificationPreference.filter({ userId: otherUser });
-      const prefs = receiverPrefs[0] || { messageReplies: true, emailNotifications: true };
-      
-      if (prefs.messageReplies) {
-        await base44.entities.Notification.create({
-          userId: otherUser,
-          type: price ? 'offer' : 'message',
-          title: price ? `💰 Offerta: ${price}€` : '💬 Nuovo messaggio',
-          message: `${listing?.title}: ${text?.substring(0, 50) || 'Immagine'}`,
-          linkUrl: '/Messages',
-          relatedId: chat.id
-        });
-      }
+      // Send notification via backend (service role)
+      await base44.functions.invoke('sendNotification', {
+        userId: otherUser,
+        type: price ? 'offer' : 'message_received',
+        title: price ? '💰 Neues Angebot!' : '💬 Neue Nachricht',
+        message: `${listing?.title}: ${text?.substring(0, 50) || (imageUrl ? 'Bild' : 'Nachricht')}`,
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id, listingId: chat.listingId, amount: price || undefined }
+      });
 
       // AI moderation (non-blocking)
       try {
@@ -588,14 +583,14 @@ export default function ChatWindow({
         [unreadField]: (chat[unreadField] || 0) + 1
       });
 
-      // Create notification for receiver
-      await base44.entities.Notification.create({
+      // Create notification for receiver (service role)
+      await base44.functions.invoke('sendNotification', {
         userId: otherUser,
         type: 'offer',
         title: type === 'counter' ? '🔄 Neues Gegenangebot!' : '💰 Neues Angebot!',
         message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title}" gemacht`,
-        linkUrl: '/Messages?chatId=' + chat.id,
-        relatedId: chat.id
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id, offerId: offer.id, listingId: chat.listingId }
       });
 
       return offer;
@@ -657,14 +652,14 @@ export default function ChatWindow({
         });
       }
 
-      // Notify buyer
-      await base44.entities.Notification.create({
+      // Notify buyer via backend
+      await base44.functions.invoke('sendNotification', {
         userId: offerToAccept.senderId,
         type: 'status_update',
         title: '✅ Angebot angenommen - Reserviert!',
         message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title}" wurde angenommen! Anzeige ist für dich reserviert. Schließe die Zahlung innerhalb von 48h ab.`,
-        linkUrl: '/Messages?chatId=' + chat.id,
-        relatedId: chat.id
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id }
       });
 
       return offerToAccept;
@@ -712,14 +707,14 @@ export default function ChatWindow({
         messageType: 'system'
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
+      // Notify buyer via backend
+      await base44.functions.invoke('sendNotification', {
         userId: chat.buyerId,
         type: 'status_update',
         title: '🔓 Reservierung aufgehoben',
         message: `Die Reservierung für "${listing?.title}" wurde aufgehoben. Die Anzeige ist wieder verfügbar.`,
-        linkUrl: '/Messages?chatId=' + chat.id,
-        relatedId: chat.id
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id }
       });
     },
     onSuccess: () => {
@@ -762,14 +757,14 @@ export default function ChatWindow({
         updatedAt: new Date().toISOString()
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
+      // Notify buyer via backend
+      await base44.functions.invoke('sendNotification', {
         userId: chat.buyerId,
         type: 'status_update',
         title: '✅ Verkauft',
         message: `"${listing?.title}" wurde als verkauft markiert.`,
-        linkUrl: '/Messages?chatId=' + chat.id,
-        relatedId: chat.id
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id }
       });
     },
     onSuccess: () => {
@@ -816,14 +811,14 @@ export default function ChatWindow({
         updatedAt: new Date().toISOString()
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
+      // Notify buyer via backend
+      await base44.functions.invoke('sendNotification', {
         userId: offerToReject.senderId,
         type: 'status_update',
         title: '❌ Angebot abgelehnt',
         message: `Dein Angebot von ${offerToReject.amount}€ für "${listing?.title}" wurde abgelehnt.`,
-        linkUrl: '/Messages?chatId=' + chat.id,
-        relatedId: chat.id
+        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+        metadata: { chatId: chat.id }
       });
 
       return offerToReject;
