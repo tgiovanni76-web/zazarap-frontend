@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
+import { ArrowLeft, Upload, Loader2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 
@@ -98,6 +98,13 @@ export default function NewListing() {
 
     // reset input to allow picking the same file again
     e.target.value = '';
+  };
+
+  const removeImage = (idx) => {
+    const newFiles = imageFiles.filter((_, i) => i !== idx);
+    const newPreviews = imagePreviews.filter((_, i) => i !== idx);
+    setImageFiles(newFiles);
+    setImagePreviews(newPreviews);
   };
 
   const handleSubmit = async (e) => {
@@ -291,7 +298,17 @@ export default function NewListing() {
         {imagePreviews.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             {imagePreviews.map((preview, idx) => (
-              <img key={idx} src={preview} alt={`Preview ${idx + 1}`} className="w-full rounded" />
+              <div key={idx} className="relative group">
+                <img src={preview} alt={`Preview ${idx + 1}`} className="w-full h-full rounded object-cover aspect-square" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(idx)}
+                  className="absolute top-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                  aria-label={`Rimuovi immagine ${idx + 1}`}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             ))}
           </div>
         )}
