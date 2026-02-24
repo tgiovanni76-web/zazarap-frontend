@@ -294,38 +294,9 @@ export default function NewListing() {
           <option value="auction">{t('listingType.auction')}</option>
         </select>
 
-        <div className="border-t pt-6 mt-6">
-          <h3 className="text-lg font-semibold mb-4 text-slate-700">{t('seoOptimization')}</h3>
-          
-          <label className="zaza-form-label">{t('metaTitle')}</label>
-          <input
-            value={formData.seo_title}
-            onChange={(e) => setFormData({...formData, seo_title: e.target.value.slice(0, 60)})}
-            className="zaza-input"
-            placeholder=""
-            maxLength={60}
-          />
-          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_title.length}/60 {t('chars')}</p>
-
-          <label className="zaza-form-label">{t('metaDesc')}</label>
-          <textarea
-            value={formData.seo_description}
-            onChange={(e) => setFormData({...formData, seo_description: e.target.value.slice(0, 160)})}
-            className="zaza-input"
-            placeholder=""
-            maxLength={160}
-            rows="3"
-          />
-          <p className="text-xs text-slate-500 mt-1 mb-4">{formData.seo_description.length}/160 {t('chars')}</p>
-
-          <label className="zaza-form-label">{t('keywords')}</label>
-          <input
-            value={formData.seo_keywords}
-            onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
-            className="zaza-input"
-            placeholder=""
-          />
-        </div>
+        {formData.category && formData.category.toLowerCase() === 'auto' && (
+          <VehicleForm vehicle={vehicle} onChange={setVehicle} />
+        )}
 
         <label className="zaza-form-label">
           {t('images')} (max 8){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/8`}
