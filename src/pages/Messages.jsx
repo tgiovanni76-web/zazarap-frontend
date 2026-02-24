@@ -17,12 +17,14 @@ export default function Messages() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [isMobileView, setIsMobileView] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
   const queryClient = useQueryClient();
 
-  // Force desktop layout also on mobile
+  // Handle responsive view (mobile + tablet stacked layout)
   useEffect(() => {
-    setIsMobileView(false);
+    const handleResize = () => setIsMobileView(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const { data: user } = useQuery({
@@ -149,7 +151,7 @@ export default function Messages() {
   }
 
   // Mobile: show only sidebar or chat
-  if (false) {
+  if (isMobileView) {
     if (selectedChat) {
       return (
         <div className="min-h-[60vh] pb-6">

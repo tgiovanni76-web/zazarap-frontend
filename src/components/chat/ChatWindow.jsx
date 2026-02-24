@@ -845,9 +845,9 @@ export default function ChatWindow({
   if (!chat) return null;
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border overflow-hidden">
+    <div className="flex flex-col h-full w-full bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 p-3 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)] text-white">
+      <div className="flex items-center gap-2 p-2 md:p-3 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)] text-white">
         <Button 
           variant="ghost" 
           size="sm" 
@@ -859,15 +859,15 @@ export default function ChatWindow({
         </Button>
         
         {listing?.images?.[0] ? (
-          <img src={listing.images[0]} alt="" className="w-10 h-10 rounded-full object-cover" />
+          <img src={listing.images[0]} alt="" className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/20 flex items-center justify-center">
             <span className="text-lg">📦</span>
           </div>
         )}
         
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold truncate">{listing?.title || 'Annuncio'}</h3>
+          <h3 className="font-semibold truncate text-sm md:text-base">{listing?.title || 'Annuncio'}</h3>
           <p className="text-xs text-white/80 truncate flex items-center gap-1">
             {isSeller ? ct.buyer : ct.seller}: {otherUser?.split('@')[0]}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
@@ -889,8 +889,8 @@ export default function ChatWindow({
 
       {/* Listing Info Bar */}
       {listing && (
-        <div className="flex items-center justify-between p-2 bg-slate-50 border-b text-sm">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between p-2 md:p-3 bg-slate-50 border-b text-[12px] md:text-sm gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-green-600">{listing.price}€</span>
             {chat.lastPrice && chat.lastPrice !== listing.price && (
               <Badge variant="outline" className="text-xs">
@@ -940,13 +940,13 @@ export default function ChatWindow({
 
       {/* Messages */}
       <div 
-        className="flex-1 overflow-y-auto p-4 space-y-4"
+        className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}
       >
         {Object.entries(groupedMessages).map(([date, dayMessages]) => (
           <div key={date}>
             {/* Date Separator */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-3 md:mb-4">
               <span className="bg-slate-200 text-slate-600 text-xs px-3 py-1 rounded-full">
                 {date}
               </span>
@@ -975,8 +975,8 @@ export default function ChatWindow({
 
               return (
                 <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                    <div className={`rounded-2xl px-4 py-2 ${
+                  <div className={`max-w-[95%] md:max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
+                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${
                       isOwn 
                         ? 'bg-[#d62828] text-white rounded-br-md' 
                         : 'bg-white border shadow-sm rounded-bl-md'
@@ -994,7 +994,7 @@ export default function ChatWindow({
                       {/* Text */}
                       {displayText && (
                         <div>
-                          <p className="text-sm whitespace-pre-wrap">
+                          <p className="text-[13px] md:text-sm whitespace-pre-wrap break-words hyphens-auto">
                             {translatedMessages[msg.id] || displayText}
                           </p>
                           {displayText && msg.senderId !== user?.email && msg.messageType !== 'system' && (
@@ -1023,7 +1023,7 @@ export default function ChatWindow({
 
                       {/* Offer Action Buttons (only for pending offers and receiver) */}
                       {msg.messageType === 'offer' && linkedOffer && linkedOffer.status === 'pending' && !isOwn && isSeller && (
-                        <div className="flex gap-2 mt-3">
+                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
                           <Button
                             size="sm"
                             onClick={() => handleAcceptOffer(linkedOffer.id)}
@@ -1117,7 +1117,7 @@ export default function ChatWindow({
 
       {/* Seller Actions for Reserved Listing */}
       {hasActiveReservation && isSeller && (
-        <div className="p-3 bg-yellow-50 border-t space-y-2">
+        <div className="p-2 md:p-3 bg-yellow-50 border-t space-y-2">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-yellow-800 font-medium">🔒 Anzeige reserviert</span>
             <span className="text-xs text-yellow-600">48h Timeout aktiv</span>
@@ -1144,7 +1144,7 @@ export default function ChatWindow({
 
       {/* Payment Button (for buyer after acceptance) */}
       {chat.status === 'accettata' && !isSeller && (
-        <div className="p-3 bg-green-50 border-t animate-pulse">
+        <div className="p-2 md:p-3 bg-green-50 border-t animate-pulse">
           <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
             <CreditCard className="h-5 w-5 mr-2" />
             💳 {ct.payNow} - {chat.lastPrice}€
@@ -1160,7 +1160,7 @@ export default function ChatWindow({
 
       {/* Buyer can make new offer after rejection */}
       {chat.status === 'rifiutata' && !isSeller && (
-        <div className="p-3 bg-orange-50 border-t">
+        <div className="p-2 md:p-3 bg-orange-50 border-t">
           <Button onClick={handleMakeOffer} className="w-full bg-orange-500 hover:bg-orange-600">
             <DollarSign className="h-4 w-4 mr-2" />
             {ct.makeNewOffer}
@@ -1170,7 +1170,7 @@ export default function ChatWindow({
 
       {/* Review prompt after transaction completed */}
       {chat.status === 'completata' && !hasLeftReview && (
-        <div className="p-3 bg-yellow-50 border-t">
+        <div className="p-2 md:p-3 bg-yellow-50 border-t">
           <Button 
             onClick={() => setShowReviewModal(true)} 
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
@@ -1186,7 +1186,7 @@ export default function ChatWindow({
 
       {/* Already reviewed message */}
       {chat.status === 'completata' && hasLeftReview && (
-        <div className="p-3 bg-green-50 border-t text-center">
+        <div className="p-2 md:p-3 bg-green-50 border-t text-center">
           <p className="text-sm text-green-700 flex items-center justify-center gap-2">
             <Check className="h-4 w-4" />
             {ct.reviewLeft}
@@ -1195,7 +1195,7 @@ export default function ChatWindow({
       )}
 
       {/* Input */}
-      <div className="flex items-center gap-2 p-3 border-t bg-slate-50 sticky bottom-0 z-30">
+      <div className="flex items-center gap-2 p-2 md:p-3 border-t bg-slate-50 sticky bottom-0 z-30">
         <input
           type="file"
           ref={fileInputRef}
