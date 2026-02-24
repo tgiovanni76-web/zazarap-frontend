@@ -901,7 +901,7 @@ export default function ChatWindow({
               {chat.status}
             </Badge>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full md:w-auto">
             <Button 
               variant="ghost" 
               size="sm" 
