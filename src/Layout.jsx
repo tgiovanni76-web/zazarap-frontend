@@ -100,7 +100,7 @@ function LayoutInner({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-[var(--z-bg)] text-[var(--z-text)] overflow-x-hidden max-w-full">
+      <div className="h-auto min-h-0 bg-[var(--z-bg)] text-[var(--z-text)] overflow-x-hidden max-w-full">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 bg-white text-black px-3 py-2 rounded">Salta al contenuto</a>
         <GlobalErrorListener />
         <PerformanceMonitor />
@@ -180,9 +180,19 @@ function LayoutInner({ children, currentPageName }) {
             border-radius: 12px !important;
           }
 
-          /* Evita che contenitori taglino menu/overlay (scoped: non forzare sui div) */
-          body, main, header, form, section {
-            overflow: visible !important;
+          /* Scrolling globale: nessun blocco su body/html, niente overflow hidden */
+          html, body {
+            height: auto !important;
+            min-height: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overscroll-behavior: auto;
+          }
+          /* Mantieni overlay/menus visibili senza forzare il body/main */
+          header, form, section {
+            overflow: visible;
           }
 
           /* HEADER */
@@ -837,7 +847,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className={`container max-w-7xl mx-auto px-4 overflow-x-hidden pb-24 ${currentPageName === 'Home' ? 'overflow-y-auto scroll-smooth h-auto min-h-0' : ''}`}>
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto scroll-smooth h-auto min-h-0 pb-24">
         {children}
       </main>
 

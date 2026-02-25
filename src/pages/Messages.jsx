@@ -157,7 +157,7 @@ export default function Messages() {
   if (isMobileView) {
     if (selectedChat) {
       return (
-        <div className="h-[calc(100dvh-60px)] overflow-hidden -mb-24">
+        <div className="h-auto overflow-visible">
           <ChatWindow
             chat={selectedChat}
             messages={chatMessages}
@@ -194,7 +194,7 @@ export default function Messages() {
     }
 
     return (
-      <div className="h-[calc(100dvh-60px)] overflow-y-auto -mb-24">
+      <div className="h-auto overflow-visible">
         <ChatSidebar
           chats={myChats}
           selectedChat={selectedChat}
@@ -209,7 +209,7 @@ export default function Messages() {
 
   // Desktop: show both sidebar and chat
   return (
-    <div className="py-0 md:py-6 overflow-hidden h-[calc(100dvh-60px)] md:h-[calc(100dvh-72px)] -mb-24">
+    <div className="py-0 md:py-6 overflow-visible h-auto md:h-auto">
       <div className="grid grid-cols-3 gap-4 h-full pb-2 overflow-hidden">
         {/* Sidebar */}
         <div className="col-span-1 h-full overflow-y-auto overscroll-contain">
