@@ -66,6 +66,11 @@ export default function NewListing() {
     queryFn: () => base44.entities.Category.list('order'),
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me().catch(() => null),
+  });
+
   const createListingMutation = useMutation({
     mutationFn: async (data) => {
       let imageUrls = [];
@@ -195,7 +200,20 @@ export default function NewListing() {
   const isLoading = createListingMutation.isPending || isUploading;
 
   // Gate: require login to publish
-  if (!base44.auth.isAuthenticated) {}
+  if (!user) {
+    return (
+      <div className="max-w-xl mx-auto py-16 text-center">
+        <h1 className="text-2xl font-bold mb-2">Accedi per pubblicare</h1>
+        <p className="text-slate-600 mb-6">Per inserire un annuncio devi effettuare l'accesso.</p>
+        <button
+          className="bg-[var(--z-primary)] text-white px-5 py-2 rounded-lg"
+          onClick={() => base44.auth.redirectToLogin(createPageUrl('NewListing'))}
+        >
+          Accedi / Registrati
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="py-8 max-w-2xl mx-auto">
       <h2 className="text-3xl font-bold mb-6">{t('publish')}</h2>
