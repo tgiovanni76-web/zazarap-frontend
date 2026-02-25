@@ -98,7 +98,7 @@ function LayoutInner({ children, currentPageName }) {
 
   const unreadCount = notifications.length;
 
-  // Sticky header height -> CSS variable
+  // Sticky header height -> CSS variable (desktop/mobile + safe-area)
   useEffect(() => {
     const setVar = () => {
       const el = document.getElementById('app-header');
@@ -107,17 +107,26 @@ function LayoutInner({ children, currentPageName }) {
       document.documentElement.style.setProperty('--header-height', `${h}px`);
     };
     setVar();
-    // Observe header size and window resize
+
+    // Observe header size and viewport/orientation changes
     let ro;
     const el = document.getElementById('app-header');
     if (el && 'ResizeObserver' in window) {
-      ro = new ResizeObserver(setVar);
+      ro = new ResizeObserver(() => setVar());
       ro.observe(el);
     }
     const onResize = () => setVar();
+    const onOrientation = () => setVar();
     window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onOrientation);
+    // iOS visual viewport resize (keyboard/toolbar)
+    const vv = window.visualViewport;
+    if (vv) vv.addEventListener('resize', onResize);
+
     return () => {
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('orientationchange', onOrientation);
+      if (vv) vv.removeEventListener('resize', onResize);
       if (ro && el) ro.unobserve(el);
     };
   }, []);
@@ -783,7 +792,7 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[999] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none">
+      <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[2000] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
                     <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
@@ -876,7 +885,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-visible h-auto min-h-0 pb-24" style={{ paddingTop: 'var(--header-height, 64px)' }}>
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-visible h-auto min-h-0 pb-24" style={{ paddingTop: 'calc(var(--header-height, 64px) + env(safe-area-inset-top, 0px))' }}>
         {children}
       </main>
 
