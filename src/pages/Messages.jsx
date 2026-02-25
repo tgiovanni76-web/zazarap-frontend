@@ -32,7 +32,7 @@ export default function Messages() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => base44.auth.me().catch(() => null),
   });
 
   const [previousMessageCount, setPreviousMessageCount] = useState(0);
@@ -145,10 +145,26 @@ export default function Messages() {
   };
 
   // Loading state
-  if (chatsLoading || !user) {
+  if (chatsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d62828]"></div>
+      </div>
+    );
+  }
+
+  // Gate unauthenticated users: require login to use messages
+  if (!user) {
+    return (
+      <div className="max-w-3xl mx-auto py-12 text-center">
+        <h1 className="text-2xl font-bold mb-2">Accedi per usare i messaggi</h1>
+        <p className="text-slate-600 mb-6">Per inviare o leggere i messaggi devi effettuare l'accesso.</p>
+        <button
+          className="bg-[var(--z-primary)] text-white px-5 py-2 rounded-lg"
+          onClick={() => base44.auth.redirectToLogin(createPageUrl('Messages'))}
+        >
+          Accedi / Registrati
+        </button>
       </div>
     );
   }

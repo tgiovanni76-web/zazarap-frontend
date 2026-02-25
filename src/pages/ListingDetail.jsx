@@ -33,7 +33,7 @@ export default function ListingDetail() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => base44.auth.me().catch(() => null),
   });
 
   const { data: listing, isLoading } = useQuery({
@@ -137,7 +137,11 @@ export default function ListingDetail() {
   };
 
   const handleContactSeller = async () => {
-    if (!user || !listing) return;
+    if (!listing) return;
+    if (!user) {
+      base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
+      return;
+    }
     
     setIsContactingLoading(true);
     try {

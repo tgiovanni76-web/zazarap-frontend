@@ -44,7 +44,7 @@ export default function Marketplace() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => base44.auth.me().catch(() => null),
   });
 
   // Trigger expiry checks in background on page load
