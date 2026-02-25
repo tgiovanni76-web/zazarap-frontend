@@ -215,13 +215,12 @@ function LayoutInner({ children, currentPageName }) {
 
           /* Scrolling globale: nessun blocco su body/html, niente overflow hidden */
           html, body {
-            height: auto !important;
-            min-height: 0 !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            overflow: hidden !important; /* Disabilita scroll sul body */
+            -webkit-overflow-scrolling: auto;
             scroll-behavior: smooth;
-            overscroll-behavior: auto;
+            overscroll-behavior: none;
             scroll-snap-type: none !important;
           }
           main {
@@ -792,7 +791,7 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[2000] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
+      <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[999] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none">
                     <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
@@ -885,32 +884,92 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-visible h-auto min-h-0 pb-24" style={{ paddingTop: 'calc(var(--header-height, 64px) + env(safe-area-inset-top, 0px))' }}>
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto h-auto min-h-0 pb-24" style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
         {children}
+
+        {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
+          'ManageUsers','ModerateListings','AdminModeration','AdminDisputes','AdminTickets','AdminReports','AdminPayments','AdminSettings','AdminSEO','SystemLogs','SystemCheckup','PreLaunchChecklist','AccessibilityAudit','ManageCategories','RejectedListings','AdminAnalytics','MarketplaceDashboard'
+        ].includes(currentPageName)) && (
+          <div className="container max-w-7xl mx-auto px-4 mb-4 -mt-4">
+            <Link
+              to={createPageUrl('AdminDashboard')}
+              className="inline-flex items-center gap-2 bg-white text-[var(--z-primary)] border border-[var(--z-primary)] rounded-full px-3 py-1.5 shadow-sm hover:bg-[var(--z-primary)] hover:text-white"
+              aria-label="Zurück zum Admin-Panel"
+              title="Zurück zum Admin-Panel"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Admin-Panel</span>
+            </Link>
+          </div>
+        )}
+
+        <Suspense fallback={null}>
+          <CookieBanner />
+        </Suspense>
+
+        {/* Footer inside scrollable content */}
+        <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-3 md:py-4 lg:py-5">
+                    <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-3 md:gap-5">
+                      {/* Logo + Newsletter */}
+                      <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+                        {/* Zazarap.de */}
+                        <div>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Zazarap.de</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
+                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">Über uns</Link></li>
+                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">Kontakt</Link></li>
+                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">Sicherheit</Link></li>
+                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">FAQ</Link></li>
+                          </ul>
+                        </div>
+
+                        {/* Rechtliches */}
+                        <div>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Rechtliches</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
+                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">Impressum</Link></li>
+                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">Datenschutz</Link></li>
+                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">AGB</Link></li>
+                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">Nutzungsbedingungen</Link></li>
+                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">Cookies</Link></li>
+                          </ul>
+                        </div>
+
+                        {/* Service */}
+                        <div>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Service</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
+                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">Support</Link></li>
+                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">Hilfe</Link></li>
+                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">Plattformregeln</Link></li>
+                          </ul>
+                        </div>
+
+                        {/* Folge uns */}
+                        <div>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Folge uns</h3>
+                          <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
+                            <li className="text-slate-500">Twitter (bald)</li>
+                            <li className="text-slate-500">Instagram (bald)</li>
+                            <li className="text-slate-500">LinkedIn (bald)</li>
+                          </ul>
+                        </div>
+                      </div>
+                      </div>
+
+                      <hr className="border-0 border-t border-[#243246] my-2 md:my-3.5 mx-auto w-[92%]" />
+
+                      <div className="text-center text-[11px] md:text-xs pb-1">
+                      <p className="text-slate-500">© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
+                      <p className="mt-0.5">
+                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-300">
+                          {t('euDispute')}
+                        </a>
+                      </p>
+                      </div>
+                  </footer>
       </main>
 
-      {/* Admin back button (bottom, aligned with content) */}
-      {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
-        'ManageUsers','ModerateListings','AdminModeration','AdminDisputes','AdminTickets','AdminReports','AdminPayments','AdminSettings','AdminSEO','SystemLogs','SystemCheckup','PreLaunchChecklist','AccessibilityAudit','ManageCategories','RejectedListings','AdminAnalytics','MarketplaceDashboard'
-      ].includes(currentPageName)) && (
-        <div className="container max-w-7xl mx-auto px-4 mb-4 -mt-4">
-          <Link
-            to={createPageUrl('AdminDashboard')}
-            className="inline-flex items-center gap-2 bg-white text-[var(--z-primary)] border border-[var(--z-primary)] rounded-full px-3 py-1.5 shadow-sm hover:bg-[var(--z-primary)] hover:text-white"
-            aria-label="Zurück zum Admin-Panel"
-            title="Zurück zum Admin-Panel"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Admin-Panel</span>
-          </Link>
-        </div>
-      )}
-
-      <Suspense fallback={null}>
-        <CookieBanner />
-      </Suspense>
-      
-      <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-3 md:py-4 lg:py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-3 md:gap-5">
                       {/* Logo + Newsletter */}
                       <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
