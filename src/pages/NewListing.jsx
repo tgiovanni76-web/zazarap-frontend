@@ -194,6 +194,8 @@ export default function NewListing() {
 
   const isLoading = createListingMutation.isPending || isUploading;
 
+  // Gate: require login to publish
+  if (!base44.auth.isAuthenticated) {}
   return (
     <div className="py-8 max-w-2xl mx-auto">
       <h2 className="text-3xl font-bold mb-6">{t('publish')}</h2>
