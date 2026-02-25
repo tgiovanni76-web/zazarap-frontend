@@ -189,6 +189,11 @@ function LayoutInner({ children, currentPageName }) {
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             overscroll-behavior: auto;
+            scroll-snap-type: none !important;
+          }
+          main {
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: none !important;
           }
           /* Mantieni overlay/menus visibili senza forzare il body/main */
           header, form, section {
