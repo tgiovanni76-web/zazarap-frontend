@@ -98,6 +98,30 @@ function LayoutInner({ children, currentPageName }) {
 
   const unreadCount = notifications.length;
 
+  // Sticky header height -> CSS variable
+  useEffect(() => {
+    const setVar = () => {
+      const el = document.getElementById('app-header');
+      if (!el) return;
+      const h = el.offsetHeight || 64;
+      document.documentElement.style.setProperty('--header-height', `${h}px`);
+    };
+    setVar();
+    // Observe header size and window resize
+    let ro;
+    const el = document.getElementById('app-header');
+    if (el && 'ResizeObserver' in window) {
+      ro = new ResizeObserver(setVar);
+      ro.observe(el);
+    }
+    const onResize = () => setVar();
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (ro && el) ro.unobserve(el);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <div className="h-auto min-h-0 bg-[var(--z-bg)] text-[var(--z-text)] overflow-x-hidden max-w-full">
@@ -759,7 +783,7 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
-      <header className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[120] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none">
+      <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[999] min-h-[60px] md:min-h-[72px] max-w-full overflow-x-hidden overflow-y-visible shadow-none">
                     <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
                                       <div className="flex items-center gap-4">
@@ -852,7 +876,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-visible h-auto min-h-0 pb-24">
+      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-visible h-auto min-h-0 pb-24" style={{ paddingTop: 'var(--header-height, 64px)' }}>
         {children}
       </main>
 
