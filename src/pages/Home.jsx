@@ -31,7 +31,7 @@ export default function Home() {
   const mainCategories = categories.filter(c => !c.parentId && c.active).slice(0, 8);
 
   return (
-    <div className="min-h-screen">
+    <div className="h-auto min-h-0 overflow-y-auto scroll-smooth">
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[var(--z-primary)] via-[var(--z-primary-light)] to-[var(--z-primary-dark)] text-white py-16 px-4 rounded-2xl mb-8">
         <div className="max-w-4xl mx-auto text-center">

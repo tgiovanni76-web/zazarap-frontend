@@ -156,6 +156,7 @@ function LayoutInner({ children, currentPageName }) {
           body { background: var(--z-bg); color: var(--z-text); }
           a { color: var(--z-link); }
           a:hover { color: var(--z-link-hover); }
+          html { scroll-behavior: smooth; }
 
 
 
@@ -836,7 +837,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden pb-24">
+      <main id="main-content" role="main" tabIndex={-1} className={`container max-w-7xl mx-auto px-4 overflow-x-hidden pb-24 ${currentPageName === 'Home' ? 'overflow-y-auto scroll-smooth h-auto min-h-0' : ''}`}>
         {children}
       </main>
 
