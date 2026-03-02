@@ -165,7 +165,7 @@ export default function OTPLogin() {
                 </Button>
 
                 <div className="mt-6 pt-6 border-t">
-                  <p className="text-xs text-center text-slate-400">
+                  <p className="text-xs text-center text-slate-600">
                     Mit der Anmeldung stimmst du unseren{' '}
                     <a href={createPageUrl('AGB')} className="text-black underline-offset-2 hover:underline">AGB</a>
                     {' '}und{' '}
