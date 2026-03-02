@@ -102,16 +102,16 @@ export default function OTPLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-200">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[var(--z-primary-dark)] via-[#0f1f46] to-[#07122a] text-slate-100">
       <div className="w-full max-w-md">
         
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#d62828] mb-2">Zazarap</h1>
+          <h1 className="text-4xl font-extrabold text-[var(--z-accent)] mb-2 drop-shadow">Zazarap</h1>
           <p className="text-slate-400">Sicher einloggen mit Code</p>
         </div>
 
-        <Card className="shadow-2xl bg-slate-900/80 border border-slate-800 text-slate-100 backdrop-blur">
-          <CardHeader className="bg-gradient-to-r from-[#d62828] to-[#c91f23] text-white">
+        <Card className="shadow-2xl bg-[#0b132b]/70 border border-[var(--z-primary)]/30 text-slate-100 backdrop-blur">
+          <CardHeader className="bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-light)] text-white">
             <CardTitle className="text-2xl">
               {step === 1 && 'Anmeldung'}
               {step === 2 && 'Code eingeben'}
@@ -149,7 +149,7 @@ export default function OTPLogin() {
                 <Button
                   onClick={handleSendCode}
                   disabled={loading}
-                  className="w-full bg-[#d62828] hover:bg-[#c91f23] text-white h-14 text-lg font-bold"
+                  className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-light)] text-white h-14 text-lg font-bold"
                 >
                   {loading ? (
                     <>
@@ -167,9 +167,9 @@ export default function OTPLogin() {
                 <div className="mt-6 pt-6 border-t">
                   <p className="text-xs text-center text-slate-400">
                     Mit der Anmeldung stimmst du unseren{' '}
-                    <a href={createPageUrl('AGB')} className="text-[#d62828] hover:underline">AGB</a>
+                    <a href={createPageUrl('AGB')} className="text-[var(--z-link)] hover:text-[var(--z-link-hover)] underline-offset-2 hover:underline">AGB</a>
                     {' '}und{' '}
-                    <a href={createPageUrl('PrivacyPolicy')} className="text-[#d62828] hover:underline">Datenschutzbestimmungen</a>
+                    <a href={createPageUrl('PrivacyPolicy')} className="text-[var(--z-link)] hover:text-[var(--z-link-hover)] underline-offset-2 hover:underline">Datenschutzbestimmungen</a>
                     {' '}zu.
                   </p>
                 </div>
@@ -179,9 +179,9 @@ export default function OTPLogin() {
             {/* Step 2: Enter Code */}
             {step === 2 && (
               <div className="space-y-5">
-                <div className="bg-emerald-900/40 border border-emerald-700 rounded-lg p-4">
-                  <p className="text-sm text-emerald-200">
-                    📬 Code gesendet an: <strong>{contact}</strong>
+                <div className="bg-[var(--z-primary)]/10 border border-[var(--z-primary)]/40 rounded-lg p-4">
+                  <p className="text-sm text-slate-200">
+                    📬 Code gesendet an: <strong className="text-[var(--z-accent)]">{contact}</strong>
                   </p>
                 </div>
 
@@ -208,7 +208,7 @@ export default function OTPLogin() {
                 <Button
                   onClick={handleVerifyCode}
                   disabled={code.length !== 6 || loading}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white h-14 text-lg font-bold"
+                  className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-light)] text-white h-14 text-lg font-bold"
                 >
                   {loading ? (
                     <>
@@ -238,7 +238,7 @@ export default function OTPLogin() {
                     variant="ghost"
                     onClick={handleResendCode}
                     disabled={loading}
-                    className="text-sm text-[#d62828] hover:text-[#c91f23]"
+                    className="text-sm text-[var(--z-primary)] hover:text-[var(--z-primary-light)]"
                   >
                     Code erneut senden
                   </Button>
@@ -249,9 +249,9 @@ export default function OTPLogin() {
           </CardContent>
         </Card>
 
-        <div className="mt-6 bg-blue-900/40 border border-blue-700 rounded-lg p-4">
-          <p className="text-sm text-blue-200">
-            <strong>ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
+        <div className="mt-6 bg-[var(--z-primary)]/10 border border-[var(--z-primary)]/40 rounded-lg p-4">
+          <p className="text-sm text-slate-200">
+            <strong className="text-[var(--z-primary-light)]">ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
           </p>
         </div>
 
