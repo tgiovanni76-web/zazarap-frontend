@@ -102,15 +102,15 @@ export default function OTPLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-200">
       <div className="w-full max-w-md">
         
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-[#d62828] mb-2">Zazarap</h1>
-          <p className="text-slate-600">Sicher einloggen mit Code</p>
+          <p className="text-slate-400">Sicher einloggen mit Code</p>
         </div>
 
-        <Card className="shadow-2xl">
+        <Card className="shadow-2xl bg-slate-900/80 border border-slate-800 text-slate-100 backdrop-blur">
           <CardHeader className="bg-gradient-to-r from-[#d62828] to-[#c91f23] text-white">
             <CardTitle className="text-2xl">
               {step === 1 && 'Anmeldung'}
@@ -128,7 +128,7 @@ export default function OTPLogin() {
             {step === 1 && (
               <div className="space-y-5">
                 <div>
-                  <Label className="text-base font-semibold mb-3 block">
+                  <Label className="text-base font-semibold mb-3 block text-slate-200">
                     Deine E-Mail-Adresse
                   </Label>
                   <Input
@@ -137,11 +137,11 @@ export default function OTPLogin() {
                     onChange={(e) => setContact(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendCode()}
                     placeholder="beispiel@email.de"
-                    className="h-14 text-lg"
+                    className="h-14 text-lg bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400"
                     autoFocus
                     style={{ fontSize: '16px' }}
                   />
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-xs text-slate-400 mt-2">
                     Wir senden einen Einmalcode an diese E-Mail-Adresse
                   </p>
                 </div>
@@ -165,7 +165,7 @@ export default function OTPLogin() {
                 </Button>
 
                 <div className="mt-6 pt-6 border-t">
-                  <p className="text-xs text-center text-slate-500">
+                  <p className="text-xs text-center text-slate-400">
                     Mit der Anmeldung stimmst du unseren{' '}
                     <a href={createPageUrl('AGB')} className="text-[#d62828] hover:underline">AGB</a>
                     {' '}und{' '}
@@ -179,14 +179,14 @@ export default function OTPLogin() {
             {/* Step 2: Enter Code */}
             {step === 2 && (
               <div className="space-y-5">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-sm text-green-800">
+                <div className="bg-emerald-900/40 border border-emerald-700 rounded-lg p-4">
+                  <p className="text-sm text-emerald-200">
                     📬 Code gesendet an: <strong>{contact}</strong>
                   </p>
                 </div>
 
                 <div>
-                  <Label className="text-base font-semibold mb-3 block">
+                  <Label className="text-base font-semibold mb-3 block text-slate-200">
                     Gib den 6-stelligen Code ein
                   </Label>
                   <Input
@@ -195,12 +195,12 @@ export default function OTPLogin() {
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     onKeyPress={(e) => e.key === 'Enter' && code.length === 6 && handleVerifyCode()}
                     placeholder="123456"
-                    className="h-16 text-center text-3xl tracking-widest font-bold"
+                    className="h-16 text-center text-3xl tracking-widest font-bold bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500"
                     maxLength={6}
                     autoFocus
                     style={{ fontSize: '28px', letterSpacing: '0.5em' }}
                   />
-                  <p className="text-xs text-slate-500 mt-2 text-center">
+                  <p className="text-xs text-slate-400 mt-2 text-center">
                     Der Code ist 15 Minuten gültig
                   </p>
                 </div>
@@ -249,8 +249,8 @@ export default function OTPLogin() {
           </CardContent>
         </Card>
 
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-800">
+        <div className="mt-6 bg-blue-900/40 border border-blue-700 rounded-lg p-4">
+          <p className="text-sm text-blue-200">
             <strong>ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
           </p>
         </div>
