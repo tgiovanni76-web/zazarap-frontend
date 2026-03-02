@@ -861,6 +861,7 @@ function LayoutInner({ children, currentPageName }) {
                                 <Link to={createPageUrl('UserSettings')}><DropdownMenuItem>Einstellungen</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('MyListings')}><DropdownMenuItem>Meine Anzeigen</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('Messages')}><DropdownMenuItem>Nachrichten</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('WarumPremium')}><DropdownMenuItem>Premium</DropdownMenuItem></Link>
       {user?.role === 'admin' && (
         <Link to={createPageUrl('AdminDashboard')}><DropdownMenuItem>Admin-Panel</DropdownMenuItem></Link>
       )}
@@ -871,6 +872,7 @@ function LayoutInner({ children, currentPageName }) {
                             ) : (
                               <>
                                 <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Anmelden</DropdownMenuItem>
+                                <Link to={createPageUrl('WarumPremium')}><DropdownMenuItem>Premium</DropdownMenuItem></Link>
                                 <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Registrieren</DropdownMenuItem>
                               </>
                             )}
