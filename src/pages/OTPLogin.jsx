@@ -102,16 +102,16 @@ export default function OTPLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[var(--z-primary-dark)] via-[#0f1f46] to-[#07122a] text-slate-100">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-white text-black">
       <div className="w-full max-w-md">
         
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold text-[var(--z-accent)] mb-2 drop-shadow">Zazarap</h1>
-          <p className="text-slate-400">Sicher einloggen mit Code</p>
+          <h1 className="text-4xl font-extrabold text-black mb-2">Zazarap</h1>
+          <p className="text-slate-600">Sicher einloggen mit Code</p>
         </div>
 
-        <Card className="shadow-2xl bg-[#0b132b]/70 border border-[var(--z-primary)]/30 text-slate-100 backdrop-blur">
-          <CardHeader className="bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-light)] text-white">
+        <Card className="shadow-2xl bg-white border border-slate-200 text-slate-900">
+          <CardHeader className="bg-white text-black border-b border-slate-200">
             <CardTitle className="text-2xl">
               {step === 1 && 'Anmeldung'}
               {step === 2 && 'Code eingeben'}
@@ -137,11 +137,11 @@ export default function OTPLogin() {
                     onChange={(e) => setContact(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendCode()}
                     placeholder="beispiel@email.de"
-                    className="h-14 text-lg bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400"
+                    className="h-14 text-lg bg-white border-slate-300 text-black placeholder-slate-500"
                     autoFocus
                     style={{ fontSize: '16px' }}
                   />
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-slate-600 mt-2">
                     Wir senden einen Einmalcode an diese E-Mail-Adresse
                   </p>
                 </div>
@@ -167,9 +167,9 @@ export default function OTPLogin() {
                 <div className="mt-6 pt-6 border-t">
                   <p className="text-xs text-center text-slate-400">
                     Mit der Anmeldung stimmst du unseren{' '}
-                    <a href={createPageUrl('AGB')} className="text-[var(--z-link)] hover:text-[var(--z-link-hover)] underline-offset-2 hover:underline">AGB</a>
+                    <a href={createPageUrl('AGB')} className="text-black underline-offset-2 hover:underline">AGB</a>
                     {' '}und{' '}
-                    <a href={createPageUrl('PrivacyPolicy')} className="text-[var(--z-link)] hover:text-[var(--z-link-hover)] underline-offset-2 hover:underline">Datenschutzbestimmungen</a>
+                    <a href={createPageUrl('PrivacyPolicy')} className="text-black underline-offset-2 hover:underline">Datenschutzbestimmungen</a>
                     {' '}zu.
                   </p>
                 </div>
@@ -195,12 +195,12 @@ export default function OTPLogin() {
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     onKeyPress={(e) => e.key === 'Enter' && code.length === 6 && handleVerifyCode()}
                     placeholder="123456"
-                    className="h-16 text-center text-3xl tracking-widest font-bold bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500"
+                    className="h-16 text-center text-3xl tracking-widest font-bold bg-white border-slate-300 text-black placeholder-slate-400"
                     maxLength={6}
                     autoFocus
                     style={{ fontSize: '28px', letterSpacing: '0.5em' }}
                   />
-                  <p className="text-xs text-slate-400 mt-2 text-center">
+                  <p className="text-xs text-slate-600 mt-2 text-center">
                     Der Code ist 15 Minuten gültig
                   </p>
                 </div>
@@ -238,7 +238,7 @@ export default function OTPLogin() {
                     variant="ghost"
                     onClick={handleResendCode}
                     disabled={loading}
-                    className="text-sm text-[var(--z-primary)] hover:text-[var(--z-primary-light)]"
+                    className="text-sm text-black hover:text-neutral-800"
                   >
                     Code erneut senden
                   </Button>
