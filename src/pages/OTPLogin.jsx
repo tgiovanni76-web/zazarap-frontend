@@ -116,7 +116,7 @@ export default function OTPLogin() {
               {step === 1 && 'Anmeldung'}
               {step === 2 && 'Code eingeben'}
             </CardTitle>
-            <CardDescription className="text-white/90">
+            <CardDescription className="text-slate-600">
               {step === 1 && 'Wir senden dir einen Einmalcode per E-Mail'}
               {step === 2 && 'Gib den 6-stelligen Code ein'}
             </CardDescription>
@@ -128,7 +128,7 @@ export default function OTPLogin() {
             {step === 1 && (
               <div className="space-y-5">
                 <div>
-                  <Label className="text-base font-semibold mb-3 block text-slate-200">
+                  <Label className="text-base font-semibold mb-3 block text-slate-800">
                     Deine E-Mail-Adresse
                   </Label>
                   <Input
@@ -179,14 +179,14 @@ export default function OTPLogin() {
             {/* Step 2: Enter Code */}
             {step === 2 && (
               <div className="space-y-5">
-                <div className="bg-[var(--z-primary)]/10 border border-[var(--z-primary)]/40 rounded-lg p-4">
-                  <p className="text-sm text-slate-200">
-                    📬 Code gesendet an: <strong className="text-[var(--z-accent)]">{contact}</strong>
+                <div className="bg-gray-100 border border-gray-300 rounded-lg p-4">
+                  <p className="text-sm text-slate-700">
+                    📬 Code gesendet an: <strong className="text-black">{contact}</strong>
                   </p>
                 </div>
 
                 <div>
-                  <Label className="text-base font-semibold mb-3 block text-slate-200">
+                  <Label className="text-base font-semibold mb-3 block text-slate-800">
                     Gib den 6-stelligen Code ein
                   </Label>
                   <Input
@@ -249,9 +249,9 @@ export default function OTPLogin() {
           </CardContent>
         </Card>
 
-        <div className="mt-6 bg-[var(--z-primary)]/10 border border-[var(--z-primary)]/40 rounded-lg p-4">
-          <p className="text-sm text-slate-200">
-            <strong className="text-[var(--z-primary-light)]">ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
+        <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
+          <p className="text-sm text-slate-700">
+            <strong className="text-black">ℹ️ Neu bei Zazarap.de?</strong> Kein Problem! Nach der Code-Verifizierung wird automatisch ein Konto für dich erstellt und du erhältst eine E-Mail mit dem Login-Link.
           </p>
         </div>
 
