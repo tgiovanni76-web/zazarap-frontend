@@ -132,6 +132,11 @@ function LayoutInner({ children, currentPageName }) {
     };
   }, []);
 
+  const TL = (k, fb) => {
+    const v = t(k);
+    return v === k ? (footerT(k.replace('footer.', ''), currentLanguage) || fb) : v;
+  };
+
   return (
     <ErrorBoundary>
       <div className="h-auto min-h-0 bg-[var(--z-bg)] text-[var(--z-text)] overflow-visible max-w-full">
