@@ -12,6 +12,7 @@ import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOu
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
+import { footerT } from '@/components/i18n/footer';
 
 
 
@@ -47,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
 }
 
 function LayoutInner({ children, currentPageName }) {
-        const { t } = useLanguage();
+        const { t, currentLanguage } = useLanguage();
         const navigate = useNavigate();
 
         // Initialize global audit logger once
@@ -916,40 +917,40 @@ function LayoutInner({ children, currentPageName }) {
                       <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
                         {/* Zazarap.de */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.company') !== 'footer.company' ? t('footer.company') : 'Zazarap.de'}</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{TL('footer.company','Zazarap.de')}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">{t('footer.about') !== 'footer.about' ? t('footer.about') : 'Über uns'}</Link></li>
-                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">{t('footer.contact') !== 'footer.contact' ? t('footer.contact') : 'Kontakt'}</Link></li>
-                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">{t('footer.security') !== 'footer.security' ? t('footer.security') : 'Sicherheit'}</Link></li>
-                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">{t('footer.faq') !== 'footer.faq' ? t('footer.faq') : 'FAQ'}</Link></li>
+                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">{TL('footer.about','Über uns')}</Link></li>
+                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">{TL('footer.contact','Kontakt')}</Link></li>
+                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">{TL('footer.security','Sicherheit')}</Link></li>
+                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">{TL('footer.faq','FAQ')}</Link></li>
                           </ul>
                         </div>
 
                         {/* Rechtliches */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.legal') !== 'footer.legal' ? t('footer.legal') : 'Rechtliches'}</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{TL('footer.legal','Rechtliches')}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">{t('footer.imprint') !== 'footer.imprint' ? t('footer.imprint') : 'Impressum'}</Link></li>
-                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">{t('footer.privacy') !== 'footer.privacy' ? t('footer.privacy') : 'Datenschutz'}</Link></li>
-                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">{t('footer.terms') !== 'footer.terms' ? t('footer.terms') : 'AGB'}</Link></li>
-                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">{t('footer.tos') !== 'footer.tos' ? t('footer.tos') : 'Nutzungsbedingungen'}</Link></li>
-                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">{t('footer.cookies') !== 'footer.cookies' ? t('footer.cookies') : 'Cookies'}</Link></li>
+                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">{TL('footer.imprint','Impressum')}</Link></li>
+                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">{TL('footer.privacy','Datenschutz')}</Link></li>
+                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">{TL('footer.terms','AGB')}</Link></li>
+                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">{TL('footer.tos','Nutzungsbedingungen')}</Link></li>
+                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">{TL('footer.cookies','Cookies')}</Link></li>
                           </ul>
                         </div>
 
                         {/* Service */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.service') !== 'footer.service' ? t('footer.service') : 'Service'}</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{TL('footer.service','Service')}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">{t('footer.support') !== 'footer.support' ? t('footer.support') : 'Support'}</Link></li>
-                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">{t('footer.help') !== 'footer.help' ? t('footer.help') : 'Hilfe'}</Link></li>
-                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">{t('footer.platformRules') !== 'footer.platformRules' ? t('footer.platformRules') : 'Plattformregeln'}</Link></li>
+                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">{TL('footer.support','Support')}</Link></li>
+                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">{TL('footer.help','Hilfe')}</Link></li>
+                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">{TL('footer.platformRules','Plattformregeln')}</Link></li>
                           </ul>
                         </div>
 
                         {/* Folge uns */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.followUs') !== 'footer.followUs' ? t('footer.followUs') : 'Folge uns'}</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{TL('footer.followUs','Folge uns')}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
                             <li className="text-slate-500">{t('footer.twitterSoon') || 'Twitter (bald)'}</li>
                             <li className="text-slate-500">{t('footer.instagramSoon') || 'Instagram (bald)'}</li>
