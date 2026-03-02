@@ -85,7 +85,7 @@ ${data.message}
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
-          <Mail className="w-12 h-12 text-red-600 mx-auto mb-4" />
+          <Mail className="w-12 h-12 text-[var(--z-primary)] mx-auto mb-4" />
           <h1 className="text-3xl font-bold mb-2">{t('contactUs')}</h1>
           <p className="text-slate-600">
             {t('contact.desc') || 'Have questions or suggestions? Send us a message!'}
@@ -150,7 +150,7 @@ ${data.message}
 
               <Button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-700"
+                className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)] border-2 border-[var(--z-accent)]"
                 disabled={submitMutation.isPending}
               >
                 {submitMutation.isPending ? (
@@ -167,7 +167,7 @@ ${data.message}
         </Card>
 
         <div className="mt-8 text-center text-sm text-slate-600">
-          <p>{t('contact.directEmail') || 'Or write to us directly at'}: <a href="mailto:support@zazarap.com" className="text-red-600 hover:underline">support@zazarap.com</a></p>
+          <p>{t('contact.directEmail') || 'Or write to us directly at'}: <a href="mailto:support@zazarap.com" className="text-[var(--z-primary)] hover:text-[var(--z-primary-dark)] hover:underline">support@zazarap.com</a></p>
         </div>
       </div>
     </div>
