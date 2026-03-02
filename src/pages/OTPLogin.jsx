@@ -106,7 +106,7 @@ export default function OTPLogin() {
       <div className="w-full max-w-md">
         
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold text-black mb-2">Zazarap</h1>
+          <h1 className="text-4xl font-extrabold text-black mb-2">Zazarap.de</h1>
           <p className="text-slate-600">Sicher einloggen mit Code</p>
         </div>
 
