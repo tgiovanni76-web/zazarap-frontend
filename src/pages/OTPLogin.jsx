@@ -149,7 +149,7 @@ export default function OTPLogin() {
                 <Button
                   onClick={handleSendCode}
                   disabled={loading}
-                  className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-light)] text-white h-14 text-lg font-bold"
+                  className="w-full bg-black hover:bg-neutral-800 text-white h-14 text-lg font-bold"
                 >
                   {loading ? (
                     <>
@@ -208,7 +208,7 @@ export default function OTPLogin() {
                 <Button
                   onClick={handleVerifyCode}
                   disabled={code.length !== 6 || loading}
-                  className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-light)] text-white h-14 text-lg font-bold"
+                  className="w-full bg-black hover:bg-neutral-800 text-white h-14 text-lg font-bold"
                 >
                   {loading ? (
                     <>
