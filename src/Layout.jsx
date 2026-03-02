@@ -916,44 +916,44 @@ function LayoutInner({ children, currentPageName }) {
                       <div className="max-w-[1100px] mx-auto px-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
                         {/* Zazarap.de */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Zazarap.de</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.company') || 'Zazarap.de'}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">Über uns</Link></li>
-                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">Kontakt</Link></li>
-                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">Sicherheit</Link></li>
-                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">FAQ</Link></li>
+                            <li><Link to={createPageUrl('UeberUns')} className="text-slate-500 hover:text-slate-300">{t('footer.about') || 'Über uns'}</Link></li>
+                            <li><Link to={createPageUrl('Contact')} className="text-slate-500 hover:text-slate-300">{t('footer.contact') || 'Kontakt'}</Link></li>
+                            <li><Link to={createPageUrl('SicherheitsHinweise')} className="text-slate-500 hover:text-slate-300">{t('footer.security') || 'Sicherheit'}</Link></li>
+                            <li><Link to={createPageUrl('FAQ')} className="text-slate-500 hover:text-slate-300">{t('footer.faq') || 'FAQ'}</Link></li>
                           </ul>
                         </div>
 
                         {/* Rechtliches */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Rechtliches</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.legal') || 'Rechtliches'}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">Impressum</Link></li>
-                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">Datenschutz</Link></li>
-                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">AGB</Link></li>
-                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">Nutzungsbedingungen</Link></li>
-                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">Cookies</Link></li>
+                            <li><Link to={createPageUrl('Impressum')} className="text-slate-500 hover:text-slate-300">{t('footer.imprint') || 'Impressum'}</Link></li>
+                            <li><Link to={createPageUrl('Datenschutz')} className="text-slate-500 hover:text-slate-300">{t('footer.privacy') || 'Datenschutz'}</Link></li>
+                            <li><Link to={createPageUrl('AGB')} className="text-slate-500 hover:text-slate-300">{t('footer.terms') || 'AGB'}</Link></li>
+                            <li><Link to={createPageUrl('Nutzungsbedingungen')} className="text-slate-500 hover:text-slate-300">{t('footer.tos') || 'Nutzungsbedingungen'}</Link></li>
+                            <li><Link to={createPageUrl('CookieRichtlinie')} className="text-slate-500 hover:text-slate-300">{t('footer.cookies') || 'Cookies'}</Link></li>
                           </ul>
                         </div>
 
                         {/* Service */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Service</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.service') || 'Service'}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">Support</Link></li>
-                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">Hilfe</Link></li>
-                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">Plattformregeln</Link></li>
+                            <li><Link to={createPageUrl('Support')} className="text-slate-500 hover:text-slate-300">{t('footer.support') || 'Support'}</Link></li>
+                            <li><Link to={createPageUrl('Hilfe')} className="text-slate-500 hover:text-slate-300">{t('footer.help') || 'Hilfe'}</Link></li>
+                            <li><Link to={createPageUrl('Plattformregeln')} className="text-slate-500 hover:text-slate-300">{t('footer.platformRules') || 'Plattformregeln'}</Link></li>
                           </ul>
                         </div>
 
                         {/* Folge uns */}
                         <div>
-                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">Folge uns</h3>
+                          <h3 className="font-medium text-[11px] md:text-xs mb-1 text-slate-300">{t('footer.followUs') || 'Folge uns'}</h3>
                           <ul className="space-y-0.5 md:space-y-1 text-[11px] md:text-xs leading-tight">
-                            <li className="text-slate-500">Twitter (bald)</li>
-                            <li className="text-slate-500">Instagram (bald)</li>
-                            <li className="text-slate-500">LinkedIn (bald)</li>
+                            <li className="text-slate-500">{t('footer.twitterSoon') || 'Twitter (bald)'}</li>
+                            <li className="text-slate-500">{t('footer.instagramSoon') || 'Instagram (bald)'}</li>
+                            <li className="text-slate-500">{t('footer.linkedinSoon') || 'LinkedIn (bald)'}</li>
                           </ul>
                         </div>
                       </div>
