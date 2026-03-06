@@ -56,7 +56,7 @@ export default function UserSettings() {
   const handlePhotoFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const validTypes = ['image/jpeg', 'image/png'];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!validTypes.includes(file.type)) {
       toast.error('Formato non valido. Usa JPG o PNG.');
       e.target.value = '';
