@@ -897,7 +897,7 @@ function LayoutInner({ children, currentPageName }) {
                                   <img src={user.profilePhoto || user.profileImageUrl} alt="Foto profilo" className="h-full w-full object-cover" />
                                 </button>
                               ) : (
-                                <button onClick={onAddPhotoClick} className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title={addPhotoLabel} aria-label={addPhotoLabel}>
+                                <button onClick={onAddPhotoClick} onPointerDown={(e)=>{e.preventDefault(); e.stopPropagation();}} className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title={addPhotoLabel} aria-label={addPhotoLabel}>
                                   {addPhotoLabel}
                                 </button>
                               )
