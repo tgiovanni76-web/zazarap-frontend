@@ -211,6 +211,28 @@ export default function UserSettings() {
               <CardDescription>{t('settings.profile.desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="text-base font-semibold">Foto profilo</h3>
+                <section id="photo" className="flex flex-col items-center gap-3">
+                  {user?.profileImageUrl ? (
+                    <img src={user.profileImageUrl} alt="Foto profilo" className="h-28 w-28 rounded-full object-cover border border-slate-200 shadow-sm" />
+                  ) : (
+                    <div className="h-28 w-28 rounded-full bg-slate-200 border border-slate-300" />
+                  )}
+                  <div className="flex items-center gap-2">
+                    <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" className="hidden" onChange={handlePhotoFileChange} />
+                    <Button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploadingPhoto}>
+                      {uploadingPhoto ? 'Carico…' : user?.profileImageUrl ? 'Cambia foto' : 'Aggiungi foto'}
+                    </Button>
+                    {user?.profileImageUrl && (
+                      <Button type="button" variant="outline" onClick={handlePhotoRemove} disabled={uploadingPhoto}>
+                        Rimuovi
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500">Formati: JPG/PNG • Max 5 MB</p>
+                </section>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">{t('settings.profile.firstName')}</Label>
