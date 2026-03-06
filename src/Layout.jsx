@@ -856,9 +856,21 @@ function LayoutInner({ children, currentPageName }) {
                         {/* Menu profilo 👤 */}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Account" aria-label="Account">
-                              <User className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
-                            </button>
+                            {user ? (
+                              user.profileImageUrl ? (
+                                <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 rounded-full overflow-hidden focus:ring-2 focus:ring-white border-2 border-white/20" title="Account" aria-label="Account">
+                                  <img src={user.profileImageUrl} alt="Foto profilo" className="h-full w-full object-cover" />
+                                </button>
+                              ) : (
+                                <button className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title="Aggiungi foto" aria-label="Aggiungi foto">
+                                  Aggiungi foto
+                                </button>
+                              )
+                            ) : (
+                              <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title="Account" aria-label="Account">
+                                <User className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
+                              </button>
+                            )}
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="min-w-[220px]">
                             {user ? (

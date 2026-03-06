@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -49,7 +49,52 @@ export default function UserSettings() {
     priceDropNotifications: true,
   });
 
-  // Initialize form data
+  // Foto profilo: stato e handler upload/rimozione
+  const fileInputRef = useRef(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  const handlePhotoFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const validTypes = ['image/jpeg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+      toast.error('Formato non valido. Usa JPG o PNG.');
+      e.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File troppo grande (max 5 MB).');
+      e.target.value = '';
+      return;
+    }
+    setUploadingPhoto(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.auth.updateMe({ profileImageUrl: file_url });
+      await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      toast.success('Foto aggiornata');
+    } catch (err) {
+      toast.error('Caricamento non riuscito');
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = '';
+    }
+  };
+
+  const handlePhotoRemove = async () => {
+    setUploadingPhoto(true);
+    try {
+      await base44.auth.updateMe({ profileImageUrl: '' });
+      await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      toast.success('Foto rimossa');
+    } catch (err) {
+      toast.error('Impossibile rimuovere la foto');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+   // Initialize form data
   useEffect(() => {
     if (user) {
       setProfileData({
