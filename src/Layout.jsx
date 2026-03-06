@@ -49,6 +49,8 @@ export default function Layout({ children, currentPageName }) {
 
 function LayoutInner({ children, currentPageName }) {
         const { t, currentLanguage } = useLanguage();
+        const ADD_PHOTO_LABELS = { de: 'Foto hinzufügen', it: 'Aggiungi foto', en: 'Add photo', fr: 'Ajouter une photo', pl: 'Dodaj zdjęcie', tr: 'Fotoğraf ekle', uk: 'Додати фото' };
+        const addPhotoLabel = ADD_PHOTO_LABELS[currentLanguage] || ADD_PHOTO_LABELS.de;
         const navigate = useNavigate();
 
         // Initialize global audit logger once
@@ -862,8 +864,8 @@ function LayoutInner({ children, currentPageName }) {
                                   <img src={user.profileImageUrl} alt="Foto profilo" className="h-full w-full object-cover" />
                                 </button>
                               ) : (
-                                <button className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title="Aggiungi foto" aria-label="Aggiungi foto">
-                                  Aggiungi foto
+                                <button className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title={addPhotoLabel} aria-label={addPhotoLabel}>
+                                  {addPhotoLabel}
                                 </button>
                               )
                             ) : (
