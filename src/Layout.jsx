@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut, User, ArrowLeft } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { initAuditLogger } from '@/components/auditLogger';
 import { footerT } from '@/components/i18n/footer';
@@ -52,6 +52,32 @@ function LayoutInner({ children, currentPageName }) {
         const ADD_PHOTO_LABELS = { de: 'Foto hinzufügen', it: 'Aggiungi foto', en: 'Add photo', fr: 'Ajouter une photo', pl: 'Dodaj zdjęcie', tr: 'Fotoğraf ekle', uk: 'Додати фото' };
         const addPhotoLabel = ADD_PHOTO_LABELS[currentLanguage] || ADD_PHOTO_LABELS.de;
         const navigate = useNavigate();
+        const queryClient = useQueryClient();
+        const fileInputRef = React.useRef(null);
+
+        const onAddPhotoClick = () => {
+          fileInputRef.current?.click();
+        };
+
+        const onFileChange = async (e) => {
+          const file = e.target?.files?.[0];
+          if (!file) return;
+          const allowed = ['image/jpeg','image/png','image/webp'];
+          if (!allowed.includes(file.type)) {
+            alert('Formato non supportato. Usa JPG, PNG o WEBP.');
+            e.target.value = '';
+            return;
+          }
+          if (file.size > 5 * 1024 * 1024) {
+            alert('Dimensione massima 5MB.');
+            e.target.value = '';
+            return;
+          }
+          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+          await base44.auth.updateMe({ profilePhoto: file_url, profileImageUrl: file_url });
+          await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+          e.target.value = '';
+        };
 
         // Initialize global audit logger once
         useEffect(() => { initAuditLogger(base44); }, []);
@@ -799,6 +825,13 @@ function LayoutInner({ children, currentPageName }) {
             flex: 1;
           }
         `}</style>
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        ref={fileInputRef}
+        onChange={onFileChange}
+        className="hidden"
+      />
       <header id="app-header" className="bg-[var(--z-primary)] px-5 py-2.5 border-b-[3px] border-[var(--z-accent)] rounded-b-xl sticky top-0 z-[999] min-h-[60px] md:min-h-[72px] max-w-full overflow-visible shadow-none">
                     <div className="flex items-center justify-between text-white max-w-full">
                       {/* Logo + Slogan + Home */}
@@ -859,12 +892,12 @@ function LayoutInner({ children, currentPageName }) {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             {user ? (
-                              user.profileImageUrl ? (
+                              (user.profilePhoto || user.profileImageUrl) ? (
                                 <button className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 rounded-full overflow-hidden focus:ring-2 focus:ring-white border-2 border-white/20" title="Account" aria-label="Account">
-                                  <img src={user.profileImageUrl} alt="Foto profilo" className="h-full w-full object-cover" />
+                                  <img src={user.profilePhoto || user.profileImageUrl} alt="Foto profilo" className="h-full w-full object-cover" />
                                 </button>
                               ) : (
-                                <button className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title={addPhotoLabel} aria-label={addPhotoLabel}>
+                                <button onClick={onAddPhotoClick} className="px-2 h-7 md:h-8 inline-flex items-center justify-center text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white border border-white/30 text-xs" title={addPhotoLabel} aria-label={addPhotoLabel}>
                                   {addPhotoLabel}
                                 </button>
                               )
