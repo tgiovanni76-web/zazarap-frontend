@@ -235,7 +235,8 @@ export default function Marketplace() {
         description="Il miglior marketplace per comprare e vendere usato in sicurezza con protezione acquisti PayPal ed Escrow. Abbigliamento, Elettronica, Auto e altro."
       />
 
-      {user && (user.firstName || user.lastName) && (
+      {/* Rimosso banner di benvenuto ingombrante per richiesta UX */}
+      {false && user && (user.firstName || user.lastName) && (
         <>
           <style>{`
             @keyframes fadeIn {
