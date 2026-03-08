@@ -88,10 +88,21 @@ export default function ManageCategories() {
     <div className="py-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">{t('admin.categoryManagement')}</h2>
-        <Button onClick={() => { setShowForm(true); setEditingCategory(null); setFormData({ name: '', icon: '', description: '', active: true, order: 0 }); }}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('admin.newCategory')}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={async () => {
+              const res = await base44.functions.invoke('cleanupCategories', {});
+              alert('Cleanup: ' + JSON.stringify(res.data));
+            }}
+          >
+            Cleanup-Dupl.
+          </Button>
+          <Button onClick={() => { setShowForm(true); setEditingCategory(null); setFormData({ name: '', icon: '', description: '', active: true, order: 0 }); }}>
+            <Plus className="h-4 w-4 mr-2" />
+            {t('admin.newCategory')}
+          </Button>
+        </div>
       </div>
 
       {showForm && (
