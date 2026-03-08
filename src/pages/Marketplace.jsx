@@ -311,11 +311,11 @@ export default function Marketplace() {
             return (
             <React.Fragment key={mainCat.id}>
             <SelectItem value={mainCat.name} className="font-bold">
-              {t(mainCat.name)}
+              {t(mainCat.i18nKey || mainCat.name)}
             </SelectItem>
             {subs.map(sub => (
               <SelectItem key={sub.id} value={sub.name} className="pl-6">
-                ↳ {t(sub.name)}
+                ↳ {t(sub.i18nKey || sub.name)}
               </SelectItem>
             ))}
             </React.Fragment>
