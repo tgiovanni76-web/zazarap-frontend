@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight } from 'lucide-react';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
+import CategoryIcon from '../components/marketplace/CategoryIcon';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function Home() {
@@ -28,7 +29,33 @@ export default function Home() {
     queryFn: () => base44.entities.Category.list('order'),
   });
 
-  const mainCategories = categories.filter(c => !c.parentId && c.active).slice(0, 8);
+  const PREFERRED_MAIN_ORDER = [
+    'Fahrzeuge',
+    'Immobilien',
+    'Elektronik',
+    'Haus & Garten',
+    'Mode & Beauty',
+    'Familie, Kind & Baby',
+    'Freizeit & Hobby',
+    'Tiere',
+    'Jobs',
+    'Dienstleistungen',
+    'Zu verschenken',
+  ];
+
+  const mainCategories = categories
+    .filter(c => !c.parentId && c.active)
+    .sort((a,b) => {
+      const la = labelFromCat(a);
+      const lb = labelFromCat(b);
+      const ia = PREFERRED_MAIN_ORDER.indexOf(la);
+      const ib = PREFERRED_MAIN_ORDER.indexOf(lb);
+      if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      const orderDiff = (a.order ?? 0) - (b.order ?? 0);
+      if (orderDiff !== 0) return orderDiff;
+      return la.localeCompare(lb, 'de');
+    })
+    .slice(0, 12);
 
   const tr = (key, fb) => { const v = t(key); return v === key ? fb : v; };
   const heroTitle = tr('home.hero.title', currentLanguage === 'de' ? 'Finde, was du suchst – mit Zazarap' : t('home.hero.title'));
@@ -41,14 +68,31 @@ export default function Home() {
   const favoritesTitle = tr('favorites', currentLanguage === 'de' ? 'Favoriten' : t('favorites'));
   const favoritesDesc = tr('home.feature.favorites.desc', currentLanguage === 'de' ? 'Merke dir interessante Anzeigen für später' : t('home.feature.favorites.desc'));
 
+  const FALLBACK_DE_BY_ICON = {
+    Car: 'Fahrzeuge',
+    Home: 'Immobilien',
+    Laptop: 'Elektronik',
+    Sprout: 'Haus & Garten',
+    Shirt: 'Mode & Beauty',
+    Users: 'Familie, Kind & Baby',
+    Gamepad2: 'Freizeit & Hobby',
+    PawPrint: 'Tiere',
+    Briefcase: 'Jobs',
+    Wrench: 'Dienstleistungen',
+    Gift: 'Zu verschenken',
+  };
+
   const labelFromCat = (cat) => {
     if (!cat) return '';
     if (cat.i18nKey) {
       const txt = t(cat.i18nKey);
-      if (txt && txt !== cat.i18nKey) return txt; // traduzione trovata
+      if (txt && txt !== cat.i18nKey) return txt;
     }
-    return t(cat.name); // fallback (DE garantito nel provider)
+    const tryKey = (cat.icon || cat.name || '').trim();
+    if (FALLBACK_DE_BY_ICON[tryKey]) return FALLBACK_DE_BY_ICON[tryKey];
+    return t(cat.name);
   };
+
 
    return (
     <div className="h-auto min-h-0">
@@ -152,7 +196,11 @@ export default function Home() {
               >
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
                   <CardContent className="pt-6 text-center">
-                    <div className="text-4xl mb-2">{cat.icon || '📦'}</div>
+                    <div className="mb-2 flex justify-center">
+                      <div className="h-10 w-10 rounded-full bg-yellow-100 text-[var(--z-primary)] flex items-center justify-center border border-yellow-300">
+                        <CategoryIcon name={cat.icon} className="h-6 w-6" />
+                      </div>
+                    </div>
                     <h3 className="font-semibold">{labelFromCat(cat)}</h3>
                   </CardContent>
                 </Card>
