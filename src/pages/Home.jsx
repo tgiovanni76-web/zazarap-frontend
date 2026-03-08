@@ -30,6 +30,34 @@ export default function Home() {
     queryFn: () => base44.entities.Category.list('order'),
   });
 
+  // Map icon names to professional German labels (fallback if i18n missing)
+  const FALLBACK_DE_BY_ICON = {
+    Car: 'Fahrzeuge',
+    Home: 'Immobilien',
+    Laptop: 'Elektronik',
+    Sprout: 'Haus & Garten',
+    Shirt: 'Mode & Beauty',
+    Users: 'Familie, Kind & Baby',
+    Gamepad2: 'Freizeit & Hobby',
+    PawPrint: 'Tiere',
+    Briefcase: 'Jobs',
+    Wrench: 'Dienstleistungen',
+    Gift: 'Zu verschenken',
+  };
+
+  // Resolve label with i18nKey, then German fallback, then name
+  const labelFromCat = (cat) => {
+    if (!cat) return '';
+    if (cat.i18nKey) {
+      const txt = t(cat.i18nKey);
+      if (txt && txt !== cat.i18nKey) return txt;
+    }
+    const tryKey = (cat.icon || cat.name || '').trim();
+    if (FALLBACK_DE_BY_ICON[tryKey]) return FALLBACK_DE_BY_ICON[tryKey];
+    return t(cat.name);
+  };
+
+
   const FALLBACK_DE_BY_ICON = {
     Car: 'Fahrzeuge',
     Home: 'Immobilien',
