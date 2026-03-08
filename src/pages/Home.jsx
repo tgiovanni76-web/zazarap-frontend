@@ -70,19 +70,6 @@ export default function Home() {
     'Zu verschenken',
   ];
 
-  const mainCategories = categories
-    .filter(c => !c.parentId && c.active)
-    .sort((a,b) => {
-      const la = labelFromCat(a);
-      const lb = labelFromCat(b);
-      const ia = PREFERRED_MAIN_ORDER.indexOf(la);
-      const ib = PREFERRED_MAIN_ORDER.indexOf(lb);
-      if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-      const orderDiff = (a.order ?? 0) - (b.order ?? 0);
-      if (orderDiff !== 0) return orderDiff;
-      return la.localeCompare(lb, 'de');
-    })
-    .slice(0, 12);
 
   const tr = (key, fb) => { const v = t(key); return v === key ? fb : v; };
   const heroTitle = tr('home.hero.title', currentLanguage === 'de' ? 'Finde, was du suchst – mit Zazarap' : t('home.hero.title'));
