@@ -11,7 +11,7 @@ import FeaturedListings from '../components/marketplace/FeaturedListings';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -30,7 +30,18 @@ export default function Home() {
 
   const mainCategories = categories.filter(c => !c.parentId && c.active).slice(0, 8);
 
-  return (
+  const tr = (key, fb) => { const v = t(key); return v === key ? fb : v; };
+  const heroTitle = tr('home.hero.title', currentLanguage === 'de' ? 'Finde, was du suchst – mit Zazarap' : t('home.hero.title'));
+  const heroSubtitle = tr('home.hero.subtitle', currentLanguage === 'de' ? 'Durchsuche Tausende von Kleinanzeigen in ganz Deutschland – sicher und schnell.' : t('home.hero.subtitle'));
+  const searchLabel = tr('home.search.button', currentLanguage === 'de' ? 'Suchen' : (t('searchPlaceholder') || 'Search'));
+  const categoriesTitle = tr('home.section.categories', currentLanguage === 'de' ? 'Entdecke die Kategorien' : t('nav.categories'));
+  const viewAllLabel = tr('home.section.viewAll', currentLanguage === 'de' ? 'Alle anzeigen' : t('home.section.viewAll'));
+  const safeTitle = tr('home.feature.safe.title', currentLanguage === 'de' ? 'Sicher kaufen' : t('home.feature.safe.title'));
+  const safeDesc = tr('home.feature.safe.desc', currentLanguage === 'de' ? 'PayPal-Schutz und sichere Zahlungsabwicklung' : t('home.feature.safe.desc'));
+  const favoritesTitle = tr('favorites', currentLanguage === 'de' ? 'Favoriten' : t('favorites'));
+  const favoritesDesc = tr('home.feature.favorites.desc', currentLanguage === 'de' ? 'Merke dir interessante Anzeigen für später' : t('home.feature.favorites.desc'));
+
+   return (
     <div className="h-auto min-h-0">
       {user && (
         <div
@@ -54,16 +65,16 @@ export default function Home() {
       <div className="bg-gradient-to-br from-[var(--z-primary)] via-[var(--z-primary-light)] to-[var(--z-primary-dark)] text-white py-16 px-4 rounded-2xl mb-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4">
-            {t('home.hero.title')}
+            {heroTitle}
           </h1>
           <p className="text-xl mb-8 text-white/90">
-            {t('home.hero.subtitle')}
+            {heroSubtitle}
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Marketplace')}>
               <Button size="lg" className="bg-[#f9d65c] text-[var(--z-primary)] hover:bg-yellow-300 font-bold text-lg px-8">
                 <Search className="h-5 w-5 mr-2" />
-                {t('home.search.button')}
+                {searchLabel}
               </Button>
             </Link>
             {!user && (
@@ -98,9 +109,9 @@ export default function Home() {
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Shield className="h-6 w-6 text-green-600" />
             </div>
-            <h3 className="font-bold mb-2">{t('home.feature.safe.title') || 'Sicher kaufen'}</h3>
+            <h3 className="font-bold mb-2">{safeTitle}</h3>
             <p className="text-sm text-slate-600">
-              {t('home.feature.safe.desc') || 'PayPal-Schutz und sichere Zahlungsabwicklung'}
+              {safeDesc}
             </p>
           </CardContent>
         </Card>
@@ -109,9 +120,9 @@ export default function Home() {
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Heart className="h-6 w-6 text-red-600" />
             </div>
-            <h3 className="font-bold mb-2">{t('favorites')}</h3>
+            <h3 className="font-bold mb-2">{favoritesTitle}</h3>
             <p className="text-sm text-slate-600">
-              {t('home.feature.favorites.desc') || 'Merke dir interessante Anzeigen für später'}
+              {favoritesDesc}
             </p>
           </CardContent>
         </Card>
@@ -122,7 +133,7 @@ export default function Home() {
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-[var(--z-primary)]" />
-            {t('home.section.categories')}
+            {categoriesTitle}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {mainCategories.map(cat => (
@@ -151,7 +162,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold">{t('dashboard.recentListings')}</h2>
           <Link to={createPageUrl('Marketplace')}>
             <Button variant="ghost" className="text-[var(--z-primary)]">
-              {t('home.section.viewAll') || 'Alle anzeigen'}
+              {viewAllLabel}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </Link>
