@@ -30,6 +30,31 @@ export default function Home() {
     queryFn: () => base44.entities.Category.list('order'),
   });
 
+  const FALLBACK_DE_BY_ICON = {
+    Car: 'Fahrzeuge',
+    Home: 'Immobilien',
+    Laptop: 'Elektronik',
+    Sprout: 'Haus & Garten',
+    Shirt: 'Mode & Beauty',
+    Users: 'Familie, Kind & Baby',
+    Gamepad2: 'Freizeit & Hobby',
+    PawPrint: 'Tiere',
+    Briefcase: 'Jobs',
+    Wrench: 'Dienstleistungen',
+    Gift: 'Zu verschenken',
+  };
+
+  const labelFromCat = (cat) => {
+    if (!cat) return '';
+    if (cat.i18nKey) {
+      const txt = t(cat.i18nKey);
+      if (txt && txt !== cat.i18nKey) return txt;
+    }
+    const tryKey = (cat.icon || cat.name || '').trim();
+    if (FALLBACK_DE_BY_ICON[tryKey]) return FALLBACK_DE_BY_ICON[tryKey];
+    return t(cat.name);
+  };
+
   const PREFERRED_MAIN_ORDER = [
     'Fahrzeuge',
     'Immobilien',
@@ -58,20 +83,7 @@ export default function Home() {
     })
     .slice(0, 12);
 
-  // Compute main categories after helpers are defined
-  const mainCategories = categories
-    .filter(c => !c.parentId && c.active)
-    .sort((a,b) => {
-      const la = labelFromCat(a);
-      const lb = labelFromCat(b);
-      const ia = PREFERRED_MAIN_ORDER.indexOf(la);
-      const ib = PREFERRED_MAIN_ORDER.indexOf(lb);
-      if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-      const orderDiff = (a.order ?? 0) - (b.order ?? 0);
-      if (orderDiff !== 0) return orderDiff;
-      return la.localeCompare(lb, 'de');
-    })
-    .slice(0, 12);
+
 
   const tr = (key, fb) => { const v = t(key); return v === key ? fb : v; };
   const heroTitle = tr('home.hero.title', currentLanguage === 'de' ? 'Finde, was du suchst – mit Zazarap' : t('home.hero.title'));
