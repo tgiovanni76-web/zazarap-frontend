@@ -36,7 +36,7 @@ export default function Home() {
     Laptop: 'Elektronik',
     Sprout: 'Haus & Garten',
     Shirt: 'Mode & Beauty',
-    Users: 'Familie, Kind & Baby',
+    Users: 'Familie & Baby',
     Gamepad2: 'Freizeit & Hobby',
     PawPrint: 'Tiere',
     Briefcase: 'Jobs',
@@ -61,7 +61,7 @@ export default function Home() {
     'Elektronik',
     'Haus & Garten',
     'Mode & Beauty',
-    'Familie, Kind & Baby',
+    'Familie & Baby',
     'Freizeit & Hobby',
     'Tiere',
     'Jobs',
@@ -69,19 +69,31 @@ export default function Home() {
     'Zu verschenken',
   ];
 
-  const mainCategories = categories
-    .filter(c => !c.parentId && c.active)
-    .sort((a,b) => {
-      const la = labelFromCat(a);
-      const lb = labelFromCat(b);
-      const ia = PREFERRED_MAIN_ORDER.indexOf(la);
-      const ib = PREFERRED_MAIN_ORDER.indexOf(lb);
-      if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-      const orderDiff = (a.order ?? 0) - (b.order ?? 0);
-      if (orderDiff !== 0) return orderDiff;
-      return la.localeCompare(lb, 'de');
-    })
-    .slice(0, 12);
+  const mainCategories = (() => {
+    const roots = categories.filter(c => !c.parentId && c.active);
+    const byLabel = new Map();
+    for (const c of roots) {
+      const label = labelFromCat(c);
+      const childrenCount = categories.filter(x => x.parentId === c.id).length;
+      const cur = byLabel.get(label);
+      if (!cur || childrenCount > cur.childrenCount) {
+        byLabel.set(label, { cat: c, childrenCount });
+      }
+    }
+    return Array.from(byLabel.values())
+      .map(v => v.cat)
+      .sort((a,b) => {
+        const la = labelFromCat(a);
+        const lb = labelFromCat(b);
+        const ia = PREFERRED_MAIN_ORDER.indexOf(la);
+        const ib = PREFERRED_MAIN_ORDER.indexOf(lb);
+        if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+        const orderDiff = (a.order ?? 0) - (b.order ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+        return la.localeCompare(lb, 'de');
+      })
+      .slice(0, 12);
+  })();
 
 
 
