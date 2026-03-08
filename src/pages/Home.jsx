@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight } from 'lucide-react';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import CategoryIcon from '../components/marketplace/CategoryIcon';
+import SubcategoryGrid from '../components/marketplace/SubcategoryGrid';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function Home() {
