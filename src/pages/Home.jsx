@@ -191,21 +191,21 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {mainCategories.map(cat => (
-              <Link 
-                key={cat.id} 
-                to={createPageUrl('Marketplace') + '?category=' + cat.name}
-              >
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
-                  <CardContent className="pt-6 text-center">
-                    <div className="mb-2 flex justify-center">
-                      <div className="h-10 w-10 rounded-full bg-yellow-100 text-[var(--z-primary)] flex items-center justify-center border border-yellow-300">
-                        <CategoryIcon name={cat.icon} className="h-6 w-6" />
+              <div key={cat.id}>
+                <Link to={createPageUrl('Marketplace') + '?category=' + encodeURIComponent(cat.name)}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
+                    <CardContent className="pt-6 text-center">
+                      <div className="mb-2 flex justify-center">
+                        <div className="h-10 w-10 rounded-full bg-yellow-100 text-[var(--z-primary)] flex items-center justify-center border border-yellow-300">
+                          <CategoryIcon name={cat.icon} className="h-6 w-6" />
+                        </div>
                       </div>
-                    </div>
-                    <h3 className="font-semibold">{labelFromCat(cat)}</h3>
-                  </CardContent>
-                </Card>
-              </Link>
+                      <h3 className="font-semibold">{labelFromCat(cat)}</h3>
+                    </CardContent>
+                  </Card>
+                </Link>
+                <SubcategoryGrid categories={categories} parent={cat} />
+              </div>
             ))}
           </div>
         </div>
