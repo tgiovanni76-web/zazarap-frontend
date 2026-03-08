@@ -71,6 +71,15 @@ export default function Marketplace() {
     queryFn: () => base44.entities.Category.list('order'),
   });
 
+  const labelForCategory = (cat) => {
+    if (!cat) return '';
+    if (cat.i18nKey) {
+      const txt = t(cat.i18nKey);
+      if (txt && txt !== cat.i18nKey) return txt;
+    }
+    return t(cat.name);
+  };
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async ({ listingId, isFavorite }) => {
       if (isFavorite) {
@@ -311,11 +320,11 @@ export default function Marketplace() {
             return (
             <React.Fragment key={mainCat.id}>
             <SelectItem value={mainCat.name} className="font-bold">
-              {t(mainCat.i18nKey || mainCat.name)}
+              {labelForCategory(mainCat)}
             </SelectItem>
             {subs.map(sub => (
               <SelectItem key={sub.id} value={sub.name} className="pl-6">
-                ↳ {t(sub.i18nKey || sub.name)}
+                ↳ {labelForCategory(sub)}
               </SelectItem>
             ))}
             </React.Fragment>

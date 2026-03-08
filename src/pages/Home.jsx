@@ -41,6 +41,15 @@ export default function Home() {
   const favoritesTitle = tr('favorites', currentLanguage === 'de' ? 'Favoriten' : t('favorites'));
   const favoritesDesc = tr('home.feature.favorites.desc', currentLanguage === 'de' ? 'Merke dir interessante Anzeigen für später' : t('home.feature.favorites.desc'));
 
+  const labelFromCat = (cat) => {
+    if (!cat) return '';
+    if (cat.i18nKey) {
+      const txt = t(cat.i18nKey);
+      if (txt && txt !== cat.i18nKey) return txt; // traduzione trovata
+    }
+    return t(cat.name); // fallback (DE garantito nel provider)
+  };
+
    return (
     <div className="h-auto min-h-0">
       {user && (
@@ -144,7 +153,7 @@ export default function Home() {
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
                   <CardContent className="pt-6 text-center">
                     <div className="text-4xl mb-2">{cat.icon || '📦'}</div>
-                    <h3 className="font-semibold">{t(cat.i18nKey || cat.name)}</h3>
+                    <h3 className="font-semibold">{labelFromCat(cat)}</h3>
                   </CardContent>
                 </Card>
               </Link>
