@@ -9,14 +9,12 @@ export default function SubcategoryGrid({ categories, parent }) {
   const subs = categories.filter(c => c.parentId === parent?.id && c.active);
   if (subs.length === 0) return null;
   return (
-    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="mt-3 flex flex-wrap gap-2">
       {subs.map((s) => (
-        <Link key={s.id} to={createPageUrl('Marketplace') + `?category=${encodeURIComponent(s.name)}` }>
-          <Card className="hover:shadow-sm">
-            <CardContent className="py-3 text-center text-sm">
-              {t(s.i18nKey || s.name)}
-            </CardContent>
-          </Card>
+        <Link key={s.id} to={createPageUrl('Marketplace') + `?category=${encodeURIComponent(s.name)}`}>
+          <div className="inline-flex items-center rounded-full border border-[var(--z-border-soft)] bg-white px-3 py-1 text-sm text-slate-700 shadow-sm hover:shadow whitespace-nowrap">
+            {t(s.i18nKey || s.locales?.de || s.name)}
+          </div>
         </Link>
       ))}
     </div>
