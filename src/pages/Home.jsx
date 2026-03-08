@@ -192,7 +192,7 @@ export default function Home() {
                 ) : (
                   <div className="zaza-img" />
                 )}
-                <div className="zaza-category">{t(listing.category)}</div>
+                <div className="zaza-category">{(categories && categories.length) ? (t(categories.find(c => c.name === listing.category)?.i18nKey || categories.find(c => c.name === listing.category)?.name || listing.category)) : t(listing.category)}</div>
                 <div className="zaza-title">{listing.title}</div>
                 <div className="zaza-price">{listing.price} €</div>
                 {listing.city && <div className="zaza-location">{listing.city}</div>}

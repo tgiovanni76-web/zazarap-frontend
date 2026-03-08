@@ -539,7 +539,7 @@ export default function Marketplace() {
 
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id} className="block">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="zaza-category">{t(listing.category)}</div>
+                  <div className="zaza-category">{labelForCategory(categories.find(c => c.name === listing.category)) || t(listing.category)}</div>
                   {listing.status === 'reserved' && (
                     <Badge className="bg-yellow-600 text-white text-xs">🔒 Reserviert</Badge>
                   )}
