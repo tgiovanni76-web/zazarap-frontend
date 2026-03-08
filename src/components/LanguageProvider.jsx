@@ -2883,7 +2883,7 @@ export function LanguageProvider({ children }) {
       return translated;
     }
 
-    // 2. Try legacy flat translations
+    // 2. Try legacy flat translations with German fallback
     const translated = translations[language]?.[key] || translations['de']?.[key];
     if (translated) return translated;
 
