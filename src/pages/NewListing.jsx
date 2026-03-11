@@ -35,7 +35,7 @@ export default function NewListing() {
     seo_keywords: ''
   });
   const [imageFiles, setImageFiles] = useState([]); // selected originals (client-side)
-  const MAX_IMAGES = 10;
+  const MAX_IMAGES = 8;
   const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8MB
   const [promoType, setPromoType] = useState('none');
   const [promoBilling, setPromoBilling] = useState('week');
