@@ -370,7 +370,7 @@ export default function NewListing() {
         )}
 
         <label className="zaza-form-label">
-          {t('images')} (max 10){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/${MAX_IMAGES}`}
+          {t('images')} (max 8){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/${MAX_IMAGES}`}
         </label>
         <div className="zaza-upload">
           <input 
