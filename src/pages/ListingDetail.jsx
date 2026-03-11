@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
+import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
 import FollowButton from '../components/profile/FollowButton';
@@ -252,13 +253,8 @@ export default function ListingDetail() {
       {listing.images && listing.images.length > 0 && (
         <div className="mb-4">
           {listing.images.map((img, idx) => {
-            // images[] stores CARD variant; use FULL on detail
-            const full = (() => {
-              try { const { variantUrl } = require('../components/media/variantUrl'); return variantUrl(img, 'full'); } catch { return img; }
-            })();
-            const thumb = (() => {
-              try { const { variantUrl } = require('../components/media/variantUrl'); return variantUrl(img, 'thumb'); } catch { return img; }
-            })();
+            const full = variantUrl(img, 'full');
+            const thumb = variantUrl(img, 'thumb');
             return (
               <img 
                 key={idx}

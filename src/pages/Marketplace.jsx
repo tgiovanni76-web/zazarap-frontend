@@ -515,7 +515,7 @@ export default function Marketplace() {
                 {listing.images && listing.images.length > 0 ? (
                   <img 
                     src={variantUrl(listing.images[0], 'thumb')}
-                    srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w, ${variantUrl(listing.images[0], 'full')} 1600w`}
+                    srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     alt={listing.title}
                     loading="lazy"
