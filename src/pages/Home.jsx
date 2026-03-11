@@ -6,10 +6,10 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight } from 'lucide-react';
+import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import CategoryIcon from '../components/marketplace/CategoryIcon';
-import SubcategoryGrid from '../components/marketplace/SubcategoryGrid';
+
 import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 
@@ -109,6 +109,13 @@ export default function Home() {
   const favoritesTitle = tr('favorites', currentLanguage === 'de' ? 'Favoriten' : t('favorites'));
   const favoritesDesc = tr('home.feature.favorites.desc', currentLanguage === 'de' ? 'Merke dir interessante Anzeigen für später' : t('home.feature.favorites.desc'));
 
+  const catScrollRef = React.useRef(null);
+  const scrollCats = (dir) => {
+    const el = catScrollRef.current;
+    if (!el) return;
+    const amount = Math.round(el.clientWidth * 0.8);
+    el.scrollBy({ left: dir * amount, behavior: 'smooth' });
+  };
 
    return (
     <div className="h-auto min-h-0">
@@ -180,31 +187,68 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Categories */}
+      {/* Categories - horizontal scroll */}
       {mainCategories.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-[var(--z-primary)]" />
             {categoriesTitle}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {mainCategories.map(cat => (
-              <div key={cat.id}>
-                <Link to={createPageUrl('Marketplace') + '?category=' + encodeURIComponent(cat.name)}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-[var(--z-primary)]">
+          <div className="relative">
+            {/* Left arrow (desktop) */}
+            <button
+              type="button"
+              aria-label="Scroll left"
+              onClick={() => scrollCats(-1)}
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow border hover:bg-white text-[var(--z-primary)]"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Scroll container */}
+            <div
+              ref={catScrollRef}
+              className="flex gap-4 overflow-x-auto scroll-smooth px-1"
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
+              {mainCategories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  to={createPageUrl('Marketplace') + '?category=' + encodeURIComponent(cat.name)}
+                  className="flex-shrink-0 w-40 sm:w-48 md:w-56 snap-start"
+                >
+                  <Card className="h-full hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer border-2 hover:border-[var(--z-primary)]">
                     <CardContent className="pt-6 text-center">
                       <div className="mb-2 flex justify-center">
                         <div className="h-10 w-10 rounded-full bg-yellow-100 text-[var(--z-primary)] flex items-center justify-center border border-yellow-300">
                           <CategoryIcon name={cat.icon} className="h-6 w-6" />
                         </div>
                       </div>
-                      <h3 className="font-semibold">{labelFromCat(cat)}</h3>
+                      <h3 className="font-semibold truncate">{labelFromCat(cat)}</h3>
                     </CardContent>
                   </Card>
                 </Link>
-                <SubcategoryGrid categories={categories} parent={cat} />
-              </div>
-            ))}
+              ))}
+
+              {/* View all button as last card */}
+              <Link to={createPageUrl('Marketplace')} className="flex-shrink-0 w-40 sm:w-48 md:w-56 snap-start">
+                <Card className="h-full border-2 border-dashed hover:border-[var(--z-primary)] hover:shadow-md transition-all cursor-pointer">
+                  <CardContent className="h-full pt-6 text-center flex items-center justify-center font-semibold text-[var(--z-primary)]">
+                    {t('home.section.viewAll') || 'Alle Kategorien'} <ArrowRight className="h-4 w-4 ml-2" />
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Right arrow (desktop) */}
+            <button
+              type="button"
+              aria-label="Scroll right"
+              onClick={() => scrollCats(1)}
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow border hover:bg-white text-[var(--z-primary)]"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
       )}
