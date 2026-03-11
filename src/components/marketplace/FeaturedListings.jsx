@@ -33,7 +33,7 @@ export default function FeaturedListings({ listings }) {
                   <div className="relative">
                     <img 
                       src={variantUrl(listing.images[0], 'thumb')}
-                      srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`
+                      srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`}
                       sizes="(max-width: 768px) 100vw, 33vw"
                       alt={listing.title}
                       loading="lazy"
