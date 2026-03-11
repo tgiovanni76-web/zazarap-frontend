@@ -111,24 +111,7 @@ export default function Home() {
 
    return (
     <div className="h-auto min-h-0">
-      {user && (
-        <div
-          className="fixed left-3 md:left-6 pointer-events-none z-[998]"
-          style={{ top: 'calc(var(--header-height, 64px) + 6px)' }}
-          aria-live="polite"
-        >
-          <div className="inline-flex items-center gap-2 text-sm text-slate-700 bg-slate-100/80 dark:bg-slate-800/70 px-3 py-1.5 rounded-full shadow-sm border border-slate-200">
-            <span aria-hidden>👋</span>
-            <span>
-              Willkommen zurück, {(
-                user?.firstName && user?.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.firstName || user?.full_name || (user?.email || '').split('@')[0]
-              )}
-            </span>
-          </div>
-        </div>
-      )}
+
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[var(--z-primary)] via-[var(--z-primary-light)] to-[var(--z-primary-dark)] text-white py-16 px-4 rounded-2xl mb-8">
         <div className="max-w-4xl mx-auto text-center">

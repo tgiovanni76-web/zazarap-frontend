@@ -889,6 +889,9 @@ function LayoutInner({ children, currentPageName }) {
                         )}
 
                         {/* Menu profilo 👤 */}
+                        {user && (
+                          <span className="text-white/70 text-xs mr-1 md:mr-2">👋 Hallo, Giovanni</span>
+                        )}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             {user ? (
