@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import { useLanguage } from '../components/LanguageProvider';
 
 export default function Home() {
   const { t, currentLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -225,6 +226,23 @@ export default function Home() {
                         </div>
                       </div>
                       <h3 className="font-semibold truncate">{labelFromCat(cat)}</h3>
+                      <div className="mt-1 text-xs text-slate-600">
+                        {categories
+                          .filter((x) => x.parentId === cat.id && x.active)
+                          .sort((a,b) => ((a.order ?? 0) - (b.order ?? 0)) || labelFromCat(a).localeCompare(labelFromCat(b), 'de'))
+                          .slice(0,3)
+                          .map((sub, i, arr) => (
+                            <React.Fragment key={sub.id}>
+                              <span
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(createPageUrl('Marketplace') + '?category=' + encodeURIComponent(sub.name)); }}
+                                className="text-[var(--z-primary)] hover:underline cursor-pointer"
+                              >
+                                {labelFromCat(sub)}
+                              </span>
+                              {i < arr.length - 1 && <span className="mx-1 text-slate-400">•</span>}
+                            </React.Fragment>
+                          ))}
+                      </div>
                     </CardContent>
                   </Card>
                 </Link>
