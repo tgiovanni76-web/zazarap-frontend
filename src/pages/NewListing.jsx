@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Upload, Loader2, X } from 'lucide-react';
+import { generateVariantBlobs, makeVariantFilenames } from "../components/media/imageUtils";
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageProvider';
 import VehicleForm from "../components/listings/VehicleForm";
@@ -33,7 +34,9 @@ export default function NewListing() {
     seo_description: '',
     seo_keywords: ''
   });
-  const [imageFiles, setImageFiles] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]); // selected originals (client-side)
+  const MAX_IMAGES = 10;
+  const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8MB
   const [promoType, setPromoType] = useState('none');
   const [promoBilling, setPromoBilling] = useState('week');
   const [promoQty, setPromoQty] = useState(1);
@@ -73,31 +76,66 @@ export default function NewListing() {
 
   const createListingMutation = useMutation({
     mutationFn: async (data) => {
-      let imageUrls = [];
+        let cardUrls = [];
+        const originals = [];
 
-      if (imageFiles.length > 0) {
-        setIsUploading(true);
-        const results = await Promise.all(
-          imageFiles.map((file) => base44.integrations.Core.UploadFile({ file }))
-        );
-        imageUrls = results.map(r => r.file_url);
-        setIsUploading(false);
-      }
+        if (imageFiles.length > 0) {
+          setIsUploading(true);
+          for (const file of imageFiles) {
+            // Process variants client-side
+            const variants = await generateVariantBlobs(file);
+            const names = makeVariantFilenames(file.name.replace(/\.(heic|heif|jpeg|jpg|png|webp)$/i, ''));
 
-      const listing = await base44.entities.Listing.create({
-        ...data,
-        images: imageUrls,
-        status: 'active',
-        moderationStatus: 'pending'
-      });
+            // Upload original (private) to keep 30 days
+            const originalUpload = await base44.integrations.Core.UploadPrivateFile({ file });
+            originals.push({ fileUri: originalUpload.file_uri, originalName: file.name, contentType: file.type, size: file.size, width: variants.width, height: variants.height });
 
-      // Trigger AI moderation in background
-      base44.functions.invoke('moderateListing', { listingId: listing.id }).catch(err => {
-        console.error('Moderation error:', err);
-      });
+            // Upload public variants
+            const thumbFile = new File([variants.thumb.blob], `${names.thumb}.${variants.thumb.ext}`, { type: variants.thumb.type });
+            const cardFile  = new File([variants.card.blob],  `${names.card}.${variants.card.ext}`,   { type: variants.card.type });
+            const fullFile  = new File([variants.full.blob],  `${names.full}.${variants.full.ext}`,   { type: variants.full.type });
 
-      return listing;
-    },
+            const [thumbRes, cardRes, fullRes] = await Promise.all([
+              base44.integrations.Core.UploadFile({ file: thumbFile }),
+              base44.integrations.Core.UploadFile({ file: cardFile }),
+              base44.integrations.Core.UploadFile({ file: fullFile }),
+            ]);
+            cardUrls.push(cardRes.file_url); // store only CARD in Listing
+          }
+          setIsUploading(false);
+        }
+
+        // Create listing with CARD images only
+        const listing = await base44.entities.Listing.create({
+          ...data,
+          images: cardUrls,
+          status: 'active',
+          moderationStatus: 'pending'
+        });
+
+        // Link originals to listing in MediaAsset registry
+        for (const o of originals) {
+          try {
+            await base44.functions.invoke('registerMediaAsset', {
+              fileUri: o.fileUri,
+              originalName: o.originalName,
+              contentType: o.contentType,
+              size: o.size,
+              kind: 'image',
+              width: o.width,
+              height: o.height,
+              correlationId: `listing:${listing.id}`
+            });
+          } catch (e) { console.warn('registerMediaAsset failed', e); }
+        }
+
+        // Trigger AI moderation in background
+        base44.functions.invoke('moderateListing', { listingId: listing.id }).catch(err => {
+          console.error('Moderation error:', err);
+        });
+
+        return listing;
+      },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['listings'] });
       toast.success(t('newListing.successToast'));
@@ -113,7 +151,20 @@ export default function NewListing() {
     const picked = Array.from(e.target.files || []);
     if (picked.length === 0) return;
 
-    const merged = [...imageFiles, ...picked].slice(0, 8);
+    // Validate type and size, block HEIC/HEIF
+    const valid = [];
+    for (const f of picked) {
+      const t = (f.type || '').toLowerCase();
+      const name = (f.name || '').toLowerCase();
+      if (t.includes('heic') || t.includes('heif') || name.endsWith('.heic') || name.endsWith('.heif')) {
+        continue; // block uncompressed HEIC/HEIF
+      }
+      if (!['image/jpeg','image/png','image/webp'].includes(t)) continue;
+      if (f.size > MAX_IMAGE_BYTES) continue;
+      valid.push(f);
+    }
+
+    const merged = [...imageFiles, ...valid].slice(0, MAX_IMAGES);
     setImageFiles(merged);
 
     const readers = merged.map((file) => new Promise((resolve) => {
@@ -319,13 +370,13 @@ export default function NewListing() {
         )}
 
         <label className="zaza-form-label">
-          {t('images')} (max 8){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/8`}
+          {t('images')} (max 10){' '}{imageFiles.length > 0 && `• ${imageFiles.length}/${MAX_IMAGES}`}
         </label>
         <div className="zaza-upload">
           <input 
             type="file" 
             name="images"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             multiple
             onChange={handleImageChange}
             className="hidden"

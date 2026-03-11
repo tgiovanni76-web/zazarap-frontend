@@ -17,6 +17,35 @@ export default function MediaUploader({ canUpload = false, onUploaded }) {
       const allowed = ['image/jpeg','image/png','image/webp','video/mp4','video/webm'];
       if (!allowed.includes(file.type)) throw new Error('Unsupported type');
 
+      // Extra rules for video: <=15s and <=720p + poster
+      if (file.type.startsWith('video/')) {
+        const metaOk = await new Promise((resolve) => {
+          const v = document.createElement('video');
+          v.preload = 'metadata';
+          v.onloadedmetadata = async () => {
+            const tooLong = v.duration > 15.05;
+            const tooBig = Math.max(v.videoWidth, v.videoHeight) > 720;
+            resolve(!tooLong && !tooBig);
+          };
+          v.src = URL.createObjectURL(file);
+        });
+        if (!metaOk) throw new Error('Video must be <=15s and max 720p');
+
+        // Capture poster at 0.5s
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        const v2 = document.createElement('video');
+        v2.src = URL.createObjectURL(file);
+        await v2.play().catch(()=>{});
+        v2.currentTime = 0.5;
+        await new Promise((r)=> v2.onseeked = r);
+        const c = document.createElement('canvas');
+        c.width = Math.min(1280, v2.videoWidth); c.height = Math.round(c.width * (v2.videoHeight / v2.videoWidth));
+        const ctx = c.getContext('2d');
+        ctx.drawImage(v2, 0, 0, c.width, c.height);
+        const posterBlob = await new Promise((res)=> c.toBlob(res, 'image/webp', 0.9));
+        if (posterBlob) { await base44.integrations.Core.UploadFile({ file: new File([posterBlob], 'video-poster.webp', { type: 'image/webp' }) }); }
+      }
+
       setProgress(30);
       const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
       setProgress(60);

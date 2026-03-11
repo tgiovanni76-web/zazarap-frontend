@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin } from 'lucide-react';
+import { variantUrl } from '../media/variantUrl';
 import { useLanguage } from '../LanguageProvider';
 
 export default function FeaturedListings({ listings }) {
@@ -31,8 +32,11 @@ export default function FeaturedListings({ listings }) {
                 {listing.images?.[0] && (
                   <div className="relative">
                     <img 
-                      src={listing.images[0]} 
+                      src={variantUrl(listing.images[0], 'thumb')}
+                      srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w, ${variantUrl(listing.images[0], 'full')} 1600w`}
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       alt={listing.title}
+                      loading="lazy"
                       className="w-full h-48 object-cover rounded-t"
                     />
                     <Badge className="absolute top-2 right-2 bg-yellow-500 text-black">

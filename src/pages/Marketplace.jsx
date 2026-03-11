@@ -12,6 +12,7 @@ import { Search, MapPin, Laptop, Home, Shirt, Bike, Car, PawPrint, Package, Hear
 import MapView from '../components/marketplace/MapView';
 import { toast } from 'sonner';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
+import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
 import FollowButton from '../components/profile/FollowButton';
@@ -513,8 +514,11 @@ export default function Marketplace() {
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
                 {listing.images && listing.images.length > 0 ? (
                   <img 
-                    src={listing.images[0]} 
-                    alt={listing.title} 
+                    src={variantUrl(listing.images[0], 'thumb')}
+                    srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w, ${variantUrl(listing.images[0], 'full')} 1600w`}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    alt={listing.title}
+                    loading="lazy"
                     className="zaza-img"
                   />
                 ) : (

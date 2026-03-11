@@ -251,14 +251,26 @@ export default function ListingDetail() {
       />
       {listing.images && listing.images.length > 0 && (
         <div className="mb-4">
-          {listing.images.map((img, idx) => (
-            <img 
-              key={idx}
-              src={img} 
-              alt={`${listing.title} ${idx + 1}`} 
-              className="zaza-detail-img"
-            />
-          ))}
+          {listing.images.map((img, idx) => {
+            // images[] stores CARD variant; use FULL on detail
+            const full = (() => {
+              try { const { variantUrl } = require('../components/media/variantUrl'); return variantUrl(img, 'full'); } catch { return img; }
+            })();
+            const thumb = (() => {
+              try { const { variantUrl } = require('../components/media/variantUrl'); return variantUrl(img, 'thumb'); } catch { return img; }
+            })();
+            return (
+              <img 
+                key={idx}
+                src={full}
+                srcSet={`${thumb} 320w, ${img} 800w, ${full} 1600w`}
+                sizes="(max-width: 640px) 100vw, 800px"
+                alt={`${listing.title} ${idx + 1}`}
+                loading="lazy"
+                className="zaza-detail-img"
+              />
+            );
+          })}
         </div>
       )}
 
