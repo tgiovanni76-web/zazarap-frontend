@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from 'lucide-react';
+import { variantUrl } from '../media/variantUrl';
 import { format } from 'date-fns';
 import { useLanguage } from '../LanguageProvider';
 
@@ -29,7 +30,14 @@ export default function RecentListings({ listings }) {
             >
               <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
                 {listing.images?.[0] ? (
-                  <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover" />
+                  <img
+                    src={variantUrl(listing.images[0], 'thumb')}
+                    srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`}
+                    sizes="(max-width: 640px) 20vw, 10vw"
+                    alt={listing.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span className="text-2xl text-slate-400">📦</span>
                 )}

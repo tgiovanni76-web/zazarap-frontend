@@ -10,6 +10,7 @@ import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight } from 'lucide-react
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import CategoryIcon from '../components/marketplace/CategoryIcon';
 import SubcategoryGrid from '../components/marketplace/SubcategoryGrid';
+import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function Home() {
@@ -231,8 +232,11 @@ export default function Home() {
               <div className="zaza-card">
                 {listing.images?.[0] ? (
                   <img 
-                    src={listing.images[0]} 
+                    src={variantUrl(listing.images[0], 'thumb')} 
+                    srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     alt={listing.title}
+                    loading="lazy"
                     className="zaza-img"
                   />
                 ) : (
