@@ -222,6 +222,7 @@ export default function ChatWindow({
   const messagesContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const messageInputRef = useRef(null);
   const queryClient = useQueryClient();
 
   const isSeller = chat?.sellerId === user?.email;
@@ -838,6 +839,13 @@ export default function ChatWindow({
   });
 
   // Group messages by date
+  const focusMessageInput = () => {
+    try {
+      messagesContainerRef.current?.scrollTo({ top: messagesContainerRef.current.scrollHeight, behavior: 'smooth' });
+    } catch {}
+    setTimeout(() => messageInputRef.current?.focus(), 100);
+  };
+
   const groupedMessages = messages.reduce((groups, message) => {
     const date = formatMessageDate(message.created_date, language);
     if (!groups[date]) groups[date] = [];
@@ -944,7 +952,7 @@ export default function ChatWindow({
       {/* Messages */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto overscroll-contain p-3 md:p-4 space-y-3 md:space-y-4"
+        className="flex-1 overflow-y-auto overscroll-contain p-3 pb-28 md:p-4 md:pb-4 space-y-3 md:space-y-4"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}
       >
         {Object.entries(groupedMessages).map(([date, dayMessages]) => (
@@ -1198,6 +1206,23 @@ export default function ChatWindow({
         </div>
       )}
 
+      {/* Mobile fixed actions */}
+      <div className="md:hidden sticky bottom-0 z-30 bg-white/95 border-t px-2 py-2 flex gap-2">
+        <Button onClick={focusMessageInput} className="flex-1 bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+          <Send className="h-4 w-4 mr-2" /> {(language === 'it' ? 'Messaggio' : language === 'de' ? 'Nachricht' : language === 'fr' ? 'Message' : language === 'pl' ? 'Wiadomość' : 'Message')}
+        </Button>
+        {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
+          <Button 
+            onClick={handleMakeOffer}
+            className="flex-1 bg-green-600 hover:bg-green-700"
+            disabled={listing?.status === 'reserved'}
+            title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
+          >
+            <DollarSign className="h-4 w-4 mr-1" /> {ct.offer}
+          </Button>
+        )}
+      </div>
+
       {/* Input */}
       <div className="flex items-center gap-2 p-2 md:p-3 border-t bg-slate-50">
         <input
@@ -1217,6 +1242,7 @@ export default function ChatWindow({
         </Button>
         
         <Input
+           ref={messageInputRef}
            placeholder={ct.typeMessage}
            value={messageText}
            onChange={(e) => {
