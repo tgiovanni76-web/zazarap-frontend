@@ -164,13 +164,13 @@ export default function Messages() {
   if (!user) {
     return (
       <div className="max-w-3xl mx-auto py-12 text-center">
-        <h1 className="text-2xl font-bold mb-2">Accedi per usare i messaggi</h1>
+        <h1 className="text-2xl font-bold mb-2">{t('loginOrRegister')}</h1>
         <p className="text-slate-600 mb-6">Per inviare o leggere i messaggi devi effettuare l'accesso.</p>
         <button
           className="bg-[var(--z-primary)] text-white px-5 py-2 rounded-lg"
           onClick={() => base44.auth.redirectToLogin(createPageUrl('Messages'))}
         >
-          Accedi / Registrati
+          {t('loginOrRegister')}
         </button>
       </div>
     );
@@ -277,7 +277,7 @@ export default function Messages() {
             <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-400">
               <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
               <p className="text-lg">{t('selectChat')}</p>
-              <p className="text-sm mt-2">Seleziona una chat per iniziare</p>
+              <p className="text-sm mt-2">{t('selectChat')}</p>
             </div>
           )}
         </div>
