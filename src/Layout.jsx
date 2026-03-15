@@ -901,7 +901,7 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Menu profilo 👤 */}
                         {user && (
-                          <span className="hidden md:inline text-white/70 text-xs mr-1 md:mr-2">
+                          <span className="hidden xs:inline text-white/70 text-[11px] md:text-xs mr-1 md:mr-2 truncate max-w-[90px] md:max-w-none">
                             👋 {(
                               currentLanguage === 'it' ? 'Ciao' :
                               currentLanguage === 'de' ? 'Hallo' :
