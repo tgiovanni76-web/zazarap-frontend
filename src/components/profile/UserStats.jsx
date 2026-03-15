@@ -5,6 +5,8 @@ import { Star, Package, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
 
 export default function UserStats({ user, isOwnProfile }) {
+  const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const sellerStats = user.sellerStats || {};
   const buyerStats = user.buyerStats || {};
 
