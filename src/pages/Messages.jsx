@@ -121,13 +121,12 @@ export default function Messages() {
     setPreviousUnreadCount(totalUnread);
   }, [myChats, user, previousUnreadCount]);
 
-  // Notification for new messages in current chat
+  // Notification for new messages in current chat (no global scroll)
   useEffect(() => {
     if (chatMessages.length > previousMessageCount && previousMessageCount > 0) {
       const lastMessage = chatMessages[chatMessages.length - 1];
       if (lastMessage && lastMessage.senderId !== user?.email) {
-        // Scroll to bottom for new message
-        document.querySelector('[data-scroll-anchor]')?.scrollIntoView({ behavior: 'smooth' });
+        // Let ChatWindow handle internal scroll; avoid touching global
       }
     }
     setPreviousMessageCount(chatMessages.length);
