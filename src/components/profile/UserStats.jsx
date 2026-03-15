@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Package, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
-import { formatCurrency, formatNumber } from '@/utils/format';
+import { formatCurrency, formatNumber } from '@/components/utils/format';
 
 export default function UserStats({ user, isOwnProfile }) {
   const { t, currentLanguage } = useLanguage();

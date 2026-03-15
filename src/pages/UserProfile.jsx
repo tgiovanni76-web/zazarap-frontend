@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import UserStats from '../components/profile/UserStats';
 import UserReviews from '../components/profile/UserReviews';
 import { format } from 'date-fns';
-import { formatCurrency } from '@/utils/format';
+import { formatCurrency } from '@/components/utils/format';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function UserProfile() {

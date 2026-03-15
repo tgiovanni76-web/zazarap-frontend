@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, MessageSquare } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
-import { formatCurrency } from '@/utils/format';
+import { formatCurrency } from '@/components/utils/format';
 
 const statusColors = {
   'in_attesa': 'bg-yellow-100 text-yellow-800',
