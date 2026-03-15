@@ -23,7 +23,7 @@ function formatChatTime(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
   if (isToday(date)) return format(date, 'HH:mm');
-  if (isYesterday(date)) return 'Ieri';
+  if (isYesterday(date)) return format(date, 'dd/MM');
   return format(date, 'dd/MM');
 }
 
@@ -118,7 +118,7 @@ export default function ChatSidebar({
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start mb-1">
                       <span className="font-semibold text-sm truncate">
-                        {chat.listingTitle || 'Annuncio'}
+                        {chat.listingTitle || t('listing')}
                       </span>
                       <span className="text-xs text-slate-400 flex-shrink-0 ml-2">
                         {formatChatTime(chat.updatedAt)}
@@ -130,7 +130,7 @@ export default function ChatSidebar({
                     </p>
                     <div className="flex items-center justify-between">
                       <p className={`text-xs truncate flex-1 ${unreadCount > 0 ? 'font-semibold text-slate-700' : 'text-slate-400'}`}>
-                        {statusEmoji[chat.status]} {chat.lastMessage || 'Inizia la conversazione...'}
+                        {statusEmoji[chat.status]} {chat.lastMessage || t('typeMessage')}
                       </p>
                       {chat.lastPrice && (
                         <span className="text-xs font-bold text-green-600 ml-2">

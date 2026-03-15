@@ -112,7 +112,7 @@ export default function Messages() {
         audio.play().catch(() => {});
       } catch (e) {}
       
-      toast.info('Nuovo messaggio ricevuto!', {
+      toast.info(t('new') + ' ' + t('messages') + '!', {
         icon: <Bell className="h-4 w-4" />,
         duration: 3000,
       });
