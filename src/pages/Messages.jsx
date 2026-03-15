@@ -226,9 +226,9 @@ export default function Messages() {
   // Desktop: show both sidebar and chat
   return (
     <div className="py-0 md:py-6 overflow-visible h-auto md:h-auto">
-      <div className="grid grid-cols-3 gap-4 h-full pb-2 overflow-hidden">
+      <div className="grid grid-cols-3 gap-4 h-full min-h-0 pb-2 overflow-hidden">
         {/* Sidebar */}
-        <div className="col-span-1 h-full overflow-y-auto overscroll-contain">
+        <div className="col-span-1 h-full min-h-0 overflow-y-auto overscroll-contain">
           <ChatSidebar
             chats={myChats}
             selectedChat={selectedChat}
@@ -240,7 +240,7 @@ export default function Messages() {
         </div>
 
         {/* Chat Window */}
-        <div className="col-span-2 h-full overflow-hidden">
+        <div className="col-span-2 h-full min-h-0 overflow-hidden">
           {/* The ChatWindow itself manages internal scrolling for messages; ensure no bleed */}
         
           {selectedChat ? (
