@@ -2871,7 +2871,7 @@ export function LanguageProvider({ children }) {
   const t = (key, params) => {
     // 1. Check namespace-based i18n first (new format: "home.hero.title")
     if (i18n[key]) {
-      let translated = i18n[key][language] || i18n[key][DEFAULT_LANG] || key;
+      let translated = i18n[key][language] || i18n[key][DEFAULT_LANG] || i18n[key]['en'] || key;
       
       // Replace parameters like {name}, {price}, etc.
       if (params && typeof translated === 'string') {
@@ -2884,7 +2884,7 @@ export function LanguageProvider({ children }) {
     }
 
     // 2. Try legacy flat translations with German fallback
-    const translated = translations[language]?.[key] || translations['de']?.[key];
+    const translated = translations[language]?.[key] || translations[DEFAULT_LANG]?.[key] || translations['en']?.[key];
     if (translated) return translated;
 
     // 3. Return key as fallback
