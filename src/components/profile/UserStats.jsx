@@ -18,17 +18,17 @@ export default function UserStats({ user, isOwnProfile }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="h-5 w-5 text-blue-600" />
-              Statistiche Venditore
+              {tr('profile.sellerStats','Statistiche Venditore')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-sm text-slate-600">Vendite</p>
+                <p className="text-sm text-slate-600">{tr('profile.sales','Vendite')}</p>
                 <p className="text-2xl font-bold">{sellerStats.totalSales || 0}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Fatturato</p>
+                <p className="text-sm text-slate-600">{tr('profile.revenue','Fatturato')}</p>
                 <p className="text-2xl font-bold">{(sellerStats.totalRevenue || 0).toFixed(0)}€</p>
               </div>
               <div>
@@ -46,7 +46,7 @@ export default function UserStats({ user, isOwnProfile }) {
             {sellerStats.responseTime && (
               <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
                 <Clock className="h-4 w-4" />
-                Tempo di risposta medio: {sellerStats.responseTime}
+                {tr('profile.responseTime','Tempo di risposta medio:')} {sellerStats.responseTime}
               </div>
             )}
           </CardContent>
@@ -59,17 +59,17 @@ export default function UserStats({ user, isOwnProfile }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5 text-green-600" />
-              Statistiche Acquirente
+              {tr('profile.buyerStats','Statistiche Acquirente')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-sm text-slate-600">Acquisti</p>
+                <p className="text-sm text-slate-600">{tr('profile.purchases','Acquisti')}</p>
                 <p className="text-2xl font-bold">{buyerStats.totalPurchases || 0}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Speso</p>
+                <p className="text-sm text-slate-600">{tr('profile.spent','Speso')}</p>
                 <p className="text-2xl font-bold">{(buyerStats.totalSpent || 0).toFixed(0)}€</p>
               </div>
               <div>
@@ -94,7 +94,7 @@ export default function UserStats({ user, isOwnProfile }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-purple-600" />
-              Badge e Riconoscimenti
+              {tr('profile.badges','Badge e Riconoscimenti')}
             </CardTitle>
           </CardHeader>
           <CardContent>
