@@ -20,7 +20,6 @@ import { useLanguage } from '../components/LanguageProvider';
 export default function UserProfile() {
   const { t, currentLanguage } = useLanguage();
   const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
-  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const urlParams = new URLSearchParams(window.location.search);
   const profileUserId = urlParams.get('user');
   const [isEditing, setIsEditing] = useState(false);
@@ -326,7 +325,7 @@ export default function UserProfile() {
                           )}
                           <div className="flex-1">
                             <h3 className="font-semibold mb-1">{listing.title}</h3>
-                            <p className="text-lg font-bold text-red-600 mb-2">{(await import('@/utils/format')).then(m=>m.formatCurrency(listing.price, currentLanguage))}</p>
+                            <p className="text-lg font-bold text-red-600 mb-2">{formatCurrency(listing.price, currentLanguage)}</p>
                             <Badge variant={listing.status === 'active' ? 'default' : 'secondary'}>
                               {listing.status === 'active' ? 'Attivo' : 
                                listing.status === 'sold' ? 'Venduto' : listing.status}
@@ -365,7 +364,7 @@ export default function UserProfile() {
                             </Badge>
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold">{(await import('@/utils/format')).then(m=>m.formatCurrency(order.totalAmount, currentLanguage))}</p>
+                            <p className="text-2xl font-bold">{formatCurrency(order.totalAmount, currentLanguage)}</p>
                             <Link to={createPageUrl('MyOrders') + '?orderId=' + order.id}>
                               <Button variant="outline" size="sm" className="mt-2">
                                 Dettagli
