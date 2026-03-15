@@ -125,6 +125,17 @@ function LayoutInner({ children, currentPageName }) {
     enabled: !!user,
   });
 
+  // Real-time notifications: refresh unread badge instantly when a notification for this user changes
+  useEffect(() => {
+    if (!user?.email) return;
+    const unsubscribe = base44.entities.Notification.subscribe((event) => {
+      if (event?.data?.userId === user.email) {
+        queryClient.invalidateQueries({ queryKey: ['notifications', user.email, 'unread'] });
+      }
+    });
+    return unsubscribe;
+  }, [user?.email, queryClient]);
+
   const unreadCount = notifications.length;
 
   // Sticky header height -> CSS variable (desktop/mobile + safe-area)
