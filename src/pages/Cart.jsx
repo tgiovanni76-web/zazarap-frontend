@@ -11,9 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingCart, Trash2, Plus, Minus, Tag, ArrowRight, ShoppingBag, Heart, MapPin, Zap, X } from 'lucide-react';
 import { toast } from 'sonner';
 import SavedItems from '../components/cart/SavedItems';
+import { useLanguage } from '../components/LanguageProvider';
 import AddressManager from '../components/cart/AddressManager';
 
 export default function Cart() {
+  const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [discountCodes, setDiscountCodes] = useState([]);
@@ -198,8 +201,8 @@ export default function Cart() {
     return (
       <div className="py-12 max-w-2xl mx-auto text-center">
         <ShoppingCart className="h-20 w-20 mx-auto mb-4 text-slate-300" />
-        <h2 className="text-2xl font-bold mb-2">Il tuo carrello è vuoto</h2>
-        <p className="text-slate-600 mb-6">Aggiungi articoli per iniziare lo shopping</p>
+        <h2 className="text-2xl font-bold mb-2">{tr('cart.emptyTitle','Il tuo carrello è vuoto')}</h2>
+        <p className="text-slate-600 mb-6">{tr('cart.emptySubtitle','Aggiungi articoli per iniziare lo shopping')}</p>
         <Link to={createPageUrl('Marketplace')}>
           <Button className="bg-red-600 hover:bg-red-700">
             <ShoppingBag className="h-4 w-4 mr-2" />
@@ -216,7 +219,7 @@ export default function Cart() {
 
   return (
     <div className="py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">Shopping</h2>
+      <h2 className="text-3xl font-bold mb-6">{tr('cart.title','Shopping')}</h2>
 
       <Tabs defaultValue="cart" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">

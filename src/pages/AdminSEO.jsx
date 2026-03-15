@@ -13,6 +13,7 @@ import SEOHead from '../components/SEOHead';
 
 export default function AdminSEO() {
   const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState({
     googleSiteVerification: '',
@@ -66,10 +67,10 @@ export default function AdminSEO() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['seoSettings'] });
-      toast.success('Impostazioni SEO salvate con successo');
+      toast.success(tr('adminSEO.saved','Impostazioni SEO salvate con successo'));
     },
     onError: () => {
-      toast.error('Errore nel salvataggio');
+      toast.error(tr('common.saveError','Errore nel salvataggio'));
     }
   });
 
@@ -79,17 +80,17 @@ export default function AdminSEO() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.success('Copiato negli appunti');
+    toast.success(tr('common.copied','Copiato negli appunti'));
   };
 
   if (!user || user.role !== 'admin') {
-    return <div className="p-8 text-center">Accesso negato</div>;
+    return <div className="p-8 text-center">{tr('common.accessDenied','Accesso negato')}</div>;
   }
 
   return (
     <div className="py-8 max-w-4xl mx-auto">
       <SEOHead title="Admin SEO & Sitemap | Zazarap" />
-      <h1 className="text-3xl font-bold mb-8">Gestione SEO e Sitemap</h1>
+      <h1 className="text-3xl font-bold mb-8">{tr('adminSEO.title','Gestione SEO e Sitemap')}</h1>
 
       <div className="grid gap-6">
         {/* GSC Verification */}
@@ -102,7 +103,7 @@ export default function AdminSEO() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block font-medium mb-1">Codice di Verifica (HTML Tag)</label>
+              <label className="block font-medium mb-1">{tr('adminSEO.verificationCode','Codice di Verifica (HTML Tag)')}</label>
               <p className="text-sm text-slate-500 mb-2">
                 Inserisci il codice <code>content</code> del meta tag di verifica.
                 Es: <code>w-5...</code> da <code>&lt;meta name="google-site-verification" content="..." /&gt;</code>
@@ -119,7 +120,7 @@ export default function AdminSEO() {
             <div className="bg-slate-50 p-4 rounded-lg border">
               <h4 className="font-bold mb-2 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-blue-500" />
-                Come verificare:
+                {tr('adminSEO.howToVerify','Come verificare:')}
               </h4>
               <ol className="list-decimal list-inside text-sm space-y-1">
                 <li>Vai su <a href="https://search.google.com/search-console" target="_blank" className="text-blue-600 hover:underline">Google Search Console</a></li>
@@ -136,7 +137,7 @@ export default function AdminSEO() {
         {/* Sitemap & Robots */}
         <Card>
           <CardHeader>
-            <CardTitle>Sitemap & Robots.txt</CardTitle>
+            <CardTitle>{tr('adminSEO.sitemapRobots','Sitemap & Robots.txt')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
@@ -152,7 +153,7 @@ export default function AdminSEO() {
                   </Button>
                 </a>
               </div>
-              <p className="text-xs text-slate-500 mt-1">Invia questo URL su Google Search Console sotto "Sitemaps"</p>
+              <p className="text-xs text-slate-500 mt-1">{tr('adminSEO.submitSitemap','Invia questo URL su Google Search Console sotto "Sitemaps"')}</p>
             </div>
 
             <div>

@@ -12,6 +12,7 @@ import { useLanguage } from '../components/LanguageProvider';
 
 export default function OTPLogin() {
   const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const navigate = useNavigate();
   
   const [step, setStep] = useState(1); // 1: enter email, 2: enter code
@@ -41,14 +42,14 @@ export default function OTPLogin() {
 
       if (response.data?.success) {
         setStep(2);
-        toast.success('✅ Code wurde an ' + contact + ' gesendet!');
+        toast.success(tr('otp.codeSent','✅ Code gesendet!'));
       } else {
-        toast.error(response.data?.message || 'Fehler beim Senden des Codes');
+        toast.error(response.data?.message || tr('otp.sendError','Fehler beim Senden des Codes'));
         console.error('Send code failed:', response.data);
       }
     } catch (error) {
       console.error('Send code error:', error);
-      toast.error('Fehler: ' + (error.message || 'Code konnte nicht gesendet werden'));
+      toast.error(tr('common.error','Fehler: ') + (error.message || tr('otp.couldNotSend','Code konnte nicht gesendet werden')));
     }
     setLoading(false);
   };
@@ -69,29 +70,29 @@ export default function OTPLogin() {
       console.log('VerifyLoginCode response:', response);
 
       if (response.data?.success) {
-        toast.success('✅ Code verifiziert!');
+        toast.success(tr('otp.verified','✅ Code verifiziert!'));
         
         if (response.data.loginUrl) {
           // Redirect to Base44 login link
-          toast.success('🔐 Anmeldung wird vorbereitet...');
+          toast.success(tr('otp.preparingLogin','🔐 Anmeldung wird vorbereitet...'));
           setTimeout(() => {
             window.location.href = response.data.loginUrl;
           }, 1000);
         } else if (response.data.isNewUser) {
-          toast.success('🎉 Konto erstellt! Prüfe deine E-Mails für den Login-Link.');
+          toast.success(tr('otp.accountCreated','🎉 Konto erstellt! Prüfe deine E-Mails für den Login-Link.'));
           setTimeout(() => {
             navigate(createPageUrl('Marketplace'));
           }, 2000);
         } else {
-          toast.error('Login-Link konnte nicht generiert werden');
+          toast.error(tr('otp.loginLinkFailed','Login-Link konnte nicht generiert werden'));
         }
       } else {
-        toast.error(response.data?.message || 'Ungültiger Code');
+        toast.error(response.data?.message || tr('otp.invalidCode','Ungültiger Code'));
         console.error('Verify code failed:', response.data);
       }
     } catch (error) {
       console.error('Verify code error:', error);
-      toast.error('Fehler: ' + (error.message || 'Verifizierung fehlgeschlagen'));
+      toast.error(tr('common.error','Fehler: ') + (error.message || tr('otp.verifyFailed','Verifizierung fehlgeschlagen')));
     }
     setLoading(false);
   };
@@ -107,18 +108,18 @@ export default function OTPLogin() {
         
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold text-black mb-2">Zazarap.de</h1>
-          <p className="text-slate-600">Sicher einloggen mit Code</p>
+          <p className="text-slate-600">{tr('otp.subtitle','Sicher einloggen mit Code')}</p>
         </div>
 
         <Card className="shadow-2xl bg-white border border-slate-200 text-slate-900">
           <CardHeader className="bg-white text-black border-b border-slate-200">
             <CardTitle className="text-2xl">
-              {step === 1 && 'Anmeldung'}
-              {step === 2 && 'Code eingeben'}
+              {step === 1 && tr('otp.title','Anmeldung')}
+              {step === 2 && tr('otp.enterCode','Code eingeben')}
             </CardTitle>
             <CardDescription className="text-slate-600">
-              {step === 1 && 'Wir senden dir einen Einmalcode per E-Mail'}
-              {step === 2 && 'Gib den 6-stelligen Code ein'}
+              {step === 1 && tr('otp.descSend','Wir senden dir einen Einmalcode per E-Mail')}
+              {step === 2 && tr('otp.descEnter','Gib den 6-stelligen Code ein')}
             </CardDescription>
           </CardHeader>
 
@@ -129,7 +130,7 @@ export default function OTPLogin() {
               <div className="space-y-5">
                 <div>
                   <Label className="text-base font-semibold mb-3 block text-slate-800">
-                    Deine E-Mail-Adresse
+                    {tr('otp.emailLabel','Deine E-Mail-Adresse')}
                   </Label>
                   <Input
                     type="email"
@@ -142,7 +143,7 @@ export default function OTPLogin() {
                     style={{ fontSize: '16px' }}
                   />
                   <p className="text-xs text-slate-600 mt-2">
-                    Wir senden einen Einmalcode an diese E-Mail-Adresse
+                    {tr('otp.emailHelp','Wir senden einen Einmalcode an diese E-Mail-Adresse')}
                   </p>
                 </div>
 
@@ -154,12 +155,12 @@ export default function OTPLogin() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Code wird gesendet...
+                      {tr('otp.sending','Code wird gesendet...')}
                     </>
                   ) : (
                     <>
                       <Mail className="mr-2 h-5 w-5" />
-                      Code per E-Mail senden
+                      {tr('otp.send','Code per E-Mail senden')}
                     </>
                   )}
                 </Button>
@@ -187,7 +188,7 @@ export default function OTPLogin() {
 
                 <div>
                   <Label className="text-base font-semibold mb-3 block text-slate-800">
-                    Gib den 6-stelligen Code ein
+                    {tr('otp.codeLabel','Gib den 6-stelligen Code ein')}
                   </Label>
                   <Input
                     type="text"
@@ -201,7 +202,7 @@ export default function OTPLogin() {
                     style={{ fontSize: '28px', letterSpacing: '0.5em' }}
                   />
                   <p className="text-xs text-slate-600 mt-2 text-center">
-                    Der Code ist 15 Minuten gültig
+                    {tr('otp.codeValidity','Der Code ist 15 Minuten gültig')}
                   </p>
                 </div>
 
@@ -213,10 +214,10 @@ export default function OTPLogin() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Wird überprüft...
+                      {tr('otp.verifying','Wird überprüft...')}
                     </>
                   ) : (
-                    'Anmelden'
+                    tr('otp.login','Anmelden')
                   )}
                 </Button>
 
@@ -230,7 +231,7 @@ export default function OTPLogin() {
                     }}
                     className="text-sm"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Zurück
+                    <ArrowLeft className="mr-2 h-4 w-4" /> {tr('common.back','Zurück')}
                   </Button>
 
                   <Button
@@ -240,7 +241,7 @@ export default function OTPLogin() {
                     disabled={loading}
                     className="text-sm text-black hover:text-neutral-800"
                   >
-                    Code erneut senden
+                    {tr('otp.resend','Code erneut senden')}
                   </Button>
                 </div>
               </div>

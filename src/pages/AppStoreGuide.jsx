@@ -20,6 +20,7 @@ import { useLanguage } from '../components/LanguageProvider';
 
 export default function AppStoreGuide() {
   const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const [completedSteps, setCompletedSteps] = useState({});
 
   const toggleStep = (stepId) => {
@@ -268,7 +269,7 @@ export default function AppStoreGuide() {
   return (
     <div className="py-8 max-w-5xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-3">Pubblicazione App Store & Play Store</h1>
+        <h1 className="text-4xl font-bold mb-3">{tr('appStoreGuide.title','Pubblicazione App Store & Play Store')}</h1>
         <p className="text-slate-600 text-lg">
           Guida completa per trasformare Zazarap in app nativa per iOS e Android
         </p>
@@ -278,7 +279,7 @@ export default function AppStoreGuide() {
       <Card className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-lg font-semibold">Progresso Complessivo</span>
+            <span className="text-lg font-semibold">{tr('appStoreGuide.overallProgress','Progresso Complessivo')}</span>
             <span className="text-2xl font-bold text-blue-600">{progress}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
@@ -319,7 +320,7 @@ export default function AppStoreGuide() {
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-semibold">{prereq.title}</h3>
                     {prereq.required && (
-                      <Badge variant="destructive" className="text-xs">Obbligatorio</Badge>
+                      <Badge variant="destructive" className="text-xs">{tr('common.required','Obbligatorio')}</Badge>
                     )}
                   </div>
                   <p className="text-sm text-slate-600 mb-2">{prereq.description}</p>
@@ -340,7 +341,7 @@ export default function AppStoreGuide() {
           </div>
           
           <div className="mt-6 p-4 bg-slate-100 rounded-lg">
-            <p className="font-semibold mb-2">Stima Costi Totali:</p>
+            <p className="font-semibold mb-2">{tr('appStoreGuide.costEstimate','Stima Costi Totali:')}</p>
             <ul className="text-sm space-y-1">
               <li>• Piano Builder Base44: variabile</li>
               <li>• Apple Developer: $99/anno</li>
@@ -409,7 +410,7 @@ export default function AppStoreGuide() {
       {/* Alternative: PWA */}
       <Card className="border-green-300 bg-green-50">
         <CardHeader>
-          <CardTitle className="text-green-900">Alternativa Più Semplice: PWA</CardTitle>
+          <CardTitle className="text-green-900">{tr('appStoreGuide.pwaAlt','Alternativa Più Semplice: PWA')}</CardTitle>
         </CardHeader>
         <CardContent className="text-green-900">
           <p className="mb-4">
@@ -440,7 +441,7 @@ export default function AppStoreGuide() {
       {/* Resources */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Risorse Utili</CardTitle>
+          <CardTitle>{tr('common.resources','Risorse Utili')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm">

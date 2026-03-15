@@ -14,8 +14,11 @@ import { toast } from 'sonner';
 import UserStats from '../components/profile/UserStats';
 import UserReviews from '../components/profile/UserReviews';
 import { format } from 'date-fns';
+import { useLanguage } from '../components/LanguageProvider';
 
 export default function UserProfile() {
+  const { t } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const urlParams = new URLSearchParams(window.location.search);
   const profileUserId = urlParams.get('user');
   const [isEditing, setIsEditing] = useState(false);
@@ -86,7 +89,7 @@ export default function UserProfile() {
   if (!profileUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-600">Utente non trovato</p>
+        <p className="text-slate-600">{tr('profile.notFound','Utente non trovato')}</p>
       </div>
     );
   }
@@ -132,9 +135,9 @@ export default function UserProfile() {
                 </div>
                 {isOwnProfile && !isEditing && (
                   <Button onClick={startEditing} variant="outline">
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Modifica Profilo
-                  </Button>
+                                        <Edit2 className="h-4 w-4 mr-2" />
+                                        {tr('profile.edit','Modifica Profilo')}
+                                      </Button>
                 )}
               </div>
 
@@ -187,36 +190,36 @@ export default function UserProfile() {
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium">Bio</label>
+                    <label className="text-sm font-medium">{tr('profile.bio','Bio')}</label>
                     <Textarea
                       value={editData.bio || ''}
                       onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                      placeholder="Racconta qualcosa di te..."
+                      placeholder={tr('profile.bioPlaceholder','Racconta qualcosa di te...')}
                       rows={3}
                     />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium">Località</label>
+                      <label className="text-sm font-medium">{tr('profile.location','Località')}</label>
                       <Input
                         value={editData.location || ''}
                         onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                        placeholder="Roma, Italia"
+                        placeholder={tr('profile.locationPlaceholder','Roma, Italia')}
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Telefono</label>
+                      <label className="text-sm font-medium">{tr('profile.phone','Telefono')}</label>
                       <Input
                         value={editData.phoneNumber || ''}
                         onChange={(e) => setEditData({ ...editData, phoneNumber: e.target.value })}
-                        placeholder="+39 123 456 7890"
+                        placeholder={tr('profile.phonePlaceholder','+39 123 456 7890')}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Social Media</label>
+                    <label className="text-sm font-medium mb-2 block">{tr('profile.social','Social Media')}</label>
                     <div className="grid grid-cols-2 gap-4">
                       <Input
                         value={editData.socialLinks?.facebook || ''}
@@ -280,7 +283,7 @@ export default function UserProfile() {
           disabled={recalculateBadgesMutation.isPending}
         >
           <Star className="h-4 w-4 mr-2" />
-          Aggiorna Badge
+          {tr('profile.refreshBadges','Aggiorna Badge')}
         </Button>
       )}
 
@@ -307,7 +310,7 @@ export default function UserProfile() {
           <TabsContent value="listings" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {listings.length === 0 ? (
-                <p className="text-center text-slate-500 col-span-2 py-8">Nessun annuncio</p>
+                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Nessun annuncio')}</p>
               ) : (
                 listings.map(listing => (
                   <Link key={listing.id} to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
@@ -338,7 +341,7 @@ export default function UserProfile() {
             <TabsContent value="purchases" className="mt-6">
               <div className="space-y-4">
                 {orders.length === 0 ? (
-                  <p className="text-center text-slate-500 py-8">Nessun acquisto</p>
+                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Nessun acquisto')}</p>
                 ) : (
                   orders.map(order => (
                     <Card key={order.id}>
