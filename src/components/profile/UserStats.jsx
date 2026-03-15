@@ -32,7 +32,7 @@ export default function UserStats({ user, isOwnProfile }) {
                 <p className="text-2xl font-bold">{(sellerStats.totalRevenue || 0).toFixed(0)}€</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Valutazione</p>
+                <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
                   <p className="text-2xl font-bold">{(sellerStats.averageRating || 0).toFixed(1)}</p>
@@ -73,7 +73,7 @@ export default function UserStats({ user, isOwnProfile }) {
                 <p className="text-2xl font-bold">{(buyerStats.totalSpent || 0).toFixed(0)}€</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Valutazione</p>
+                <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
                   <p className="text-2xl font-bold">{(buyerStats.averageRating || 0).toFixed(1)}</p>
