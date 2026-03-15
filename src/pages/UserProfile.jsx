@@ -14,10 +14,12 @@ import { toast } from 'sonner';
 import UserStats from '../components/profile/UserStats';
 import UserReviews from '../components/profile/UserReviews';
 import { format } from 'date-fns';
+import { formatCurrency } from '@/utils/format';
 import { useLanguage } from '../components/LanguageProvider';
 
 export default function UserProfile() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const urlParams = new URLSearchParams(window.location.search);
   const profileUserId = urlParams.get('user');
@@ -89,7 +91,7 @@ export default function UserProfile() {
   if (!profileUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-600">{tr('profile.notFound','Benutzer nicht gefunden')}</p>
+        <p className="text-slate-600">{tr('profile.notFound','Utente non trovato')}</p>
       </div>
     );
   }
@@ -125,7 +127,7 @@ export default function UserProfile() {
             </div>
             
             <div className="flex-1">
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
                 <div>
                   <h1 className="text-3xl font-bold">{profileUser.full_name || profileUser.email}</h1>
                   <p className="text-slate-600 flex items-center gap-2 mt-1">
@@ -134,10 +136,10 @@ export default function UserProfile() {
                   </p>
                 </div>
                 {isOwnProfile && !isEditing && (
-                  <Button onClick={startEditing} variant="outline">
-                                        <Edit2 className="h-4 w-4 mr-2" />
-                                        {tr('profile.edit','Profil bearbeiten')}
-                                      </Button>
+                  <Button onClick={startEditing} variant="outline" className="self-start sm:self-auto mt-2 sm:mt-0 whitespace-nowrap">
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    {tr('profile.edit','Modifica profilo')}
+                  </Button>
                 )}
               </div>
 
@@ -283,7 +285,7 @@ export default function UserProfile() {
           disabled={recalculateBadgesMutation.isPending}
         >
           <Star className="h-4 w-4 mr-2" />
-          {tr('profile.refreshBadges','Badges aktualisieren')}
+          {tr('profile.refreshBadges','Aggiorna badge')}
         </Button>
       )}
 
@@ -310,7 +312,7 @@ export default function UserProfile() {
           <TabsContent value="listings" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {listings.length === 0 ? (
-                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Keine Anzeigen')}</p>
+                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Nessun annuncio')}</p>
               ) : (
                 listings.map(listing => (
                   <Link key={listing.id} to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
@@ -322,7 +324,7 @@ export default function UserProfile() {
                           )}
                           <div className="flex-1">
                             <h3 className="font-semibold mb-1">{listing.title}</h3>
-                            <p className="text-lg font-bold text-red-600 mb-2">{listing.price}€</p>
+                            <p className="text-lg font-bold text-red-600 mb-2">{(await import('@/utils/format')).then(m=>m.formatCurrency(listing.price, currentLanguage))}</p>
                             <Badge variant={listing.status === 'active' ? 'default' : 'secondary'}>
                               {listing.status === 'active' ? 'Attivo' : 
                                listing.status === 'sold' ? 'Venduto' : listing.status}
@@ -341,7 +343,7 @@ export default function UserProfile() {
             <TabsContent value="purchases" className="mt-6">
               <div className="space-y-4">
                 {orders.length === 0 ? (
-                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Keine Käufe')}</p>
+                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Nessun acquisto')}</p>
                 ) : (
                   orders.map(order => (
                     <Card key={order.id}>
@@ -361,7 +363,7 @@ export default function UserProfile() {
                             </Badge>
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold">{order.totalAmount}€</p>
+                            <p className="text-2xl font-bold">{(await import('@/utils/format')).then(m=>m.formatCurrency(order.totalAmount, currentLanguage))}</p>
                             <Link to={createPageUrl('MyOrders') + '?orderId=' + order.id}>
                               <Button variant="outline" size="sm" className="mt-2">
                                 Dettagli

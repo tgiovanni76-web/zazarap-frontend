@@ -901,7 +901,16 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Menu profilo 👤 */}
                         {user && (
-                          <span className="text-white/70 text-xs mr-1 md:mr-2">👋 Hallo, Giovanni</span>
+                          <span className="hidden md:inline text-white/70 text-xs mr-1 md:mr-2">
+                            👋 {(
+                              currentLanguage === 'it' ? 'Ciao' :
+                              currentLanguage === 'de' ? 'Hallo' :
+                              currentLanguage === 'en' ? 'Hello' :
+                              currentLanguage === 'fr' ? 'Bonjour' :
+                              currentLanguage === 'pl' ? 'Cześć' :
+                              currentLanguage === 'tr' ? 'Merhaba' : 'Hallo'
+                            )}, {user.full_name?.split(' ')[0] || user.email?.split('@')[0]}
+                          </span>
                         )}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

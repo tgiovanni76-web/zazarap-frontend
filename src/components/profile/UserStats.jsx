@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Package, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
+import { formatCurrency, formatNumber } from '@/utils/format';
 
 export default function UserStats({ user, isOwnProfile }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const tr = (k, fb) => { const v = t(k); return v === k ? fb : v; };
   const sellerStats = user.sellerStats || {};
   const buyerStats = user.buyerStats || {};
@@ -29,13 +30,13 @@ export default function UserStats({ user, isOwnProfile }) {
               </div>
               <div>
                 <p className="text-sm text-slate-600">{tr('profile.revenue','Fatturato')}</p>
-                <p className="text-2xl font-bold">{(sellerStats.totalRevenue || 0).toFixed(0)}€</p>
+                <p className="text-2xl font-bold">{formatCurrency(sellerStats.totalRevenue || 0, currentLanguage)}</p>
               </div>
               <div>
                 <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <p className="text-2xl font-bold">{(sellerStats.averageRating || 0).toFixed(1)}</p>
+                  <p className="text-2xl font-bold">{formatNumber(sellerStats.averageRating || 0, currentLanguage, 1)}</p>
                 </div>
               </div>
               <div>
@@ -70,7 +71,7 @@ export default function UserStats({ user, isOwnProfile }) {
               </div>
               <div>
                 <p className="text-sm text-slate-600">{tr('profile.spent','Speso')}</p>
-                <p className="text-2xl font-bold">{(buyerStats.totalSpent || 0).toFixed(0)}€</p>
+                <p className="text-2xl font-bold">{formatCurrency(buyerStats.totalSpent || 0, currentLanguage)}</p>
               </div>
               <div>
                 <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
