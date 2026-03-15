@@ -856,6 +856,8 @@ function LayoutInner({ children, currentPageName }) {
 
                       {/* Menu Icons */}
                       <nav className="flex items-center gap-1.5 md:gap-4" aria-label="Main navigation">
+                        {/* Mobile overflow handling */}
+                        <style>{`@media (max-width: 380px){ #app-header nav a, #app-header nav button{transform:scale(0.92)} }`}</style>
                         <Link to={createPageUrl('Marketplace')} className="inline-flex items-center justify-center h-7 w-7 md:h-8 md:w-8 text-white hover:text-[var(--z-accent)] rounded focus:ring-2 focus:ring-white" title={t('aria.home')} aria-label={t('aria.home')}>
                           <Home className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" focusable="false" />
                         </Link>
