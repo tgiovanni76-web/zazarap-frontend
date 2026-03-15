@@ -237,7 +237,7 @@ export default function ChatWindow({
         window.location.href = createPageUrl('Marketplace');
       }
     }
-    setTimeout(() => window.scrollTo(0, 0), 0);
+
   }, [listing?.id, chat?.listingId]);
 
   // Translate message function

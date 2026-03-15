@@ -140,8 +140,7 @@ export default function Messages() {
   const handleSelectChat = (chat) => {
     setSelectedChat(chat);
     queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
-    // Scroll to top when selecting a chat
-    window.scrollTo(0, 0);
+
   };
 
   // Loading state
@@ -181,7 +180,6 @@ export default function Messages() {
             listing={currentListing}
             onBack={() => {
               setSelectedChat(null);
-              window.scrollTo(0, 0);
             }}
             onOpenPayment={() => setShowPaymentModal(true)}
             onReport={() => setShowReportModal(true)}
@@ -251,7 +249,6 @@ export default function Messages() {
               listing={currentListing}
               onBack={() => {
                 setSelectedChat(null);
-                window.scrollTo(0, 0);
               }}
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
