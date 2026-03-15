@@ -89,7 +89,7 @@ export default function UserProfile() {
   if (!profileUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-600">{tr('profile.notFound','Utente non trovato')}</p>
+        <p className="text-slate-600">{tr('profile.notFound','Benutzer nicht gefunden')}</p>
       </div>
     );
   }
@@ -136,7 +136,7 @@ export default function UserProfile() {
                 {isOwnProfile && !isEditing && (
                   <Button onClick={startEditing} variant="outline">
                                         <Edit2 className="h-4 w-4 mr-2" />
-                                        {tr('profile.edit','Modifica Profilo')}
+                                        {tr('profile.edit','Profil bearbeiten')}
                                       </Button>
                 )}
               </div>
@@ -283,7 +283,7 @@ export default function UserProfile() {
           disabled={recalculateBadgesMutation.isPending}
         >
           <Star className="h-4 w-4 mr-2" />
-          {tr('profile.refreshBadges','Aggiorna Badge')}
+          {tr('profile.refreshBadges','Badges aktualisieren')}
         </Button>
       )}
 
@@ -310,7 +310,7 @@ export default function UserProfile() {
           <TabsContent value="listings" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {listings.length === 0 ? (
-                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Nessun annuncio')}</p>
+                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Keine Anzeigen')}</p>
               ) : (
                 listings.map(listing => (
                   <Link key={listing.id} to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
@@ -341,7 +341,7 @@ export default function UserProfile() {
             <TabsContent value="purchases" className="mt-6">
               <div className="space-y-4">
                 {orders.length === 0 ? (
-                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Nessun acquisto')}</p>
+                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Keine Käufe')}</p>
                 ) : (
                   orders.map(order => (
                     <Card key={order.id}>
