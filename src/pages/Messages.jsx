@@ -179,7 +179,13 @@ export default function Messages() {
             user={user}
             listing={currentListing}
             onBack={() => {
+              const el = document.getElementById('main-content');
+              const prev = el ? el.scrollTop : null;
               setSelectedChat(null);
+              if (prev !== null) requestAnimationFrame(() => {
+                const c = document.getElementById('main-content');
+                if (c) c.scrollTop = prev;
+              });
             }}
             onOpenPayment={() => setShowPaymentModal(true)}
             onReport={() => setShowReportModal(true)}
@@ -248,7 +254,13 @@ export default function Messages() {
               user={user}
               listing={currentListing}
               onBack={() => {
+                const el = document.getElementById('main-content');
+                const prev = el ? el.scrollTop : null;
                 setSelectedChat(null);
+                if (prev !== null) requestAnimationFrame(() => {
+                  const c = document.getElementById('main-content');
+                  if (c) c.scrollTop = prev;
+                });
               }}
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
