@@ -136,10 +136,12 @@ export default function UserProfile() {
                   </p>
                 </div>
                 {isOwnProfile && !isEditing && (
-                  <Button onClick={startEditing} variant="outline" className="self-start sm:self-auto mt-2 sm:mt-0 whitespace-nowrap">
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    {tr('profile.edit','Modifica profilo')}
-                  </Button>
+                  <div className="relative">
+                    <Button onClick={startEditing} variant="outline" className="self-start sm:self-auto mt-2 sm:mt-0 whitespace-nowrap rounded-full px-3 py-1 h-8 text-sm shadow-sm">
+                      <Edit2 className="h-4 w-4 mr-1" />
+                      {tr('profile.edit','Modifica profilo')}
+                    </Button>
+                  </div>
                 )}
               </div>
 
