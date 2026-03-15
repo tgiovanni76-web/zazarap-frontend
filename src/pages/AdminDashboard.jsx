@@ -196,6 +196,7 @@ export default function AdminDashboard() {
       color: 'bg-emerald-600'
     }
     ];
+  const filteredAdminTools = adminTools.filter(t => !['PreLaunchChecklist','SystemCheckup','AccessibilityAudit'].includes(t.link));
 
   return (
     <div className="py-8">
