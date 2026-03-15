@@ -219,6 +219,7 @@ export default function ChatWindow({
   const [translatedMessages, setTranslatedMessages] = useState({});
   const [translatingId, setTranslatingId] = useState(null);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const queryClient = useQueryClient();
@@ -326,9 +327,11 @@ export default function ChatWindow({
     return () => clearInterval(interval);
   }, [chat, otherUser]);
 
-  // Scroll to bottom on new messages
+  // Scroll messages panel to bottom on new messages (avoid global scroll jump)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   // Mark messages as read
@@ -940,7 +943,8 @@ export default function ChatWindow({
 
       {/* Messages */}
       <div 
-        className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4"
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto overscroll-contain p-3 md:p-4 space-y-3 md:space-y-4"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}
       >
         {Object.entries(groupedMessages).map(([date, dayMessages]) => (
@@ -1110,7 +1114,7 @@ export default function ChatWindow({
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
+
       </div>
 
 
