@@ -39,7 +39,7 @@ export default function UserStats({ user, isOwnProfile }) {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Recensioni</p>
+                <p className="text-sm text-slate-600">{tr('profile.reviews','Recensioni')}</p>
                 <p className="text-2xl font-bold">{sellerStats.totalReviews || 0}</p>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default function UserStats({ user, isOwnProfile }) {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-slate-600">Recensioni</p>
+                <p className="text-sm text-slate-600">{tr('profile.reviews','Recensioni')}</p>
                 <p className="text-2xl font-bold">{buyerStats.totalReviews || 0}</p>
               </div>
             </div>
