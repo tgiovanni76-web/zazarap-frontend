@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Package, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
+import { useLanguage } from '../LanguageProvider';
 
 export default function UserStats({ user, isOwnProfile }) {
   const sellerStats = user.sellerStats || {};
