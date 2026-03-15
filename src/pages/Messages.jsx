@@ -8,6 +8,7 @@ import PaymentShippingModal from '../components/marketplace/PaymentShippingModal
 import ReportListingModal from '../components/ReportListingModal';
 import { useLanguage } from '../components/LanguageProvider';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 export default function Messages() {
   const { t } = useLanguage();
@@ -19,6 +20,17 @@ export default function Messages() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
   const queryClient = useQueryClient();
+
+  const handleSeedDemo = async () => {
+    try {
+      await base44.functions.invoke('seedDemoData', {});
+      await queryClient.invalidateQueries({ queryKey: ['chats'] });
+      await queryClient.invalidateQueries({ queryKey: ['listings'] });
+      toast.success('Dati demo creati');
+    } catch (e) {
+      toast.error('Errore creazione dati demo');
+    }
+  };
 
   // Handle responsive view (mobile + tablet stacked layout)
   useEffect(() => {
@@ -223,6 +235,13 @@ export default function Messages() {
 
     return (
       <div className="h-full min-h-0 overflow-hidden">
+        {myChats.length === 0 && (
+          <div className="p-3">
+            <Button onClick={handleSeedDemo} className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+              Crea dati demo
+            </Button>
+          </div>
+        )}
         <ChatSidebar
           chats={myChats}
           selectedChat={selectedChat}
@@ -278,6 +297,11 @@ export default function Messages() {
               <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
               <p className="text-lg">{t('selectChat')}</p>
               <p className="text-sm mt-2">{t('selectChat')}</p>
+              {myChats.length === 0 && (
+                <Button onClick={handleSeedDemo} className="mt-4 bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+                  Crea dati demo
+                </Button>
+              )}
             </div>
           )}
         </div>
