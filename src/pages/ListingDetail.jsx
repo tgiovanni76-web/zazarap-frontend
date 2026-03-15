@@ -192,7 +192,12 @@ export default function ListingDetail() {
     }
   };
 
-  // Track user activity for AI recommendations
+  const handleMakeOffer = async () => {
+    // Reuse chat creation/navigation
+    await handleContactSeller();
+  };
+
+   // Track user activity for AI recommendations
   useEffect(() => {
     if (user && listing && !activityTracked) {
       base44.entities.UserActivity.create({
@@ -229,6 +234,7 @@ export default function ListingDetail() {
     );
   }
 
+  const isOwner = !!user && listing.created_by === user.email;
   const avgRating = reviews.length > 0
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : 0;
@@ -333,79 +339,93 @@ export default function ListingDetail() {
 
       <div className="zaza-detail-description">{listing.description}</div>
 
-      {user && (
-        <div className="mb-6 space-y-3">
-          {listing.created_by === user.email ? (
-            <>
-              <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
-                <button className="zaza-contact-btn">{t('editListing')}</button>
-              </Link>
-              {listing.status === 'active' && (
-                <button
-                  onClick={() => markAsSoldMutation.mutate()}
-                  disabled={markAsSoldMutation.isPending}
-                  className="w-full p-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg disabled:opacity-50"
-                >
-                  {markAsSoldMutation.isPending ? 'Wird markiert...' : '✓ Als verkauft markieren'}
+      <div className="mb-6 space-y-3">
+        {isOwner ? (
+          <>
+            <Link to={createPageUrl('EditListing') + '?id=' + listingId}>
+              <button className="zaza-contact-btn">{t('editListing')}</button>
+            </Link>
+            {listing.status === 'active' && (
+              <button
+                onClick={() => markAsSoldMutation.mutate()}
+                disabled={markAsSoldMutation.isPending}
+                className="w-full p-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg disabled:opacity-50"
+              >
+                {markAsSoldMutation.isPending ? 'Wird markiert...' : '✓ Als verkauft markieren'}
+              </button>
+            )}
+            {!listing.featured && listing.status === 'active' && (
+              <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
+                <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
+                  ⭐ {t('promote')}
                 </button>
-              )}
-              {!listing.featured && listing.status === 'active' && (
-                <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
-                  <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
-                    ⭐ {t('promote')}
-                  </button>
-                </Link>
-              )}
-            </>
-          ) : (
-            <>
-              <button 
-                onClick={handleContactSeller}
-                disabled={isContactingLoading}
-                className="zaza-contact-btn flex items-center justify-center gap-2"
-              >
-                {isContactingLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <MessageSquare className="inline h-4 w-4" />
+              </Link>
+            )}
+          </>
+        ) : (
+          <>
+            {listing.status === 'active' && (
+              <>
+                <button 
+                  onClick={user ? handleContactSeller : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+                  disabled={isContactingLoading}
+                  className="zaza-contact-btn flex items-center justify-center gap-2"
+                >
+                  {isContactingLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <MessageSquare className="inline h-4 w-4" />
+                  )}
+                  {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
+                </button>
+                <button
+                  onClick={user ? handleMakeOffer : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+                  className="w-full mt-3 p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg"
+                >
+                  💬 {t('makeOffer') || `Fai un'offerta`}
+                </button>
+              </>
+            )}
+
+            {user && (
+              <>
+                <button
+                  onClick={() => toggleFavoriteMutation.mutate()}
+                  className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold focus:ring-2 focus:ring-[#e84c00]"
+                  aria-pressed={isFavorite}
+                >
+                  <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
+                  {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
+                </button>
+                {user.email !== listing.created_by && (
+                  <FollowButton
+                    targetType="user"
+                    targetId={listing.created_by}
+                    className="w-full mt-3"
+                    labelFollow="Segui venditore"
+                    labelUnfollow="Smetti di seguire"
+                  />
                 )}
-                {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
-              </button>
-              <button
-                onClick={() => toggleFavoriteMutation.mutate()}
-                className="w-full mt-3 p-3 border-2 border-[#e84c00] text-[#e84c00] rounded-lg font-bold focus:ring-2 focus:ring-[#e84c00]"
-                aria-pressed={isFavorite}
-              >
-                <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
-                {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
-              </button>
-              {user && user.email !== listing.created_by && (
                 <FollowButton
-                  targetType="user"
-                  targetId={listing.created_by}
+                  targetType="category"
+                  targetId={listing.category}
                   className="w-full mt-3"
-                  labelFollow="Segui venditore"
-                  labelUnfollow="Smetti di seguire"
+                  labelFollow="Segui categoria"
+                  labelUnfollow="Non seguire più"
                 />
-              )}
-              <FollowButton
-                targetType="category"
-                targetId={listing.category}
-                className="w-full mt-3"
-                labelFollow="Segui categoria"
-                labelUnfollow="Non seguire più"
-              />
-              <button
-                onClick={() => setShowReportModal(true)}
-                className="w-full mt-3 p-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-bold focus:ring-2 focus:ring-red-500"
-              >
-                <Flag className="inline h-4 w-4 mr-2" aria-hidden="true" />
-                {t('report.listing') || 'Segnala annuncio'}
-              </button>
-            </>
-          )}
-        </div>
-      )}
+              </>
+            )}
+
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="w-full mt-3 p-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-bold focus:ring-2 focus:ring-red-500"
+            >
+              <Flag className="inline h-4 w-4 mr-2" aria-hidden="true" />
+              {t('report.listing') || 'Segnala annuncio'}
+            </button>
+          </>
+        )}
+      </div>
 
       <ReportListingModal
         open={showReportModal}
