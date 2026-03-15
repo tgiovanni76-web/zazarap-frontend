@@ -138,9 +138,18 @@ export default function Messages() {
 
   // Handle chat selection
   const handleSelectChat = (chat) => {
+    const container = document.getElementById('main-content');
+    const prevScroll = container ? container.scrollTop : null;
+
     setSelectedChat(chat);
     queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
 
+    if (prevScroll !== null) {
+      requestAnimationFrame(() => {
+        const el = document.getElementById('main-content');
+        if (el) el.scrollTop = prevScroll;
+      });
+    }
   };
 
   // Loading state
