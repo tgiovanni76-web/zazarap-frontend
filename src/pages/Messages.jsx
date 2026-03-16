@@ -73,7 +73,10 @@ export default function Messages() {
 
   const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id],
-    queryFn: () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date'),
+    queryFn: async () => {
+      const msgs = await base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date');
+      return msgs ?? [];
+    },
     enabled: !!selectedChat,
   });
 
