@@ -6,8 +6,8 @@ import { variantUrl } from './variantUrl';
 
 export default function ImageLightbox({ open, onOpenChange, images = [], index = 0, onIndexChange, title = '' }) {
   const count = images.length || 0;
-  const goPrev = () => onIndexChange((index - 1 + count) % count);
-  const goNext = () => onIndexChange((index + 1) % count);
+  const goPrev = () => count ? onIndexChange((index - 1 + count) % count) : null;
+  const goNext = () => count ? onIndexChange((index + 1) % count) : null;
 
   useEffect(() => {
     if (!open) return;
@@ -65,11 +65,11 @@ export default function ImageLightbox({ open, onOpenChange, images = [], index =
           </Button>
         )}
 
-        <div className="w-full h-full flex items-center justify-center select-none">
+        <div className="w-full h-full flex items-center justify-center select-none touch-pan-y">
           <img
             src={src}
             alt={`${title} ${index + 1} / ${count}`}
-            className="max-w-[calc(100vw-96px)] max-h-[calc(100vh-96px)] object-contain"
+            className="w-auto h-auto max-w-[min(100vw-88px,1200px)] max-h-[calc(100dvh-88px)] object-contain"
             draggable={false}
           />
         </div>
