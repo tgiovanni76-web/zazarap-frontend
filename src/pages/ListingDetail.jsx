@@ -530,7 +530,17 @@ export default function ListingDetail() {
 
       <SimilarProducts listingId={listingId} />
 
-       {/* Fixed action bar removed as requested */}
+       {/* Sticky contact bar (mobile only) */}
+       {!isOwner && listing.status === 'active' && (
+         <div className="md:hidden sticky bottom-0 inset-x-0 z-[1000] bg-white/95 backdrop-blur border-t shadow-lg px-3 py-2 mt-6">
+           <Button
+             onClick={user ? handleContactSeller : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+             className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]"
+           >
+             <MessageSquare className="h-4 w-4 mr-2" /> {t('contactSeller')}
+           </Button>
+         </div>
+       )}
 
       <button 
         onClick={() => navigate(-1)} 
