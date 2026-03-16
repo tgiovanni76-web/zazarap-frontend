@@ -269,20 +269,28 @@ export default function ListingDetail() {
         }} 
       />
       {listing.images && listing.images.length > 0 && (
-        <div className="mb-4">
+        <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
           {listing.images.map((img, idx) => {
             const full = variantUrl(img, 'full');
             const thumb = variantUrl(img, 'thumb');
             return (
-              <img 
+              <button
+                type="button"
                 key={idx}
-                src={full}
-                srcSet={`${thumb} 320w, ${img} 800w, ${full} 1600w`}
-                sizes="(max-width: 640px) 100vw, 800px"
-                alt={`${listing.title} ${idx + 1}`}
-                loading="lazy"
-                className="zaza-detail-img"
-              />
+                onClick={() => { setLightboxIndex(idx); setLightboxOpen(true); }}
+                className="relative group rounded-lg overflow-hidden border focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                aria-label={`Apri immagine ${idx + 1}`}
+              >
+                <img
+                  src={full}
+                  srcSet={`${thumb} 320w, ${img} 800w, ${full} 1600w`}
+                  sizes="(max-width: 640px) 100vw, 800px"
+                  alt={`${listing.title} ${idx + 1}`}
+                  loading="lazy"
+                  className="w-full h-40 sm:h-48 object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                />
+                <span className="absolute inset-0 bg-black/0 group-hover:bg-black/10" />
+              </button>
             );
           })}
         </div>
