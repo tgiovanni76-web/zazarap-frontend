@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { variantUrl } from './variantUrl';
@@ -27,7 +27,13 @@ export default function ImageLightbox({ open, onOpenChange, images = [], index =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-screen h-[100dvh] max-w-none max-h-none left-0 top-0 translate-x-0 translate-y-0 bg-black p-0 border-0 text-white rounded-none sm:rounded-none">
+      <DialogContent className="w-screen h-[100dvh] max-w-none max-h-none left-0 top-0 translate-x-0 translate-y-0 bg-black p-0 border-0 text-white rounded-none sm:rounded-none" aria-label="Galleria immagini" aria-describedby="lightbox-desc">
+        {/* A11y hidden title/desc */}
+        <div className="sr-only">
+          <DialogTitle>Galleria immagini</DialogTitle>
+          <DialogDescription id="lightbox-desc">Naviga con frecce sinistra/destra, Esc per chiudere.</DialogDescription>
+        </div>
+
         {/* Close */}
         <Button
           variant="ghost"
