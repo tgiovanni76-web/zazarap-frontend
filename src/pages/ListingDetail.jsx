@@ -518,9 +518,19 @@ export default function ListingDetail() {
         </CardContent>
       </Card>
 
+      {/* Lightbox */}
+      <ImageLightbox
+        open={lightboxOpen}
+        onOpenChange={setLightboxOpen}
+        images={listing.images || []}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+        title={listing.title}
+      />
+
       <SimilarProducts listingId={listingId} />
 
-      {/* Fixed action bar: Message + Make Offer */}
+       {/* Fixed action bar: Message + Make Offer */}
       {!isOwner && listing.status === 'active' && (
         <div className="sticky bottom-0 z-40 bg-white/95 border-t shadow-lg px-3 py-2 mt-6 flex gap-2">
           <Button
