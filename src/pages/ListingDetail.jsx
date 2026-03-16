@@ -57,7 +57,10 @@ export default function ListingDetail() {
 
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
-    queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
+    queryFn: async () => {
+      const f = await base44.entities.Favorite.filter({ user_email: user.email });
+      return f ?? [];
+    },
     enabled: !!user
   });
 
