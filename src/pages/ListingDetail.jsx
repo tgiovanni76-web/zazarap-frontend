@@ -18,6 +18,7 @@ import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
 import FollowButton from '../components/profile/FollowButton';
 import SimilarProducts from '../components/marketplace/SimilarProducts';
+import ImageLightbox from '../components/media/ImageLightbox';
 
 
 export default function ListingDetail() {
