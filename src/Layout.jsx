@@ -262,8 +262,9 @@ function LayoutInner({ children, currentPageName }) {
           html, body {
             height: 100vh !important;
             min-height: 100vh !important;
-            overflow: hidden !important; /* Disabilita scroll sul body */
-            -webkit-overflow-scrolling: auto;
+            /* allow scroll; dialog/lightbox will trap focus itself */
+            overflow: auto !important;
+            -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             overscroll-behavior: none;
             scroll-snap-type: none !important;
