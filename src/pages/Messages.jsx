@@ -9,6 +9,7 @@ import ReportListingModal from '../components/ReportListingModal';
 import { useLanguage } from '../components/LanguageProvider';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { createPageUrl } from '@/utils';
 
 export default function Messages() {
   const { t } = useLanguage();
