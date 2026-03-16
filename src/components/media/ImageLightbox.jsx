@@ -27,7 +27,7 @@ export default function ImageLightbox({ open, onOpenChange, images = [], index =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-screen h-screen bg-black p-0 border-0 text-white">
+      <DialogContent className="w-screen h-[100dvh] max-w-none max-h-none left-0 top-0 translate-x-0 translate-y-0 bg-black p-0 border-0 text-white rounded-none sm:rounded-none">
         {/* Close */}
         <Button
           variant="ghost"
