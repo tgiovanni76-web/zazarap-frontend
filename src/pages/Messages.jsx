@@ -101,19 +101,38 @@ export default function Messages() {
     c => c.buyerId === user?.email || c.sellerId === user?.email
   );
 
-  // Auto-select chat from URL parameter (fallback fetch if not yet in list)
+  // Auto-select chat from URL parameter (robust): try list → filter → subscribe until it exists
   useEffect(() => {
-    if (!chatIdFromUrl || selectedChat) return;
+    if (!chatIdFromUrl || selectedChat || !user) return;
+
+    const maybeSelect = (c) => {
+      if (c && (c.buyerId === user.email || c.sellerId === user.email)) {
+        setSelectedChat(c);
+        return true;
+      }
+      return false;
+    };
+
+    // 1) try from current list
     const inList = myChats.find(c => c.id === chatIdFromUrl);
-    if (inList) { setSelectedChat(inList); return; }
+    if (maybeSelect(inList)) return;
+
+    // 2) fetch directly by id
+    let unsub = null;
     base44.entities.Chat.filter({ id: chatIdFromUrl })
       .then(res => {
-        const c = res?.[0];
-        if (c && (c.buyerId === user?.email || c.sellerId === user?.email)) {
-          setSelectedChat(c);
-        }
+        if (maybeSelect(res?.[0])) return;
+        // 3) subscribe for creation/update events affecting this chat id
+        unsub = base44.entities.Chat.subscribe((event) => {
+          if (event.id === chatIdFromUrl) {
+            maybeSelect(event.data);
+            if (unsub) unsub();
+          }
+        });
       })
       .catch(() => {});
+
+    return () => { if (unsub) unsub(); };
   }, [chatIdFromUrl, myChats, selectedChat, user]);
 
   // Real-time notification for new messages
