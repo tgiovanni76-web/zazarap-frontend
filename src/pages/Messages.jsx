@@ -53,7 +53,10 @@ export default function Messages() {
 
   const { data: chats = [], isLoading: chatsLoading } = useQuery({
     queryKey: ['chats'],
-    queryFn: () => base44.entities.Chat.list('-updatedAt'),
+    queryFn: async () => {
+      const list = await base44.entities.Chat.list('-updatedAt');
+      return list ?? [];
+    },
     enabled: !!user,
   });
 
