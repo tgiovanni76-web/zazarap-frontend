@@ -32,6 +32,8 @@ export default function ListingDetail() {
   const [activityTracked, setActivityTracked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [isContactingLoading, setIsContactingLoading] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
