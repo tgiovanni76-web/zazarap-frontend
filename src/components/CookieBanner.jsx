@@ -16,7 +16,7 @@ export default function CookieBanner() {
     queryKey: ['userConsent', user?.email],
     queryFn: async () => {
       const consents = await base44.entities.UserConsent.filter({ userId: user.email });
-      return consents[0];
+      return consents?.[0] ?? null; // react-query v5: never return undefined
     },
     enabled: !!user,
   });
