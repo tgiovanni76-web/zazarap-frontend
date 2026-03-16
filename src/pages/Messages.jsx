@@ -97,15 +97,20 @@ export default function Messages() {
     c => c.buyerId === user?.email || c.sellerId === user?.email
   );
 
-  // Auto-select chat from URL parameter
+  // Auto-select chat from URL parameter (fallback fetch if not yet in list)
   useEffect(() => {
-    if (chatIdFromUrl && myChats.length > 0 && !selectedChat) {
-      const chatFromUrl = myChats.find(c => c.id === chatIdFromUrl);
-      if (chatFromUrl) {
-        setSelectedChat(chatFromUrl);
-      }
-    }
-  }, [chatIdFromUrl, myChats, selectedChat]);
+    if (!chatIdFromUrl || selectedChat) return;
+    const inList = myChats.find(c => c.id === chatIdFromUrl);
+    if (inList) { setSelectedChat(inList); return; }
+    base44.entities.Chat.filter({ id: chatIdFromUrl })
+      .then(res => {
+        const c = res?.[0];
+        if (c && (c.buyerId === user?.email || c.sellerId === user?.email)) {
+          setSelectedChat(c);
+        }
+      })
+      .catch(() => {});
+  }, [chatIdFromUrl, myChats, selectedChat, user]);
 
   // Real-time notification for new messages
   useEffect(() => {
