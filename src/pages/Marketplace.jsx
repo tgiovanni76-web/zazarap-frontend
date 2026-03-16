@@ -318,18 +318,18 @@ export default function Marketplace() {
             .filter(c => !c.parentId && c.active)
             .map(mainCat => {
             const subs = categories.filter(c => c.parentId === mainCat.id && c.active);
-            return (
-            <React.Fragment key={mainCat.id}>
-            <SelectItem value={mainCat.name} className="font-bold">
-              {labelForCategory(mainCat)}
-            </SelectItem>
-            {subs.map(sub => (
-              <SelectItem key={sub.id} value={sub.name} className="pl-6">
-                ↳ {labelForCategory(sub)}
-              </SelectItem>
-            ))}
-            </React.Fragment>
-            );
+            return [
+              (
+                <SelectItem key={`main-${mainCat.id}`} value={mainCat.name} className="font-bold">
+                  {labelForCategory(mainCat)}
+                </SelectItem>
+              ),
+              ...subs.map(sub => (
+                <SelectItem key={`sub-${sub.id}`} value={sub.name} className="pl-6">
+                  ↳ {labelForCategory(sub)}
+                </SelectItem>
+              ))
+            ];
             })}
           </SelectContent>
         </Select>
