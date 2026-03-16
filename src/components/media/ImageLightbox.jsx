@@ -27,7 +27,7 @@ export default function ImageLightbox({ open, onOpenChange, images = [], index =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] bg-black p-0 border-0 text-white">
+      <DialogContent className="w-screen h-screen bg-black p-0 border-0 text-white">
         {/* Close */}
         <Button
           variant="ghost"
@@ -69,7 +69,7 @@ export default function ImageLightbox({ open, onOpenChange, images = [], index =
           <img
             src={src}
             alt={`${title} ${index + 1} / ${count}`}
-            className="max-w-full max-h-full object-contain"
+            className="max-w-[calc(100vw-96px)] max-h-[calc(100vh-96px)] object-contain"
             draggable={false}
           />
         </div>
