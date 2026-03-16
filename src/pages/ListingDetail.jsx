@@ -66,7 +66,10 @@ export default function ListingDetail() {
 
   const { data: likes = [] } = useQuery({
     queryKey: ['likes', listingId],
-    queryFn: () => base44.entities.ListingLike.filter({ listing_id: listingId }),
+    queryFn: async () => {
+      const l = await base44.entities.ListingLike.filter({ listing_id: listingId });
+      return l ?? [];
+    },
     enabled: !!listingId
   });
 
