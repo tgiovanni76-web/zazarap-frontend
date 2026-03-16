@@ -530,23 +530,7 @@ export default function ListingDetail() {
 
       <SimilarProducts listingId={listingId} />
 
-       {/* Fixed action bar: Message + Make Offer */}
-      {!isOwner && listing.status === 'active' && (
-        <div className="sticky bottom-0 z-40 bg-white/95 border-t shadow-lg px-3 py-2 mt-6 flex gap-2">
-          <Button
-            onClick={user ? handleContactSeller : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
-            className="flex-1 bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]"
-          >
-            <MessageSquare className="h-4 w-4 mr-2" /> {t('contactSeller')}
-          </Button>
-          <Button
-            onClick={user ? handleMakeOffer : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700"
-          >
-            💬 {t('makeOffer') || `Fai un'offerta`}
-          </Button>
-        </div>
-      )}
+       {/* Fixed action bar removed as requested */}
 
       <button 
         onClick={() => navigate(-1)} 
