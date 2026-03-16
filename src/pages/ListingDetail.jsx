@@ -48,7 +48,10 @@ export default function ListingDetail() {
 
   const { data: reviews = [] } = useQuery({
     queryKey: ['reviews', listingId],
-    queryFn: () => base44.entities.Review.filter({ listing_id: listingId }),
+    queryFn: async () => {
+      const r = await base44.entities.Review.filter({ listing_id: listingId });
+      return r ?? [];
+    },
     enabled: !!listingId
   });
 
