@@ -107,7 +107,7 @@ export default function BusinessForm() {
           <Input type="number" min="0" value={form.budget} onChange={(e) => handleChange("budget", e.target.value)} />
         </div>
         <div>
-          <Label>Formato</Label>
+          <Label>Format</Label>
           <Select value={form.format} onValueChange={(v) => handleChange("format", v)}>
             <SelectTrigger><SelectValue placeholder="Formato" /></SelectTrigger>
             <SelectContent>
