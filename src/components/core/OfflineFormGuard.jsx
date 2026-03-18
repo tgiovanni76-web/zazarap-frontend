@@ -43,7 +43,7 @@ export default function OfflineFormGuard() {
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onSubmit = (e) => {
       try {
         if (typeof navigator === 'undefined') return;
