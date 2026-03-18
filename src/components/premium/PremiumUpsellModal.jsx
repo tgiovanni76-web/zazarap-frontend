@@ -17,7 +17,7 @@ export default function PremiumUpsellModal({ open, onClose, onConfirm, copy, lis
         )}
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={onClose}>Vielleicht später</Button>
-          <Button onClick={onConfirm} className="bg-primary">{copy.cta || 'Vai a Premium'}</Button>
+          <Button onClick={onConfirm} className="bg-primary">{copy.cta || 'Jetzt hervorheben'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
