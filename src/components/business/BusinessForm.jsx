@@ -74,7 +74,7 @@ export default function BusinessForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4 bg-card p-4 md:p-6 rounded-xl border">
       <div>
-        <Label>Nome azienda</Label>
+        <Label>Firmenname</Label>
         <Input value={form.advertiserName} onChange={(e) => handleChange("advertiserName", e.target.value)} required />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
