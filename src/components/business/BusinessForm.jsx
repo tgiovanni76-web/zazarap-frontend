@@ -103,7 +103,7 @@ export default function BusinessForm() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <Label>Budget indicativo (€)</Label>
+          <Label>Ungefähreres Budget (€)</Label>
           <Input type="number" min="0" value={form.budget} onChange={(e) => handleChange("budget", e.target.value)} />
         </div>
         <div>
