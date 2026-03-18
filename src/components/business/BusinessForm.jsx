@@ -98,7 +98,7 @@ export default function BusinessForm() {
         </div>
       </div>
       <div>
-        <Label>Obiettivo campagna</Label>
+        <Label>Kampagnenziel</Label>
         <Textarea value={form.goal} onChange={(e) => handleChange("goal", e.target.value)} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
