@@ -85,6 +85,15 @@ export default function WarumPremium() {
         description={t('premium.seo.description')}
       />
 
+      {/* Context badge if navigated from prompt */}
+      {listingId && (
+        <div className="mb-4 text-center">
+          <Badge className="bg-amber-100 text-amber-800 border-amber-300">
+            Annuncio: {listingId} • Motivo: {reason}
+          </Badge>
+        </div>
+      )}
+
       {/* Hero Section */}
       <div className="text-center mb-8 md:mb-12">
         <Badge className="mb-3 md:mb-4 bg-[var(--z-primary)] text-[var(--z-accent)] border-2 border-[var(--z-accent)] text-xs">
