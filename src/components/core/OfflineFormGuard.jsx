@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 export default function OfflineFormGuard() {
-  const onlineRef = React.useRef(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const onlineRef = useRef(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
   const toggleSubmitButtons = (isOnline) => {
     try {
