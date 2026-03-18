@@ -43,21 +43,27 @@ export default function PremiumPromptManager({ listings = [], contextProvider })
   }, [candidates, state.open, contextProvider]);
 
   const handleClose = async () => {
-    if (state.listing) {
-      // Update throttle timestamp
-      await base44.entities.Listing.update(state.listing.id, { lastBoostPromptAt: new Date().toISOString() });
-    }
+    const listingId = state.listing?.id;
+    // Close immediately for snappier UX
     setState({ open: false, copy: null, listing: null, reason: null });
+    // Update throttle timestamp in background (non-blocking)
+    if (listingId) {
+      base44.entities.Listing.update(listingId, { lastBoostPromptAt: new Date().toISOString() });
+    }
   };
 
   const handleConfirm = async () => {
-    if (state.listing) {
-      await base44.entities.Listing.update(state.listing.id, { lastBoostPromptAt: new Date().toISOString() });
-      base44.analytics.track({ eventName: 'premium_prompt_cta_click', properties: { listing_id: state.listing.id, reason: state.reason } });
-      const url = createPremiumUrl(state.listing.id, state.reason);
+    const listingId = state.listing?.id;
+    const reason = state.reason;
+    // Close immediately
+    setState({ open: false, copy: null, listing: null, reason: null });
+    if (listingId) {
+      // Fire-and-forget update + tracking, do not block navigation
+      base44.entities.Listing.update(listingId, { lastBoostPromptAt: new Date().toISOString() });
+      base44.analytics.track({ eventName: 'premium_prompt_cta_click', properties: { listing_id: listingId, reason } });
+      const url = createPremiumUrl(listingId, reason);
       window.location.href = url; // navigate maintaining layout routing
     }
-    setState({ open: false, copy: null, listing: null, reason: null });
   };
 
   return (
