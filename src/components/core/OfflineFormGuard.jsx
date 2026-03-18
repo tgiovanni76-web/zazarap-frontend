@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 export default function OfflineFormGuard() {
