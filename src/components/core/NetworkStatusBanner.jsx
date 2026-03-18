@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export default function NetworkStatusBanner() {
-  const [online, setOnline] = React.useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
-  const [justCameBack, setJustCameBack] = React.useState(false);
+  const [online, setOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [justCameBack, setJustCameBack] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const on = () => {
       setOnline(true);
       setJustCameBack(true);
