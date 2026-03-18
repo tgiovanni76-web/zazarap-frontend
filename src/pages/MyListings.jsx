@@ -152,6 +152,7 @@ export default function MyListings() {
         </TabsList>
 
         <TabsContent value="active" className="mt-6">
+          <PremiumPromptManager listings={activeListings} contextProvider={contextProvider} />
           <div className="space-y-4">
             {activeListings.length === 0 ? (
               <div className="text-center py-12">
