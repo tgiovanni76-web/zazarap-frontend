@@ -253,6 +253,17 @@ export default function ListingDetail() {
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : 0;
 
+  // Premium trigger context for this listing (owner only)
+  const premiumContextProvider = (l) => {
+    const ageHours = Math.max(0, (Date.now() - new Date(l.created_date).getTime()) / 36e5);
+    const hoursToExpiry = l.expiresAt ? (new Date(l.expiresAt).getTime() - Date.now()) / 36e5 : null;
+    const viewsCount = l.viewsCount || l.views || 0;
+    // messagesCount is not directly on listing; use Chat counters if available via listing cache (fallback 0)
+    const messagesCount = l.messagesCount || 0;
+    // immediate triggers managed via props from page logic (e.g., justPublished/firstMessageJustArrived) not set here
+    return { ageHours, hoursToExpiry, viewsCount, messagesCount };
+  };
+
   return (
     <div className="py-8 max-w-2xl mx-auto">
       <SEOHead 
