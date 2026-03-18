@@ -971,14 +971,6 @@ function LayoutInner({ children, currentPageName }) {
       {/* EmailVerificationBanner removed as requested */}
       
       <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto h-auto min-h-0 pb-24" style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
-        {/* Global Premium triggers (scope: current user's active listings only on MyListings/ListingDetail pages) */}
-        {currentPageName === 'MyListings' && (
-          <PremiumPromptManager
-            listings={[]}
-            contextProvider={() => ({})}
-          />
-        )}
-
         {children}
 
         {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
