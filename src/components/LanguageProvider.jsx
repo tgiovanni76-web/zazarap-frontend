@@ -2847,21 +2847,8 @@ export function LanguageProvider({ children }) {
     // Update HTML lang attribute
     document.documentElement.lang = newLang;
     
-    // Update URL if needed (without reload)
-    if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      const currentLangPrefix = currentPath.split('/')[1];
-      
-      if (SUPPORTED_LANGS.includes(currentLangPrefix)) {
-        // Replace existing lang prefix
-        const newPath = currentPath.replace(`/${currentLangPrefix}`, `/${newLang}`);
-        window.history.replaceState({}, '', newPath + window.location.search);
-      } else {
-        // Add lang prefix
-        const newPath = `/${newLang}${currentPath}`;
-        window.history.replaceState({}, '', newPath + window.location.search);
-      }
-    }
+    // Do not modify URL; keep routes stable. Language is stored and applied instantly.
+    // (Cookie + localStorage + html[lang] are enough for runtime changes.)
   };
 
   useEffect(() => {
