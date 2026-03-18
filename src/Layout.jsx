@@ -1048,10 +1048,11 @@ function LayoutInner({ children, currentPageName }) {
                       <div className="max-w-[1100px] mx-auto px-4 w-full">
                         {/* Desktop: Dropdown on click */}
                         <div className="hidden lg:block">
+                          <div className="text-[10px] text-slate-400 mb-1">Für Händler & Unternehmen</div>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button className="text-[11px] md:text-xs text-slate-300 hover:text-slate-200 bg-transparent border border-[#243246] rounded-full px-3 py-1">
-                                Für Unternehmen
+                                Für Unternehmen – Werbung
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start" className="min-w-[220px]">
@@ -1064,9 +1065,10 @@ function LayoutInner({ children, currentPageName }) {
 
                         {/* Mobile: Accordion behavior */}
                         <div className="block lg:hidden mt-2">
+                          <div className="text-[10px] text-slate-400 mb-1">Für Händler & Unternehmen</div>
                           <Collapsible>
                             <CollapsibleTrigger className="w-full text-left px-3 py-2 text-slate-300 font-medium border border-[#243246] rounded-md">
-                              Für Unternehmen
+                              Für Unternehmen – Werbung
                             </CollapsibleTrigger>
                             <CollapsibleContent className="px-3 pb-2">
                               <ul className="space-y-1 text-[13px]">
