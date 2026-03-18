@@ -32,7 +32,7 @@ export default function BusinessForm() {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       handleChange("imageUrl", file_url);
-      toast.success("Immagine caricata");
+      toast.success("Bild hochgeladen");
     } catch (e) {
       toast.error("Upload fallito");
     } finally {
