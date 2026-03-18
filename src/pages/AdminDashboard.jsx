@@ -57,24 +57,135 @@ export default function AdminDashboard() {
     queryKey: ['payments'],
     queryFn: () => base44.entities.Payment.list(),
   });
+  
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: () => base44.entities.Transaction.list(),
+  });
 
   if (user?.role !== 'admin') {
     return (
       <div className="py-8 text-center">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">{t('accessDenied') || 'Accesso Negato'}</h2>
-        <p>{t('adminOnly') || 'Solo gli amministratori possono accedere a questa pagina.'}</p>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">{t('accessDenied') || 'Zugriff verweigert'}</h2>
+        <p>{t('adminOnly') || 'Nur Administratoren können auf diese Seite zugreifen.'}</p>
       </div>
     );
   }
 
-  const pendingListings = listings.filter(l => l.status === 'active').length;
+  const moderationPending = listings.filter(l => l.moderationStatus === 'pending').length;
   const activeUsers = users.filter(u => !u.blocked).length;
   const openDisputes = disputes.filter(d => d.status === 'open' || d.status === 'under_review').length;
   const openTickets = tickets.filter(t => t.status === 'open' || t.status === 'in_progress').length;
   const pendingReports = reports.filter(r => r.status === 'pending').length;
   const escrowAmount = payments.filter(p => p.status === 'held_in_escrow').reduce((sum, p) => sum + p.amount, 0);
+  
+  const now = new Date();
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const revenueToday = (transactions || [])
+    .filter(tr => ['paid', 'captured'].includes(tr.status) && new Date(tr.created_date) >= startOfToday && new Date(tr.created_date) <= endOfToday)
+    .reduce((sum, tr) => sum + (tr.amount || 0), 0);
+
+  const newListingsToday = (listings || [])
+    .filter(l => new Date(l.created_date) >= startOfToday && new Date(l.created_date) <= endOfToday)
+    .length;
 
   const adminTools = [
+    {
+      title: 'Moderation',
+      desc: 'Neue Anzeigen prüfen und freigeben',
+      icon: Package,
+      link: 'ModerateListings',
+      count: moderationPending,
+      color: 'bg-green-600',
+      emphasis: true
+    },
+    {
+      title: 'Meldungen',
+      desc: 'Nutzer-Meldungen prüfen und bearbeiten',
+      icon: AlertTriangle,
+      link: 'AdminReports',
+      count: pendingReports,
+      color: 'bg-orange-500',
+      emphasis: true
+    },
+    {
+      title: 'Support-Tickets',
+      desc: 'Offene Anfragen im Support-Center',
+      icon: MessageSquare,
+      link: 'AdminTickets',
+      count: openTickets,
+      color: 'bg-yellow-500',
+      emphasis: true
+    },
+    {
+      title: 'Benutzerverwaltung',
+      desc: 'Nutzerkonten, Rollen und Sperren verwalten',
+      icon: Users,
+      link: 'ManageUsers',
+      count: activeUsers,
+      color: 'bg-blue-500'
+    },
+    {
+      title: 'Streitfälle',
+      desc: 'Konflikte prüfen und moderieren',
+      icon: AlertTriangle,
+      link: 'AdminDisputes',
+      count: openDisputes,
+      color: 'bg-red-500'
+    },
+    {
+      title: 'Statistiken',
+      desc: 'Kennzahlen und Trends des Marktplatzes',
+      icon: TrendingUp,
+      link: 'MarketplaceDashboard',
+      count: null,
+      color: 'bg-purple-500'
+    },
+    {
+      title: 'Nutzer-Analysen',
+      desc: 'Detaillierte Metriken zu Verhalten und Performance',
+      icon: BarChart3,
+      link: 'AdminAnalytics',
+      count: null,
+      color: 'bg-indigo-500'
+    },
+    {
+      title: 'Zahlungen & Treuhand',
+      desc: 'Zahlungsstatus und Treuhandkonten überwachen',
+      icon: ShoppingBag,
+      link: 'AdminPayments',
+      count: `${escrowAmount.toFixed(0)}€`,
+      color: 'bg-pink-500'
+    },
+    {
+      title: 'Kategorienverwaltung',
+      desc: 'Kategorien strukturieren und pflegen',
+      icon: Settings,
+      link: 'ManageCategories',
+      count: null,
+      color: 'bg-indigo-500'
+    },
+    {
+      title: 'Systemkonfiguration',
+      desc: 'Plattform-Einstellungen und Richtlinien',
+      icon: Settings,
+      link: 'AdminSettings',
+      count: null,
+      color: 'bg-slate-500'
+    },
+    {
+      title: 'Systemprotokolle',
+      desc: 'Ereignisse und Fehler überwachen',
+      icon: FileText,
+      link: 'SystemLogs',
+      count: null,
+      color: 'bg-slate-600'
+    }
+  ];
     {
       titleKey: 'admin.userManagement',
       descKey: 'admin.userManagementDesc',
@@ -196,12 +307,12 @@ export default function AdminDashboard() {
       color: 'bg-emerald-600'
     }
     ];
-  const filteredAdminTools = adminTools.filter(t => !['PreLaunchChecklist','SystemCheckup','AccessibilityAudit'].includes(t.link));
+  const filteredAdminTools = adminTools;
 
   return (
     <div className="py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">{t('admin.panel') || 'Pannello Amministratore'}</h2>
+        <h2 className="text-3xl font-bold">{t('admin.panel') || 'Admin-Panel'}</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-slate-500" />
@@ -219,34 +330,40 @@ export default function AdminDashboard() {
             </Select>
           </div>
           <Button onClick={() => base44.auth.logout()} variant="outline">
-            Logout
+            Abmelden
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">{t('admin.activeUsers') || 'Utenti Attivi'}</div>
+            <div className="text-sm text-slate-500 mb-1">Umsatz heute</div>
+            <div className="text-3xl font-bold">{revenueToday.toFixed(0)}€</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-sm text-slate-500 mb-1">Aktive Nutzer</div>
             <div className="text-3xl font-bold">{activeUsers}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">{t('admin.activeListings') || 'Annunci Attivi'}</div>
-            <div className="text-3xl font-bold">{pendingListings}</div>
+            <div className="text-sm text-slate-500 mb-1">Neue Anzeigen (heute)</div>
+            <div className="text-3xl font-bold">{newListingsToday}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">{t('admin.openDisputes') || 'Dispute Aperte'}</div>
-            <div className="text-3xl font-bold text-red-600">{openDisputes}</div>
+            <div className="text-sm text-slate-500 mb-1">Offene Tickets</div>
+            <div className="text-3xl font-bold">{openTickets}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm text-slate-500 mb-1">{t('admin.fundsInEscrow') || 'Fondi in Escrow'}</div>
-            <div className="text-3xl font-bold text-green-600">{escrowAmount.toFixed(0)}€</div>
+            <div className="text-sm text-slate-500 mb-1">Offene Meldungen</div>
+            <div className="text-3xl font-bold">{pendingReports}</div>
           </CardContent>
         </Card>
       </div>
@@ -280,7 +397,7 @@ export default function AdminDashboard() {
           const Icon = tool.icon;
           return (
             <Link key={tool.link} to={createPageUrl(tool.link)}>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <Card className={`hover:shadow-lg transition-shadow cursor-pointer h-full ${tool.emphasis ? 'ring-2 ring-[var(--z-accent)] shadow-md' : ''}`}>
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className={`${tool.color} p-3 rounded-lg`}>
@@ -290,8 +407,8 @@ export default function AdminDashboard() {
                       <span className="text-2xl font-bold text-slate-700">{tool.count}</span>
                     )}
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{t(tool.titleKey) || tool.titleKey}</h3>
-                  <p className="text-sm text-slate-600">{t(tool.descKey) || tool.descKey}</p>
+                  <h3 className="font-bold text-lg mb-2">{tool.title}</h3>
+                  <p className="text-sm text-slate-600">{tool.desc}</p>
                 </CardContent>
               </Card>
             </Link>
