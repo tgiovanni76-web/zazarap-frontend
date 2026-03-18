@@ -16,6 +16,8 @@ import StructuredData from '../components/marketplace/StructuredData';
 import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 import SocialShareButtons from '../components/SocialShareButtons';
+import PremiumPromptManager from '@/components/premium/PremiumPromptManager';
+import { PremiumReasons } from '@/lib/premium-prompts';
 import FollowButton from '../components/profile/FollowButton';
 import SimilarProducts from '../components/marketplace/SimilarProducts';
 import ImageLightbox from '../components/media/ImageLightbox';
