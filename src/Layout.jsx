@@ -5,7 +5,7 @@ import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
 import GlobalErrorListener from '@/components/core/GlobalErrorListener';
 import NetworkStatusBanner from '@/components/core/NetworkStatusBanner';
 import OfflineFormGuard from '@/components/core/OfflineFormGuard';
-import PremiumPromptManager from '@/components/premium/PremiumPromptManager';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
