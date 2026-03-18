@@ -72,6 +72,7 @@ export default function Category() {
                 </Link>
               </CardContent>
             </Card>
+            </React.Fragment>
           ))}
         </div>
       )}
