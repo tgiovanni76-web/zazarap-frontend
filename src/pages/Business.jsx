@@ -8,9 +8,9 @@ export default function Business() {
   return (
     <div className="max-w-5xl mx-auto py-8 px-4">
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold">Per aziende • Business</h1>
-        <p className="text-muted-foreground mt-2">Promuovi il tuo brand con banner e card sponsorizzate su Zazarap.de</p>
-        <Link to={createPageUrl('BusinessContact')}><Button className="mt-4">Richiedi una campagna</Button></Link>
+        <h1 className="text-3xl font-extrabold">Werben auf Zazarap • Für Unternehmen</h1>
+        <p className="text-muted-foreground mt-2">Präsentieren Sie Ihre Marke mit Bannern und gesponserten Cards auf Zazarap.de</p>
+        <Link to={createPageUrl('BusinessContact')}><Button className="mt-4">Kampagne anfragen</Button></Link>
       </header>
 
       <section className="grid md:grid-cols-3 gap-4 mb-10">
