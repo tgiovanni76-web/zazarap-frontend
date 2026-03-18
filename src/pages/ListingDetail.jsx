@@ -281,6 +281,11 @@ export default function ListingDetail() {
           reviewCount: reviews.length 
         }} 
       />
+      {/* Owner-only premium prompt manager (single listing) */}
+      {isOwner && listing.status === 'active' && (
+        <PremiumPromptManager listings={[listing]} contextProvider={premiumContextProvider} />
+      )}
+
       {listing.images && listing.images.length > 0 && (
         <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
           {listing.images.map((img, idx) => {
