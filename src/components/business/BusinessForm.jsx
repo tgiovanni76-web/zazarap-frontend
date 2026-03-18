@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 export default function BusinessForm() {
   const [loading, setLoading] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
   const [form, setForm] = useState({
     advertiserName: "",
     contactName: "",
@@ -32,6 +33,7 @@ export default function BusinessForm() {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       handleChange("imageUrl", file_url);
+      setSelectedFileName(file.name);
       toast.success("Bild hochgeladen");
     } catch (e) {
       toast.error("Upload fehlgeschlagen");
@@ -99,12 +101,22 @@ export default function BusinessForm() {
       </div>
       <div>
         <Label>Kampagnenziel</Label>
-        <Textarea value={form.goal} onChange={(e) => handleChange("goal", e.target.value)} />
+        <Textarea placeholder="Mehr Verkäufe, mehr Website-Besucher oder Markenbekanntheit" value={form.goal} onChange={(e) => handleChange("goal", e.target.value)} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <Label>Ungefähreres Budget (€)</Label>
-          <Input type="number" min="0" value={form.budget} onChange={(e) => handleChange("budget", e.target.value)} />
+          <Label>Budget (ungefähr)</Label>
+          <Select value={form.budget} onValueChange={(v) => handleChange("budget", v)}>
+            <SelectTrigger><SelectValue placeholder="Budget wählen" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="500">Bis 500 €</SelectItem>
+              <SelectItem value="1000">500–1.000 €</SelectItem>
+              <SelectItem value="2500">1.000–2.500 €</SelectItem>
+              <SelectItem value="5000">2.500–5.000 €</SelectItem>
+              <SelectItem value="10000">5.000–10.000 €</SelectItem>
+              <SelectItem value="20000">Über 10.000 €</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div>
           <Label>Format</Label>
@@ -137,12 +149,18 @@ export default function BusinessForm() {
           <Input value={form.targetUrl} onChange={(e) => handleChange("targetUrl", e.target.value)} />
         </div>
         <div>
-          <Label>Immagine (jpg/png/webp)</Label>
-          <Input type="file" accept="image/*" onChange={handleFile} />
+          <Label>Bild (JPG/PNG/WebP)</Label>
+          <Input type="file" accept="image/*" onChange={handleFile} aria-label="Datei auswählen" title="Datei auswählen" />
+          <p className="mt-1 text-xs text-slate-500">{selectedFileName ? selectedFileName : 'Keine Datei ausgewählt'}</p>
           {form.imageUrl && <img src={form.imageUrl} alt="preview" className="mt-2 h-24 rounded-md object-cover border" />}
         </div>
       </div>
-      <Button type="submit" disabled={loading} className="w-full md:w-auto">{loading ? "Invio..." : "Richiedi campagna"}</Button>
+      <Button type="submit" disabled={loading} className="w-full md:w-auto">{loading ? "Senden..." : "Kampagne anfragen"}</Button>
+      <div className="mt-2 text-[12px] text-slate-500 flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+        <span>• Kostenlos & unverbindlich</span>
+        <span>• Antwort innerhalb von 24h</span>
+        <span>• Persönliche Beratung</span>
+      </div>
     </form>
   );
 }
