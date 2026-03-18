@@ -93,7 +93,7 @@ export default function BusinessForm() {
           <Input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} />
         </div>
         <div>
-          <Label>Sito web</Label>
+          <Label>Webseite</Label>
           <Input value={form.website} onChange={(e) => handleChange("website", e.target.value)} />
         </div>
       </div>
