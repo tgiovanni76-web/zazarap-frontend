@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -19,14 +19,14 @@ export default function AdCard() {
 
   useEffect(() => {
     if (campaign) {
-      base44.entities.BusinessAdCampaign.update(campaign.id, { impressionCount: (campaign.impressionCount || 0) + 1 });
+      base44.functions.invoke('trackAdEvent', { campaignId: campaign.id, eventType: 'impression' });
     }
   }, [campaign]);
 
   if (!campaign) return null;
 
   return (
-    <a href={campaign.targetUrl || "#"} target="_blank" rel="noopener" onClick={() => base44.entities.BusinessAdCampaign.update(campaign.id, { clickCount: (campaign.clickCount || 0) + 1 })}>
+    <a href={campaign.targetUrl || "#"} target="_blank" rel="noopener" onClick={() => base44.functions.invoke('trackAdEvent', { campaignId: campaign.id, eventType: 'click' })}>
       <Card className="border-dashed">
         <CardHeader>
           <div className="flex items-center justify-between">
