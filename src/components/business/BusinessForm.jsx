@@ -79,7 +79,7 @@ export default function BusinessForm() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label>Referente</Label>
+          <Label>Ansprechpartner</Label>
           <Input value={form.contactName} onChange={(e) => handleChange("contactName", e.target.value)} />
         </div>
         <div>
