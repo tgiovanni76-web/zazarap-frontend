@@ -31,7 +31,7 @@ export default function AdCard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{campaign.title || campaign.advertiserName}</CardTitle>
-            <Badge className="bg-black/70 text-white">{currentLanguage === 'de' ? 'Werbung' : 'Sponsorizzato'}</Badge>
+            <Badge className="bg-black/70 text-white">{currentLanguage === 'de' ? 'Werbung' : currentLanguage === 'en' ? 'Sponsored' : 'Sponsorizzato'}</Badge>
           </div>
         </CardHeader>
         <CardContent>
