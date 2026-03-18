@@ -51,7 +51,7 @@ export default function Category() {
         <p className="text-slate-500">{t('noAdsFound')}</p>
       ) : (
         <div className="space-y-4">
-          {categoryListings.map(listing => (
+          {categoryListings.map((listing, idx) => (
             <Card key={listing.id} className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-3">{listing.title}</h3>
