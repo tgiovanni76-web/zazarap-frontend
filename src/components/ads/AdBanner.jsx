@@ -25,7 +25,7 @@ export default function AdBanner({ placement = "home_banner" }) {
     <a href={campaign.targetUrl || "#"} target="_blank" rel="noopener" onClick={() => base44.functions.invoke('trackAdEvent', { campaignId: campaign.id, eventType: 'click' })} className="block">
       <div className="relative rounded-xl overflow-hidden border bg-card">
         <img src={campaign.imageUrl} alt={campaign.title || campaign.advertiserName} className="w-full h-36 md:h-48 object-cover" />
-        <Badge className="absolute top-2 left-2 bg-black/70 text-white">{currentLanguage === 'de' ? 'Werbung' : 'Sponsorizzato'}</Badge>
+        <Badge className="absolute top-2 left-2 bg-black/70 text-white">{currentLanguage === 'de' ? 'Werbung' : currentLanguage === 'en' ? 'Sponsored' : 'Sponsorizzato'}</Badge>
       </div>
     </a>
   );
