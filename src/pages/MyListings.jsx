@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, CheckCircle, Archive, Edit, Eye } from 'lucide-react';
+import PremiumPromptManager from '@/components/premium/PremiumPromptManager';
 import { useLanguage } from '../components/LanguageProvider';
 import { format } from 'date-fns';
 
