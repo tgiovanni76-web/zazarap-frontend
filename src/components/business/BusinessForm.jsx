@@ -50,7 +50,7 @@ export default function BusinessForm() {
         status: "draft"
       };
       await base44.entities.BusinessAdCampaign.create(payload);
-      toast.success("Richiesta inviata: bozza creata. Un admin la valuterà.");
+      toast.success("Anfrage gesendet: Entwurf erstellt. Ein Admin prüft sie.");
       setForm({
         advertiserName: "",
         contactName: "",
