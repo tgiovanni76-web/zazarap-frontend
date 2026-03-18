@@ -65,7 +65,7 @@ export default function BusinessForm() {
         targetUrl: ""
       });
     } catch (e) {
-      toast.error("Errore invio richiesta");
+      toast.error("Fehler beim Senden der Anfrage");
     } finally {
       setLoading(false);
     }
