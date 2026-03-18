@@ -114,7 +114,7 @@ export default function BusinessForm() {
               <SelectItem value="banner">Banner</SelectItem>
               <SelectItem value="card">Gesponserte Card</SelectItem>
               <SelectItem value="image">Immagine</SelectItem>
-              <SelectItem value="video">Video (futuro)</SelectItem>
+              <SelectItem value="video">Video (zukünftig)</SelectItem>
             </SelectContent>
           </Select>
         </div>
