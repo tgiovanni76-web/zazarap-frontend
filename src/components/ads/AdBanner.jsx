@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function AdBanner({ placement = "home_banner" }) {
   const qc = useQueryClient();
+  const { currentLanguage } = useLanguage();
   const { data: campaigns = [] } = useQuery({
     queryKey: ["ad-campaigns", placement],
     queryFn: async () => {
@@ -32,7 +34,7 @@ export default function AdBanner({ placement = "home_banner" }) {
     <a href={campaign.targetUrl || "#"} target="_blank" rel="noopener" onClick={() => base44.entities.BusinessAdCampaign.update(campaign.id, { clickCount: (campaign.clickCount || 0) + 1 })} className="block">
       <div className="relative rounded-xl overflow-hidden border bg-card">
         <img src={campaign.imageUrl} alt={campaign.title || campaign.advertiserName} className="w-full h-36 md:h-48 object-cover" />
-        <Badge className="absolute top-2 left-2 bg-black/70 text-white">Sponsorizzato</Badge>
+        <Badge className="absolute top-2 left-2 bg-black/70 text-white">{currentLanguage === 'de' ? 'Werbung' : 'Sponsorizzato'}</Badge>
       </div>
     </a>
   );

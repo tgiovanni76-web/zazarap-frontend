@@ -16,6 +16,7 @@ import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
 import SEOHead from '../components/SEOHead';
 import FollowButton from '../components/profile/FollowButton';
+import AdCard from '@/components/ads/AdCard';
 
 export default function Marketplace() {
   const { t } = useLanguage();
@@ -507,10 +508,12 @@ export default function Marketplace() {
       )}
 
       <div className="zaza-grid">
-        {filteredListings.map(listing => {
+          {filteredListings.map((listing, idx) => (
           const isFavorite = user && favorites.some(fav => fav.listing_id === listing.id);
-          return (
-            <div key={listing.id} className="zaza-card">
+          (
+            <React.Fragment key={listing.id}>
+              {idx > 0 && idx % 12 === 0 && <AdCard />}
+              <div className="zaza-card">
               <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
                 {listing.images && listing.images.length > 0 ? (
                   <img 
@@ -566,6 +569,7 @@ export default function Marketplace() {
                 {listing.city && <div className="zaza-location">{listing.city}</div>}
               </Link>
             </div>
+            </React.Fragment>
           );
         })}
       </div>

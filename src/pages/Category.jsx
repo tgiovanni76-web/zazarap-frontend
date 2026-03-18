@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '../components/LanguageProvider';
 import { ArrowLeft } from 'lucide-react';
+import AdBanner from '@/components/ads/AdBanner';
 
 export default function Category() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +42,9 @@ export default function Category() {
         </Link>
         <h2 className="text-3xl font-bold capitalize">{t(category)}</h2>
       </div>
+
+      {/* Ad Banner - Category */}
+      <AdBanner placement="category_banner" />
 
       {categoryListings.length === 0 ? (
         <p className="text-slate-500">{t('noAdsFound')}</p>

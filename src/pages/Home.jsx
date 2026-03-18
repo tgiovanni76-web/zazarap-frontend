@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
+import AdBanner from '@/components/ads/AdBanner';
 import CategoryIcon from '../components/marketplace/CategoryIcon';
 
 import { variantUrl } from '../components/media/variantUrl';
@@ -150,6 +151,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Ad Banner - Home */}
+      <AdBanner placement="home_banner" />
 
       {/* Features */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">

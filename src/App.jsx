@@ -7,6 +7,9 @@ import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+import Business from './pages/Business';
+import BusinessContact from './pages/BusinessContact';
+import AdminCampaigns from './pages/AdminCampaigns';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -61,9 +64,9 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
-      <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Pages.Business /></LayoutWrapper>} />
-      <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><Pages.BusinessContact /></LayoutWrapper>} />
-      <Route path="/AdminCampaigns" element={<LayoutWrapper currentPageName="AdminCampaigns"><Pages.AdminCampaigns /></LayoutWrapper>} />
+      <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
+      <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />
+      <Route path="/AdminCampaigns" element={<LayoutWrapper currentPageName="AdminCampaigns"><AdminCampaigns /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
