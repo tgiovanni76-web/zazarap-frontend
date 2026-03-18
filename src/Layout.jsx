@@ -11,6 +11,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { LayoutDashboard, Plus, Bell, Settings, TrendingUp, Package, Home, LogOut, User, ArrowLeft } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -1041,6 +1042,41 @@ function LayoutInner({ children, currentPageName }) {
                           </ul>
                         </div>
                       </div>
+                      </div>
+
+                      {/* Für Unternehmen */}
+                      <div className="max-w-[1100px] mx-auto px-4 w-full">
+                        {/* Desktop: Dropdown on click */}
+                        <div className="hidden lg:block">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button className="text-[11px] md:text-xs text-slate-300 hover:text-slate-200 bg-transparent border border-[#243246] rounded-full px-3 py-1">
+                                Für Unternehmen
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="min-w-[220px]">
+                              <Link to={createPageUrl('Business')}><DropdownMenuItem>Werbung schalten</DropdownMenuItem></Link>
+                              <Link to={`${createPageUrl('Business')}?view=pricing`}><DropdownMenuItem>Preise & Pakete</DropdownMenuItem></Link>
+                              <Link to={createPageUrl('BusinessContact')}><DropdownMenuItem>Business-Kontakt</DropdownMenuItem></Link>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+
+                        {/* Mobile: Accordion behavior */}
+                        <div className="block lg:hidden mt-2">
+                          <Collapsible>
+                            <CollapsibleTrigger className="w-full text-left px-3 py-2 text-slate-300 font-medium border border-[#243246] rounded-md">
+                              Für Unternehmen
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="px-3 pb-2">
+                              <ul className="space-y-1 text-[13px]">
+                                <li><Link to={createPageUrl('Business')} className="text-slate-500 hover:text-slate-300">Werbung schalten</Link></li>
+                                <li><Link to={`${createPageUrl('Business')}?view=pricing`} className="text-slate-500 hover:text-slate-300">Preise & Pakete</Link></li>
+                                <li><Link to={createPageUrl('BusinessContact')} className="text-slate-500 hover:text-slate-300">Business-Kontakt</Link></li>
+                              </ul>
+                            </CollapsibleContent>
+                          </Collapsible>
+                        </div>
                       </div>
 
                       <hr className="border-0 border-t border-[#243246] my-2 md:my-3.5 mx-auto w-[92%]" />
