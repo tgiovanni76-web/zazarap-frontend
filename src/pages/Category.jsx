@@ -55,7 +55,7 @@ export default function Category() {
             <React.Fragment key={listing.id}>
               {idx > 0 && idx % 12 === 0 && <AdCard />}
 
-            <Card key={listing.id} className="hover:shadow-lg transition-shadow">
+            <Card className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-3">{listing.title}</h3>
                 {listing.images && listing.images.length > 0 && (
