@@ -10,37 +10,42 @@ export default function Business() {
       <header className="text-center mb-8">
         <h1 className="text-3xl font-extrabold">Werben auf Zazarap • Für Unternehmen</h1>
         <p className="text-muted-foreground mt-2">Präsentieren Sie Ihre Marke mit Bannern und gesponserten Cards auf Zazarap.de</p>
-        <Link to={createPageUrl('BusinessContact')}><Button className="mt-4">Kampagne anfragen</Button></Link>
       </header>
 
       <section className="grid md:grid-cols-3 gap-4 mb-10">
         <Card>
-          <CardHeader><CardTitle>Vantaggi</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Vorteile</CardTitle></CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            • Audience locale e in crescita
-            <br/>• Posizionamenti premium in Home, Categorie e Feed
-            <br/>• Etichette chiare “Sponsorizzato” per massima trasparenza
+            • Lokale Zielgruppe
+            <br/>• Premium-Platzierungen (Home, Kategorien, Feed)
+            <br/>• Hohe Transparenz („Gesponsert“-Kennzeichnung)
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Formati iniziali</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Startformate</CardTitle></CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            • Banner (Home, Categoria)
-            <br/>• Card sponsorizzate nel feed (1 ogni 12)
-            <br/>• Immagini statiche pulite; Video in futuro
+            • Banner
+            <br/>• Gesponserte Cards
+            <br/>• Bilder/Video
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Modello</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Modell</CardTitle></CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            • Tariffa flat mensile per placement
-            <br/>• Attivazione dopo approvazione admin
+            • Monatliche Pauschale
+            <br/>• Aktivierung nach Admin-Freigabe
           </CardContent>
         </Card>
       </section>
 
       <section className="text-center">
-        <Link to={createPageUrl('BusinessContact')}><Button size="lg">Compila il form di richiesta</Button></Link>
+        <Link to={createPageUrl('BusinessContact')}><Button size="lg">Anfrage senden</Button></Link>
+        <p className="text-xs text-slate-500 mt-2">Ab 2,99 € pro Tag</p>
+        <ul className="mt-2 text-sm text-muted-foreground space-y-1">
+          <li>• Keine versteckten Kosten</li>
+          <li>• Monatlich kündbar</li>
+          <li>• DSGVO-konform</li>
+        </ul>
       </section>
     </div>
   );
