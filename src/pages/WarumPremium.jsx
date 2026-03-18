@@ -74,6 +74,10 @@ export default function WarumPremium() {
     { icon: Zap, value: '85%', label: t('premium.stats.success') }
   ];
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const listingId = urlParams.get('listingId');
+  const reason = urlParams.get('reason');
+
   return (
     <div className="py-4 md:py-8 px-4 max-w-6xl mx-auto">
       <SEOHead 
