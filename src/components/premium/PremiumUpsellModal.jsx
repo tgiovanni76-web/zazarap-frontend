@@ -16,7 +16,7 @@ export default function PremiumUpsellModal({ open, onClose, onConfirm, copy, lis
           <img src={listing.images[0]} alt={listing.title} className="w-full h-40 object-cover rounded-md" />
         )}
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onClose}>Più tardi</Button>
+          <Button variant="outline" onClick={onClose}>Vielleicht später</Button>
           <Button onClick={onConfirm} className="bg-primary">{copy.cta || 'Vai a Premium'}</Button>
         </DialogFooter>
       </DialogContent>

@@ -10,23 +10,23 @@ export const PremiumReasons = {
 
 export function buildPremiumCopy(reason, listing) {
   const titleMap = {
-    [PremiumReasons.AFTER_PUBLISH]: 'Dai slancio al tuo annuncio! 🚀',
-    [PremiumReasons.NO_MESSAGES_24H]: 'Nessun messaggio ancora? Aumenta la visibilità',
-    [PremiumReasons.VIEWS_NO_MESSAGES]: 'Molte visualizzazioni, nessun contatto? Rendi l’annuncio Premium',
-    [PremiumReasons.FIRST_MESSAGE]: 'Più messaggi e offerte grazie a Premium',
-    [PremiumReasons.EXPIRING_48H]: 'Sta per scadere: metti in evidenza ora',
+    [PremiumReasons.AFTER_PUBLISH]: 'Neu veröffentlicht? Jetzt Sichtbarkeit steigern',
+    [PremiumReasons.NO_MESSAGES_24H]: 'Noch keine Anfragen? Steigern Sie Ihre Sichtbarkeit jetzt',
+    [PremiumReasons.VIEWS_NO_MESSAGES]: 'Viele Aufrufe, aber keine Anfragen?',
+    [PremiumReasons.FIRST_MESSAGE]: 'Mehr Nachrichten und Angebote mit Premium',
+    [PremiumReasons.EXPIRING_48H]: 'Bald weniger Sichtbarkeit – jetzt hervorheben',
   };
   const bodyMap = {
-    [PremiumReasons.AFTER_PUBLISH]: 'Appena pubblicato: parti in pole position con maggiore visibilità e priorità nei risultati.',
-    [PremiumReasons.NO_MESSAGES_24H]: 'Dopo 24 ore senza contatti, un boost Premium può fare la differenza con badge e posizionamento migliori.',
-    [PremiumReasons.VIEWS_NO_MESSAGES]: 'Il tuo annuncio viene visto ma non converte: prova il boost Premium per aumentare i contatti.',
-    [PremiumReasons.FIRST_MESSAGE]: 'Stanno arrivando contatti: amplifica la portata e ricevi più offerte attivando Premium.',
-    [PremiumReasons.EXPIRING_48H]: 'Mancano meno di 2 giorni: evita il calo di visibilità e promuovi prima della scadenza.',
+    [PremiumReasons.AFTER_PUBLISH]: 'Ihre Anzeige ist neu online. Mit Premium sichern Sie sich bessere Platzierungen und mehr Reichweite. Ohne Boost sinkt die Sichtbarkeit mit der Zeit.',
+    [PremiumReasons.NO_MESSAGES_24H]: 'Ihre Anzeige wird aktuell weniger gesehen. Mit Premium erreichen Sie bis zu 10x mehr Käufer. Ohne Boost sinkt die Sichtbarkeit mit der Zeit.',
+    [PremiumReasons.VIEWS_NO_MESSAGES]: 'Ihre Anzeige wird angesehen, aber führt zu keinen Kontakten. Premium erhöht Reichweite und Sichtbarkeit – für mehr Anfragen.',
+    [PremiumReasons.FIRST_MESSAGE]: 'Die ersten Kontakte kommen rein – verstärken Sie jetzt die Reichweite und erhalten Sie mehr Angebote mit Premium.',
+    [PremiumReasons.EXPIRING_48H]: 'Ihre Sichtbarkeit nimmt demnächst ab. Vermeiden Sie den Rückgang und heben Sie die Anzeige jetzt hervor.',
   };
   return {
-    title: titleMap[reason] || 'Rendi l’annuncio Premium',
-    body: bodyMap[reason] || 'Aumenta visibilità, fiducia e conversioni con il pacchetto Premium.',
-    cta: 'Scopri Premium',
+    title: titleMap[reason] || 'Anzeige hervorheben',
+    body: bodyMap[reason] || 'Mit Premium steigern Sie Sichtbarkeit, Vertrauen und Conversion. Ohne Boost sinkt die Sichtbarkeit mit der Zeit.',
+    cta: 'Jetzt hervorheben',
   };
 }
 
