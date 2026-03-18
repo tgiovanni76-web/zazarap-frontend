@@ -508,14 +508,14 @@ export default function Marketplace() {
       )}
 
       <div className="zaza-grid">
-          {filteredListings.map((listing, idx) => (
-          const isFavorite = user && favorites.some(fav => fav.listing_id === listing.id);
-          (
-            <React.Fragment key={listing.id}>
-              {idx > 0 && idx % 12 === 0 && <AdCard />}
-              <div className="zaza-card">
-              <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
-                {listing.images && listing.images.length > 0 ? (
+          {filteredListings.map((listing, idx) => {
+            const isFavorite = user && favorites.some(fav => fav.listing_id === listing.id);
+            return (
+              <React.Fragment key={listing.id}>
+                {idx > 0 && idx % 12 === 0 && <AdCard />}
+                <div className="zaza-card">
+                <Link to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
+                  {listing.images && listing.images.length > 0 ? (
                   <img 
                     src={variantUrl(listing.images[0], 'thumb')}
                     srcSet={`${variantUrl(listing.images[0], 'thumb')} 320w, ${variantUrl(listing.images[0], 'card')} 800w`}
