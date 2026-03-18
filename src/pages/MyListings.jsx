@@ -153,6 +153,8 @@ export default function MyListings() {
         </TabsList>
 
         <TabsContent value="active" className="mt-6">
+          {/* Premium prompt manager scoped to active listings */}
+          <PremiumPromptManager listings={activeListings} contextProvider={contextProvider} />
           <PremiumPromptManager listings={activeListings} contextProvider={contextProvider} />
           <div className="space-y-4">
             {activeListings.length === 0 ? (
