@@ -34,7 +34,7 @@ export default function BusinessForm() {
       handleChange("imageUrl", file_url);
       toast.success("Bild hochgeladen");
     } catch (e) {
-      toast.error("Upload fallito");
+      toast.error("Upload fehlgeschlagen");
     } finally {
       setLoading(false);
     }
