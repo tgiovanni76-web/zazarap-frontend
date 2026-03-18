@@ -28,6 +28,16 @@ export default function MyListings() {
   });
 
   const activeListings = listings.filter(l => l.status === 'active');
+
+  // Map of listingId -> signals (views/messages/age/expiry). Kept lightweight without changing business logic
+  const contextProvider = (l) => {
+    const ageHours = Math.max(0, (Date.now() - new Date(l.created_date).getTime()) / 36e5);
+    const hoursToExpiry = l.expiresAt ? (new Date(l.expiresAt).getTime() - Date.now()) / 36e5 : null;
+    // Best-effort counters if present on listing cache; if not, default 0
+    const viewsCount = l.viewsCount || l.views || 0;
+    const messagesCount = l.messagesCount || l.unreadBuyer + l.unreadSeller || 0;
+    return { ageHours, hoursToExpiry, viewsCount, messagesCount };
+  };
   const soldListings = listings.filter(l => l.status === 'sold');
   const archivedListings = listings.filter(l => l.status === 'archived' || l.status === 'expired');
 
