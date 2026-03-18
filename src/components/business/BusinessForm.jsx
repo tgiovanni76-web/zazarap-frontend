@@ -112,7 +112,7 @@ export default function BusinessForm() {
             <SelectTrigger><SelectValue placeholder="Formato" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="banner">Banner</SelectItem>
-              <SelectItem value="card">Card sponsorizzata</SelectItem>
+              <SelectItem value="card">Gesponserte Card</SelectItem>
               <SelectItem value="image">Immagine</SelectItem>
               <SelectItem value="video">Video (futuro)</SelectItem>
             </SelectContent>
