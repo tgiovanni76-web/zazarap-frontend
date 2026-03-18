@@ -22,7 +22,7 @@ export default function OfflineFormGuard() {
     } catch (_) {}
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onOnline = () => {
       onlineRef.current = true;
       toggleSubmitButtons(true);
