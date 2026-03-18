@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from '../components/LanguageProvider';
 import { ArrowLeft } from 'lucide-react';
 import AdBanner from '@/components/ads/AdBanner';
+import AdCard from '@/components/ads/AdCard';
 
 export default function Category() {
   const urlParams = new URLSearchParams(window.location.search);
