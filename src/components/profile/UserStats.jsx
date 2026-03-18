@@ -19,35 +19,51 @@ export default function UserStats({ user, isOwnProfile }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="h-5 w-5 text-blue-600" />
-              {tr('profile.sellerStats','Statistiche Venditore')}
+              {tr('profile.sellerStats','Verkäuferstatistiken')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.sales','Vendite')}</p>
-                <p className="text-2xl font-bold">{sellerStats.totalSales || 0}</p>
+                <p className="text-sm text-slate-600">{tr('profile.sales','Verkäufe')}</p>
+                {(sellerStats.totalSales || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{sellerStats.totalSales}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Verkäufe</p>
+                )}
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.revenue','Fatturato')}</p>
-                <p className="text-2xl font-bold">{formatCurrency(sellerStats.totalRevenue || 0, currentLanguage)}</p>
+                <p className="text-sm text-slate-600">{tr('profile.revenue','Umsatz')}</p>
+                {(sellerStats.totalRevenue || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{formatCurrency(sellerStats.totalRevenue, currentLanguage)}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Umsätze</p>
+                )}
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
+                <p className="text-sm text-slate-600">{tr('profile.rating','Bewertung')}</p>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <p className="text-2xl font-bold">{formatNumber(sellerStats.averageRating || 0, currentLanguage, 1)}</p>
+                  {(sellerStats.averageRating || 0) > 0 ? (
+                    <p className="text-2xl font-bold">{formatNumber(sellerStats.averageRating, currentLanguage, 1)}</p>
+                  ) : (
+                    <p className="text-slate-500 text-sm">Noch keine Bewertungen</p>
+                  )}
                 </div>
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.reviews','Recensioni')}</p>
-                <p className="text-2xl font-bold">{sellerStats.totalReviews || 0}</p>
+                <p className="text-sm text-slate-600">{tr('profile.reviews','Bewertungen')}</p>
+                {(sellerStats.totalReviews || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{sellerStats.totalReviews}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Bewertungen</p>
+                )}
               </div>
             </div>
             {sellerStats.responseTime && (
               <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
                 <Clock className="h-4 w-4" />
-                {tr('profile.responseTime','Tempo di risposta medio:')} {sellerStats.responseTime}
+                {tr('profile.responseTime','Durchschnittliche Antwortzeit:')} {sellerStats.responseTime}
               </div>
             )}
           </CardContent>
@@ -60,29 +76,45 @@ export default function UserStats({ user, isOwnProfile }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5 text-green-600" />
-              {tr('profile.buyerStats','Statistiche Acquirente')}
+              {tr('profile.buyerStats','Käuferstatistiken')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.purchases','Acquisti')}</p>
-                <p className="text-2xl font-bold">{buyerStats.totalPurchases || 0}</p>
+                <p className="text-sm text-slate-600">{tr('profile.purchases','Käufe')}</p>
+                {(buyerStats.totalPurchases || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{buyerStats.totalPurchases}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Käufe</p>
+                )}
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.spent','Speso')}</p>
-                <p className="text-2xl font-bold">{formatCurrency(buyerStats.totalSpent || 0, currentLanguage)}</p>
+                <p className="text-sm text-slate-600">{tr('profile.spent','Ausgaben')}</p>
+                {(buyerStats.totalSpent || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{formatCurrency(buyerStats.totalSpent, currentLanguage)}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Ausgaben</p>
+                )}
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.rating','Valutazione')}</p>
+                <p className="text-sm text-slate-600">{tr('profile.rating','Bewertung')}</p>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <p className="text-2xl font-bold">{(buyerStats.averageRating || 0).toFixed(1)}</p>
+                  {(buyerStats.averageRating || 0) > 0 ? (
+                    <p className="text-2xl font-bold">{(buyerStats.averageRating).toFixed(1)}</p>
+                  ) : (
+                    <p className="text-slate-500 text-sm">Noch keine Bewertungen</p>
+                  )}
                 </div>
               </div>
               <div>
-                <p className="text-sm text-slate-600">{tr('profile.reviews','Recensioni')}</p>
-                <p className="text-2xl font-bold">{buyerStats.totalReviews || 0}</p>
+                <p className="text-sm text-slate-600">{tr('profile.reviews','Bewertungen')}</p>
+                {(buyerStats.totalReviews || 0) > 0 ? (
+                  <p className="text-2xl font-bold">{buyerStats.totalReviews}</p>
+                ) : (
+                  <p className="text-slate-500 text-sm">Noch keine Bewertungen</p>
+                )}
               </div>
             </div>
           </CardContent>

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Edit2, MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin, Package, ShoppingBag, Star, Settings } from 'lucide-react';
+import { User, Edit2, MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin, Package, ShoppingBag, Star, Settings, Calendar, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
@@ -129,16 +129,34 @@ export default function UserProfile() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
                 <div>
                   <h1 className="text-3xl font-bold">{profileUser.full_name || profileUser.email}</h1>
-                  <p className="text-slate-600 flex items-center gap-2 mt-1">
-                    <Mail className="h-4 w-4" />
-                    {profileUser.email}
-                  </p>
+                  <div className="text-slate-600 flex items-center gap-3 mt-1 flex-wrap">
+                    {profileUser.created_date && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        Mitglied seit {format(new Date(profileUser.created_date), 'MM/yyyy')}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      Verifiziertes Profil
+                    </span>
+                    {isOwnProfile ? (
+                      <span className="flex items-center gap-1">
+                        <Mail className="h-4 w-4" />
+                        {profileUser.email}
+                      </span>
+                    ) : (
+                      <Link to={createPageUrl('Messages')} className="inline-flex items-center gap-2 text-[var(--z-link)] hover:text-[var(--z-link-hover)]">
+                        Kontakt über Zazarap
+                      </Link>
+                    )}
+                  </div>
                 </div>
                 {isOwnProfile && !isEditing && (
                   <div className="relative">
                     <Button onClick={startEditing} variant="outline" className="self-start sm:self-auto mt-2 sm:mt-0 whitespace-nowrap rounded-full px-3 py-1 h-8 text-sm shadow-sm">
                       <Edit2 className="h-4 w-4 mr-1" />
-                      {tr('profile.edit','Modifica profilo')}
+                      {tr('profile.edit','Profil bearbeiten')}
                     </Button>
                   </div>
                 )}
@@ -286,9 +304,24 @@ export default function UserProfile() {
           disabled={recalculateBadgesMutation.isPending}
         >
           <Star className="h-4 w-4 mr-2" />
-          {tr('profile.refreshBadges','Aggiorna badge')}
+          {tr('profile.refreshBadges','Profil verbessern')}
         </Button>
       )}
+
+      {/* Monetarisierung */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Mehr Sichtbarkeit</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col sm:flex-row gap-3">
+          <Link to={createPageUrl('WarumPremium')}>
+            <Button className="w-full sm:w-auto">Anzeige hervorheben</Button>
+          </Link>
+          <Link to={createPageUrl('WarumPremium')}>
+            <Button variant="outline" className="w-full sm:w-auto">Top-Anzeige buchen</Button>
+          </Link>
+        </CardContent>
+      </Card>
 
       {/* Tabs */}
       <div className="mt-6">
@@ -296,24 +329,24 @@ export default function UserProfile() {
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="listings">
               <Package className="h-4 w-4 mr-2" />
-              Annunci ({listings.length})
+              Anzeigen ({listings.length})
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger value="purchases">
                 <ShoppingBag className="h-4 w-4 mr-2" />
-                Acquisti ({orders.length})
+                Käufe ({orders.length})
               </TabsTrigger>
             )}
             <TabsTrigger value="reviews">
               <Star className="h-4 w-4 mr-2" />
-              Recensioni
+              Bewertungen
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="listings" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {listings.length === 0 ? (
-                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Nessun annuncio')}</p>
+                <p className="text-center text-slate-500 col-span-2 py-8">{tr('profile.noListings','Noch keine Anzeigen')}</p>
               ) : (
                 listings.map(listing => (
                   <Link key={listing.id} to={createPageUrl('ListingDetail') + '?id=' + listing.id}>
@@ -327,8 +360,8 @@ export default function UserProfile() {
                             <h3 className="font-semibold mb-1">{listing.title}</h3>
                             <p className="text-lg font-bold text-red-600 mb-2">{formatCurrency(listing.price, currentLanguage)}</p>
                             <Badge variant={listing.status === 'active' ? 'default' : 'secondary'}>
-                              {listing.status === 'active' ? 'Attivo' : 
-                               listing.status === 'sold' ? 'Venduto' : listing.status}
+                              {listing.status === 'active' ? 'Aktiv' : 
+                               listing.status === 'sold' ? 'Verkauft' : listing.status}
                             </Badge>
                           </div>
                         </div>
@@ -344,7 +377,7 @@ export default function UserProfile() {
             <TabsContent value="purchases" className="mt-6">
               <div className="space-y-4">
                 {orders.length === 0 ? (
-                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Nessun acquisto')}</p>
+                  <p className="text-center text-slate-500 py-8">{tr('profile.noPurchases','Noch keine Käufe')}</p>
                 ) : (
                   orders.map(order => (
                     <Card key={order.id}>
@@ -367,7 +400,7 @@ export default function UserProfile() {
                             <p className="text-2xl font-bold">{formatCurrency(order.totalAmount, currentLanguage)}</p>
                             <Link to={createPageUrl('MyOrders') + '?orderId=' + order.id}>
                               <Button variant="outline" size="sm" className="mt-2">
-                                Dettagli
+                                Details
                               </Button>
                             </Link>
                           </div>
