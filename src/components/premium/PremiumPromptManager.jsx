@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PremiumUpsellModal from './PremiumUpsellModal';
 import { PremiumReasons, buildPremiumCopy, canShowPrompt, shouldTrigger } from '@/lib/premium-prompts';
 import { base44 } from '@/api/base44Client';
@@ -9,6 +9,7 @@ import { base44 } from '@/api/base44Client';
  */
 export default function PremiumPromptManager({ listings = [], contextProvider }) {
   const [state, setState] = useState({ open: false, copy: null, listing: null, reason: null });
+  const snoozedRef = useRef(new Set());
 
   const candidates = useMemo(() => {
     const now = Date.now();
@@ -19,6 +20,7 @@ export default function PremiumPromptManager({ listings = [], contextProvider })
     if (!candidates?.length || state.open) return;
 
     for (const listing of candidates) {
+      if (snoozedRef.current.has(listing.id)) continue;
       if (!canShowPrompt(listing)) continue;
       const ctx = contextProvider ? contextProvider(listing) : {};
 
@@ -44,6 +46,7 @@ export default function PremiumPromptManager({ listings = [], contextProvider })
 
   const handleClose = async () => {
     const listingId = state.listing?.id;
+    if (listingId) snoozedRef.current.add(listingId);
     // Close immediately for snappier UX
     setState({ open: false, copy: null, listing: null, reason: null });
     // Update throttle timestamp in background (non-blocking)
@@ -54,6 +57,7 @@ export default function PremiumPromptManager({ listings = [], contextProvider })
 
   const handleConfirm = async () => {
     const listingId = state.listing?.id;
+    if (listingId) snoozedRef.current.add(listingId);
     const reason = state.reason;
     // Close immediately
     setState({ open: false, copy: null, listing: null, reason: null });
