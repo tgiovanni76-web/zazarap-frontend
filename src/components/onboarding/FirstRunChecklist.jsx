@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { CheckCircle2, Camera, UserRoundCog } from 'lucide-react';
+import { CheckCircle2, Camera, UserCog } from 'lucide-react';
 
 const SNOOZE_KEY = 'onboarding_snooze_until_v1';
 const isSnoozed = () => {
@@ -42,7 +42,7 @@ export default function FirstRunChecklist({ user, onAddPhotoClick }) {
         label: 'Profil vervollständigen',
         actionLabel: 'Profil öffnen',
         link: createPageUrl('CompleteProfile'),
-        icon: UserRoundCog,
+        icon: UserCog,
       },
     ];
   }, [user, onAddPhotoClick]);
