@@ -5,6 +5,7 @@ import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
 import GlobalErrorListener from '@/components/core/GlobalErrorListener';
 import NetworkStatusBanner from '@/components/core/NetworkStatusBanner';
 import OfflineFormGuard from '@/components/core/OfflineFormGuard';
+import FirstRunChecklist from '@/components/onboarding/FirstRunChecklist';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -972,6 +973,7 @@ function LayoutInner({ children, currentPageName }) {
       {/* EmailVerificationBanner removed as requested */}
       
       <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto h-auto min-h-0 pb-24" style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
+        <FirstRunChecklist user={user} onAddPhotoClick={onAddPhotoClick} />
         {children}
 
         {user?.role === 'admin' && currentPageName !== 'AdminDashboard' && ([
