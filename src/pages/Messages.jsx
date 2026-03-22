@@ -76,29 +76,35 @@ export default function Messages() {
   const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
 
   const { data: chats = [], isLoading: chatsLoading, refetch: refetchChats } = useQuery({
-    queryKey: ['chats', user?.email],
+    queryKey: ['chats', user?.email || 'anon'],
     queryFn: async () => {
       if (!user?.email) return [];
-      // Carica esplicitamente entrambe le direzioni
-      const [asBuyer, asSeller] = await Promise.all([
-        base44.entities.Chat.filter({ buyerId: user.email }, '-updatedAt').catch(() => []),
-        base44.entities.Chat.filter({ sellerId: user.email }, '-updatedAt').catch(() => []),
-      ]);
-      const merged = [...(asBuyer || []), ...(asSeller || [])];
-      const byId = new Map();
-      for (const c of merged) byId.set(c.id, c);
-      const arr = Array.from(byId.values())
-        .sort((a,b) => new Date(b.updatedAt || b.updated_date || 0) - new Date(a.updatedAt || a.updated_date || 0));
-      console.debug('[Messages] chats loaded', {
-        user: user.email,
-        asBuyerCount: asBuyer?.length || 0,
-        asSellerCount: asSeller?.length || 0,
-        total: arr.length,
-        ids: arr.map(c => c.id)
-      });
-      return arr;
+      try {
+        const [asBuyer, asSeller] = await Promise.all([
+          base44.entities.Chat.filter({ buyerId: user.email }, '-updatedAt').catch(() => []),
+          base44.entities.Chat.filter({ sellerId: user.email }, '-updatedAt').catch(() => []),
+        ]);
+        const merged = [...(asBuyer || []), ...(asSeller || [])];
+        const byId = new Map();
+        for (const c of merged) if (c?.id) byId.set(c.id, c);
+        const arr = Array.from(byId.values())
+          .sort((a,b) => new Date(b?.updatedAt || b?.updated_date || 0) - new Date(a?.updatedAt || a?.updated_date || 0));
+        console.debug('[Messages] chats loaded', {
+          user: user.email,
+          asBuyerCount: asBuyer?.length || 0,
+          asSellerCount: asSeller?.length || 0,
+          total: arr.length,
+          ids: arr.map(c => c.id)
+        });
+        return arr;
+      } catch (e) {
+        console.error('[Messages] chat query failed', e);
+        return [];
+      }
     },
     enabled: !!user,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
   });
 
   // Real-time subscription for chats
