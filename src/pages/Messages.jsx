@@ -323,13 +323,13 @@ export default function Messages() {
 
   // Mobile: show only sidebar or chat
   if (isMobileView) {
-    if (selectedChat) {
+    if (selectedChat?.id) {
       return (
             <div className="h-full min-h-0 overflow-hidden">
           <ChatWindow
             chat={selectedChat}
-            messages={chatMessages}
-            user={user}
+            messages={chatMessages || []}
+            user={user || null}
             listing={currentListing}
             onBack={() => {
               const el = document.getElementById('main-content');
@@ -353,7 +353,7 @@ export default function Messages() {
             onReport={() => setShowReportModal(true)}
           />
 
-          {showPaymentModal && (
+          {showPaymentModal && selectedChat?.id && (
             <PaymentShippingModal
               chat={selectedChat}
               listing={currentListing}
@@ -361,13 +361,13 @@ export default function Messages() {
             />
           )}
 
-          {showReportModal && (
+          {showReportModal && selectedChat?.id && (
             <ReportListingModal
               open={showReportModal}
               onClose={() => setShowReportModal(false)}
               listingId={selectedChat.listingId}
               listingTitle={currentListing?.title}
-              sellerEmail={selectedChat.sellerId === user.email ? selectedChat.buyerId : selectedChat.sellerId}
+              sellerEmail={(user && selectedChat.sellerId === user.email) ? selectedChat.buyerId : selectedChat.sellerId}
               user={user}
             />
           )}
