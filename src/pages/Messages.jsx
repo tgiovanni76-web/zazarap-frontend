@@ -148,6 +148,17 @@ export default function Messages() {
     base44.entities.Chat.filter({ id: chatIdFromUrl })
       .then(res => {
         if (maybeSelect(res?.[0])) return;
+
+        // If chat does not exist or is not accessible, clear chatId to avoid infinite spinner
+        if (!res || res.length === 0) {
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('chatId');
+            window.history.replaceState({}, '', url.toString());
+          } catch {}
+          return;
+        }
+
         // 3) subscribe for creation/update events affecting this chat id
         unsub = base44.entities.Chat.subscribe((event) => {
           if (event.id === chatIdFromUrl) {
