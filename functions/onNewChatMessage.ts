@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     const computedReceiver = message.senderId === buyer ? seller : buyer;
 
     // Backfill receiverId if missing or incorrect
-    if (!message.receiverId || (computedReceiver && message.receiverId !== computedReceiver)) {
+    if (evtType === 'create' && (!message.receiverId || (computedReceiver && message.receiverId !== computedReceiver))) {
       await base44.asServiceRole.entities.ChatMessage.update(message.id, { receiverId: computedReceiver });
     }
 
