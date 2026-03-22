@@ -6,7 +6,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, TrendingUp, Shield, Heart, Zap, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, TrendingUp, Users, Heart, Zap, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import FeaturedListings from '../components/marketplace/FeaturedListings';
 import AdBanner from '@/components/ads/AdBanner';
 import CategoryIcon from '../components/marketplace/CategoryIcon';
@@ -170,8 +170,8 @@ export default function Home() {
         </Card>
         <Card>
           <CardContent className="pt-6 text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-6 w-6 text-green-600" />
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="h-6 w-6 text-blue-600" />
             </div>
             <h3 className="font-bold mb-2">{safeTitle}</h3>
             <p className="text-sm text-slate-600">
