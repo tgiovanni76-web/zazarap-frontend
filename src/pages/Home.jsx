@@ -102,7 +102,7 @@ export default function Home() {
 
   const tr = (key, fb) => { const v = t(key); return v === key ? fb : v; };
   const heroTitle = tr('home.hero.title', currentLanguage === 'de' ? 'Finde, was du suchst – mit Zazarap' : t('home.hero.title'));
-  const heroSubtitle = tr('home.hero.subtitle', currentLanguage === 'de' ? 'Durchsuche Tausende von Kleinanzeigen in ganz Deutschland – sicher und schnell.' : t('home.hero.subtitle'));
+  const heroSubtitle = tr('home.hero.subtitle', currentLanguage === 'de' ? 'Durchsuche Tausende von Kleinanzeigen in ganz Deutschland.' : t('home.hero.subtitle'));
   const searchLabel = tr('home.search.button', currentLanguage === 'de' ? 'Suchen' : (t('searchPlaceholder') || 'Search'));
   const categoriesTitle = tr('home.section.categories', currentLanguage === 'de' ? 'Entdecke die Kategorien' : t('nav.categories'));
   const viewAllLabel = tr('home.section.viewAll', currentLanguage === 'de' ? 'Alle anzeigen' : t('home.section.viewAll'));
