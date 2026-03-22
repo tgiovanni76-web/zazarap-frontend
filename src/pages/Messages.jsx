@@ -90,7 +90,7 @@ export default function Messages() {
       const byId = new Map();
       for (const c of merged) if (c?.id) byId.set(c.id, c);
       const arr = Array.from(byId.values())
-        .sort((a,b) => new Date(b?.updatedAt || b?.updated_date || 0) - new Date(a?.updatedAt || a?.updated_date || 0));
+        .sort((a,b) => new Date(b?.updated_date || b?.updatedAt || 0) - new Date(a?.updated_date || a?.updatedAt || 0));
       console.debug('[Messages] chats loaded (buyer+seller merge)', {
         user: user.email,
         asBuyerCount: asBuyer?.length || 0,
