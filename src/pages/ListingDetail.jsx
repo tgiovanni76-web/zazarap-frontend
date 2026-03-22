@@ -231,6 +231,7 @@ export default function ListingDetail() {
       }
 
       // Direkt zur Chat-Seite mit chatId navigieren (mit Fallback)
+      try { localStorage.setItem('pendingChatId', chatId); } catch {}
       const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);

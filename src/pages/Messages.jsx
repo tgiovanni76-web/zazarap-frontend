@@ -16,7 +16,9 @@ export default function Messages() {
   const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const chatIdFromUrl = urlParams.get('chatId');
-  const [urlChatId, setUrlChatId] = useState(chatIdFromUrl);
+  const pendingChatId = typeof window !== 'undefined' ? localStorage.getItem('pendingChatId') : null;
+  const initialChatId = chatIdFromUrl || pendingChatId || null;
+  const [urlChatId, setUrlChatId] = useState(initialChatId);
   const [selectedChat, setSelectedChat] = useState(null);
   const awaitingChatFromUrl = !!urlChatId && !selectedChat;
   const [searchTerm, setSearchTerm] = useState('');
@@ -143,6 +145,13 @@ export default function Messages() {
     return () => unsubscribe();
   }, [selectedChat?.id, queryClient]);
 
+  // Clear pendingChatId once a chat is selected
+  useEffect(() => {
+    if (selectedChat?.id) {
+      try { localStorage.removeItem('pendingChatId'); } catch {}
+    }
+  }, [selectedChat?.id]);
+
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],
     queryFn: async () => {
@@ -186,6 +195,7 @@ export default function Messages() {
       if (c && (c.buyerId === user.email || c.sellerId === user.email)) {
         console.debug('[Messages] selecting chat from URL', c.id);
         setSelectedChat(c);
+        try { localStorage.removeItem('pendingChatId'); } catch {}
         return true;
       }
       console.debug('[Messages] chat not selectable for user', { urlChatId, c, user: user.email });
@@ -193,7 +203,7 @@ export default function Messages() {
     };
 
     // 1) try from current list
-    const inList = myChats.find(c => c.id === chatIdFromUrl);
+    const inList = myChats.find(c => c.id === urlChatId);
     if (maybeSelect(inList)) return;
 
     // 2) fetch directly by id
