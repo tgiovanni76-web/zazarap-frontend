@@ -25,17 +25,14 @@ export default function Messages() {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
   const queryClient = useQueryClient();
 
-  // Debug: track incoming chatId from URL
+  // Track incoming chatId from URL (safe, no TDZ)
   useEffect(() => {
-    if (urlChatId) {
-      console.debug('[Messages] chatIdFromUrl detected', urlChatId);
-      // Aggiorna cache e forza refetch immediato
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
-      if (typeof refetchChats === 'function') {
-        refetchChats();
-      }
-    }
-  }, [urlChatId, queryClient, refetchChats]);
+    if (!urlChatId) return;
+    console.debug('[Messages] chatIdFromUrl detected', urlChatId);
+    // Update cache and schedule a refetch (refetchChats may be undefined on first render)
+    queryClient.invalidateQueries({ queryKey: ['chats'] });
+    setTimeout(() => { try { typeof refetchChats === 'function' && refetchChats(); } catch {} }, 0);
+  }, [urlChatId, queryClient]);
 
   const handleSeedDemo = async () => {
     try {
