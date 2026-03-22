@@ -869,6 +869,18 @@ export default function ChatWindow({
           <ArrowLeft className="h-5 w-5 mr-1" />
           ← Chats
         </Button>
+        {/* Back to listing (desktop and mobile) */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="hidden md:inline-flex text-white hover:bg-white/20"
+          onClick={() => goBack()}
+          aria-label="Zurück zur Anzeige"
+          title="Zur Anzeige"
+        >
+          <ArrowLeft className="h-5 w-5 mr-1" />
+          {listing?.title ? '' : ''}
+        </Button>
         
         {(listing?.images?.[0] || chat?.listingImage) ? (
           <img src={listing?.images?.[0] || chat?.listingImage} alt="" className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
