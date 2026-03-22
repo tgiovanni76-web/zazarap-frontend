@@ -255,6 +255,14 @@ export default function Messages() {
             onBack={() => {
               const el = document.getElementById('main-content');
               const prev = el ? el.scrollTop : null;
+
+              // Remove chatId from URL to avoid auto-reselect on mobile
+              try {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('chatId');
+                window.history.replaceState({}, '', url.toString());
+              } catch {}
+
               setSelectedChat(null);
               if (prev !== null) requestAnimationFrame(() => {
                 const c = document.getElementById('main-content');
@@ -349,6 +357,14 @@ export default function Messages() {
               onBack={() => {
                 const el = document.getElementById('main-content');
                 const prev = el ? el.scrollTop : null;
+
+                // Remove chatId from URL so back arrow returns to list
+                try {
+                  const url = new URL(window.location.href);
+                  url.searchParams.delete('chatId');
+                  window.history.replaceState({}, '', url.toString());
+                } catch {}
+
                 setSelectedChat(null);
                 if (prev !== null) requestAnimationFrame(() => {
                   const c = document.getElementById('main-content');
