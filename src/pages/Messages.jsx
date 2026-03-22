@@ -17,6 +17,7 @@ export default function Messages() {
   const urlParams = new URLSearchParams(window.location.search);
   const chatIdFromUrl = urlParams.get('chatId');
   const [selectedChat, setSelectedChat] = useState(null);
+  const awaitingChatFromUrl = !!chatIdFromUrl && !selectedChat;
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -281,7 +282,11 @@ export default function Messages() {
 
     return (
       <div className="h-full min-h-0 overflow-hidden">
-        {myChats.length === 0 ? (
+        {awaitingChatFromUrl ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--z-primary)]"></div>
+          </div>
+        ) : myChats.length === 0 ? (
           <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
             <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
             <p className="text-base md:text-lg mb-1">Du hast noch keine Chats.</p>

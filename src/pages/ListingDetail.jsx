@@ -165,12 +165,15 @@ export default function ListingDetail() {
 
     setIsContactingLoading(true);
     try {
+      console.debug('[ContactSeller] click', { listingId, sellerId: listing.created_by, buyerId: user.email });
+
       // Prüfen: existiert bereits eine Chat-Konversation für dieses Listing und diese beiden Nutzer?
       const existingChats = await base44.entities.Chat.filter({
         listingId: listingId,
         buyerId: user.email,
         sellerId: listing.created_by
       });
+      console.debug('[ContactSeller] existingChats', existingChats?.length);
 
       let chatId;
 
@@ -191,6 +194,7 @@ export default function ListingDetail() {
           unreadSeller: 0
         });
         chatId = newChat.id;
+        console.debug('[ContactSeller] new chat created', chatId);
 
         // Begrüßungs‑Systemnachricht
         await base44.entities.ChatMessage.create({
@@ -201,8 +205,15 @@ export default function ListingDetail() {
         });
       }
 
-      // Direkt zur Chat-Seite mit chatId navigieren
-      navigate(createPageUrl('Messages') + `?chatId=${chatId}`);
+      // Direkt zur Chat-Seite mit chatId navigieren (mit Fallback)
+      const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
+      navigate(targetUrl);
+      // Fallback: falls der Router die Query verliert, erzwinge Navigation
+      setTimeout(() => {
+        if (!new URLSearchParams(window.location.search).get('chatId')) {
+          window.location.assign(targetUrl);
+        }
+      }, 50);
     } catch (error) {
       console.error('Error creating chat:', error);
       toast.error('Fehler beim Starten des Chats');
