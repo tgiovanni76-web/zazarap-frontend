@@ -28,6 +28,7 @@ export default function Notifications() {
     mutationFn: (id) => base44.entities.Notification.update(id, { read: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications', user?.email, 'unread'] });
     },
   });
 
@@ -40,6 +41,7 @@ export default function Notifications() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications', user?.email, 'unread'] });
     },
   });
 
@@ -47,6 +49,7 @@ export default function Notifications() {
     mutationFn: (id) => base44.entities.Notification.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications', user?.email, 'unread'] });
     },
   });
 
@@ -92,7 +95,7 @@ export default function Notifications() {
 
       <div className="space-y-3">
         {notifications.map(notification => {
-          const Icon = typeIcons[notification.type];
+          const Icon = typeIcons[notification.type] || Bell;
           const colorClass = typeColors[notification.type];
           
           return (
