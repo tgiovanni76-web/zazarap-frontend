@@ -158,6 +158,7 @@ export default function ListingDetail() {
       base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
       return;
     }
+    console.debug('[ContactSeller] listing owner fields', { created_by: listing.created_by, sellerId: listing.sellerId, ownerEmail: listing.ownerEmail, ownerId: listing.ownerId });
     const sellerId = listing.created_by || listing.sellerId || listing.ownerEmail || listing.ownerId;
     if (!sellerId) {
       console.error('[ContactSeller] sellerId missing on listing', { listingId, listing });
@@ -175,10 +176,11 @@ export default function ListingDetail() {
 
       // Prüfen: existiert bereits eine Chat-Konversation für dieses Listing und diese beiden Nutzer?
       const existingChats = await base44.entities.Chat.filter({
-        listingId: listingId,
-        buyerId: user.email,
-        sellerId: sellerId
+       listingId: listingId,
+       buyerId: user.email,
+       sellerId: sellerId
       });
+      console.debug('[ContactSeller] filter for existing', { listingId, buyerId: user.email, sellerId });
       console.debug('[ContactSeller] existingChats count', existingChats?.length, existingChats?.map(c => c.id));
 
       let chatId;
@@ -188,7 +190,7 @@ export default function ListingDetail() {
         console.debug('[ContactSeller] using existing chat', { chatId });
       } else {
         // Neue Chat-Konversation anlegen
-        const newChat = await base44.entities.Chat.create({
+        const payload = {
           listingId: listingId,
           buyerId: user.email,
           sellerId: sellerId,
@@ -199,13 +201,21 @@ export default function ListingDetail() {
           updatedAt: new Date().toISOString(),
           unreadBuyer: 0,
           unreadSeller: 0
-        });
+        };
+        console.debug('[ContactSeller] creating chat with payload', payload);
+        const newChat = await base44.entities.Chat.create(payload);
         chatId = newChat.id;
-        console.debug('[ContactSeller] new chat created', { chatId });
+        console.debug('[ContactSeller] new chat created', { chatId, newChat });
 
         // Verifica persistenza DB
         const verify = await base44.entities.Chat.filter({ id: chatId });
         console.debug('[ContactSeller] persisted chat', verify?.[0]);
+        if (!verify || verify.length === 0) {
+          console.error('[ContactSeller] chat not persisted!');
+        } else {
+          const ch = verify[0];
+          console.debug('[ContactSeller] persisted fields', { listingId: ch.listingId, buyerId: ch.buyerId, sellerId: ch.sellerId });
+        }
 
         // Begrüßungs‑Systemnachricht (non bloccante)
         try {

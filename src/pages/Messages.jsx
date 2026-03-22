@@ -29,10 +29,13 @@ export default function Messages() {
   useEffect(() => {
     if (urlChatId) {
       console.debug('[Messages] chatIdFromUrl detected', urlChatId);
-      // Forza un aggiornamento elenco chat subito dopo arrivo da ListingDetail
+      // Aggiorna cache e forza refetch immediato
       queryClient.invalidateQueries({ queryKey: ['chats'] });
+      if (typeof refetchChats === 'function') {
+        refetchChats();
+      }
     }
-  }, [urlChatId, queryClient]);
+  }, [urlChatId, queryClient, refetchChats]);
 
   const handleSeedDemo = async () => {
     try {
@@ -67,15 +70,36 @@ export default function Messages() {
     queryFn: () => base44.auth.me().catch(() => null),
   });
 
+  // Log utente corrente
+  useEffect(() => {
+    if (user) console.debug('[Messages] currentUser', user.email);
+  }, [user?.email]);
+
   const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
 
   const { data: chats = [], isLoading: chatsLoading, refetch: refetchChats } = useQuery({
-    queryKey: ['chats'],
+    queryKey: ['chats', user?.email],
     queryFn: async () => {
-      const list = await base44.entities.Chat.list('-updatedAt');
-      console.debug('[Messages] fetched chats count', list?.length, 'user', user?.email);
-      return list ?? [];
+      if (!user?.email) return [];
+      // Carica esplicitamente entrambe le direzioni
+      const [asBuyer, asSeller] = await Promise.all([
+        base44.entities.Chat.filter({ buyerId: user.email }, '-updatedAt').catch(() => []),
+        base44.entities.Chat.filter({ sellerId: user.email }, '-updatedAt').catch(() => []),
+      ]);
+      const merged = [...(asBuyer || []), ...(asSeller || [])];
+      const byId = new Map();
+      for (const c of merged) byId.set(c.id, c);
+      const arr = Array.from(byId.values())
+        .sort((a,b) => new Date(b.updatedAt || b.updated_date || 0) - new Date(a.updatedAt || a.updated_date || 0));
+      console.debug('[Messages] chats loaded', {
+        user: user.email,
+        asBuyerCount: asBuyer?.length || 0,
+        asSellerCount: asSeller?.length || 0,
+        total: arr.length,
+        ids: arr.map(c => c.id)
+      });
+      return arr;
     },
     enabled: !!user,
   });
@@ -95,6 +119,7 @@ export default function Messages() {
     queryKey: ['chatMessages', selectedChat?.id],
     queryFn: async () => {
       const msgs = await base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date');
+      console.debug('[Messages] messages fetched for chat', selectedChat?.id, { count: msgs?.length || 0 });
       return msgs ?? [];
     },
     enabled: !!selectedChat,
@@ -116,17 +141,20 @@ export default function Messages() {
 
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.list(),
+    queryFn: async () => {
+      const ls = await base44.entities.Listing.list();
+      return ls || [];
+    },
   });
 
   // Filter chats where user is buyer or seller
   const myChats = chats.filter(
-  c => c.buyerId === user?.email || c.sellerId === user?.email
+  (c) => c?.buyerId === user?.email || c?.sellerId === user?.email
   );
 
   useEffect(() => {
     if (!user) return;
-    console.debug('[Messages] myChats count', myChats.length, { user: user.email });
+    console.debug('[Messages] myChats count', myChats.length, { user: user.email, ids: myChats.map(c=>c.id) });
   }, [myChats.length, user?.email]);
 
   // Mobile: auto-open first chat if none selected and no chatId in URL
@@ -193,7 +221,7 @@ export default function Messages() {
   // Real-time notification for new messages
   useEffect(() => {
     if (!user || !myChats.length) return;
-    
+    console.debug('[Messages] recompute unread', { myChats: myChats.map(c=>({id:c.id, unreadBuyer:c.unreadBuyer, unreadSeller:c.unreadSeller})) });
     const totalUnread = myChats.reduce((sum, chat) => {
       const unread = chat.sellerId === user.email ? chat.unreadSeller : chat.unreadBuyer;
       return sum + (unread || 0);
@@ -229,6 +257,9 @@ export default function Messages() {
 
   // Get current listing
   const currentListing = listings.find(l => l.id === selectedChat?.listingId);
+  if (selectedChat) {
+    console.debug('[Messages] selectedChat snapshot', { id: selectedChat.id, listingId: selectedChat.listingId, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId });
+  }
 
   // Handle chat selection
   const handleSelectChat = (chat) => {
