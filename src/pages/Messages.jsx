@@ -428,11 +428,11 @@ export default function Messages() {
             <div className="h-full flex items-center justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
             </div>
-          ) : selectedChat ? (
+          ) : selectedChat?.id ? (
             <ChatWindow
               chat={selectedChat}
-              messages={chatMessages}
-              user={user}
+              messages={chatMessages || []}
+              user={user || null}
               listing={currentListing}
               onBack={() => {
                 const el = document.getElementById('main-content');
@@ -457,7 +457,7 @@ export default function Messages() {
             />
           ) : (
             <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
-              {myChats.length === 0 ? (
+              {(myChats?.length || 0) === 0 ? (
                 <div className="contents">
                   <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
                   <p className="text-lg mb-1">Du hast noch keine Chats.</p>
