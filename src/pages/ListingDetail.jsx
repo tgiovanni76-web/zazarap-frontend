@@ -213,7 +213,7 @@ export default function ListingDetail() {
         console.debug('[ContactSeller] new chat created', { chatId, newChat });
 
         // Verifica persistenza DB
-        const verify = await base44.entities.Chat.filter({ id: chatId });
+        const verify = chatId ? await base44.entities.Chat.filter({ id: chatId }) : [];
         console.debug('[ContactSeller] persisted chat', verify?.[0]);
         if (!verify || verify.length === 0) {
           console.error('[ContactSeller] chat not persisted!');
