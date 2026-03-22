@@ -28,7 +28,7 @@ export default function ListingDetail() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const cleanTitle = (title) => (title || '').replace(/^(demo)\s*[-–—]?\s*/i, '');
-  const listingId = urlParams.get('id');
+  const listingId = urlParams.get('id') || urlParams.get('listingId');
   const queryClient = useQueryClient();
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
