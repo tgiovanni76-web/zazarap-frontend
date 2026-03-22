@@ -1207,22 +1207,6 @@ export default function ChatWindow({
         </div>
       )}
 
-      {/* Mobile fixed actions */}
-      <div className="md:hidden sticky bottom-0 z-30 bg-white/95 border-t px-2 py-2 flex gap-2">
-        <Button onClick={focusMessageInput} className="flex-1 bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
-          <Send className="h-4 w-4 mr-2" /> {(language === 'it' ? 'Messaggio' : language === 'de' ? 'Nachricht' : language === 'fr' ? 'Message' : language === 'pl' ? 'Wiadomość' : 'Message')}
-        </Button>
-        {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
-          <Button 
-            onClick={handleMakeOffer}
-            className="flex-1 bg-green-600 hover:bg-green-700"
-            disabled={listing?.status === 'reserved'}
-            title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
-          >
-            <DollarSign className="h-4 w-4 mr-1" /> {ct.offer}
-          </Button>
-        )}
-      </div>
 
       {/* Input */}
       <div className="flex items-center gap-2 p-2 md:p-3 border-t bg-slate-50">
