@@ -50,9 +50,7 @@
 import AGB from './pages/AGB';
 import AccessibilityAudit from './pages/AccessibilityAudit';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminDisputes from './pages/AdminDisputes';
 import AdminModeration from './pages/AdminModeration';
-import AdminPayments from './pages/AdminPayments';
 import AdminReports from './pages/AdminReports';
 import AdminSEO from './pages/AdminSEO';
 import AdminSettings from './pages/AdminSettings';
@@ -65,7 +63,6 @@ import CookieRichtlinie from './pages/CookieRichtlinie';
 import CustomerSupport from './pages/CustomerSupport';
 import Datenschutz from './pages/Datenschutz';
 import DatenschutzDE from './pages/DatenschutzDE';
-import DisputeCenter from './pages/DisputeCenter';
 import EditListing from './pages/EditListing';
 import EditProfile from './pages/EditProfile';
 import FAQ from './pages/FAQ';
@@ -113,9 +110,7 @@ export const PAGES = {
     "AGB": AGB,
     "AccessibilityAudit": AccessibilityAudit,
     "AdminDashboard": AdminDashboard,
-    "AdminDisputes": AdminDisputes,
     "AdminModeration": AdminModeration,
-    "AdminPayments": AdminPayments,
     "AdminReports": AdminReports,
     "AdminSEO": AdminSEO,
     "AdminSettings": AdminSettings,
@@ -128,7 +123,6 @@ export const PAGES = {
     "CustomerSupport": CustomerSupport,
     "Datenschutz": Datenschutz,
     "DatenschutzDE": DatenschutzDE,
-    "DisputeCenter": DisputeCenter,
     "EditListing": EditListing,
     "EditProfile": EditProfile,
     "FAQ": FAQ,
