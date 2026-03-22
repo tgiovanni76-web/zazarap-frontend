@@ -329,7 +329,11 @@ export default function Messages() {
         <div className="col-span-2 h-full min-h-0 overflow-hidden">
           {/* The ChatWindow itself manages internal scrolling for messages; ensure no bleed */}
         
-          {selectedChat ? (
+          {awaitingChatFromUrl ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
+            </div>
+          ) : selectedChat ? (
             <ChatWindow
               chat={selectedChat}
               messages={chatMessages}
