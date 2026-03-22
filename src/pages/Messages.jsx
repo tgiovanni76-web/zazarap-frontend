@@ -157,9 +157,11 @@ export default function Messages() {
   );
 
   useEffect(() => {
-    if (!user) return;
-    console.debug('[Messages] myChats count', myChats.length, { user: user.email, ids: myChats.map(c=>c.id) });
-  }, [myChats.length, user?.email]);
+    if (!user?.email) return;
+    try {
+      console.debug('[Messages] myChats count', myChats?.length || 0, { user: user.email, ids: (myChats||[]).map(c=>c?.id) });
+    } catch {}
+  }, [myChats?.length, user?.email]);
 
   // Mobile: auto-open first chat if none selected and no chatId in URL
   useEffect(() => {
