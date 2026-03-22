@@ -891,7 +891,7 @@ export default function ChatWindow({
         )}
         
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold truncate text-sm md:text-base">{listing?.title || chat?.listingTitle || 'Annuncio'}</h3>
+          <h3 className="font-semibold truncate text-sm md:text-base">{(listing?.title || chat?.listingTitle) ?? 'Annuncio'}</h3>
           <p className="text-xs text-white/80 truncate flex items-center gap-1">
             {isSeller ? ct.buyer : ct.seller}: {otherUser?.split('@')[0]}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
