@@ -88,7 +88,6 @@ import NotificationSettings from './pages/NotificationSettings';
 import Notifications from './pages/Notifications';
 import Nutzungsbedingungen from './pages/Nutzungsbedingungen';
 import OTPLogin from './pages/OTPLogin';
-import PayPalWebhook from './pages/PayPalWebhook';
 import Plattformregeln from './pages/Plattformregeln';
 import PreLaunchChecklist from './pages/PreLaunchChecklist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -152,7 +151,6 @@ export const PAGES = {
     "Notifications": Notifications,
     "Nutzungsbedingungen": Nutzungsbedingungen,
     "OTPLogin": OTPLogin,
-    "PayPalWebhook": PayPalWebhook,
     "Plattformregeln": Plattformregeln,
     "PreLaunchChecklist": PreLaunchChecklist,
     "PrivacyPolicy": PrivacyPolicy,
