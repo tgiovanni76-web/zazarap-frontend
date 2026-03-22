@@ -158,6 +158,12 @@ export default function ListingDetail() {
       base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
       return;
     }
+    // Ensure listingId and seller are valid
+    if (!listingId) {
+      console.error('[ContactSeller] missing listingId in URL');
+      toast.error('Fehler: Ungültige URL');
+      return;
+    }
     console.debug('[ContactSeller] listing owner fields', { created_by: listing.created_by, sellerId: listing.sellerId, ownerEmail: listing.ownerEmail, ownerId: listing.ownerId });
     const sellerId = listing.created_by || listing.sellerId || listing.ownerEmail || listing.ownerId;
     if (!sellerId) {
