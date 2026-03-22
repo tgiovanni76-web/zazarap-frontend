@@ -29,8 +29,10 @@ export default function Messages() {
   useEffect(() => {
     if (urlChatId) {
       console.debug('[Messages] chatIdFromUrl detected', urlChatId);
+      // Forza un refetch delle chat subito dopo arrivo da ListingDetail
+      refetchChats();
     }
-  }, [urlChatId]);
+  }, [urlChatId, refetchChats]);
 
   const handleSeedDemo = async () => {
     try {
@@ -68,10 +70,11 @@ export default function Messages() {
   const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
 
-  const { data: chats = [], isLoading: chatsLoading } = useQuery({
+  const { data: chats = [], isLoading: chatsLoading, refetch: refetchChats } = useQuery({
     queryKey: ['chats'],
     queryFn: async () => {
       const list = await base44.entities.Chat.list('-updatedAt');
+      console.debug('[Messages] fetched chats count', list?.length, 'user', user?.email);
       return list ?? [];
     },
     enabled: !!user,
@@ -121,12 +124,18 @@ export default function Messages() {
   c => c.buyerId === user?.email || c.sellerId === user?.email
   );
 
+  useEffect(() => {
+    if (!user) return;
+    console.debug('[Messages] myChats count', myChats.length, { user: user.email });
+  }, [myChats.length, user?.email]);
+
   // Mobile: auto-open first chat if none selected and no chatId in URL
   useEffect(() => {
-    if (isMobileView && !selectedChat && !chatIdFromUrl && myChats.length > 0) {
+    if (isMobileView && !selectedChat && !urlChatId && myChats.length > 0) {
+      console.debug('[Messages] auto-open first chat on mobile', myChats[0]?.id);
       setSelectedChat(myChats[0]);
     }
-  }, [isMobileView, selectedChat, chatIdFromUrl, myChats]);
+  }, [isMobileView, selectedChat, urlChatId, myChats]);
 
   // Clear any active search filter when there are no chats to avoid confusion
   useEffect(() => {
@@ -141,9 +150,11 @@ export default function Messages() {
 
     const maybeSelect = (c) => {
       if (c && (c.buyerId === user.email || c.sellerId === user.email)) {
+        console.debug('[Messages] selecting chat from URL', c.id);
         setSelectedChat(c);
         return true;
       }
+      console.debug('[Messages] chat not selectable for user', { urlChatId, c, user: user.email });
       return false;
     };
 
