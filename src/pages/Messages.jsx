@@ -451,6 +451,15 @@ export default function Messages() {
             <div className="h-full flex items-center justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
             </div>
+          ) : urlChatNotFound ? (
+            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+              <p className="text-lg mb-1">Chat non trovata o non accessibile.</p>
+              <p className="text-sm mb-4">Seleziona una chat dalla lista o torna al marketplace.</p>
+              <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+                <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
+              </Button>
+            </div>
           ) : selectedChat?.id ? (
             <ChatWindow
               chat={selectedChat}
