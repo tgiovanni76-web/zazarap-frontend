@@ -24,6 +24,13 @@ export default function Messages() {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
   const queryClient = useQueryClient();
 
+  // Debug: track incoming chatId from URL
+  useEffect(() => {
+    if (chatIdFromUrl) {
+      console.debug('[Messages] chatIdFromUrl detected', chatIdFromUrl);
+    }
+  }, [chatIdFromUrl]);
+
   const handleSeedDemo = async () => {
     try {
       await base44.functions.invoke('seedDemoData', {});
