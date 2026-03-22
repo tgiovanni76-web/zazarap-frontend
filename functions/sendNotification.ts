@@ -4,6 +4,12 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
+    // Require authenticated user for security (prevents anonymous notification spam)
+    const caller = await base44.auth.me().catch(() => null);
+    if (!caller) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { userId, type, title, message, actionUrl, metadata } = await req.json();
 
     // Basic payload validation
