@@ -273,13 +273,6 @@ export default function Messages() {
 
     return (
       <div className="h-full min-h-0 overflow-hidden">
-        {myChats.length === 0 && (
-          <div className="p-3">
-            <Button onClick={handleSeedDemo} className="w-full bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
-              Crea dati demo
-            </Button>
-          </div>
-        )}
         <ChatSidebar
           chats={myChats}
           selectedChat={selectedChat}
