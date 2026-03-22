@@ -83,8 +83,8 @@ export default function Messages() {
       if (!user?.email) return [];
       // Always fetch both roles explicitly to guarantee OR semantics across environments
       const [asBuyer, asSeller] = await Promise.all([
-        base44.entities.Chat.filter({ buyerId: user.email }, '-updatedAt').catch(() => []),
-        base44.entities.Chat.filter({ sellerId: user.email }, '-updatedAt').catch(() => []),
+        base44.entities.Chat.filter({ buyerId: user.email }, '-updated_date').catch(() => []),
+        base44.entities.Chat.filter({ sellerId: user.email }, '-updated_date').catch(() => []),
       ]);
       const merged = [...(asBuyer || []), ...(asSeller || [])];
       const byId = new Map();

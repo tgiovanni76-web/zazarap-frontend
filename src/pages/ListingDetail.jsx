@@ -174,12 +174,17 @@ export default function ListingDetail() {
     try {
       console.debug('[ContactSeller] click', { listingId, sellerId, buyerId: user.email });
 
-      // Prüfen: existiert bereits eine Chat-Konversation für dieses Listing und diese beiden Nutzer?
-      const existingChats = await base44.entities.Chat.filter({
-       listingId: listingId,
-       buyerId: user.email,
-       sellerId: sellerId
-      });
+      // Prüfen: existiert bereits eine Chat‑Konversation? Fehler ignorieren → anlegen
+      let existingChats = [];
+      try {
+        existingChats = await base44.entities.Chat.filter(
+          { listingId: listingId, buyerId: user.email, sellerId: sellerId },
+          '-updated_date'
+        );
+      } catch (e) {
+        console.warn('[ContactSeller] existingChats filter failed, will create new chat', e);
+        existingChats = [];
+      }
       console.debug('[ContactSeller] filter for existing', { listingId, buyerId: user.email, sellerId });
       console.debug('[ContactSeller] existingChats count', existingChats?.length, existingChats?.map(c => c.id));
 
