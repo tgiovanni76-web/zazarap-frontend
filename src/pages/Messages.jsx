@@ -189,7 +189,7 @@ export default function Messages() {
 
   // Auto-select chat from URL parameter (robust): try list → filter → subscribe until it exists
   useEffect(() => {
-    if (!chatIdFromUrl || selectedChat || !user) return;
+    if (!urlChatId || selectedChat || !user) return;
 
     const maybeSelect = (c) => {
       if (c && (c.buyerId === user.email || c.sellerId === user.email)) {
@@ -232,7 +232,7 @@ export default function Messages() {
       .catch(() => {});
 
     return () => { if (unsub) unsub(); };
-  }, [chatIdFromUrl, myChats, selectedChat, user]);
+  }, [urlChatId, myChats, selectedChat, user]);
 
   // Real-time notification for new messages
   useEffect(() => {
