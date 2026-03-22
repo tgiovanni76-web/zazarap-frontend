@@ -260,8 +260,8 @@ export default function Messages() {
   }, [chatMessages, previousMessageCount, user]);
 
   // Get current listing
-  const currentListing = listings.find(l => l.id === selectedChat?.listingId);
-  if (selectedChat) {
+  const currentListing = selectedChat?.listingId ? listings.find(l => l.id === selectedChat?.listingId) : undefined;
+  if (selectedChat?.id) {
     console.debug('[Messages] selectedChat snapshot', { id: selectedChat.id, listingId: selectedChat.listingId, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId });
   }
 
