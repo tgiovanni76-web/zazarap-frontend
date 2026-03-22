@@ -123,7 +123,7 @@ export default function ChatSidebar({
                         {chat.listingTitle || tr('listing','Annuncio')}
                       </span>
                       <span className="text-xs text-slate-400 flex-shrink-0 ml-2">
-                        {formatChatTime(chat.updatedAt)}
+                        {formatChatTime(chat.updatedAt || chat.updated_date)}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 truncate mb-1">

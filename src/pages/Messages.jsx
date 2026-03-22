@@ -209,12 +209,13 @@ export default function Messages() {
         if (maybeSelect(res?.[0])) return;
 
         if (!res || res.length === 0) {
-          try {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('chatId');
-            window.history.replaceState({}, '', url.toString());
-          } catch {}
-          setUrlChatId(null);
+          // Wait for chat to appear in realtime instead of clearing URL
+          unsub = base44.entities.Chat.subscribe((event) => {
+            if (event.id === urlChatId) {
+              maybeSelect(event.data);
+              if (unsub) unsub();
+            }
+          });
           return;
         }
 
