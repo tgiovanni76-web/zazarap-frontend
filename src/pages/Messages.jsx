@@ -290,6 +290,19 @@ export default function Messages() {
     );
   }
 
+  // Hard guard against runtime crashes
+  if (!Array.isArray(chats)) {
+    console.error('[Messages] chats not an array', chats);
+    return (
+      <div className="max-w-3xl mx-auto py-12 text-center">
+        <p className="text-slate-600 mb-4">Fehler beim Laden der Chats.</p>
+        <Button asChild className="bg-[var(--z-primary)]">
+          <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
+        </Button>
+      </div>
+    );
+  }
+
   // Gate unauthenticated users: require login to use messages
   if (!user) {
     return (
