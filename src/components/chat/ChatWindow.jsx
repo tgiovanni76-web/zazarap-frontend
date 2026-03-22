@@ -376,11 +376,11 @@ export default function ChatWindow({
       // Send notification via backend (service role)
       await base44.functions.invoke('sendNotification', {
         userId: otherUser,
-        type: price ? 'offer' : 'message_received',
-        title: price ? '💰 Neues Angebot!' : '💬 Neue Nachricht',
+        type: 'message',
+        title: '💬 Neue Nachricht',
         message: `${listing?.title}: ${text?.substring(0, 50) || (imageUrl ? 'Bild' : 'Nachricht')}`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
-        metadata: { chatId: chat.id, listingId: chat.listingId, amount: price || undefined }
+        metadata: { chatId: chat.id, listingId: chat.listingId, subtype: 'message' }
       });
 
       // AI moderation (non-blocking)

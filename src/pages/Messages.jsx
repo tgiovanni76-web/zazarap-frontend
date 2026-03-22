@@ -273,6 +273,17 @@ export default function Messages() {
     console.debug('[Messages] selectedChat snapshot', { id: selectedChat.id, listingId: selectedChat.listingId, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId });
   }
 
+  // Mark related bell notifications as read when opening a chat
+  useEffect(() => {
+    if (!selectedChat?.id || !user?.email) return;
+    base44.entities.Notification.filter({ userId: user.email, relatedId: selectedChat.id, read: false })
+      .then((list) => Promise.all((list || []).map(n => base44.entities.Notification.update(n.id, { read: true }))))
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['notifications', user.email, 'unread'] });
+      })
+      .catch(() => {});
+  }, [selectedChat?.id, user?.email, queryClient]);
+
   // Handle chat selection
   const handleSelectChat = (chat) => {
     const container = document.getElementById('main-content');
