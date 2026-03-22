@@ -229,17 +229,17 @@ export default function ChatWindow({
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
 
   const goBack = useCallback(() => {
+    const targetId = listing?.id || chat?.listingId;
+    if (targetId) {
+      // Use router-style URL used by ListingDetail
+      window.location.href = createPageUrl('ListingDetail') + `?id=${targetId}`;
+      return;
+    }
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      const targetId = listing?.id || chat?.listingId;
-      if (targetId) {
-        window.location.href = createPageUrl(`ListingDetail?listingId=${targetId}`);
-      } else {
-        window.location.href = createPageUrl('Marketplace');
-      }
+      window.location.href = createPageUrl('Marketplace');
     }
-
   }, [listing?.id, chat?.listingId]);
 
   // Translate message function
