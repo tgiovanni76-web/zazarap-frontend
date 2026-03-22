@@ -158,22 +158,26 @@ export default function ListingDetail() {
       base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
       return;
     }
-    
+    if (user.email === listing.created_by) {
+      toast.error('Sie können Ihre eigene Anzeige nicht kontaktieren');
+      return;
+    }
+
     setIsContactingLoading(true);
     try {
-      // Check if chat already exists
+      // Prüfen: existiert bereits eine Chat-Konversation für dieses Listing und diese beiden Nutzer?
       const existingChats = await base44.entities.Chat.filter({
         listingId: listingId,
-        buyerId: user.email
+        buyerId: user.email,
+        sellerId: listing.created_by
       });
 
       let chatId;
-      
-      if (existingChats.length > 0) {
-        // Chat exists, use it
+
+      if (existingChats && existingChats.length > 0) {
         chatId = existingChats[0].id;
       } else {
-        // Create new chat
+        // Neue Chat-Konversation anlegen
         const newChat = await base44.entities.Chat.create({
           listingId: listingId,
           buyerId: user.email,
@@ -187,21 +191,21 @@ export default function ListingDetail() {
           unreadSeller: 0
         });
         chatId = newChat.id;
-        
-        // Send welcome system message
+
+        // Begrüßungs‑Systemnachricht
         await base44.entities.ChatMessage.create({
           chatId: chatId,
           senderId: 'system',
-          text: `💬 Chat avviata per "${listing.title}" - Prezzo: ${listing.price}€`,
+          text: `💬 Chat gestartet für "${listing.title}" – Preis: ${listing.price}€`,
           messageType: 'system'
         });
       }
 
-      // Navigate to Messages with chatId
-      navigate(createPageUrl('Messages') + '?chatId=' + chatId);
+      // Direkt zur Chat-Seite mit chatId navigieren
+      navigate(createPageUrl('Messages') + `?chatId=${chatId}`);
     } catch (error) {
       console.error('Error creating chat:', error);
-      toast.error('Errore nell\'avvio della chat');
+      toast.error('Fehler beim Starten des Chats');
     } finally {
       setIsContactingLoading(false);
     }
