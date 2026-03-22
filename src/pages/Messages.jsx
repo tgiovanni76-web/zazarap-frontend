@@ -119,13 +119,14 @@ export default function Messages() {
   }, [user, queryClient]);
 
   const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
-    queryKey: ['chatMessages', selectedChat?.id],
+    queryKey: ['chatMessages', selectedChat?.id || 'none'],
     queryFn: async () => {
-      const msgs = await base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date');
+      if (!selectedChat?.id) return [];
+      const msgs = await base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date').catch(() => []);
       console.debug('[Messages] messages fetched for chat', selectedChat?.id, { count: msgs?.length || 0 });
       return msgs ?? [];
     },
-    enabled: !!selectedChat,
+    enabled: !!selectedChat?.id,
   });
 
   // Real-time subscription for messages
