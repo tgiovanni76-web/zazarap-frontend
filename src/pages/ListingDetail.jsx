@@ -153,7 +153,7 @@ export default function ListingDetail() {
   };
 
   const handleContactSeller = async () => {
-    if (!listing) return;
+    if (!listing) { toast.error('Anzeige nicht gefunden'); return; }
     if (!user) {
       base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
       return;
