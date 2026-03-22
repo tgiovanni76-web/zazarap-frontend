@@ -29,10 +29,10 @@ export default function Messages() {
   useEffect(() => {
     if (urlChatId) {
       console.debug('[Messages] chatIdFromUrl detected', urlChatId);
-      // Forza un refetch delle chat subito dopo arrivo da ListingDetail
-      refetchChats();
+      // Forza un aggiornamento elenco chat subito dopo arrivo da ListingDetail
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
     }
-  }, [urlChatId, refetchChats]);
+  }, [urlChatId, queryClient]);
 
   const handleSeedDemo = async () => {
     try {
