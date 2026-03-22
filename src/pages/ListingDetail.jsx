@@ -438,12 +438,14 @@ export default function ListingDetail() {
                   )}
                   {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
                 </button>
-                <button
-                  onClick={user ? handleMakeOffer : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
-                  className="w-full mt-3 p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg"
-                >
-                  💬 {t('makeOffer') || `Fai un'offerta`}
-                </button>
+                {listing.listingType !== 'auction' && (
+                  <button
+                    onClick={user ? handleMakeOffer : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+                    className="w-full mt-3 p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg"
+                  >
+                    💬 {t('makeOffer') || `Fai un'offerta`}
+                  </button>
+                )}
               </>
             )}
 
