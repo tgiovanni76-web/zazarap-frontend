@@ -12,6 +12,13 @@ export default function ScrollToTop() {
   const routeKey = `${location.pathname}|${location.search}|${location.hash}`;
   const STORAGE_KEY = 'scrollPositions';
 
+  // Force manual scroll restoration globally
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      try { window.history.scrollRestoration = 'manual'; } catch {}
+    }
+  }, []);
+
   const readStore = () => {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
@@ -33,42 +40,32 @@ export default function ScrollToTop() {
     writeStore(store);
   };
 
-  // Attach scroll listener to the primary app scroller
+  // Disable scroll position saving; always start at top
   useEffect(() => {
-    const scroller = document.getElementById('main-content');
-    if (!scroller) return;
-
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        savePos(scroller.scrollTop || 0);
-        ticking = false;
-      });
-    };
-
-    scroller.addEventListener('scroll', onScroll, { passive: true });
-
-    return () => {
-      scroller.removeEventListener('scroll', onScroll);
-      savePos(scroller.scrollTop || 0);
-    };
+    return undefined;
   }, [routeKey]);
 
-  // Restore or reset on navigation changes
+  // Always scroll to top on route changes; also reset internal scroll containers
   useEffect(() => {
     const scroller = document.getElementById('main-content');
-    if (!scroller) return;
 
-    const stored = readStore();
-    const targetTop = navType === 'POP' ? (stored[routeKey] ?? 0) : 0;
+    const resetAll = () => {
+      try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch {}
+      if (scroller) {
+        try { scroller.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch {}
+      }
+      // Reset common scrollable containers
+      try {
+        document.querySelectorAll('.overflow-y-auto, [data-scrollable], [data-reset-scroll]').forEach((el) => {
+          el.scrollTop = 0;
+          el.scrollLeft = 0;
+        });
+      } catch {}
+    };
 
-    // Restore after next paint
-    requestAnimationFrame(() => {
-      scroller.scrollTo({ top: targetTop, left: 0, behavior: 'auto' });
-    });
-  }, [routeKey, navType]);
+    // Reset after paint to avoid layout shifts
+    requestAnimationFrame(resetAll);
+  }, [routeKey]);
 
   return null;
 }

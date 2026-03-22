@@ -2814,18 +2814,6 @@ export function LanguageProvider({ children }) {
     const saved = localStorage.getItem('zazarap_language');
     if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
 
-    // 4. Auto-detect browser language
-    if (typeof navigator !== 'undefined') {
-      const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      if (browserLang.startsWith('de')) return 'de';
-      if (browserLang.startsWith('it')) return 'it';
-      if (browserLang.startsWith('en')) return 'en';
-      if (browserLang.startsWith('fr')) return 'fr';
-      if (browserLang.startsWith('pl')) return 'pl';
-      if (browserLang.startsWith('tr')) return 'tr';
-      if (browserLang.startsWith('uk')) return 'uk';
-    }
-
     return DEFAULT_LANG;
   });
 
