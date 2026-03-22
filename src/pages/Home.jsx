@@ -106,8 +106,8 @@ export default function Home() {
   const searchLabel = tr('home.search.button', currentLanguage === 'de' ? 'Suchen' : (t('searchPlaceholder') || 'Search'));
   const categoriesTitle = tr('home.section.categories', currentLanguage === 'de' ? 'Entdecke die Kategorien' : t('nav.categories'));
   const viewAllLabel = tr('home.section.viewAll', currentLanguage === 'de' ? 'Alle anzeigen' : t('home.section.viewAll'));
-  const safeTitle = tr('home.feature.safe.title', currentLanguage === 'de' ? 'Sicher kaufen' : t('home.feature.safe.title'));
-  const safeDesc = tr('home.feature.safe.desc', currentLanguage === 'de' ? 'PayPal-Schutz und sichere Zahlungsabwicklung' : t('home.feature.safe.desc'));
+  const safeTitle = tr('home.feature.safe.title', currentLanguage === 'de' ? 'Direkter Kontakt' : 'Direct contact');
+  const safeDesc = tr('home.feature.safe.desc', currentLanguage === 'de' ? 'Käufer und Verkäufer vereinbaren Zahlung, Abholung und Übergabe direkt miteinander.' : 'Buyers and sellers arrange payment, pickup, and handover directly.');
   const favoritesTitle = tr('favorites', currentLanguage === 'de' ? 'Favoriten' : t('favorites'));
   const favoritesDesc = tr('home.feature.favorites.desc', currentLanguage === 'de' ? 'Merke dir interessante Anzeigen für später' : t('home.feature.favorites.desc'));
 
