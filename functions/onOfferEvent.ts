@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
       offer = await base44.asServiceRole.entities.get('Offer', event.entity_id);
     }
 
-    if (!offer?.chatId || !offer?.senderId || !offer?.receiverId) {
+    if (!offer?.chatId || !offer?.senderId || (evtType === 'create' && !offer?.receiverId)) {
       // Try to compute missing ends using Chat
       if (offer?.chatId) {
         const chat = await base44.asServiceRole.entities.get('Chat', offer.chatId).catch(() => null);
