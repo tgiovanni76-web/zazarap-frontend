@@ -10,6 +10,7 @@ import { useLanguage } from '../components/LanguageProvider';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 export default function Messages() {
   const { t } = useLanguage();
@@ -110,6 +111,13 @@ export default function Messages() {
       setSelectedChat(myChats[0]);
     }
   }, [isMobileView, selectedChat, chatIdFromUrl, myChats]);
+
+  // Clear any active search filter when there are no chats to avoid confusion
+  useEffect(() => {
+    if (!chatsLoading && myChats.length === 0 && searchTerm) {
+      setSearchTerm('');
+    }
+  }, [chatsLoading, myChats, searchTerm]);
 
   // Auto-select chat from URL parameter (robust): try list → filter → subscribe until it exists
   useEffect(() => {
@@ -273,14 +281,25 @@ export default function Messages() {
 
     return (
       <div className="h-full min-h-0 overflow-hidden">
-        <ChatSidebar
-          chats={myChats}
-          selectedChat={selectedChat}
-          onSelectChat={handleSelectChat}
-          user={user}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
+        {myChats.length === 0 ? (
+          <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+            <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
+            <p className="text-base md:text-lg mb-1">Non hai ancora chat.</p>
+            <p className="text-sm mb-4">Vai al Marketplace e contatta un venditore per iniziare una conversazione.</p>
+            <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+              <Link to={createPageUrl('Marketplace')}>Vai al Marketplace</Link>
+            </Button>
+          </div>
+        ) : (
+          <ChatSidebar
+            chats={myChats}
+            selectedChat={selectedChat}
+            onSelectChat={handleSelectChat}
+            user={user}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+        )}
       </div>
     );
   }
@@ -324,17 +343,25 @@ export default function Messages() {
               onReport={() => setShowReportModal(true)}
             />
           ) : (
-            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-400">
-              <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
-              <p className="text-lg">{t('selectChat')}</p>
-              <p className="text-sm mt-2">{t('selectChat')}</p>
-              {myChats.length === 0 && (
-                <Button onClick={handleSeedDemo} className="mt-4 bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
-                  Crea dati demo
-                </Button>
+            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              {myChats.length === 0 ? (
+                <>
+                  <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+                  <p className="text-lg mb-1">Non hai ancora chat.</p>
+                  <p className="text-sm mb-4">Vai al Marketplace e contatta un venditore per iniziare una conversazione.</p>
+                  <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+                    <Link to={createPageUrl('Marketplace')}>Vai al Marketplace</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+                  <p className="text-lg">{t('selectChat')}</p>
+                  <p className="text-sm mt-2">{t('selectChat')}</p>
+                </>
               )}
             </div>
-          )}
+          )
         </div>
       </div>
 
