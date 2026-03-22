@@ -177,6 +177,9 @@ export default function Home() {
             <p className="text-sm text-slate-600">
               {safeDesc}
             </p>
+            <p className="text-xs text-slate-500 mt-2">
+              {t('classifieds.disclaimer') || 'Hinweis: Zazarap stellt nur die Plattform bereit. Transaktionen erfolgen direkt zwischen Nutzern. Zahlungen an Zazarap betreffen ausschließlich Abos und Promotions.'}
+            </p>
           </CardContent>
         </Card>
         <Card>
