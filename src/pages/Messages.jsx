@@ -82,6 +82,14 @@ export default function Messages() {
     queryFn: async () => {
       if (!user?.email) return [];
       try {
+        // Rely on RLS to fetch chats where current user is buyer OR seller
+        const list = await base44.entities.Chat.list('-updatedAt').catch(() => []);
+        const unique = Array.from(new Map((list || []).map(c => [c.id, c])).values());
+        const arr = unique.sort((a,b) => new Date(b?.updatedAt || b?.updated_date || 0) - new Date(a?.updatedAt || a?.updated_date || 0));
+        console.debug('[Messages] chats loaded (RLS)', { user: user.email, total: arr.length, ids: arr.map(c => c.id) });
+        return arr;
+      } catch (e) {
+        console.warn('[Messages] list() failed, fallback to buyer/seller merge', e);
         const [asBuyer, asSeller] = await Promise.all([
           base44.entities.Chat.filter({ buyerId: user.email }, '-updatedAt').catch(() => []),
           base44.entities.Chat.filter({ sellerId: user.email }, '-updatedAt').catch(() => []),
@@ -89,19 +97,7 @@ export default function Messages() {
         const merged = [...(asBuyer || []), ...(asSeller || [])];
         const byId = new Map();
         for (const c of merged) if (c?.id) byId.set(c.id, c);
-        const arr = Array.from(byId.values())
-          .sort((a,b) => new Date(b?.updatedAt || b?.updated_date || 0) - new Date(a?.updatedAt || a?.updated_date || 0));
-        console.debug('[Messages] chats loaded', {
-          user: user.email,
-          asBuyerCount: asBuyer?.length || 0,
-          asSellerCount: asSeller?.length || 0,
-          total: arr.length,
-          ids: arr.map(c => c.id)
-        });
-        return arr;
-      } catch (e) {
-        console.error('[Messages] chat query failed', e);
-        return [];
+        return Array.from(byId.values()).sort((a,b) => new Date(b?.updatedAt || b?.updated_date || 0) - new Date(a?.updatedAt || a?.updated_date || 0));
       }
     },
     enabled: !!user,
