@@ -58,7 +58,6 @@ import AdminSEO from './pages/AdminSEO';
 import AdminSettings from './pages/AdminSettings';
 import AdminTickets from './pages/AdminTickets';
 import AppStoreGuide from './pages/AppStoreGuide';
-import Cart from './pages/Cart';
 import Category from './pages/Category';
 import CompleteProfile from './pages/CompleteProfile';
 import Contact from './pages/Contact';
@@ -83,9 +82,6 @@ import Messages from './pages/Messages';
 import MobileAppChecklist from './pages/MobileAppChecklist';
 import ModerateListings from './pages/ModerateListings';
 import MyListings from './pages/MyListings';
-import MyOrders from './pages/MyOrders';
-import MyPurchases from './pages/MyPurchases';
-import MySales from './pages/MySales';
 import NewListing from './pages/NewListing';
 import NotificationCenter from './pages/NotificationCenter';
 import NotificationSettings from './pages/NotificationSettings';
@@ -105,7 +101,6 @@ import Support from './pages/Support';
 import SystemCheckup from './pages/SystemCheckup';
 import SystemLogs from './pages/SystemLogs';
 import TermsOfService from './pages/TermsOfService';
-import Transactions from './pages/Transactions';
 import UeberUns from './pages/UeberUns';
 import UserProfile from './pages/UserProfile';
 import UserSettings from './pages/UserSettings';
@@ -127,7 +122,6 @@ export const PAGES = {
     "AdminSettings": AdminSettings,
     "AdminTickets": AdminTickets,
     "AppStoreGuide": AppStoreGuide,
-    "Cart": Cart,
     "Category": Category,
     "CompleteProfile": CompleteProfile,
     "Contact": Contact,
@@ -152,9 +146,6 @@ export const PAGES = {
     "MobileAppChecklist": MobileAppChecklist,
     "ModerateListings": ModerateListings,
     "MyListings": MyListings,
-    "MyOrders": MyOrders,
-    "MyPurchases": MyPurchases,
-    "MySales": MySales,
     "NewListing": NewListing,
     "NotificationCenter": NotificationCenter,
     "NotificationSettings": NotificationSettings,
@@ -174,7 +165,6 @@ export const PAGES = {
     "SystemCheckup": SystemCheckup,
     "SystemLogs": SystemLogs,
     "TermsOfService": TermsOfService,
-    "Transactions": Transactions,
     "UeberUns": UeberUns,
     "UserProfile": UserProfile,
     "UserSettings": UserSettings,
