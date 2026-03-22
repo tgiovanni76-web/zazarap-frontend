@@ -101,8 +101,15 @@ export default function Messages() {
 
   // Filter chats where user is buyer or seller
   const myChats = chats.filter(
-    c => c.buyerId === user?.email || c.sellerId === user?.email
+  c => c.buyerId === user?.email || c.sellerId === user?.email
   );
+
+  // Mobile: auto-open first chat if none selected and no chatId in URL
+  useEffect(() => {
+    if (isMobileView && !selectedChat && !chatIdFromUrl && myChats.length > 0) {
+      setSelectedChat(myChats[0]);
+    }
+  }, [isMobileView, selectedChat, chatIdFromUrl, myChats]);
 
   // Auto-select chat from URL parameter (robust): try list → filter → subscribe until it exists
   useEffect(() => {

@@ -866,7 +866,8 @@ export default function ChatWindow({
           onClick={() => (onBack ? onBack() : goBack())}
           aria-label="Zurück"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5 mr-1" />
+          ← Chats
         </Button>
         
         {listing?.images?.[0] ? (
