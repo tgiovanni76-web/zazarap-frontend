@@ -20,7 +20,8 @@ export default function Messages() {
   const initialChatId = chatIdFromUrl || pendingChatId || null;
   const [urlChatId, setUrlChatId] = useState(initialChatId);
   const [selectedChat, setSelectedChat] = useState(null);
-  const awaitingChatFromUrl = !!urlChatId && !selectedChat;
+  const [urlChatNotFound, setUrlChatNotFound] = useState(false);
+  const awaitingChatFromUrl = !!urlChatId && !selectedChat && !urlChatNotFound;
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -59,6 +60,7 @@ export default function Messages() {
     const handler = () => {
       const p = new URLSearchParams(window.location.search).get('chatId');
       setUrlChatId(p);
+      setUrlChatNotFound(false);
     };
     window.addEventListener('popstate', handler);
     return () => window.removeEventListener('popstate', handler);
@@ -208,25 +210,18 @@ export default function Messages() {
       .then(res => {
         if (maybeSelect(res?.[0])) return;
 
-        if (!res || res.length === 0) {
-          // Wait for chat to appear in realtime instead of clearing URL
-          unsub = base44.entities.Chat.subscribe((event) => {
-            if (event.id === urlChatId) {
-              maybeSelect(event.data);
-              if (unsub) unsub();
-            }
-          });
-          return;
-        }
-
-        unsub = base44.entities.Chat.subscribe((event) => {
-          if (event.id === urlChatId) {
-            maybeSelect(event.data);
-            if (unsub) unsub();
-          }
-        });
+        // Not found or not accessible → clear URL and show empty state instead of infinite spinner
+        try {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('chatId');
+          window.history.replaceState({}, '', url.toString());
+        } catch {}
+        setUrlChatId(null);
+        setUrlChatNotFound(true);
       })
-      .catch(() => {});
+      .catch(() => {
+        setUrlChatNotFound(true);
+      });
 
     return () => { if (unsub) unsub(); };
   }, [urlChatId, myChats, selectedChat, user]);
@@ -291,6 +286,7 @@ export default function Messages() {
     const prevScroll = container ? container.scrollTop : null;
 
     setSelectedChat(chat);
+    setUrlChatNotFound(false);
     queryClient.invalidateQueries({ queryKey: ['chatMessages', chat.id] });
 
     if (prevScroll !== null) {
