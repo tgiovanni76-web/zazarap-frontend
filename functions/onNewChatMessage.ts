@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
     const body = await req.json();
 
     const { event, data, old_data, changed_fields, payload_too_large } = body || {};
+    const evtType = event?.type;
     if (!event || event.entity_name !== 'ChatMessage') {
       return Response.json({ ok: true, skipped: true, reason: 'not ChatMessage event' });
     }
