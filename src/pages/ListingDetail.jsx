@@ -179,6 +179,7 @@ export default function ListingDetail() {
 
       if (existingChats && existingChats.length > 0) {
         chatId = existingChats[0].id;
+        console.debug('[ContactSeller] using existing chat', { chatId });
       } else {
         // Neue Chat-Konversation anlegen
         const newChat = await base44.entities.Chat.create({
@@ -207,11 +208,16 @@ export default function ListingDetail() {
 
       // Direkt zur Chat-Seite mit chatId navigieren (mit Fallback)
       const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
+      console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);
       // Fallback: falls der Router die Query verliert, erzwinge Navigation
       setTimeout(() => {
-        if (!new URLSearchParams(window.location.search).get('chatId')) {
+        const present = new URLSearchParams(window.location.search).get('chatId');
+        if (!present) {
+          console.warn('[ContactSeller] router lost chatId, forcing location.assign', { targetUrl });
           window.location.assign(targetUrl);
+        } else {
+          console.debug('[ContactSeller] router confirmed chatId in URL', { chatId: present });
         }
       }, 50);
     } catch (error) {
