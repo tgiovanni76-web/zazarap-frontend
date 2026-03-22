@@ -407,8 +407,8 @@ export default function Messages() {
         ) : myChats.length === 0 ? (
           <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
             <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
-            <p className="text-base md:text-lg mb-1">Du hast noch keine Chats.</p>
-            <p className="text-sm mb-4">Gehe zum Marktplatz und kontaktiere einen Verkäufer, um ein Gespräch zu starten.</p>
+            <p className="text-base md:text-lg mb-1">Non hai ancora chat.</p>
+            <p className="text-sm mb-4">Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.</p>
             <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
               <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
             </Button>
@@ -492,8 +492,8 @@ export default function Messages() {
               {(myChats?.length || 0) === 0 ? (
                 <div className="contents">
                   <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
-                  <p className="text-lg mb-1">Du hast noch keine Chats.</p>
-                  <p className="text-sm mb-4">Gehe zum Marktplatz und kontaktiere einen Verkäufer, um ein Gespräch zu starten.</p>
+                  <p className="text-lg mb-1">Non hai ancora chat.</p>
+                  <p className="text-sm mb-4">Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.</p>
                   <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
                     <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
                   </Button>
