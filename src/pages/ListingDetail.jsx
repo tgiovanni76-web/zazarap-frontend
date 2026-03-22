@@ -209,7 +209,7 @@ export default function ListingDetail() {
         };
         console.debug('[ContactSeller] creating chat with payload', payload);
         const newChat = await base44.entities.Chat.create(payload);
-        chatId = newChat.id;
+        chatId = newChat.id || newChat?.data?.id || newChat?.inserted_id;
         console.debug('[ContactSeller] new chat created', { chatId, newChat });
 
         // Verifica persistenza DB
