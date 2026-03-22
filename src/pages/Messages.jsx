@@ -67,9 +67,9 @@ export default function Messages() {
     queryFn: () => base44.auth.me().catch(() => null),
   });
 
-  // Log utente corrente
+  // Safe log
   useEffect(() => {
-    if (user) console.debug('[Messages] currentUser', user.email);
+    if (user?.email) console.debug('[Messages] currentUser', user.email);
   }, [user?.email]);
 
   const [previousMessageCount, setPreviousMessageCount] = useState(0);
