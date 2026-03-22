@@ -16,8 +16,9 @@ export default function Messages() {
   const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const chatIdFromUrl = urlParams.get('chatId');
+  const [urlChatId, setUrlChatId] = useState(chatIdFromUrl);
   const [selectedChat, setSelectedChat] = useState(null);
-  const awaitingChatFromUrl = !!chatIdFromUrl && !selectedChat;
+  const awaitingChatFromUrl = !!urlChatId && !selectedChat;
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -26,10 +27,10 @@ export default function Messages() {
 
   // Debug: track incoming chatId from URL
   useEffect(() => {
-    if (chatIdFromUrl) {
-      console.debug('[Messages] chatIdFromUrl detected', chatIdFromUrl);
+    if (urlChatId) {
+      console.debug('[Messages] chatIdFromUrl detected', urlChatId);
     }
-  }, [chatIdFromUrl]);
+  }, [urlChatId]);
 
   const handleSeedDemo = async () => {
     try {
@@ -49,8 +50,15 @@ export default function Messages() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Do not lock global scroll; constrain scrolling to internal panels via fixed heights
-  useEffect(() => { return () => {}; }, []);
+  // Track URL changes to keep local urlChatId in sync
+  useEffect(() => {
+    const handler = () => {
+      const p = new URLSearchParams(window.location.search).get('chatId');
+      setUrlChatId(p);
+    };
+    window.addEventListener('popstate', handler);
+    return () => window.removeEventListener('popstate', handler);
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -145,23 +153,22 @@ export default function Messages() {
 
     // 2) fetch directly by id
     let unsub = null;
-    base44.entities.Chat.filter({ id: chatIdFromUrl })
+    base44.entities.Chat.filter({ id: urlChatId })
       .then(res => {
         if (maybeSelect(res?.[0])) return;
 
-        // If chat does not exist or is not accessible, clear chatId to avoid infinite spinner
         if (!res || res.length === 0) {
           try {
             const url = new URL(window.location.href);
             url.searchParams.delete('chatId');
             window.history.replaceState({}, '', url.toString());
           } catch {}
+          setUrlChatId(null);
           return;
         }
 
-        // 3) subscribe for creation/update events affecting this chat id
         unsub = base44.entities.Chat.subscribe((event) => {
-          if (event.id === chatIdFromUrl) {
+          if (event.id === urlChatId) {
             maybeSelect(event.data);
             if (unsub) unsub();
           }
@@ -273,6 +280,7 @@ export default function Messages() {
                 url.searchParams.delete('chatId');
                 window.history.replaceState({}, '', url.toString());
               } catch {}
+              setUrlChatId(null);
 
               setSelectedChat(null);
               if (prev !== null) requestAnimationFrame(() => {
@@ -375,6 +383,7 @@ export default function Messages() {
                   url.searchParams.delete('chatId');
                   window.history.replaceState({}, '', url.toString());
                 } catch {}
+                setUrlChatId(null);
 
                 setSelectedChat(null);
                 if (prev !== null) requestAnimationFrame(() => {
