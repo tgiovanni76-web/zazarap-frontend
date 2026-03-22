@@ -82,6 +82,9 @@ export default function Marketplace() {
     return t(cat.name);
   };
 
+  // Strip demo prefix from seeded titles when rendering
+  const cleanTitle = (title) => (title || '').replace(/^(demo)\s*[-–—]?\s*/i, '');
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async ({ listingId, isFavorite }) => {
       if (isFavorite) {
@@ -557,7 +560,7 @@ export default function Marketplace() {
                     <Badge variant="secondary" className="text-xs">Archiviert</Badge>
                   )}
                 </div>
-                <div className="zaza-title">{listing.title}</div>
+                <div className="zaza-title">{cleanTitle(listing.title)}</div>
                 {listing.offerPrice ? (
                   <div className="zaza-price">
                     <span className="text-green-700 font-bold mr-2">{listing.offerPrice} €</span>

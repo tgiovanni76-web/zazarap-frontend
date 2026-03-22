@@ -27,6 +27,7 @@ export default function ListingDetail() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
+  const cleanTitle = (title) => (title || '').replace(/^(demo)\s*[-–—]?\s*/i, '');
   const listingId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [reviewRating, setReviewRating] = useState(5);
@@ -327,7 +328,7 @@ export default function ListingDetail() {
           </Badge>
         )}
       </div>
-      <h2 className="zaza-detail-title">{listing.title}</h2>
+      <h2 className="zaza-detail-title">{cleanTitle(listing.title)}</h2>
       {listing.offerPrice ? (
         <div className="zaza-detail-price">
           <span className="text-green-600 font-bold mr-2">{listing.offerPrice} €</span>
