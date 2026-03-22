@@ -239,7 +239,7 @@ export default function Home() {
                           .sort((a,b) => ((a.order ?? 0) - (b.order ?? 0)) || labelFromCat(a).localeCompare(labelFromCat(b), 'de'))
                           .slice(0,3)
                           .map((sub, i, arr) => (
-                            <React.Fragment key={sub.id}>
+                            <span key={sub.id} className="contents">
                               <span
                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(createPageUrl('Marketplace') + '?category=' + encodeURIComponent(sub.name)); }}
                                 className="text-[var(--z-primary)] hover:underline cursor-pointer"
@@ -247,7 +247,7 @@ export default function Home() {
                                 {labelFromCat(sub)}
                               </span>
                               {i < arr.length - 1 && <span className="mx-1 text-slate-400">•</span>}
-                            </React.Fragment>
+                            </span>
                           ))}
                       </div>
                     </CardContent>
