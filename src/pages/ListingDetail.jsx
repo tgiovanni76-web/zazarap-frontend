@@ -201,7 +201,7 @@ export default function ListingDetail() {
         console.warn('[ContactSeller] existingChats filter failed, will create new chat', e);
         existingChats = [];
       }
-      console.debug('[ContactSeller] filter for existing', { listingId, buyerId: user.email, sellerId });
+      console.debug('[ContactSeller] filter for existing', { listingId, buyerId: user.email, sellerId: sellerEmail });
       console.debug('[ContactSeller] existingChats count', existingChats?.length, existingChats?.map(c => c.id));
 
       let chatId;
@@ -229,7 +229,7 @@ export default function ListingDetail() {
           localStorage.setItem('pendingChatMeta', JSON.stringify({
             listingId,
             buyerId: user.email,
-            sellerId,
+            sellerId: sellerEmail,
             listingTitle: listing.title,
             listingImage: listing.images?.[0] || '',
             lastPrice: typeof listing.price === 'number' ? listing.price : null
