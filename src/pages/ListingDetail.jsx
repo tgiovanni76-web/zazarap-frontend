@@ -509,7 +509,7 @@ export default function ListingDetail() {
             {['active','reserved'].includes(listing.status) ? (
               <>
                 <button 
-                  onClick={user ? handleContactSeller : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+                  onClick={user ? () => handleContactSeller() : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
                   disabled={isContactingLoading}
                   className="zaza-contact-btn flex items-center justify-center gap-2"
                 >
