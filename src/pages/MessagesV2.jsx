@@ -15,8 +15,14 @@ export default function MessagesV2() {
   const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
+  // Robust URL param getter (supports both ?chatId= and ?chatid=)
+  const getChatIdFromUrl = () => {
+    const sp = new URLSearchParams(window.location.search);
+    return sp.get('chatId') || sp.get('chatid') || null;
+  };
+
   const [selectedChat, setSelectedChat] = useState(null);
-  const [urlChatId, setUrlChatId] = useState(() => new URLSearchParams(window.location.search).get('chatId'));
+  const [urlChatId, setUrlChatId] = useState(() => getChatIdFromUrl());
   const [openIntent, setOpenIntent] = useState(() => new URLSearchParams(window.location.search).get('open'));
   const [urlChatNotFound, setUrlChatNotFound] = useState(false);
   const awaitingChatFromUrl = !!urlChatId && !selectedChat && !urlChatNotFound;
@@ -34,8 +40,8 @@ export default function MessagesV2() {
   // Track URL changes (back/forward) and reset not-found state
   useEffect(() => {
     const handler = () => {
+      setUrlChatId(getChatIdFromUrl());
       const sp = new URLSearchParams(window.location.search);
-      setUrlChatId(sp.get('chatId'));
       setOpenIntent(sp.get('open'));
       setUrlChatNotFound(false);
     };
