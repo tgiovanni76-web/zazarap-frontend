@@ -90,18 +90,26 @@ export default function MessagesV2() {
     queryFn: async () => {
       const me = user.email;
       const meLower = (me || '').toLowerCase();
-      const [asBuyerExact, asSellerExact, asBuyerLower, asSellerLower] = await Promise.all([
-        base44.entities.Chat.filter({ buyerId: me }, '-updated_date').catch(() => []),
-        base44.entities.Chat.filter({ sellerId: me }, '-updated_date').catch(() => []),
-        meLower ? base44.entities.Chat.filter({ buyerId: meLower }, '-updated_date').catch(() => []) : [],
-        meLower ? base44.entities.Chat.filter({ sellerId: meLower }, '-updated_date').catch(() => []) : [],
-      ]);
-      const merged = [...(asBuyerExact || []), ...(asSellerExact || []), ...(asBuyerLower || []), ...(asSellerLower || [])];
+
+      const chats = await base44.entities.Chat.filter(
+        {
+          $or: [
+            { buyerId: me },
+            { sellerId: me },
+            { buyerId: meLower },
+            { sellerId: meLower }
+          ]
+        },
+        '-updated_date'
+      ).catch(() => []);
+
+      // Deduplicate in case of both exact and lower-case matches for the same chat
       const map = new Map();
-      merged.forEach(c => c?.id && map.set(c.id, c));
-      const arr = Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
-      console.debug('[MessagesV2] chats loaded', { total: arr.length, ids: arr.map(c=>c.id) });
-      return arr;
+      chats.forEach(c => c?.id && map.set(c.id, c));
+      const uniqueChats = Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
+
+      console.debug('[MessagesV2] chats loaded', { total: uniqueChats.length, ids: uniqueChats.map(c => c.id) });
+      return uniqueChats;
     }
   });
 
@@ -164,12 +172,12 @@ export default function MessagesV2() {
     const pendingId = (() => { try { return localStorage.getItem('pendingChatId'); } catch { return null; } })();
     if (!urlChatId || !pendingId || pendingId !== urlChatId || selectedChat?.id) return;
     let cancelled = false;
-    let tries = 0;
+    let tries = 0; const maxTries = 10; const delayMs = 800;
 
     const poll = async () => {
       // Show loading state instead of not-found while polling
       setUrlChatNotFound(false);
-      while (!cancelled && tries < 30 && !selectedChat?.id) {
+      while (!cancelled && tries < maxTries && !selectedChat?.id) {
         try {
           const res = await base44.entities.Chat.filter({ id: urlChatId });
           const c = res?.[0];
@@ -182,7 +190,7 @@ export default function MessagesV2() {
           }
         } catch {}
         tries++;
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, delayMs));
       }
       if (!cancelled && !selectedChat?.id) {
         setUrlChatNotFound(true);
