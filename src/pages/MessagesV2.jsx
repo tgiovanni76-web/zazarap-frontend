@@ -46,6 +46,10 @@ export default function MessagesV2() {
     queryFn: () => base44.auth.me().catch(() => null),
   });
 
+  useEffect(() => {
+    if (user?.email) console.debug('[MessagesV2] currentUser', user.email);
+  }, [user?.email]);
+
   const { data: chats = [], isLoading: chatsLoading } = useQuery({
     queryKey: ['chats', user?.email || 'anon'],
     enabled: !!user?.email,
@@ -57,7 +61,9 @@ export default function MessagesV2() {
       const merged = [...(asBuyer || []), ...(asSeller || [])];
       const map = new Map();
       merged.forEach(c => c?.id && map.set(c.id, c));
-      return Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
+      const arr = Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
+      console.debug('[MessagesV2] chats loaded', { total: arr.length, ids: arr.map(c=>c.id) });
+      return arr;
     }
   });
 
@@ -74,6 +80,7 @@ export default function MessagesV2() {
   }, [user?.email, selectedChat?.id, queryClient]);
 
   const myChats = useMemo(() => (chats || []).filter(c => c?.buyerId === user?.email || c?.sellerId === user?.email), [chats, user?.email]);
+  useEffect(() => { if (user?.email) console.debug('[MessagesV2] myChats', myChats.length); }, [myChats.length, user?.email]);
 
   // Select chat from URL once list is ready
   useEffect(() => {

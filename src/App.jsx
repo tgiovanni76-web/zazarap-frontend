@@ -64,6 +64,7 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
+      <Route path="/messages" element={<LayoutWrapper currentPageName="Messages"><Pages.Messages /></LayoutWrapper>} />
       <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
       <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />
       <Route path="/AdminCampaigns" element={<LayoutWrapper currentPageName="AdminCampaigns"><AdminCampaigns /></LayoutWrapper>} />
