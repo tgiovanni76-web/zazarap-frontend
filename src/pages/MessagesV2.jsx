@@ -158,6 +158,61 @@ export default function MessagesV2() {
     return () => { cancelled = true; };
   }, [urlChatId, selectedChat?.id, user?.email]);
 
+  // Self-heal: if chatId is in URL but chat isn't readable yet, recreate/attach using pendingChatMeta
+  useEffect(() => {
+    if (!urlChatNotFound || !user?.email) return;
+    let meta = null;
+    try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+    if (!meta?.listingId || !meta?.sellerId) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        // Check if it already exists for me (exact case)
+        const existing = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email, sellerId: meta.sellerId }, '-updated_date').catch(() => []);
+        if (existing?.length) {
+          if (cancelled) return;
+          setSelectedChat(existing[0]);
+          try { localStorage.removeItem('pendingChatMeta'); } catch {}
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', existing[0].id);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(existing[0].id);
+          setUrlChatNotFound(false);
+          return;
+        }
+        // Create again with my email as buyer
+        const payload = {
+          listingId: meta.listingId,
+          buyerId: user.email,
+          sellerId: meta.sellerId,
+          status: 'in_attesa',
+          lastMessage: '',
+          listingTitle: meta.listingTitle || '',
+          listingImage: meta.listingImage || '',
+          lastPrice: typeof meta.lastPrice === 'number' ? meta.lastPrice : undefined,
+          updatedAt: new Date().toISOString(),
+          unreadBuyer: 0,
+          unreadSeller: 0,
+        };
+        const created = await base44.entities.Chat.create(payload);
+        const newId = created?.id || created?.data?.id || created?.inserted_id;
+        if (!cancelled && newId) {
+          try { localStorage.setItem('pendingChatId', newId); localStorage.removeItem('pendingChatMeta'); } catch {}
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', newId);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(newId);
+          setUrlChatNotFound(false);
+        }
+      } catch (e) {
+        console.warn('[MessagesV2] self-heal create failed', e);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [urlChatNotFound, user?.email]);
+
   const { data: chatMessages = [] } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id || 'none'],
     enabled: !!selectedChat?.id,
