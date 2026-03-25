@@ -135,7 +135,7 @@ export default function MessagesV2() {
     const poll = async () => {
       // Show loading state instead of not-found while polling
       setUrlChatNotFound(false);
-      while (!cancelled && tries < 12 && !selectedChat?.id) {
+      while (!cancelled && tries < 30 && !selectedChat?.id) {
         try {
           const res = await base44.entities.Chat.filter({ id: urlChatId });
           const c = res?.[0];

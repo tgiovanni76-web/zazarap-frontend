@@ -254,7 +254,7 @@ export default function ListingDetail() {
         console.debug('[ContactSeller] new chat created', { chatId, newChat });
         // Fallback + robust wait loop: if ID missing, poll until record is visible
         if (!chatId) {
-          for (let i = 0; i < 12 && !chatId; i++) { // ~12 * 300ms = 3.6s max
+          for (let i = 0; i < 30 && !chatId; i++) { // ~30 * 300ms ≈ 9s max
             try {
               // Try exact-case first (RLS is case-sensitive)
               let retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmailRaw, sellerId: sellerEmailRaw }, '-updated_date').catch(() => []);
@@ -311,8 +311,8 @@ export default function ListingDetail() {
         return;
       }
       try { 
-        localStorage.setItem('pendingChatId', chatId); 
-        localStorage.removeItem('pendingChatMeta');
+        localStorage.setItem('pendingChatId', chatId);
+        // Keep pendingChatMeta for self-heal in Messages until it confirms load
       } catch {}
       let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
       if (opts.openOffer) { targetUrl += '&open=offer'; }
