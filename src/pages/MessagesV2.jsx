@@ -367,14 +367,15 @@ export default function MessagesV2() {
     queryFn: async () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date').catch(() => []),
   });
 
-  const { data: listings = [] } = useQuery({
-    queryKey: ['listings'],
+  const { data: listingById = [] } = useQuery({
+    queryKey: ['listingById', selectedChat?.listingId],
+    enabled: !!selectedChat?.listingId,
     queryFn: async () => {
-      try { return await base44.entities.Listing.list(); } catch { return []; }
+      try { return await base44.entities.Listing.filter({ id: selectedChat.listingId }); } catch { return []; }
     }
   });
 
-  const currentListing = selectedChat?.listingId ? listings.find(l => l.id === selectedChat.listingId) : undefined;
+  const currentListing = Array.isArray(listingById) ? listingById[0] : undefined;
 
   const handleSelectChat = (chat) => {
     setSelectedChat(chat);
