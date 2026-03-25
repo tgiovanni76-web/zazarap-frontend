@@ -247,7 +247,7 @@ export default function ListingDetail() {
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);
       // Fallback: falls der Router die Query verliert, erzwinge Navigation
-      setTimeout(() => {
+      const ensureNav = () => {
         const present = new URLSearchParams(window.location.search).get('chatId');
         if (!present) {
           console.warn('[ContactSeller] router lost chatId, forcing location.assign', { targetUrl });
@@ -255,7 +255,9 @@ export default function ListingDetail() {
         } else {
           console.debug('[ContactSeller] router confirmed chatId in URL', { chatId: present });
         }
-      }, 80);
+      };
+      setTimeout(ensureNav, 150);
+      setTimeout(ensureNav, 400);
     } catch (error) {
       console.error('[ContactSeller] Error creating/getting chat:', error);
       toast.error('Fehler beim Starten des Chats');

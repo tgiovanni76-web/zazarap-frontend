@@ -170,6 +170,17 @@ export default function Messages() {
     } catch {}
   }, [myChats?.length, user?.email]);
 
+  // If the chat becomes available after an initial "not found" (eventual consistency), recover and open it
+  useEffect(() => {
+    if (!urlChatId) return;
+    const found = myChats.find(c => c.id === urlChatId);
+    if (urlChatNotFound && found) {
+      setUrlChatNotFound(false);
+      setSelectedChat(found);
+      try { localStorage.removeItem('pendingChatId'); } catch {}
+    }
+  }, [urlChatNotFound, urlChatId, myChats]);
+
   // Mobile: auto-open first chat if none selected and no chatId in URL
   useEffect(() => {
     if (isMobileView && !selectedChat && !urlChatId && myChats.length > 0) {
@@ -451,15 +462,6 @@ export default function Messages() {
             <div className="h-full flex items-center justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
             </div>
-          ) : urlChatNotFound ? (
-            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
-              <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
-              <p className="text-lg mb-1">Chat non trovata o non accessibile.</p>
-              <p className="text-sm mb-4">Seleziona una chat dalla lista o torna al marketplace.</p>
-              <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
-                <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
-              </Button>
-            </div>
           ) : selectedChat?.id ? (
             <ChatWindow
               chat={selectedChat}
@@ -486,9 +488,18 @@ export default function Messages() {
               }}
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
-            />
-          ) : (
-            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              />
+              ) : urlChatNotFound ? (
+              <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+              <p className="text-lg mb-1">Chat non trovata o non accessibile.</p>
+              <p className="text-sm mb-4">Seleziona una chat dalla lista o torna al marketplace.</p>
+              <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+               <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
+              </Button>
+              </div>
+              ) : (
+              <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
               {(myChats?.length || 0) === 0 ? (
                 <div className="contents">
                   <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
@@ -505,8 +516,8 @@ export default function Messages() {
                   <p className="text-sm mt-2">{t('selectChat')}</p>
                 </div>
               )}
-            </div>
-          )}
+              </div>
+              )
         </div>
       </div>
 
