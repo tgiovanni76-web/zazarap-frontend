@@ -79,7 +79,10 @@ export default function MessagesV2() {
     return () => { u1?.(); u2?.(); };
   }, [user?.email, selectedChat?.id, queryClient]);
 
-  const myChats = useMemo(() => (chats || []).filter(c => c?.buyerId === user?.email || c?.sellerId === user?.email), [chats, user?.email]);
+  const myChats = useMemo(() => {
+    const u = (user?.email || '').toLowerCase();
+    return (chats || []).filter(c => (c?.buyerId || '').toLowerCase() === u || (c?.sellerId || '').toLowerCase() === u);
+  }, [chats, user?.email]);
   useEffect(() => { if (user?.email) console.debug('[MessagesV2] myChats', myChats.length); }, [myChats.length, user?.email]);
 
   // Select chat from URL once list is ready
@@ -100,7 +103,8 @@ export default function MessagesV2() {
       try {
         const res = await base44.entities.Chat.filter({ id: urlChatId });
         const c = res?.[0];
-        if (c && (c.buyerId === user?.email || c.sellerId === user?.email)) {
+        const u = (user?.email || '').toLowerCase();
+        if (c && ((c.buyerId || '').toLowerCase() === u || (c.sellerId || '').toLowerCase() === u)) {
           if (!cancelled) {
             setSelectedChat(c);
             setUrlChatNotFound(false);

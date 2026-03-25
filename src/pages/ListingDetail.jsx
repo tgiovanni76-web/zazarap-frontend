@@ -162,27 +162,39 @@ export default function ListingDetail() {
       toast.error('Fehler: Ungültige URL');
       return;
     }
+
+    // Log current user ids for diagnostics
+    console.debug('[ContactSeller] current user', { id: user.id, email: user.email });
     console.debug('[ContactSeller] listing owner fields', { created_by: listing.created_by, sellerId: listing.sellerId, ownerEmail: listing.ownerEmail, ownerId: listing.ownerId });
-    const sellerId = listing.created_by || listing.sellerId || listing.ownerEmail || listing.ownerId;
-    if (!sellerId) {
-      console.error('[ContactSeller] sellerId missing on listing', { listingId, listing });
+
+    const normalizeEmail = (s) => (s || '').toString().trim().toLowerCase();
+    const buyerEmail = normalizeEmail(user.email);
+    const sellerEmail = normalizeEmail([
+      listing.created_by,
+      listing.ownerEmail,
+      listing.sellerId,
+      listing.ownerId,
+    ].find(v => typeof v === 'string' && v.includes('@')) || listing.created_by || listing.ownerEmail);
+
+    if (!sellerEmail) {
+      console.error('[ContactSeller] sellerEmail missing/invalid on listing', { listingId, listing });
       toast.error('Fehler: Verkäufer nicht gefunden');
       return;
     }
-    if (user.email === sellerId) {
+    if (buyerEmail === sellerEmail) {
       toast.error('Sie können Ihre eigene Anzeige nicht kontaktieren');
       return;
     }
 
     setIsContactingLoading(true);
     try {
-      console.debug('[ContactSeller] click', { listingId, sellerId, buyerId: user.email });
+      console.debug('[ContactSeller] click', { listingId, buyerEmail, sellerEmail });
 
       // Prüfen: existiert bereits eine Chat‑Konversation? Fehler ignorieren → anlegen
       let existingChats = [];
       try {
         existingChats = await base44.entities.Chat.filter(
-          { listingId: listingId, buyerId: user.email, sellerId: sellerId },
+          { listingId: listingId, buyerId: buyerEmail, sellerId: sellerEmail },
           '-updated_date'
         );
       } catch (e) {
@@ -201,8 +213,8 @@ export default function ListingDetail() {
         // Neue Chat-Konversation anlegen
         const payload = {
           listingId: listingId,
-          buyerId: user.email,
-          sellerId: sellerId,
+          buyerId: buyerEmail,
+          sellerId: sellerEmail,
           status: 'in_attesa',
           lastMessage: '',
           listingTitle: listing.title,
@@ -212,6 +224,7 @@ export default function ListingDetail() {
           unreadBuyer: 0,
           unreadSeller: 0
         };
+        console.debug('[ContactSeller] creating chat payload', payload);
         try {
           localStorage.setItem('pendingChatMeta', JSON.stringify({
             listingId,
@@ -230,8 +243,8 @@ export default function ListingDetail() {
         if (!chatId) {
           for (let i = 0; i < 12 && !chatId; i++) { // ~12 * 300ms = 3.6s max
             try {
-              // Be permissive on sellerId in case legacy data differs
-              const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: user.email }, '-updated_date').catch(() => []);
+              // Retry by buyer only; seller may vary in legacy data
+              const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmail }, '-updated_date').catch(() => []);
               chatId = retry?.[0]?.id || null;
               if (chatId) {
                 console.debug('[ContactSeller] fallback found chat id', { chatId, try: i + 1 });
