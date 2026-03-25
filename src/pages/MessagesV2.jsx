@@ -43,6 +43,19 @@ export default function MessagesV2() {
     return () => window.removeEventListener('popstate', handler);
   }, []);
 
+  // Restore chatId from pendingChatId if the router lost the query string (common after redirects)
+  useEffect(() => {
+    try {
+      const pid = localStorage.getItem('pendingChatId');
+      if (!urlChatId && pid) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('chatId', pid);
+        window.history.replaceState({}, '', url.toString());
+        setUrlChatId(pid);
+      }
+    } catch {}
+  }, [urlChatId]);
+
   // Restore chatId from pendingChatId if router dropped it
   useEffect(() => {
     try {
