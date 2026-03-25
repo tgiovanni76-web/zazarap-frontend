@@ -198,6 +198,12 @@ export default function MessagesV2() {
     if (!urlChatNotFound || !user?.email) return;
     let meta = null;
     try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+    if (!meta?.listingId || !meta?.sellerId) {
+      const sp = new URLSearchParams(window.location.search);
+      const lid = sp.get('lid') || sp.get('listingId');
+      const seller = sp.get('seller');
+      if (lid && seller) meta = { listingId: lid, sellerId: seller, listingTitle: '', listingImage: '' };
+    }
     if (!meta?.listingId || !meta?.sellerId) return;
 
     let cancelled = false;
@@ -308,6 +314,12 @@ export default function MessagesV2() {
     if (selectedChat?.id || !user?.email || (myChats?.length || 0) > 0) return;
     let meta = null;
     try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+    if (!meta?.listingId || !meta?.sellerId) {
+      const sp = new URLSearchParams(window.location.search);
+      const lid = sp.get('lid') || sp.get('listingId');
+      const seller = sp.get('seller');
+      if (lid && seller) meta = { listingId: lid, sellerId: seller, listingTitle: '', listingImage: '' };
+    }
     if (!meta?.listingId || !meta?.sellerId) return;
 
     (async () => {
