@@ -215,8 +215,18 @@ export default function ListingDetail() {
         };
         console.debug('[ContactSeller] creating chat with payload', payload);
         const newChat = await base44.entities.Chat.create(payload);
-        chatId = newChat.id || newChat?.data?.id || newChat?.inserted_id;
+        chatId = newChat?.id || newChat?.data?.id || newChat?.inserted_id;
         console.debug('[ContactSeller] new chat created', { chatId, newChat });
+        // Fallback: retrieve the just-created chat if ID wasn't returned immediately
+        if (!chatId) {
+          try {
+            const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: user.email, sellerId: sellerId }, '-updated_date');
+            chatId = retry?.[0]?.id;
+            console.debug('[ContactSeller] fallback chat id after filter', { chatId, retryCount: retry?.length || 0 });
+          } catch (e) {
+            console.warn('[ContactSeller] fallback fetch failed', e);
+          }
+        }
 
         // Verifica persistenza DB
         const verify = chatId ? await base44.entities.Chat.filter({ id: chatId }) : [];
@@ -242,6 +252,12 @@ export default function ListingDetail() {
       }
 
       // Direkt zur Chat-Seite mit chatId navigieren (mit Fallback)
+      if (!chatId) {
+        console.error('[ContactSeller] missing chatId after creation, aborting navigation');
+        toast.error('Impossibile aprire la chat, riprova.');
+        navigate(createPageUrl('Messages'));
+        return;
+      }
       try { localStorage.setItem('pendingChatId', chatId); } catch {}
       const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
       console.debug('[ContactSeller] redirecting to', targetUrl);
