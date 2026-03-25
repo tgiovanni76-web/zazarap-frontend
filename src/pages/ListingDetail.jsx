@@ -218,25 +218,34 @@ export default function ListingDetail() {
         const newChat = await base44.entities.Chat.create(payload);
         chatId = newChat?.id || newChat?.data?.id || newChat?.inserted_id;
         console.debug('[ContactSeller] new chat created', { chatId, newChat });
-        // Fallback: retrieve the just-created chat if ID wasn't returned immediately
+        // Fallback + robust wait loop: if ID missing, poll until record is visible
         if (!chatId) {
-          try {
-            const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: user.email, sellerId: sellerId }, '-updated_date');
-            chatId = retry?.[0]?.id;
-            console.debug('[ContactSeller] fallback chat id after filter', { chatId, retryCount: retry?.length || 0 });
-          } catch (e) {
-            console.warn('[ContactSeller] fallback fetch failed', e);
+          for (let i = 0; i < 12 && !chatId; i++) { // ~12 * 300ms = 3.6s max
+            try {
+              // Be permissive on sellerId in case legacy data differs
+              const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: user.email }, '-updated_date').catch(() => []);
+              chatId = retry?.[0]?.id || null;
+              if (chatId) {
+                console.debug('[ContactSeller] fallback found chat id', { chatId, try: i + 1 });
+                break;
+              }
+            } catch (e) {
+              console.warn('[ContactSeller] fallback fetch failed (try loop)', e);
+            }
+            await new Promise(r => setTimeout(r, 300));
           }
         }
 
-        // Verifica persistenza DB
-        const verify = chatId ? await base44.entities.Chat.filter({ id: chatId }) : [];
-        console.debug('[ContactSeller] persisted chat', verify?.[0]);
-        if (!verify || verify.length === 0) {
-          console.error('[ContactSeller] chat not persisted!');
-        } else {
-          const ch = verify[0];
-          console.debug('[ContactSeller] persisted fields', { listingId: ch.listingId, buyerId: ch.buyerId, sellerId: ch.sellerId });
+        // Verify persistence by id (best-effort)
+        if (chatId) {
+          try {
+            const verify = await base44.entities.Chat.filter({ id: chatId });
+            console.debug('[ContactSeller] persisted chat', verify?.[0]);
+            if (verify && verify[0]) {
+              const ch = verify[0];
+              console.debug('[ContactSeller] persisted fields', { listingId: ch.listingId, buyerId: ch.buyerId, sellerId: ch.sellerId });
+            }
+          } catch {}
         }
 
         // Begrüßungs‑Systemnachricht (non bloccante)
