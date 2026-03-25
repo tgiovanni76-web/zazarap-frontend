@@ -203,7 +203,8 @@ export default function ChatWindow({
   listing,
   onBack,
   onOpenPayment,
-  onReport
+  onReport,
+  initialOpenOffer = false
 }) {
   const { language } = useLanguage();
   const ct = chatTranslations[language] || chatTranslations.de;
@@ -227,6 +228,14 @@ export default function ChatWindow({
 
   const isSeller = chat?.sellerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+
+  // Auto-open Offer modal when requested via URL (only for buyer)
+  useEffect(() => {
+    if (initialOpenOffer && !isSeller) {
+      setIsCounterOffer(false);
+      setShowOfferModal(true);
+    }
+  }, [initialOpenOffer, isSeller]);
 
   const goBack = useCallback(() => {
     const targetId = listing?.id || chat?.listingId;

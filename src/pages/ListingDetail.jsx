@@ -150,7 +150,7 @@ export default function ListingDetail() {
     });
   };
 
-  const handleContactSeller = async () => {
+  const handleContactSeller = async (opts = {}) => {
     if (!listing) { toast.error('Anzeige nicht gefunden'); return; }
     if (!user) {
       base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
@@ -293,7 +293,8 @@ export default function ListingDetail() {
         localStorage.setItem('pendingChatId', chatId); 
         localStorage.removeItem('pendingChatMeta');
       } catch {}
-      const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
+      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
+      if (opts.openOffer) { targetUrl += '&open=offer'; }
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);
       // Fallback: falls der Router die Query verliert, erzwinge Navigation
@@ -519,6 +520,16 @@ export default function ListingDetail() {
                   )}
                   {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
                 </button>
+                {listing.listingType !== 'auction' && (
+                  <button
+                    onClick={user ? () => handleContactSeller({ openOffer: true }) : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
+                    className="w-full mt-3 p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg"
+                    disabled={listing.status === 'reserved'}
+                    title={listing.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
+                  >
+                    💬 {t('makeOffer') || `Fai un'offerta`}
+                  </button>
+                )}
               </>
             ) : null}
 

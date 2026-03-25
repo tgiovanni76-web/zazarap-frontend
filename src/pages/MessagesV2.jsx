@@ -17,6 +17,7 @@ export default function MessagesV2() {
 
   const [selectedChat, setSelectedChat] = useState(null);
   const [urlChatId, setUrlChatId] = useState(() => new URLSearchParams(window.location.search).get('chatId'));
+  const [openIntent, setOpenIntent] = useState(() => new URLSearchParams(window.location.search).get('open'));
   const [urlChatNotFound, setUrlChatNotFound] = useState(false);
   const awaitingChatFromUrl = !!urlChatId && !selectedChat && !urlChatNotFound;
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,8 +34,9 @@ export default function MessagesV2() {
   // Track URL changes (back/forward) and reset not-found state
   useEffect(() => {
     const handler = () => {
-      const p = new URLSearchParams(window.location.search).get('chatId');
-      setUrlChatId(p);
+      const sp = new URLSearchParams(window.location.search);
+      setUrlChatId(sp.get('chatId'));
+      setOpenIntent(sp.get('open'));
       setUrlChatNotFound(false);
     };
     window.addEventListener('popstate', handler);
@@ -174,6 +176,7 @@ export default function MessagesV2() {
             messages={chatMessages}
             user={user}
             listing={currentListing}
+            initialOpenOffer={openIntent === 'offer'}
             onBack={() => setSelectedChat(null)}
             onOpenPayment={() => setShowPaymentModal(true)}
             onReport={() => setShowReportModal(true)}
@@ -256,6 +259,7 @@ export default function MessagesV2() {
               messages={chatMessages}
               user={user}
               listing={currentListing}
+              initialOpenOffer={openIntent === 'offer'}
               onBack={() => setSelectedChat(null)}
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
