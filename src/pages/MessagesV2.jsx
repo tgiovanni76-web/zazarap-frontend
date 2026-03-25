@@ -17,6 +17,8 @@ export default function MessagesV2() {
 
   const [selectedChat, setSelectedChat] = useState(null);
   const [urlChatId, setUrlChatId] = useState(() => new URLSearchParams(window.location.search).get('chatId'));
+  const [urlChatNotFound, setUrlChatNotFound] = useState(false);
+  const awaitingChatFromUrl = !!urlChatId && !selectedChat && !urlChatNotFound;
   const [searchTerm, setSearchTerm] = useState('');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -26,6 +28,17 @@ export default function MessagesV2() {
     const onResize = () => setIsMobileView(window.innerWidth < 1024);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Track URL changes (back/forward) and reset not-found state
+  useEffect(() => {
+    const handler = () => {
+      const p = new URLSearchParams(window.location.search).get('chatId');
+      setUrlChatId(p);
+      setUrlChatNotFound(false);
+    };
+    window.addEventListener('popstate', handler);
+    return () => window.removeEventListener('popstate', handler);
   }, []);
 
   const { data: user } = useQuery({
@@ -66,8 +79,34 @@ export default function MessagesV2() {
   useEffect(() => {
     if (!urlChatId || !myChats.length) return;
     const found = myChats.find(c => c.id === urlChatId);
-    if (found) setSelectedChat(found);
+    if (found) {
+      setSelectedChat(found);
+      setUrlChatNotFound(false);
+    }
   }, [urlChatId, myChats]);
+
+  // If list is empty or doesn't include the URL chat, try fetching that chat directly
+  useEffect(() => {
+    if (!urlChatId || selectedChat) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await base44.entities.Chat.filter({ id: urlChatId });
+        const c = res?.[0];
+        if (c && (c.buyerId === user?.email || c.sellerId === user?.email)) {
+          if (!cancelled) {
+            setSelectedChat(c);
+            setUrlChatNotFound(false);
+          }
+        } else if (!cancelled) {
+          setUrlChatNotFound(true);
+        }
+      } catch (_) {
+        if (!cancelled) setUrlChatNotFound(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [urlChatId, selectedChat, user?.email]);
 
   const { data: chatMessages = [] } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id || 'none'],
@@ -149,7 +188,16 @@ export default function MessagesV2() {
 
     return (
       <div className="h-full min-h-0 overflow-hidden">
-        {myChats.length === 0 ? (
+        {urlChatNotFound ? (
+          <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+            <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
+            <p className="text-base md:text-lg mb-1">{currentLanguage==='de' ? 'Chat nicht gefunden oder nicht zugänglich.' : 'Chat non trovata o non accessibile.'}</p>
+            <p className="text-sm mb-4">{currentLanguage==='de' ? 'Wähle einen Chat aus der Liste oder kehre zum Marktplatz zurück.' : 'Seleziona una chat dalla lista o torna al marketplace.'}</p>
+            <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+              <Link to={createPageUrl('Marketplace')}>{currentLanguage==='de' ? 'Zum Marktplatz' : 'Torna al marketplace'}</Link>
+            </Button>
+          </div>
+        ) : myChats.length === 0 ? (
           <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
             <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
             <p className="text-base md:text-lg mb-1">{currentLanguage==='de' ? 'Du hast noch keine Chats.' : 'Non hai ancora chat.'}</p>
@@ -187,7 +235,11 @@ export default function MessagesV2() {
           />
         </div>
         <div className="col-span-2 h-full min-h-0 overflow-hidden">
-          {selectedChat?.id ? (
+          {awaitingChatFromUrl ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
+            </div>
+          ) : selectedChat?.id ? (
             <ChatWindow
               chat={selectedChat}
               messages={chatMessages}
@@ -197,6 +249,15 @@ export default function MessagesV2() {
               onOpenPayment={() => setShowPaymentModal(true)}
               onReport={() => setShowReportModal(true)}
             />
+          ) : urlChatNotFound ? (
+            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+              <p className="text-lg mb-1">{currentLanguage==='de' ? 'Chat nicht gefunden oder nicht zugänglich.' : 'Chat non trovata o non accessibile.'}</p>
+              <p className="text-sm mb-4">{currentLanguage==='de' ? 'Wähle einen Chat aus der Liste oder kehre zum Marktplatz zurück.' : 'Seleziona una chat dalla lista o torna al marketplace.'}</p>
+              <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+                <Link to={createPageUrl('Marketplace')}>{currentLanguage==='de' ? 'Zum Marktplatz' : 'Torna al marketplace'}</Link>
+              </Button>
+            </div>
           ) : (
             <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
               {(myChats?.length || 0) === 0 ? (
