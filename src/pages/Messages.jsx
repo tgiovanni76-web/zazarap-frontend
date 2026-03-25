@@ -150,11 +150,16 @@ export default function Messages() {
     }
   }, [selectedChat?.id]);
 
+  // Try to load listing details, but tolerate 403/empty (non-owner cannot read pending/unapproved)
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],
     queryFn: async () => {
-      const ls = await base44.entities.Listing.list();
-      return ls || [];
+      try {
+        const ls = await base44.entities.Listing.list();
+        return ls || [];
+      } catch {
+        return [];
+      }
     },
   });
 
