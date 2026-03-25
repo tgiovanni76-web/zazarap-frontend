@@ -175,6 +175,18 @@ export default function Messages() {
     } catch {}
   }, [myChats?.length, user?.email]);
 
+  // Strong auto-select by URL once chats are loaded (even if urlChatNotFound was set earlier)
+  useEffect(() => {
+    if (!urlChatId || !user?.email || !Array.isArray(myChats) || myChats.length === 0) return;
+    const found = myChats.find(c => c?.id === urlChatId);
+    if (found && (!selectedChat || selectedChat.id !== found.id)) {
+      console.debug('[Messages] auto-select by URL after list load', found.id);
+      setSelectedChat(found);
+      setUrlChatNotFound(false);
+      try { localStorage.removeItem('pendingChatId'); } catch {}
+    }
+  }, [urlChatId, myChats, user?.email, selectedChat]);
+
   // If the chat becomes available after an initial "not found" (eventual consistency), recover and open it
   useEffect(() => {
     if (!urlChatId) return;
