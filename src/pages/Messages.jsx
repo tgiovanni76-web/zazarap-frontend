@@ -278,7 +278,7 @@ export default function Messages() {
     setPreviousMessageCount(chatMessages.length);
   }, [chatMessages, previousMessageCount, user]);
 
-  // Get current listing
+  // Get current listing if readable; otherwise pass undefined so ChatWindow uses cached fields on chat
   const currentListing = selectedChat?.listingId ? listings.find(l => l.id === selectedChat?.listingId) : undefined;
   if (selectedChat?.id) {
     console.debug('[Messages] selectedChat snapshot', { id: selectedChat.id, listingId: selectedChat.listingId, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId });
