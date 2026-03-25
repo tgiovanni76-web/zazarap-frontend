@@ -15,10 +15,8 @@ import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
 import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
-import SocialShareButtons from '../components/SocialShareButtons';
 import PremiumPromptManager from '@/components/premium/PremiumPromptManager';
 import { PremiumReasons } from '@/lib/premium-prompts';
-import FollowButton from '../components/profile/FollowButton';
 import SimilarProducts from '../components/marketplace/SimilarProducts';
 import ImageLightbox from '../components/media/ImageLightbox';
 
@@ -466,13 +464,6 @@ export default function ListingDetail() {
         )}
       </div>
 
-      <div className="mb-6">
-        <SocialShareButtons 
-          url={window.location.href}
-          title={listing.title}
-          description={listing.description}
-        />
-      </div>
 
       <div className="zaza-detail-description">{listing.description}</div>
 
@@ -515,16 +506,6 @@ export default function ListingDetail() {
                   )}
                   {isContactingLoading ? 'Avvio chat...' : t('contactSeller')}
                 </button>
-                {listing.listingType !== 'auction' && (
-                  <button
-                    onClick={user ? handleMakeOffer : () => base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`)}
-                    className="w-full mt-3 p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg"
-                    disabled={listing.status === 'reserved'}
-                    title={listing.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
-                  >
-                    💬 {t('makeOffer') || `Fai un'offerta`}
-                  </button>
-                )}
               </>
             ) : null}
 
@@ -538,30 +519,14 @@ export default function ListingDetail() {
                   <Heart className={`inline h-4 w-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} aria-hidden="true" />
                   {isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
                 </button>
-                {user.email !== listing.created_by && (
-                  <FollowButton
-                    targetType="user"
-                    targetId={listing.created_by}
-                    className="w-full mt-3"
-                    labelFollow="Segui venditore"
-                    labelUnfollow="Smetti di seguire"
-                  />
-                )}
-                <FollowButton
-                  targetType="category"
-                  targetId={listing.category}
-                  className="w-full mt-3"
-                  labelFollow="Segui categoria"
-                  labelUnfollow="Non seguire più"
-                />
               </>
             )}
 
             <button
               onClick={() => setShowReportModal(true)}
-              className="w-full mt-3 p-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-bold focus:ring-2 focus:ring-red-500"
+              className="mt-2 text-sm text-slate-500 hover:text-red-600 underline inline-flex items-center"
             >
-              <Flag className="inline h-4 w-4 mr-2" aria-hidden="true" />
+              <Flag className="h-3 w-3 mr-1" aria-hidden="true" />
               {t('report.listing') || 'Segnala annuncio'}
             </button>
           </>
