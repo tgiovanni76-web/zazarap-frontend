@@ -141,6 +141,32 @@ export default function MessagesV2() {
     }
   }, [urlChatId, myChats]);
 
+  // If list is empty or doesn't include the URL chat, try fetching that chat directly
+  useEffect(() => {
+    if (!urlChatId || selectedChat) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await base44.entities.Chat.filter({ id: urlChatId });
+        const c = res?.[0];
+        const u = (user?.email || '').toLowerCase();
+        const isMine = c && ((((c.buyerId || '').toLowerCase() === u) || ((c.sellerId || '').toLowerCase() === u)));
+        const isAdmin = user?.role === 'admin';
+        if (c && (isMine || isAdmin)) {
+          if (!cancelled) {
+            setSelectedChat(c);
+            setUrlChatNotFound(false);
+          }
+        } else if (!cancelled) {
+          setUrlChatNotFound(true);
+        }
+      } catch (_) {
+        if (!cancelled) setUrlChatNotFound(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [urlChatId, selectedChat, user?.email]);
+
 
 
   // If we navigated with a just-created chatId, poll briefly until it becomes readable (eventual consistency)
