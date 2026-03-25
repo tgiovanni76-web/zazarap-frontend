@@ -1,0 +1,238 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { createPageUrl } from '@/utils';
+import { useLanguage } from '@/components/LanguageProvider';
+import ChatSidebar from '@/components/chat/ChatSidebar';
+import ChatWindow from '@/components/chat/ChatWindow';
+import PaymentShippingModal from '@/components/marketplace/PaymentShippingModal';
+import ReportListingModal from '@/components/ReportListingModal';
+import { MessageSquare } from 'lucide-react';
+
+export default function MessagesV2() {
+  const { t, currentLanguage } = useLanguage();
+  const queryClient = useQueryClient();
+
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [urlChatId, setUrlChatId] = useState(() => new URLSearchParams(window.location.search).get('chatId'));
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => setIsMobileView(window.innerWidth < 1024);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me().catch(() => null),
+  });
+
+  const { data: chats = [], isLoading: chatsLoading } = useQuery({
+    queryKey: ['chats', user?.email || 'anon'],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const [asBuyer, asSeller] = await Promise.all([
+        base44.entities.Chat.filter({ buyerId: user.email }, '-updated_date').catch(() => []),
+        base44.entities.Chat.filter({ sellerId: user.email }, '-updated_date').catch(() => []),
+      ]);
+      const merged = [...(asBuyer || []), ...(asSeller || [])];
+      const map = new Map();
+      merged.forEach(c => c?.id && map.set(c.id, c));
+      return Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
+    }
+  });
+
+  // Real-time refresh
+  useEffect(() => {
+    if (!user?.email) return;
+    const u1 = base44.entities.Chat.subscribe(() => queryClient.invalidateQueries({ queryKey: ['chats', user.email] }));
+    const u2 = base44.entities.ChatMessage.subscribe((e) => {
+      if (e?.data?.chatId === selectedChat?.id) {
+        queryClient.invalidateQueries({ queryKey: ['chatMessages', selectedChat.id] });
+      }
+    });
+    return () => { u1?.(); u2?.(); };
+  }, [user?.email, selectedChat?.id, queryClient]);
+
+  const myChats = useMemo(() => (chats || []).filter(c => c?.buyerId === user?.email || c?.sellerId === user?.email), [chats, user?.email]);
+
+  // Select chat from URL once list is ready
+  useEffect(() => {
+    if (!urlChatId || !myChats.length) return;
+    const found = myChats.find(c => c.id === urlChatId);
+    if (found) setSelectedChat(found);
+  }, [urlChatId, myChats]);
+
+  const { data: chatMessages = [] } = useQuery({
+    queryKey: ['chatMessages', selectedChat?.id || 'none'],
+    enabled: !!selectedChat?.id,
+    queryFn: async () => base44.entities.ChatMessage.filter({ chatId: selectedChat.id }, 'created_date').catch(() => []),
+  });
+
+  const { data: listings = [] } = useQuery({
+    queryKey: ['listings'],
+    queryFn: async () => {
+      try { return await base44.entities.Listing.list(); } catch { return []; }
+    }
+  });
+
+  const currentListing = selectedChat?.listingId ? listings.find(l => l.id === selectedChat.listingId) : undefined;
+
+  const handleSelectChat = (chat) => {
+    setSelectedChat(chat);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('chatId', chat.id);
+      window.history.replaceState({}, '', url.toString());
+      setUrlChatId(chat.id);
+    } catch {}
+  };
+
+  if (!user) {
+    return (
+      <div className="max-w-3xl mx-auto py-12 text-center">
+        <h1 className="text-2xl font-bold mb-2">{t('loginOrRegister')}</h1>
+        <p className="text-slate-600 mb-6">Per inviare o leggere i messaggi devi effettuare l'accesso.</p>
+        <button className="bg-[var(--z-primary)] text-white px-5 py-2 rounded-lg" onClick={() => base44.auth.redirectToLogin(createPageUrl('Messages'))}>
+          {t('loginOrRegister')}
+        </button>
+      </div>
+    );
+  }
+
+  if (chatsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
+      </div>
+    );
+  }
+
+  // Mobile view: show either sidebar or chat
+  if (isMobileView) {
+    if (selectedChat?.id) {
+      return (
+        <div className="h-full min-h-0 overflow-hidden">
+          <ChatWindow
+            chat={selectedChat}
+            messages={chatMessages}
+            user={user}
+            listing={currentListing}
+            onBack={() => setSelectedChat(null)}
+            onOpenPayment={() => setShowPaymentModal(true)}
+            onReport={() => setShowReportModal(true)}
+          />
+
+          {showPaymentModal && selectedChat?.id && (
+            <PaymentShippingModal chat={selectedChat} listing={currentListing} onClose={() => setShowPaymentModal(false)} />
+          )}
+
+          {showReportModal && selectedChat?.id && (
+            <ReportListingModal
+              open={showReportModal}
+              onClose={() => setShowReportModal(false)}
+              listingId={selectedChat.listingId}
+              listingTitle={currentListing?.title}
+              sellerEmail={selectedChat.sellerId === user.email ? selectedChat.buyerId : selectedChat.sellerId}
+              user={user}
+            />
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="h-full min-h-0 overflow-hidden">
+        {myChats.length === 0 ? (
+          <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+            <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
+            <p className="text-base md:text-lg mb-1">{currentLanguage==='de' ? 'Du hast noch keine Chats.' : 'Non hai ancora chat.'}</p>
+            <p className="text-sm mb-4">{currentLanguage==='de' ? 'Um eine Unterhaltung zu starten, öffne eine Anzeige und klicke „Verkäufer kontaktieren“.' : 'Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.'}</p>
+            <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+              <Link to={createPageUrl('Marketplace')}>{currentLanguage==='de' ? 'Zum Marktplatz' : 'Torna al marketplace'}</Link>
+            </Button>
+          </div>
+        ) : (
+          <ChatSidebar
+            chats={myChats}
+            selectedChat={selectedChat}
+            onSelectChat={handleSelectChat}
+            user={user}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Desktop: split view
+  return (
+    <div className="py-0 md:py-6 h-full min-h-0 overflow-hidden">
+      <div className="grid grid-cols-3 gap-4 h-full min-h-0 pb-2 overflow-hidden">
+        <div className="col-span-1 h-full min-h-0 overflow-y-auto overscroll-contain">
+          <ChatSidebar
+            chats={myChats}
+            selectedChat={selectedChat}
+            onSelectChat={handleSelectChat}
+            user={user}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+        </div>
+        <div className="col-span-2 h-full min-h-0 overflow-hidden">
+          {selectedChat?.id ? (
+            <ChatWindow
+              chat={selectedChat}
+              messages={chatMessages}
+              user={user}
+              listing={currentListing}
+              onBack={() => setSelectedChat(null)}
+              onOpenPayment={() => setShowPaymentModal(true)}
+              onReport={() => setShowReportModal(true)}
+            />
+          ) : (
+            <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
+              {(myChats?.length || 0) === 0 ? (
+                <div className="contents">
+                  <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+                  <p className="text-lg mb-1">{currentLanguage==='de' ? 'Du hast noch keine Chats.' : 'Non hai ancora chat.'}</p>
+                  <p className="text-sm mb-4">{currentLanguage==='de' ? 'Um eine Unterhaltung zu starten, öffne eine Anzeige und klicke „Verkäufer kontaktieren“.' : 'Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.'}</p>
+                  <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
+                    <Link to={createPageUrl('Marketplace')}>{currentLanguage==='de' ? 'Zum Marktplatz' : 'Torna al marketplace'}</Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="contents">
+                  <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
+                  <p className="text-lg">{t('selectChat')}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showPaymentModal && selectedChat && (
+        <PaymentShippingModal chat={selectedChat} listing={currentListing} onClose={() => setShowPaymentModal(false)} />
+      )}
+
+      {showReportModal && selectedChat && (
+        <ReportListingModal
+          open={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          listingId={selectedChat.listingId}
+          listingTitle={currentListing?.title}
+          sellerEmail={selectedChat.sellerId === user.email ? selectedChat.buyerId : selectedChat.sellerId}
+          user={user}
+        />
+      )}
+    </div>
+  );
+}
