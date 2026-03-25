@@ -256,8 +256,16 @@ export default function ListingDetail() {
         if (!chatId) {
           for (let i = 0; i < 12 && !chatId; i++) { // ~12 * 300ms = 3.6s max
             try {
-              // Retry by buyer only; seller may vary in legacy data
-              const retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmail }, '-updated_date').catch(() => []);
+              // Try exact-case first (RLS is case-sensitive)
+              let retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmailRaw, sellerId: sellerEmailRaw }, '-updated_date').catch(() => []);
+              if (!retry?.length) {
+                // Fallback: exact buyer only
+                retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmailRaw }, '-updated_date').catch(() => []);
+              }
+              if (!retry?.length) {
+                // Fallback: lowercase legacy records
+                retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmail }, '-updated_date').catch(() => []);
+              }
               chatId = retry?.[0]?.id || null;
               if (chatId) {
                 console.debug('[ContactSeller] fallback found chat id', { chatId, try: i + 1 });
