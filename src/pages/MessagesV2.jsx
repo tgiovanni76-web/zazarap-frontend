@@ -262,6 +262,52 @@ export default function MessagesV2() {
     return () => { cancelled = true; clearTimeout(timer); };
   }, [awaitingChatFromUrl, selectedChat?.id, user?.email]);
 
+  // Last-resort: if I still have no chats listed and meta exists, create/attach a chat
+  useEffect(() => {
+    if (selectedChat?.id || !user?.email || (myChats?.length || 0) > 0) return;
+    let meta = null;
+    try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+    if (!meta?.listingId || !meta?.sellerId) return;
+
+    (async () => {
+      try {
+        const existing = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email, sellerId: meta.sellerId }, '-updated_date').catch(() => []);
+        if (existing?.length) {
+          setSelectedChat(existing[0]);
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', existing[0].id);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(existing[0].id);
+          try { localStorage.removeItem('pendingChatMeta'); } catch {}
+          return;
+        }
+        const created = await base44.entities.Chat.create({
+          listingId: meta.listingId,
+          buyerId: user.email,
+          sellerId: meta.sellerId,
+          status: 'in_attesa',
+          lastMessage: '',
+          listingTitle: meta.listingTitle || '',
+          listingImage: meta.listingImage || '',
+          lastPrice: typeof meta.lastPrice === 'number' ? meta.lastPrice : undefined,
+          updatedAt: new Date().toISOString(),
+          unreadBuyer: 0,
+          unreadSeller: 0,
+        });
+        const newId = created?.id || created?.data?.id || created?.inserted_id;
+        if (newId) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', newId);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(newId);
+          try { localStorage.setItem('pendingChatId', newId); localStorage.removeItem('pendingChatMeta'); } catch {}
+        }
+      } catch (e) {
+        console.warn('[MessagesV2] last-resort self-heal failed', e);
+      }
+    })();
+  }, [myChats?.length, selectedChat?.id, user?.email]);
+
   const { data: chatMessages = [] } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id || 'none'],
     enabled: !!selectedChat?.id,
