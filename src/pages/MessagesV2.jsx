@@ -158,7 +158,7 @@ export default function MessagesV2() {
     return () => { cancelled = true; };
   }, [urlChatId, selectedChat?.id, user?.email]);
 
-  // Self-heal: if chatId is in URL but chat isn't readable yet, recreate/attach using pendingChatMeta
+  // Self-heal: if chatId is in URL but chat isn't readable yet, recreate/attach using pendingChatMeta (runs once when we already concluded not-found)
   useEffect(() => {
     if (!urlChatNotFound || !user?.email) return;
     let meta = null;
@@ -212,6 +212,55 @@ export default function MessagesV2() {
 
     return () => { cancelled = true; };
   }, [urlChatNotFound, user?.email]);
+
+  // Early self-heal: if we are awaiting a chat from URL for >700ms and still none, try to attach/create using meta
+  useEffect(() => {
+    if (!awaitingChatFromUrl || selectedChat?.id || !user?.email) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      if (cancelled || selectedChat?.id) return;
+      let meta = null;
+      try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+      if (!meta?.listingId || !meta?.sellerId) return;
+      try {
+        const existing = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email, sellerId: meta.sellerId }, '-updated_date').catch(() => []);
+        if (existing?.length) {
+          setSelectedChat(existing[0]);
+          try { localStorage.removeItem('pendingChatMeta'); } catch {}
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', existing[0].id);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(existing[0].id);
+          return;
+        }
+        const payload = {
+          listingId: meta.listingId,
+          buyerId: user.email,
+          sellerId: meta.sellerId,
+          status: 'in_attesa',
+          lastMessage: '',
+          listingTitle: meta.listingTitle || '',
+          listingImage: meta.listingImage || '',
+          lastPrice: typeof meta.lastPrice === 'number' ? meta.lastPrice : undefined,
+          updatedAt: new Date().toISOString(),
+          unreadBuyer: 0,
+          unreadSeller: 0,
+        };
+        const created = await base44.entities.Chat.create(payload);
+        const newId = created?.id || created?.data?.id || created?.inserted_id;
+        if (newId) {
+          try { localStorage.setItem('pendingChatId', newId); localStorage.removeItem('pendingChatMeta'); } catch {}
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', newId);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatId(newId);
+        }
+      } catch (e) {
+        console.warn('[MessagesV2] early self-heal failed', e);
+      }
+    }, 700);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [awaitingChatFromUrl, selectedChat?.id, user?.email]);
 
   const { data: chatMessages = [] } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id || 'none'],
