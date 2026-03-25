@@ -43,6 +43,19 @@ export default function MessagesV2() {
     return () => window.removeEventListener('popstate', handler);
   }, []);
 
+  // Restore chatId from pendingChatId if router dropped it
+  useEffect(() => {
+    try {
+      const pid = localStorage.getItem('pendingChatId');
+      if (!urlChatId && pid) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('chatId', pid);
+        window.history.replaceState({}, '', url.toString());
+        setUrlChatId(pid);
+      }
+    } catch {}
+  }, [urlChatId]);
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me().catch(() => null),
@@ -142,7 +155,8 @@ export default function MessagesV2() {
           const res = await base44.entities.Chat.filter({ id: urlChatId });
           const c = res?.[0];
           const u = (user?.email || '').toLowerCase();
-          if (c && (((c.buyerId || '').toLowerCase() === u) || ((c.sellerId || '').toLowerCase() === u))) {
+          const isAdmin = user?.role === 'admin';
+          if (c && (isAdmin || ((c.buyerId || '').toLowerCase() === u) || ((c.sellerId || '').toLowerCase() === u))) {
             setSelectedChat(c);
             try { localStorage.removeItem('pendingChatId'); } catch {}
             return;
