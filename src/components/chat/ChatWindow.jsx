@@ -291,7 +291,14 @@ export default function ChatWindow({
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
   const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
-const displayPrice = (listing && typeof listing.price === 'number') ? listing.price : (typeof chat?.lastPrice === 'number' ? chat.lastPrice : null);
+  const displayPrice = (listing && typeof listing.price === 'number') ? listing.price : (typeof chat?.lastPrice === 'number' ? chat.lastPrice : null);
+
+  // Listing availability helpers
+  const expiresAt = listing?.expiresAt ? new Date(listing.expiresAt) : null;
+  const isExpired = !!(expiresAt && expiresAt < new Date());
+  const isListingUnavailable = !!(
+   (listing?.status && ['sold', 'archived', 'expired'].includes(listing.status)) || isExpired
+  );
 
   // Check if user already left a review for this chat
   const { data: existingReviews = [] } = useQuery({
@@ -923,6 +930,14 @@ const displayPrice = (listing && typeof listing.price === 'number') ? listing.pr
         </div>
       </div>
 
+      {/* Unavailable Listing Banner */}
+      {isListingUnavailable && (
+        <div className="px-3 py-2 bg-red-50 border-b border-red-200 text-red-700 text-xs md:text-sm flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4" />
+          <span>{isExpired ? 'Annuncio scaduto' : (listing?.status === 'sold' ? 'Annuncio venduto' : 'Annuncio non più disponibile')}</span>
+        </div>
+      )}
+
       {/* Listing Info Bar (works even if listing not readable) */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between p-2 md:p-3 bg-slate-50 border-b text-[12px] md:text-sm gap-2">
         <div className="flex flex-wrap items-center gap-2">
@@ -947,15 +962,19 @@ const displayPrice = (listing && typeof listing.price === 'number') ? listing.pr
           >
             <History className="h-4 w-4 mr-1" />
             {offers.length}
-          </Button>
-          {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
-            <Button 
-              size="sm" 
-              onClick={handleMakeOffer}
-              className="bg-green-600 hover:bg-green-700 text-xs"
-              disabled={listing?.status === 'reserved'}
-              title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
-            >
+             </Button>
+             {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
+               <Button 
+                 size="sm" 
+                 onClick={handleMakeOffer}
+                 className="bg-green-600 hover:bg-green-700 text-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                 disabled={isListingUnavailable || listing?.status === 'reserved'}
+                 title={
+                   isListingUnavailable
+                     ? (isExpired ? 'Annuncio scaduto' : 'Annuncio non disponibile')
+                     : (listing?.status === 'reserved' ? 'Anzeige ist reserviert' : '')
+                 }
+               >
               <DollarSign className="h-4 w-4 mr-1" />
               {ct.offer}
             </Button>
@@ -1245,27 +1264,30 @@ const displayPrice = (listing && typeof listing.price === 'number') ? listing.pr
           variant="ghost" 
           size="sm"
           onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
+          disabled={isUploading || isListingUnavailable}
+          title={isListingUnavailable ? 'Annuncio non disponibile' : undefined}
         >
           <Image className={`h-5 w-5 ${isUploading ? 'animate-pulse' : ''}`} />
         </Button>
         
         <Input
            ref={messageInputRef}
-           placeholder={ct.typeMessage}
+           placeholder={isListingUnavailable ? 'Annuncio non disponibile' : ct.typeMessage}
            value={messageText}
            onChange={(e) => {
              setMessageText(e.target.value);
              handleTyping();
            }}
-           onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+           onKeyPress={(e) => !isListingUnavailable && e.key === 'Enter' && !e.shiftKey && handleSend()}
            className="flex-1 min-w-0"
+           disabled={isListingUnavailable}
          />
         
         <Button 
           onClick={handleSend} 
-          disabled={!messageText.trim() || sendMessageMutation.isPending}
+          disabled={isListingUnavailable || !messageText.trim() || sendMessageMutation.isPending}
           className="bg-[#d62828] hover:bg-[#b82020]"
+          title={isListingUnavailable ? 'Annuncio non disponibile' : undefined}
         >
           <Send className="h-4 w-4" />
         </Button>
