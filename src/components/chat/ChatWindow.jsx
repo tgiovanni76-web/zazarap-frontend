@@ -282,6 +282,7 @@ export default function ChatWindow({
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
   const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
+const displayPrice = (listing && typeof listing.price === 'number') ? listing.price : (typeof chat?.lastPrice === 'number' ? chat.lastPrice : null);
 
   // Check if user already left a review for this chat
   const { data: existingReviews = [] } = useQuery({
@@ -378,7 +379,7 @@ export default function ChatWindow({
         userId: otherUser,
         type: 'message',
         title: '💬 Neue Nachricht',
-        message: `${listing?.title}: ${text?.substring(0, 50) || (imageUrl ? 'Bild' : 'Nachricht')}`,
+        message: `${(listing?.title || chat?.listingTitle || 'Chat')}: ${text?.substring(0, 50) || (imageUrl ? 'Bild' : 'Nachricht')}`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id, listingId: chat.listingId, subtype: 'message' }
       });
@@ -524,8 +525,10 @@ export default function ChatWindow({
 
       // Validation: Amount must be <= listingPrice * MAX_OFFER_MULTIPLIER
       const MAX_OFFER_MULTIPLIER = 1.5; // Configurable
-      if (amount > (listing?.price || 0) * MAX_OFFER_MULTIPLIER) {
-        throw new Error(`Betrag darf nicht mehr als ${MAX_OFFER_MULTIPLIER}x des Listenpreises (${listing?.price}€) sein`);
+      if (typeof listing?.price === 'number' && listing.price > 0) {
+        if (amount > listing.price * MAX_OFFER_MULTIPLIER) {
+          throw new Error(`Betrag darf nicht mehr als ${MAX_OFFER_MULTIPLIER}x des Listenpreises (${listing.price}€) sein`);
+        }
       }
 
       // Validation: Only buyer can make initial offers
@@ -592,7 +595,7 @@ export default function ChatWindow({
         userId: otherUser,
         type: 'offer',
         title: type === 'counter' ? '🔄 Neues Gegenangebot!' : '💰 Neues Angebot!',
-        message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title}" gemacht`,
+        message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title || chat?.listingTitle}" gemacht`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id, offerId: offer.id, listingId: chat.listingId }
       });
@@ -661,7 +664,7 @@ export default function ChatWindow({
         userId: offerToAccept.senderId,
         type: 'status_update',
         title: '✅ Angebot angenommen - Reserviert!',
-        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title}" wurde angenommen! Anzeige ist für dich reserviert. Schließe die Zahlung innerhalb von 48h ab.`,
+        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title || chat?.listingTitle}" wurde angenommen! Anzeige ist für dich reserviert. Schließe die Zahlung innerhalb von 48h ab.`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id }
       });
@@ -716,7 +719,7 @@ export default function ChatWindow({
         userId: chat.buyerId,
         type: 'status_update',
         title: '🔓 Reservierung aufgehoben',
-        message: `Die Reservierung für "${listing?.title}" wurde aufgehoben. Die Anzeige ist wieder verfügbar.`,
+        message: `Die Reservierung für "${listing?.title || chat?.listingTitle}" wurde aufgehoben. Die Anzeige ist wieder verfügbar.`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id }
       });
@@ -766,7 +769,7 @@ export default function ChatWindow({
         userId: chat.buyerId,
         type: 'status_update',
         title: '✅ Verkauft',
-        message: `"${listing?.title}" wurde als verkauft markiert.`,
+        message: `"${listing?.title || chat?.listingTitle}" wurde als verkauft markiert.`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id }
       });

@@ -209,6 +209,7 @@ export default function ListingDetail() {
           lastMessage: '',
           listingTitle: listing.title,
           listingImage: listing.images?.[0] || '',
+          lastPrice: typeof listing.price === 'number' ? listing.price : undefined,
           updatedAt: new Date().toISOString(),
           unreadBuyer: 0,
           unreadSeller: 0
