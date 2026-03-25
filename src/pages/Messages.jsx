@@ -290,6 +290,9 @@ export default function Messages() {
           window.history.replaceState({}, '', url.toString());
           setUrlChatNotFound(false);
           setUrlChatId(id);
+          // Try immediate local select instead of waiting another refetch
+          const newLocal = { ...ch, id };
+          setSelectedChat((prev) => prev?.id === id ? prev : newLocal);
           queryClient.invalidateQueries({ queryKey: ['chats'] });
         }
       } catch {}
