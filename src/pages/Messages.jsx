@@ -196,9 +196,11 @@ export default function Messages() {
     }
   }, [chatsLoading, myChats, searchTerm]);
 
-  // Auto-select chat from URL parameter (robust): try list → filter → subscribe until it exists
+  // Auto-select chat from URL parameter with retries (eventual consistency safe)
   useEffect(() => {
     if (!urlChatId || selectedChat || !user) return;
+
+    let cancelled = false;
 
     const maybeSelect = (c) => {
       if (c && (c.buyerId === user.email || c.sellerId === user.email)) {
@@ -207,34 +209,31 @@ export default function Messages() {
         try { localStorage.removeItem('pendingChatId'); } catch {}
         return true;
       }
-      console.debug('[Messages] chat not selectable for user', { urlChatId, c, user: user.email });
       return false;
     };
 
-    // 1) try from current list
-    const inList = myChats.find(c => c.id === urlChatId);
-    if (maybeSelect(inList)) return;
+    const run = async () => {
+      // 1) try from current list immediately
+      const inList = myChats.find(c => c.id === urlChatId);
+      if (maybeSelect(inList)) return;
 
-    // 2) fetch directly by id
-    let unsub = null;
-    base44.entities.Chat.filter({ id: urlChatId })
-      .then(res => {
-        if (maybeSelect(res?.[0])) return;
-
-        // Not found or not accessible → clear URL and show empty state instead of infinite spinner
+      // 2) retry fetching by id a few times to allow DB to persist/replicate
+      for (let i = 0; i < 8 && !cancelled; i++) {
         try {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('chatId');
-          window.history.replaceState({}, '', url.toString());
+          const res = await base44.entities.Chat.filter({ id: urlChatId });
+          if (maybeSelect(res?.[0])) return;
         } catch {}
-        setUrlChatId(null);
-        setUrlChatNotFound(true);
-      })
-      .catch(() => {
-        setUrlChatNotFound(true);
-      });
+        // wait 400ms before next attempt
+        await new Promise(r => setTimeout(r, 400));
+      }
 
-    return () => { if (unsub) unsub(); };
+      if (!cancelled) {
+        setUrlChatNotFound(true);
+      }
+    };
+
+    run();
+    return () => { cancelled = true; };
   }, [urlChatId, myChats, selectedChat, user]);
 
   // Real-time notification for new messages
