@@ -215,7 +215,7 @@ export default function Messages() {
 
   // Auto-select chat from URL parameter with retries (eventual consistency safe)
   useEffect(() => {
-    if (!urlChatId || selectedChat || !user) return;
+    if (!urlChatId || selectedChat || !user) return; // initial URL-based selection with retries
 
     let cancelled = false;
 
