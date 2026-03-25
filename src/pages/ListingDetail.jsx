@@ -168,13 +168,18 @@ export default function ListingDetail() {
     console.debug('[ContactSeller] listing owner fields', { created_by: listing.created_by, sellerId: listing.sellerId, ownerEmail: listing.ownerEmail, ownerId: listing.ownerId });
 
     const normalizeEmail = (s) => (s || '').toString().trim().toLowerCase();
-    const buyerEmail = normalizeEmail(user.email);
-    const sellerEmail = normalizeEmail([
-      listing.created_by,
-      listing.ownerEmail,
-      listing.sellerId,
-      listing.ownerId,
-    ].find(v => typeof v === 'string' && v.includes('@')) || listing.created_by || listing.ownerEmail);
+    const buyerEmailRaw = (user.email || '').toString().trim();
+    const sellerEmailRaw = (() => {
+      const v = [
+        listing.created_by,
+        listing.ownerEmail,
+        listing.sellerId,
+        listing.ownerId,
+      ].find(v => typeof v === 'string' && v.includes('@'));
+      return (v || listing.created_by || listing.ownerEmail || '').toString().trim();
+    })();
+    const buyerEmail = normalizeEmail(buyerEmailRaw);
+    const sellerEmail = normalizeEmail(sellerEmailRaw);
 
     if (!sellerEmail) {
       console.error('[ContactSeller] sellerEmail missing/invalid on listing', { listingId, listing });
@@ -193,15 +198,23 @@ export default function ListingDetail() {
       // Prüfen: existiert bereits eine Chat‑Konversation? Fehler ignorieren → anlegen
       let existingChats = [];
       try {
+        // First try exact-case match (RLS requires exact equality with user.email)
         existingChats = await base44.entities.Chat.filter(
-          { listingId: listingId, buyerId: buyerEmail, sellerId: sellerEmail },
+          { listingId: listingId, buyerId: buyerEmailRaw, sellerId: sellerEmailRaw },
           '-updated_date'
         );
+        // Fallback: try lowercased legacy records (created previously)
+        if (!existingChats?.length) {
+          existingChats = await base44.entities.Chat.filter(
+            { listingId: listingId, buyerId: buyerEmail, sellerId: sellerEmail },
+            '-updated_date'
+          ).catch(() => []);
+        }
       } catch (e) {
         console.warn('[ContactSeller] existingChats filter failed, will create new chat', e);
         existingChats = [];
       }
-      console.debug('[ContactSeller] filter for existing', { listingId, buyerId: user.email, sellerId: sellerEmail });
+      console.debug('[ContactSeller] filter for existing', { listingId, buyerIdRaw: buyerEmailRaw, sellerIdRaw: sellerEmailRaw, buyerLower: buyerEmail, sellerLower: sellerEmail });
       console.debug('[ContactSeller] existingChats count', existingChats?.length, existingChats?.map(c => c.id));
 
       let chatId;
@@ -213,8 +226,8 @@ export default function ListingDetail() {
         // Neue Chat-Konversation anlegen
         const payload = {
           listingId: listingId,
-          buyerId: buyerEmail,
-          sellerId: sellerEmail,
+          buyerId: buyerEmailRaw,
+          sellerId: sellerEmailRaw,
           status: 'in_attesa',
           lastMessage: '',
           listingTitle: listing.title,
@@ -229,7 +242,7 @@ export default function ListingDetail() {
           localStorage.setItem('pendingChatMeta', JSON.stringify({
             listingId,
             buyerId: user.email,
-            sellerId: sellerEmail,
+            sellerId: sellerEmailRaw,
             listingTitle: listing.title,
             listingImage: listing.images?.[0] || '',
             lastPrice: typeof listing.price === 'number' ? listing.price : null
