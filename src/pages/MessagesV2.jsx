@@ -110,7 +110,9 @@ export default function MessagesV2() {
         const res = await base44.entities.Chat.filter({ id: urlChatId });
         const c = res?.[0];
         const u = (user?.email || '').toLowerCase();
-        if (c && ((c.buyerId || '').toLowerCase() === u || (c.sellerId || '').toLowerCase() === u)) {
+        const isMine = c && ((((c.buyerId || '').toLowerCase() === u) || ((c.sellerId || '').toLowerCase() === u)));
+        const isAdmin = user?.role === 'admin';
+        if (c && (isMine || isAdmin)) {
           if (!cancelled) {
             setSelectedChat(c);
             setUrlChatNotFound(false);
