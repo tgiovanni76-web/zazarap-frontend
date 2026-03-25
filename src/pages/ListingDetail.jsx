@@ -314,7 +314,7 @@ export default function ListingDetail() {
         localStorage.setItem('pendingChatId', chatId);
         // Keep pendingChatMeta for self-heal in Messages until it confirms load
       } catch {}
-      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
+      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}&lid=${encodeURIComponent(listingId)}&seller=${encodeURIComponent(sellerEmailRaw)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
       if (opts.openOffer) { targetUrl += '&open=offer'; }
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);

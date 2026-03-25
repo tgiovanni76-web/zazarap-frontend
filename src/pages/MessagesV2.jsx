@@ -256,6 +256,12 @@ export default function MessagesV2() {
       if (cancelled || selectedChat?.id) return;
       let meta = null;
       try { meta = JSON.parse(localStorage.getItem('pendingChatMeta') || 'null'); } catch { meta = null; }
+      if (!meta?.listingId || !meta?.sellerId) {
+        const sp = new URLSearchParams(window.location.search);
+        const lid = sp.get('lid') || sp.get('listingId');
+        const seller = sp.get('seller');
+        if (lid && seller) meta = { listingId: lid, sellerId: seller, listingTitle: '', listingImage: '' };
+      }
       if (!meta?.listingId || !meta?.sellerId) return;
       try {
         const existing = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email, sellerId: meta.sellerId }, '-updated_date').catch(() => []);
