@@ -13,7 +13,7 @@ import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
 export default function Messages() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const chatIdFromUrl = urlParams.get('chatId');
   const pendingChatId = typeof window !== 'undefined' ? localStorage.getItem('pendingChatId') : null;
@@ -409,8 +409,8 @@ export default function Messages() {
         ) : urlChatNotFound ? (
           <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
             <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
-            <p className="text-base md:text-lg mb-1">Chat non trovata o non accessibile.</p>
-            <p className="text-sm mb-4">Seleziona una chat dalla lista o torna al marketplace.</p>
+            <p className="text-base md:text-lg mb-1">{currentLanguage==='de' ? 'Chat nicht gefunden oder nicht zugänglich.' : 'Chat non trovata o non accessibile.'}</p>
+            <p className="text-sm mb-4">{currentLanguage==='de' ? 'Wähle einen Chat aus der Liste oder kehre zum Marktplatz zurück.' : 'Seleziona una chat dalla lista o torna al marketplace.'}</p>
             <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
               <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
             </Button>
@@ -418,8 +418,8 @@ export default function Messages() {
         ) : myChats.length === 0 ? (
           <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
             <MessageSquare className="h-14 w-14 mb-3 opacity-30" />
-            <p className="text-base md:text-lg mb-1">Non hai ancora chat.</p>
-            <p className="text-sm mb-4">Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.</p>
+            <p className="text-base md:text-lg mb-1">{currentLanguage==='de' ? 'Du hast noch keine Chats.' : 'Non hai ancora chat.'}</p>
+            <p className="text-sm mb-4">{currentLanguage==='de' ? 'Um eine Unterhaltung zu starten, öffne eine Anzeige und klicke „Verkäufer kontaktieren“.' : 'Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.'}</p>
             <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
               <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
             </Button>
@@ -492,8 +492,8 @@ export default function Messages() {
               ) : urlChatNotFound ? (
               <div className="h-full bg-white rounded-xl shadow-sm border flex flex-col items-center justify-center text-slate-500 p-6 text-center">
               <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
-              <p className="text-lg mb-1">Chat non trovata o non accessibile.</p>
-              <p className="text-sm mb-4">Seleziona una chat dalla lista o torna al marketplace.</p>
+              <p className="text-lg mb-1">{currentLanguage==='de' ? 'Chat nicht gefunden oder nicht zugänglich.' : 'Chat non trovata o non accessibile.'}</p>
+              <p className="text-sm mb-4">{currentLanguage==='de' ? 'Wähle einen Chat aus der Liste oder kehre zum Marktplatz zurück.' : 'Seleziona una chat dalla lista o torna al marketplace.'}</p>
               <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
                <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
               </Button>
@@ -503,8 +503,8 @@ export default function Messages() {
               {(myChats?.length || 0) === 0 ? (
                 <div className="contents">
                   <MessageSquare className="h-16 w-16 mb-4 opacity-30" />
-                  <p className="text-lg mb-1">Non hai ancora chat.</p>
-                  <p className="text-sm mb-4">Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.</p>
+                  <p className="text-lg mb-1">{currentLanguage==='de' ? 'Du hast noch keine Chats.' : 'Non hai ancora chat.'}</p>
+                  <p className="text-sm mb-4">{currentLanguage==='de' ? 'Um eine Unterhaltung zu starten, öffne eine Anzeige und klicke „Verkäufer kontaktieren“.' : 'Per iniziare una conversazione, apri un annuncio e clicca “Verkäufer kontaktieren”.'}</p>
                   <Button asChild className="bg-[var(--z-primary)] hover:bg-[var(--z-primary-dark)]">
                     <Link to={createPageUrl('Marketplace')}>Zum Marktplatz</Link>
                   </Button>
