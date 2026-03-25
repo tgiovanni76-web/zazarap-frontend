@@ -914,45 +914,45 @@ const displayPrice = (listing && typeof listing.price === 'number') ? listing.pr
         </div>
       </div>
 
-      {/* Listing Info Bar */}
-      {listing && (
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between p-2 md:p-3 bg-slate-50 border-b text-[12px] md:text-sm gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-semibold text-green-600">{listing.price}€</span>
-            {chat.lastPrice && chat.lastPrice !== listing.price && (
-              <Badge variant="outline" className="text-xs">
-                {ct.lastOffer}: {chat.lastPrice}€
-              </Badge>
-            )}
-            <Badge className={statusColors[chat.status].replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
-              {chat.status}
+      {/* Listing Info Bar (works even if listing not readable) */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between p-2 md:p-3 bg-slate-50 border-b text-[12px] md:text-sm gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {displayPrice !== null && (
+            <span className="font-semibold text-green-600">{displayPrice}€</span>
+          )}
+          {chat.lastPrice && (displayPrice === null || chat.lastPrice !== displayPrice) && (
+            <Badge variant="outline" className="text-xs">
+              {ct.lastOffer}: {chat.lastPrice}€
             </Badge>
-          </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setShowOfferHistory(!showOfferHistory)}
-              className="text-xs"
-            >
-              <History className="h-4 w-4 mr-1" />
-              {offers.length}
-            </Button>
-            {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
-              <Button 
-                size="sm" 
-                onClick={handleMakeOffer}
-                className="bg-green-600 hover:bg-green-700 text-xs"
-                disabled={listing?.status === 'reserved'}
-                title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
-              >
-                <DollarSign className="h-4 w-4 mr-1" />
-                {ct.offer}
-              </Button>
-            )}
-          </div>
+          )}
+          <Badge className={(statusColors[chat.status] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
+            {chat.status}
+          </Badge>
         </div>
-      )}
+        <div className="flex gap-2 w-full md:w-auto">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowOfferHistory(!showOfferHistory)}
+            className="text-xs"
+          >
+            <History className="h-4 w-4 mr-1" />
+            {offers.length}
+          </Button>
+          {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
+            <Button 
+              size="sm" 
+              onClick={handleMakeOffer}
+              className="bg-green-600 hover:bg-green-700 text-xs"
+              disabled={listing?.status === 'reserved'}
+              title={listing?.status === 'reserved' ? 'Anzeige ist reserviert' : ''}
+            >
+              <DollarSign className="h-4 w-4 mr-1" />
+              {ct.offer}
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Offer History Panel */}
       {showOfferHistory && (

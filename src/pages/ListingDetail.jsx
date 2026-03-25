@@ -214,6 +214,16 @@ export default function ListingDetail() {
           unreadBuyer: 0,
           unreadSeller: 0
         };
+        try {
+          localStorage.setItem('pendingChatMeta', JSON.stringify({
+            listingId,
+            buyerId: user.email,
+            sellerId,
+            listingTitle: listing.title,
+            listingImage: listing.images?.[0] || '',
+            lastPrice: typeof listing.price === 'number' ? listing.price : null
+          }));
+        } catch {}
         console.debug('[ContactSeller] creating chat with payload', payload);
         const newChat = await base44.entities.Chat.create(payload);
         chatId = newChat?.id || newChat?.data?.id || newChat?.inserted_id;
@@ -268,7 +278,10 @@ export default function ListingDetail() {
         navigate(createPageUrl('Messages'));
         return;
       }
-      try { localStorage.setItem('pendingChatId', chatId); } catch {}
+      try { 
+        localStorage.setItem('pendingChatId', chatId); 
+        localStorage.removeItem('pendingChatMeta');
+      } catch {}
       const targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);

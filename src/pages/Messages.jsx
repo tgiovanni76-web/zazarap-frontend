@@ -241,6 +241,50 @@ export default function Messages() {
     return () => { cancelled = true; };
   }, [urlChatId, myChats, selectedChat, user]);
 
+  // If chat not found, try to self-heal by creating it from pendingChatMeta (saved on ListingDetail)
+  useEffect(() => {
+    if (!urlChatNotFound || !user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const raw = localStorage.getItem('pendingChatMeta');
+        if (!raw) return;
+        const meta = JSON.parse(raw);
+        if (!meta?.listingId || meta?.buyerId !== user.email) return;
+
+        // Check if it exists now
+        const exist = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email }, '-updated_date').catch(() => []);
+        let ch = exist?.[0] || null;
+        if (!ch) {
+          ch = await base44.entities.Chat.create({
+            listingId: meta.listingId,
+            buyerId: user.email,
+            sellerId: meta.sellerId,
+            status: 'in_attesa',
+            lastMessage: '',
+            listingTitle: meta.listingTitle,
+            listingImage: meta.listingImage,
+            lastPrice: meta.lastPrice ?? undefined,
+            updatedAt: new Date().toISOString(),
+            unreadBuyer: 0,
+            unreadSeller: 0
+          });
+        }
+        const id = ch?.id || ch?.data?.id || ch?.inserted_id;
+        if (id && !cancelled) {
+          try { localStorage.setItem('pendingChatId', id); localStorage.removeItem('pendingChatMeta'); } catch {}
+          const url = new URL(window.location.href);
+          url.searchParams.set('chatId', id);
+          window.history.replaceState({}, '', url.toString());
+          setUrlChatNotFound(false);
+          setUrlChatId(id);
+          queryClient.invalidateQueries({ queryKey: ['chats'] });
+        }
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [urlChatNotFound, user, queryClient]);
+
   // Real-time notification for new messages
   useEffect(() => {
     if (!user || !myChats.length) return;
