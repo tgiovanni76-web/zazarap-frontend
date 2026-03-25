@@ -56,11 +56,15 @@ export default function MessagesV2() {
     queryKey: ['chats', user?.email || 'anon'],
     enabled: !!user?.email,
     queryFn: async () => {
-      const [asBuyer, asSeller] = await Promise.all([
-        base44.entities.Chat.filter({ buyerId: user.email }, '-updated_date').catch(() => []),
-        base44.entities.Chat.filter({ sellerId: user.email }, '-updated_date').catch(() => []),
+      const me = user.email;
+      const meLower = (me || '').toLowerCase();
+      const [asBuyerExact, asSellerExact, asBuyerLower, asSellerLower] = await Promise.all([
+        base44.entities.Chat.filter({ buyerId: me }, '-updated_date').catch(() => []),
+        base44.entities.Chat.filter({ sellerId: me }, '-updated_date').catch(() => []),
+        meLower ? base44.entities.Chat.filter({ buyerId: meLower }, '-updated_date').catch(() => []) : [],
+        meLower ? base44.entities.Chat.filter({ sellerId: meLower }, '-updated_date').catch(() => []) : [],
       ]);
-      const merged = [...(asBuyer || []), ...(asSeller || [])];
+      const merged = [...(asBuyerExact || []), ...(asSellerExact || []), ...(asBuyerLower || []), ...(asSellerLower || [])];
       const map = new Map();
       merged.forEach(c => c?.id && map.set(c.id, c));
       const arr = Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
@@ -120,6 +124,39 @@ export default function MessagesV2() {
     })();
     return () => { cancelled = true; };
   }, [urlChatId, selectedChat, user?.email]);
+
+  // If we navigated with a just-created chatId, poll briefly until it becomes readable (eventual consistency)
+  useEffect(() => {
+    const pendingId = (() => { try { return localStorage.getItem('pendingChatId'); } catch { return null; } })();
+    if (!urlChatId || !pendingId || pendingId !== urlChatId || selectedChat?.id) return;
+    let cancelled = false;
+    let tries = 0;
+
+    const poll = async () => {
+      // Show loading state instead of not-found while polling
+      setUrlChatNotFound(false);
+      while (!cancelled && tries < 12 && !selectedChat?.id) {
+        try {
+          const res = await base44.entities.Chat.filter({ id: urlChatId });
+          const c = res?.[0];
+          const u = (user?.email || '').toLowerCase();
+          if (c && (((c.buyerId || '').toLowerCase() === u) || ((c.sellerId || '').toLowerCase() === u))) {
+            setSelectedChat(c);
+            try { localStorage.removeItem('pendingChatId'); } catch {}
+            return;
+          }
+        } catch {}
+        tries++;
+        await new Promise(r => setTimeout(r, 300));
+      }
+      if (!cancelled && !selectedChat?.id) {
+        setUrlChatNotFound(true);
+      }
+    };
+
+    poll();
+    return () => { cancelled = true; };
+  }, [urlChatId, selectedChat?.id, user?.email]);
 
   const { data: chatMessages = [] } = useQuery({
     queryKey: ['chatMessages', selectedChat?.id || 'none'],

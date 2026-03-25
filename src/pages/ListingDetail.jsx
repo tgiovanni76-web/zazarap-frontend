@@ -306,7 +306,7 @@ export default function ListingDetail() {
         localStorage.setItem('pendingChatId', chatId); 
         localStorage.removeItem('pendingChatMeta');
       } catch {}
-      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`;
+      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
       if (opts.openOffer) { targetUrl += '&open=offer'; }
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);
