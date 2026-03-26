@@ -11,8 +11,13 @@ export default function AGB() {
       <h1 className="text-3xl font-bold mb-6">{t('agb.title')}</h1>
       <p className="text-sm text-slate-600 mb-6">{t('agb.validFrom')}: 01.02.2026</p>
       <p className="text-sm text-slate-600 mb-6">
-        <strong>{t('agb.operator')}:</strong> WOHLGER GbR, Kronenstr. 10, 75245 Neulingen, Deutschland<br />
-        <strong>E-Mail:</strong> info@zazarap.de
+        <strong>{t('agb.operator')}:</strong> WOHLGER GbR<br />
+        Kronenstr. 10<br />
+        75245 Neulingen, Deutschland<br /><br />
+        <strong>Vertreten durch die Gesellschafter:</strong><br />
+        Giovanni Tornabene<br />
+        Marco Ruggieri<br /><br />
+        <strong>E-Mail:</strong> <a href="mailto:info@zazarap.de" className="text-[var(--z-accent)] hover:text-[#E6BD00]">info@zazarap.de</a>
       </p>
 
       <Card className="mb-6">
