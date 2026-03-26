@@ -10,9 +10,15 @@ export default function Datenschutz() {
         <CardHeader>
           <CardTitle>Verantwortlicher</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p>Zazarap GmbH, info@zazarap.de</p>
-          <p>Sitz: Deutschland</p>
+        <CardContent className="space-y-1">
+          <p>WOHLGER GbR</p>
+          <p>Kronenstr. 10</p>
+          <p>75245 Neulingen</p>
+          <p>Deutschland</p>
+          <p className="mt-2">Vertreten durch die Gesellschafter:</p>
+          <p>Giovanni Tornabene</p>
+          <p>Marco Ruggieri</p>
+          <p className="mt-2">E-Mail: <a href="mailto:info@zazarap.de" className="text-blue-600 hover:underline">info@zazarap.de</a></p>
         </CardContent>
       </Card>
 
