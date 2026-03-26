@@ -32,8 +32,12 @@ export default function UeberUns() {
         <CardHeader>
           <CardTitle>Kontakt</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p>info@zazarap.de</p>
+        <CardContent className="space-y-1">
+          <p>WOHLGER GbR</p>
+          <p>Kronenstr. 10</p>
+          <p>75245 Neulingen, Deutschland</p>
+          <p>Gesellschafter: Giovanni Tornabene, Marco Ruggieri</p>
+          <p>E-Mail: <a href="mailto:info@zazarap.de" className="text-[var(--z-accent)] hover:text-[#E6BD00]">info@zazarap.de</a></p>
         </CardContent>
       </Card>
     </div>
