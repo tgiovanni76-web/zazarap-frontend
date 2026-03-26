@@ -11,7 +11,7 @@ export default function AGB() {
       <h1 className="text-3xl font-bold mb-6">{t('agb.title')}</h1>
       <p className="text-sm text-slate-600 mb-6">{t('agb.validFrom')}: 01.02.2026</p>
       <p className="text-sm text-slate-600 mb-6">
-        <strong>{t('agb.operator')}:</strong> zazarap GmbH, Musterstraße 123, 10115 Berlin, Deutschland<br />
+        <strong>{t('agb.operator')}:</strong> WOHLGER GbR, Kronenstr. 10, 75245 Neulingen, Deutschland<br />
         <strong>E-Mail:</strong> info@zazarap.de
       </p>
 
