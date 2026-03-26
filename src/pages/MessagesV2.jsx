@@ -62,18 +62,7 @@ export default function MessagesV2() {
     } catch {}
   }, [urlChatId]);
 
-  // Restore chatId from pendingChatId if router dropped it
-  useEffect(() => {
-    try {
-      const pid = localStorage.getItem('pendingChatId');
-      if (!urlChatId && pid) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('chatId', pid);
-        window.history.replaceState({}, '', url.toString());
-        setUrlChatId(pid);
-      }
-    } catch {}
-  }, [urlChatId]);
+
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],

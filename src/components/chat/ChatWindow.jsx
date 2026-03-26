@@ -1200,7 +1200,7 @@ export default function ChatWindow({
 
       {/* Payment Button (for buyer after acceptance) */}
       {chat.status === 'accettata' && !isSeller && (
-        <div className="p-2 md:p-3 bg-green-50 border-t animate-pulse">
+        <div className="p-2 md:p-3 bg-green-50 border-t">
           <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
             <CreditCard className="h-5 w-5 mr-2" />
             💳 {ct.payNow} - {chat.lastPrice}€
@@ -1278,7 +1278,7 @@ export default function ChatWindow({
              setMessageText(e.target.value);
              handleTyping();
            }}
-           onKeyPress={(e) => !isListingUnavailable && e.key === 'Enter' && !e.shiftKey && handleSend()}
+           onKeyDown={(e) => !isListingUnavailable && e.key === 'Enter' && !e.shiftKey && handleSend()}
            className="flex-1 min-w-0"
            disabled={isListingUnavailable}
          />
