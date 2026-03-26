@@ -20,7 +20,7 @@ export default function Support() {
             <li>
               <Link to={createPageUrl('Contact')} className="text-[var(--z-accent)] hover:text-[#E6BD00]">Kontaktformular</Link>
             </li>
-            <li>E-Mail: support@zazarap.de</li>
+            <li>E-Mail: <a href="mailto:info@zazarap.de" className="text-[var(--z-accent)] hover:text-[#E6BD00]">info@zazarap.de</a></li>
           </ul>
         </CardContent>
       </Card>
