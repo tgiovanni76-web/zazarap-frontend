@@ -83,8 +83,8 @@ export default function Datenschutz() {
           <CardTitle>Kontakt Datenschutz</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>E-Mail: privacy@zazarap.de</p>
-          <p>Stand: {new Date().toLocaleDateString('de-DE')}</p>
+          <p>E-Mail: <a href="mailto:info@zazarap.de" className="text-blue-600 hover:underline">info@zazarap.de</a></p>
+          <p>Stand: 26.03.2026</p>
         </CardContent>
       </Card>
     </div>
