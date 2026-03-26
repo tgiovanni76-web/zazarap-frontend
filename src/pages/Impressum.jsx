@@ -208,14 +208,15 @@ export default function Impressum() {
           <CardTitle>{content.operator}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p><strong>{content.companyName}:</strong> Zazarap GmbH</p>
-          <p><strong>{content.address}:</strong> Musterstraße 123<br/>
-          10115 Berlin<br/>
-          Deutschland</p>
-          <p><strong>{content.ceo}:</strong> Max Mustermann</p>
-          <p><strong>{content.court}:</strong> Amtsgericht Berlin-Charlottenburg</p>
-          <p><strong>{content.regNumber}:</strong> HRB 123456</p>
-          <p><strong>{content.vatId}:</strong> DE123456789</p>
+          <p><strong>{content.companyName}:</strong> WOHLGER GbR</p>
+          <p><strong>{content.address}:</strong> Kronenstr. 10<br/>
+                     75245 Neulingen<br/>
+                     Deutschland</p>
+          <p><strong>{content.ceo}:</strong> Vertreten durch die Gesellschafter: Giovanni Tornabene, Marco Ruggieri</p>
+          <p><strong>{content.court}:</strong> Nicht im Handelsregister eingetragen (GbR)</p>
+          <p><strong>{content.regNumber}:</strong> entfällt</p>
+           <p>Angemeldet bei der Gemeinde Neulingen</p>
+          <p><strong>{content.vatId}:</strong> entfällt</p>
         </CardContent>
       </Card>
 
@@ -236,8 +237,8 @@ export default function Impressum() {
         </CardHeader>
         <CardContent>
           <p>{content.responsibleNote}:<br/>
-          Max Mustermann<br/>
-          Musterstraße 123, 10115 Berlin</p>
+                     Giovanni Tornabene und Marco Ruggieri<br/>
+                     Kronenstr. 10, 75245 Neulingen</p>
         </CardContent>
       </Card>
 
