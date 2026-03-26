@@ -33,7 +33,7 @@ export default function SicherheitsHinweise() {
           <CardTitle>Kontakt bei Vorfällen</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>support@zazarap.de</p>
+          <p><a href="mailto:info@zazarap.de" className="text-[var(--z-accent)] hover:text-[#E6BD00]">info@zazarap.de</a></p>
         </CardContent>
       </Card>
     </div>
