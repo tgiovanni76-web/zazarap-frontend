@@ -196,7 +196,7 @@ const impressumContent = {
 
 export default function Impressum() {
   const { language } = useLanguage();
-  const content = impressumContent[language] || impressumContent.de;
+  const content = impressumContent.de;
 
   return (
     <div className="py-8 max-w-4xl mx-auto">
@@ -208,15 +208,17 @@ export default function Impressum() {
           <CardTitle>{content.operator}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p><strong>{content.companyName}:</strong> WOHLGER GbR</p>
-          <p><strong>{content.address}:</strong> Kronenstr. 10<br/>
-                     75245 Neulingen<br/>
-                     Deutschland</p>
-          <p><strong>{content.ceo}:</strong> Vertreten durch die Gesellschafter: Giovanni Tornabene, Marco Ruggieri</p>
-          <p><strong>{content.court}:</strong> Nicht im Handelsregister eingetragen (GbR)</p>
-          <p><strong>{content.regNumber}:</strong> entfällt</p>
+          <p>WOHLGER GbR</p>
+          <p>Kronenstr. 10</p>
+                     <p>75245 Neulingen</p>
+                     <p>Deutschland</p>
+          <p>Vertreten durch die Gesellschafter:</p>
+           <p>Giovanni Tornabene</p>
+           <p>Marco Ruggieri</p>
+          
+          
            <p>Angemeldet bei der Gemeinde Neulingen</p>
-          <p><strong>{content.vatId}:</strong> entfällt</p>
+          
         </CardContent>
       </Card>
 
