@@ -1086,7 +1086,7 @@ function LayoutInner({ children, currentPageName }) {
                       <hr className="border-0 border-t border-[#243246] my-2 md:my-3.5 mx-auto w-[92%]" />
 
                       <div className="text-center text-[11px] md:text-xs pb-1">
-                      <p className="text-slate-500">© 2025 Zazarap.de. {t('allRightsReserved')}.</p>
+                      <p className="text-slate-500">© {new Date().getFullYear()} Zazarap.de. {t('allRightsReserved')}.</p>
                       <p className="mt-0.5">
                         <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-300">
                           {t('euDispute')}
