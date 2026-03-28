@@ -204,7 +204,8 @@ export default function ChatWindow({
   onBack,
   onOpenPayment,
   onReport,
-  initialOpenOffer = false
+  initialOpenOffer = false,
+  autoFocusComposer = false
 }) {
   const { language } = useLanguage();
   const ct = chatTranslations[language] || chatTranslations.de;
@@ -219,6 +220,8 @@ export default function ChatWindow({
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [translatedMessages, setTranslatedMessages] = useState({});
   const [translatingId, setTranslatingId] = useState(null);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [botSuggestions, setBotSuggestions] = useState([]);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -236,6 +239,14 @@ export default function ChatWindow({
       setShowOfferModal(true);
     }
   }, [initialOpenOffer, isSeller]);
+
+  // Focus composer when requested
+  useEffect(() => {
+    if (autoFocusComposer) {
+      try { messagesContainerRef.current?.scrollTo({ top: messagesContainerRef.current.scrollHeight }); } catch {}
+      setTimeout(() => messageInputRef.current?.focus(), 100);
+    }
+  }, [autoFocusComposer]);
 
   const goBack = useCallback(() => {
     const targetId = listing?.id || chat?.listingId;
@@ -288,6 +299,26 @@ export default function ChatWindow({
     queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
     enabled: !!chat?.id,
   });
+
+  // AI assistant suggestions ("Hunger Bot")
+  const handleSuggest = async () => {
+    setIsSuggesting(true);
+    try {
+      const langName = language === 'de' ? 'German' : language === 'en' ? 'English' : language === 'it' ? 'Italian' : language === 'tr' ? 'Turkish' : language === 'uk' ? 'Ukrainian' : language === 'fr' ? 'French' : language === 'pl' ? 'Polish' : 'English';
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a helpful assistant for a buyer-seller chat about "${listing?.title || chat?.listingTitle || 'the item'}". Role: ${isSeller ? 'seller' : 'buyer'}. Generate 3 short, friendly reply suggestions in ${langName} (max 90 chars each). Return JSON matching the schema.`,
+        response_json_schema: {
+          type: 'object',
+          properties: { suggestions: { type: 'array', items: { type: 'string' } } }
+        }
+      });
+      setBotSuggestions((res?.suggestions || []).slice(0,3));
+    } catch (e) {
+      toast.error('Suggerimenti non disponibili');
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
   const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
@@ -1251,6 +1282,21 @@ export default function ChatWindow({
       )}
 
 
+      {/* AI suggestions */}
+      {botSuggestions.length > 0 && (
+        <div className="px-3 py-2 border-t bg-white flex gap-2 flex-wrap">
+          {botSuggestions.map((s, i) => (
+            <button
+              key={i}
+              className="text-xs border rounded-full px-2 py-1 hover:bg-slate-50"
+              onClick={() => { setMessageText(s); setTimeout(() => messageInputRef.current?.focus(), 50); }}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Input */}
       <div className="flex items-center gap-2 p-2 md:p-3 border-t bg-slate-50">
         <input
@@ -1269,7 +1315,18 @@ export default function ChatWindow({
         >
           <Image className={`h-5 w-5 ${isUploading ? 'animate-pulse' : ''}`} />
         </Button>
-        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleSuggest}
+          disabled={isSuggesting || isListingUnavailable}
+          title="Hunger Bot"
+          className="hidden md:inline-flex"
+        >
+          <Zap className={`h-4 w-4 mr-1 ${isSuggesting ? 'animate-spin' : ''}`} />
+          Hunger Bot
+        </Button>
+
         <Input
            ref={messageInputRef}
            placeholder={isListingUnavailable ? 'Annuncio non disponibile' : ct.typeMessage}

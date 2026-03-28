@@ -56,7 +56,7 @@ export default function ChatSidebar({
       <div className="p-4 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)]">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
-          {t('chats')}
+          {tr('chats','Chats')}
         </h2>
       </div>
 

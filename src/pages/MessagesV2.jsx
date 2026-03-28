@@ -12,12 +12,17 @@ export default function MessagesV2() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [initialOfferFlag, setInitialOfferFlag] = useState(false);
   const { t } = useLanguage();
+  const [autoFocusComposer, setAutoFocusComposer] = useState(false);
+  const [creatingChat, setCreatingChat] = useState(false);
 
   // Read URL params (chatId + openOffer)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const openOffer = params.get('openOffer') === '1' || params.get('offer') === '1';
     setInitialOfferFlag(openOffer);
+    if (params.get('listingId') || params.get('listing')) {
+      setAutoFocusComposer(true);
+    }
   }, []);
 
   // Current user (reuse global cache key)
@@ -57,6 +62,47 @@ export default function MessagesV2() {
       setSelectedChat(chats[0]);
     }
   }, [user, chats]);
+
+  // Auto-create chat when coming from a listing without existing chat
+  useEffect(() => {
+    if (!user) return;
+    const params = new URLSearchParams(window.location.search);
+    const lId = params.get('listingId') || params.get('listing');
+    if (!lId) return;
+    if (loadingChats) return;
+    const existing = (chats || []).find(c => c.listingId === lId && (c.buyerId === user.email || c.sellerId === user.email));
+    if (existing) {
+      setSelectedChat(existing);
+      setAutoFocusComposer(true);
+      return;
+    }
+    if (creatingChat) return;
+    setCreatingChat(true);
+    (async () => {
+      try {
+        const res = await base44.entities.Listing.filter({ id: lId });
+        const L = Array.isArray(res) ? res[0] : null;
+        if (!L) return;
+        const sellerEmail = L.created_by || L.sellerId;
+        const newChat = await base44.entities.Chat.create({
+          listingId: lId,
+          buyerId: user.email,
+          sellerId: sellerEmail,
+          listingTitle: L.title,
+          listingImage: (L.images && L.images[0]) || '',
+          updatedAt: new Date().toISOString()
+        });
+        setSelectedChat(newChat);
+        setAutoFocusComposer(true);
+        queryClient.invalidateQueries({ queryKey: ['chats'] });
+        const url = new URL(window.location.href);
+        url.searchParams.set('chatId', newChat.id);
+        window.history.replaceState({}, '', url.toString());
+      } finally {
+        setCreatingChat(false);
+      }
+    })();
+  }, [user, chats, loadingChats, creatingChat, queryClient]);
 
   // Listing for selected chat (optional)
   const listingId = selectedChat?.listingId;
@@ -118,6 +164,7 @@ export default function MessagesV2() {
               onOpenPayment={() => {}}
               onReport={() => {}}
               initialOpenOffer={initialOfferFlag}
+              autoFocusComposer={autoFocusComposer}
             />
           ) : (
             <div className="h-full grid place-items-center bg-white rounded-xl border">
