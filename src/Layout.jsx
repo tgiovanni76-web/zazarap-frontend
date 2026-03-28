@@ -997,6 +997,7 @@ function LayoutInner({ children, currentPageName }) {
         </Suspense>
 
         {/* Footer inside scrollable content */}
+        {currentPageName !== 'Messages' && (
         <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-3 md:py-4 lg:py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-3 md:gap-5">
                       {/* Logo + Newsletter */}
@@ -1094,6 +1095,7 @@ function LayoutInner({ children, currentPageName }) {
                       </p>
                       </div>
                   </footer>
+        )}
       </main>
       </div>
       </ErrorBoundary>
