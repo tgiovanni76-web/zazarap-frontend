@@ -17,6 +17,228 @@ export default function UserSettings() {
   const { t, changeLanguage, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
+  // Local i18n for missing keys in LanguageProvider
+  const TX = {
+    de: {
+      photoSectionTitle: 'Profilfoto',
+      uploadBtnAdd: 'Foto hinzufügen',
+      uploadBtnChange: 'Foto ändern',
+      uploadBtnUploading: 'Lade hoch…',
+      removeBtn: 'Entfernen',
+      formatsHint: 'Formate: JPG/PNG • Max 5 MB',
+      altProfilePhoto: 'Profilfoto',
+      toastInvalidFormat: 'Ungültiges Format. Verwenden Sie JPG oder PNG.',
+      toastTooLarge: 'Datei zu groß (max. 5 MB).',
+      toastPhotoUpdated: 'Foto aktualisiert',
+      toastUploadFailed: 'Upload fehlgeschlagen',
+      toastPhotoRemoved: 'Foto entfernt',
+      toastRemoveFailed: 'Foto kann nicht entfernt werden'
+    },
+    it: {
+      photoSectionTitle: 'Foto profilo',
+      uploadBtnAdd: 'Aggiungi foto',
+      uploadBtnChange: 'Cambia foto',
+      uploadBtnUploading: 'Carico…',
+      removeBtn: 'Rimuovi',
+      formatsHint: 'Formati: JPG/PNG • Max 5 MB',
+      altProfilePhoto: 'Foto profilo',
+      toastInvalidFormat: 'Formato non valido. Usa JPG o PNG.',
+      toastTooLarge: 'File troppo grande (max 5 MB).',
+      toastPhotoUpdated: 'Foto aggiornata',
+      toastUploadFailed: 'Caricamento non riuscito',
+      toastPhotoRemoved: 'Foto rimossa',
+      toastRemoveFailed: 'Impossibile rimuovere la foto'
+    },
+    en: {
+      photoSectionTitle: 'Profile photo',
+      uploadBtnAdd: 'Add photo',
+      uploadBtnChange: 'Change photo',
+      uploadBtnUploading: 'Uploading…',
+      removeBtn: 'Remove',
+      formatsHint: 'Formats: JPG/PNG • Max 5 MB',
+      altProfilePhoto: 'Profile photo',
+      toastInvalidFormat: 'Invalid format. Use JPG or PNG.',
+      toastTooLarge: 'File too large (max 5 MB).',
+      toastPhotoUpdated: 'Photo updated',
+      toastUploadFailed: 'Upload failed',
+      toastPhotoRemoved: 'Photo removed',
+      toastRemoveFailed: 'Unable to remove photo'
+    },
+    fr: {
+      photoSectionTitle: 'Photo de profil',
+      uploadBtnAdd: 'Ajouter une photo',
+      uploadBtnChange: 'Changer la photo',
+      uploadBtnUploading: 'Téléversement…',
+      removeBtn: 'Supprimer',
+      formatsHint: 'Formats : JPG/PNG • Max 5 Mo',
+      altProfilePhoto: 'Photo de profil',
+      toastInvalidFormat: 'Format invalide. Utilisez JPG ou PNG.',
+      toastTooLarge: 'Fichier trop volumineux (max 5 Mo).',
+      toastPhotoUpdated: 'Photo mise à jour',
+      toastUploadFailed: "Échec du téléversement",
+      toastPhotoRemoved: 'Photo supprimée',
+      toastRemoveFailed: 'Impossible de supprimer la photo'
+    },
+    pl: {
+      photoSectionTitle: 'Zdjęcie profilowe',
+      uploadBtnAdd: 'Dodaj zdjęcie',
+      uploadBtnChange: 'Zmień zdjęcie',
+      uploadBtnUploading: 'Przesyłanie…',
+      removeBtn: 'Usuń',
+      formatsHint: 'Formaty: JPG/PNG • Maks 5 MB',
+      altProfilePhoto: 'Zdjęcie profilowe',
+      toastInvalidFormat: 'Nieprawidłowy format. Użyj JPG lub PNG.',
+      toastTooLarge: 'Plik za duży (maks. 5 MB).',
+      toastPhotoUpdated: 'Zaktualizowano zdjęcie',
+      toastUploadFailed: 'Przesyłanie nie powiodło się',
+      toastPhotoRemoved: 'Usunięto zdjęcie',
+      toastRemoveFailed: 'Nie można usunąć zdjęcia'
+    },
+    tr: {
+      photoSectionTitle: 'Profil fotoğrafı',
+      uploadBtnAdd: 'Fotoğraf ekle',
+      uploadBtnChange: 'Fotoğrafı değiştir',
+      uploadBtnUploading: 'Yükleniyor…',
+      removeBtn: 'Kaldır',
+      formatsHint: 'Biçimler: JPG/PNG • Maks 5 MB',
+      altProfilePhoto: 'Profil fotoğrafı',
+      toastInvalidFormat: 'Geçersiz format. JPG veya PNG kullanın.',
+      toastTooLarge: 'Dosya çok büyük (maks 5 MB).',
+      toastPhotoUpdated: 'Fotoğraf güncellendi',
+      toastUploadFailed: 'Yükleme başarısız',
+      toastPhotoRemoved: 'Fotoğraf kaldırıldı',
+      toastRemoveFailed: 'Fotoğraf kaldırılamıyor'
+    },
+    uk: {
+      photoSectionTitle: 'Фото профілю',
+      uploadBtnAdd: 'Додати фото',
+      uploadBtnChange: 'Змінити фото',
+      uploadBtnUploading: 'Завантаження…',
+      removeBtn: 'Видалити',
+      formatsHint: 'Формати: JPG/PNG • Макс 5 МБ',
+      altProfilePhoto: 'Фото профілю',
+      toastInvalidFormat: 'Неприпустимий формат. Використовуйте JPG або PNG.',
+      toastTooLarge: 'Файл завеликий (макс 5 МБ).',
+      toastPhotoUpdated: 'Фото оновлено',
+      toastUploadFailed: 'Не вдалося завантажити',
+      toastPhotoRemoved: 'Фото видалено',
+      toastRemoveFailed: 'Не вдалося видалити фото'
+    }
+  };
+  const tt = (k) => (TX[currentLanguage] || TX.en)[k] || TX.en[k] || k;
+
+  // Fallback translations for settings.* keys (avoid mixed languages)
+  const SETTINGS_TX = {
+    it: {
+      'settings.title': 'Impostazioni',
+      'settings.subtitle': 'Gestisci profilo, lingua e notifiche',
+      'settings.tab.profile': 'Profilo',
+      'settings.tab.language': 'Lingua',
+      'settings.tab.notifications': 'Notifiche',
+      'settings.tab.email': 'E‑mail',
+      'settings.profile.title': 'Informazioni profilo',
+      'settings.profile.desc': 'Aggiorna i tuoi dati personali',
+      'settings.profile.firstName': 'Nome',
+      'settings.profile.lastName': 'Cognome',
+      'settings.profile.firstNamePh': 'Giovanni',
+      'settings.profile.lastNamePh': 'Rossi',
+      'settings.profile.email': 'Indirizzo e‑mail',
+      'settings.profile.emailNote': "L'indirizzo e‑mail non può essere modificato",
+      'settings.profile.phone': 'Numero di telefono',
+      'settings.profile.bio': 'Su di me',
+      'settings.profile.bioPh': 'Raccontaci qualcosa di te…',
+      'settings.saving': 'Salvataggio…',
+      'settings.saveChanges': 'Salva modifiche',
+      'settings.profileUpdated': 'Profilo aggiornato',
+      'settings.profileError': 'Errore durante il salvataggio',
+      'settings.lang.title': "Lingua dell'app",
+      'settings.lang.desc': 'Scegli la tua lingua preferita',
+      'settings.lang.select': 'Seleziona lingua',
+      'settings.lang.infoTitle': 'Lingua aggiornata',
+      'settings.lang.infoDesc': "La lingua viene applicata subito in tutta l'app",
+      'settings.langChanged': 'Lingua aggiornata',
+      'settings.notif.title': 'Notifiche',
+      'settings.notif.desc': 'Scegli quali notifiche ricevere',
+      'settings.notif.newOffer': 'Offerte sugli annunci salvati',
+      'settings.notif.newOfferDesc': 'Ricevi una notifica quando qualcuno fa un’offerta',
+      'settings.notif.messageReplies': 'Risposte ai messaggi',
+      'settings.notif.messageRepliesDesc': 'Avvisami quando qualcuno risponde in chat',
+      'settings.notif.statusUpdates': 'Aggiornamenti stato trattativa',
+      'settings.notif.statusUpdatesDesc': 'Ricevi notifiche su riserve/accettazioni',
+      'settings.notif.purchase': 'Conferme di acquisto',
+      'settings.notif.purchaseDesc': 'Notifiche per transazioni riuscite',
+      'settings.notif.shipping': 'Informazioni di spedizione',
+      'settings.notif.shippingDesc': 'Aggiornamenti spedizione e consegna',
+      'settings.notif.priceDrop': 'Riduzioni di prezzo',
+      'settings.notif.priceDropDesc': 'Avvisi quando il prezzo diminuisce',
+      'settings.notifUpdated': 'Preferenze aggiornate',
+      'settings.notifError': 'Errore nel salvataggio preferenze',
+      'settings.email.title': 'Preferenze e‑mail',
+      'settings.email.desc': 'Ricevi aggiornamenti importanti via e‑mail',
+      'settings.email.notifications': 'Notifiche via e‑mail',
+      'settings.email.notificationsDesc': 'Riepiloghi e aggiornamenti importanti',
+      'settings.email.note': 'Nota',
+      'settings.email.noteDesc': 'Puoi disiscriverti in qualsiasi momento.'
+    },
+    en: {
+      'settings.title': 'Settings',
+      'settings.subtitle': 'Manage profile, language and notifications',
+      'settings.tab.profile': 'Profile',
+      'settings.tab.language': 'Language',
+      'settings.tab.notifications': 'Notifications',
+      'settings.tab.email': 'Email',
+      'settings.profile.title': 'Profile information',
+      'settings.profile.desc': 'Update your personal data',
+      'settings.profile.firstName': 'First name',
+      'settings.profile.lastName': 'Last name',
+      'settings.profile.firstNamePh': 'John',
+      'settings.profile.lastNamePh': 'Doe',
+      'settings.profile.email': 'Email address',
+      'settings.profile.emailNote': "Email can't be changed",
+      'settings.profile.phone': 'Phone number',
+      'settings.profile.bio': 'About me',
+      'settings.profile.bioPh': 'Tell us about yourself…',
+      'settings.saving': 'Saving…',
+      'settings.saveChanges': 'Save changes',
+      'settings.profileUpdated': 'Profile updated',
+      'settings.profileError': 'Save failed',
+      'settings.lang.title': 'App language',
+      'settings.lang.desc': 'Choose your preferred language',
+      'settings.lang.select': 'Select language',
+      'settings.lang.infoTitle': 'Language updated',
+      'settings.lang.infoDesc': 'Language is applied immediately',
+      'settings.langChanged': 'Language updated',
+      'settings.notif.title': 'Notifications',
+      'settings.notif.desc': 'Choose what to receive',
+      'settings.notif.newOffer': 'Offers on favorites',
+      'settings.notif.newOfferDesc': 'Be notified when someone makes an offer',
+      'settings.notif.messageReplies': 'Message replies',
+      'settings.notif.messageRepliesDesc': 'Alert when someone replies in chat',
+      'settings.notif.statusUpdates': 'Status updates',
+      'settings.notif.statusUpdatesDesc': 'Reservation/acceptance updates',
+      'settings.notif.purchase': 'Purchase confirmations',
+      'settings.notif.purchaseDesc': 'Successful purchase notifications',
+      'settings.notif.shipping': 'Shipping information',
+      'settings.notif.shippingDesc': 'Shipping and delivery updates',
+      'settings.notif.priceDrop': 'Price drops',
+      'settings.notif.priceDropDesc': 'Alerts when price decreases',
+      'settings.notifUpdated': 'Preferences updated',
+      'settings.notifError': 'Failed to save preferences',
+      'settings.email.title': 'Email preferences',
+      'settings.email.desc': 'Get important updates via email',
+      'settings.email.notifications': 'Email notifications',
+      'settings.email.notificationsDesc': 'Summaries and important updates',
+      'settings.email.note': 'Note',
+      'settings.email.noteDesc': 'You can unsubscribe at any time.'
+    }
+  };
+  const trS = (k, fb) => {
+    const v = t(k);
+    if (v !== k) return v;
+    const local = (SETTINGS_TX[currentLanguage] || SETTINGS_TX.en)[k];
+    return local ?? fb ?? k;
+  };
+
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -58,12 +280,12 @@ export default function UserSettings() {
     if (!file) return;
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!validTypes.includes(file.type)) {
-      toast.error('Formato non valido. Usa JPG o PNG.');
+      toast.error(tt('toastInvalidFormat'));
       e.target.value = '';
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('File troppo grande (max 5 MB).');
+      toast.error(tt('toastTooLarge'));
       e.target.value = '';
       return;
     }
@@ -72,9 +294,9 @@ export default function UserSettings() {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       await base44.auth.updateMe({ profileImageUrl: file_url });
       await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-      toast.success('Foto aggiornata');
+      toast.success(tt('toastPhotoUpdated'));
     } catch (err) {
-      toast.error('Caricamento non riuscito');
+      toast.error(tt('toastUploadFailed'));
     } finally {
       setUploadingPhoto(false);
       e.target.value = '';
@@ -86,9 +308,9 @@ export default function UserSettings() {
     try {
       await base44.auth.updateMe({ profileImageUrl: '' });
       await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-      toast.success('Foto rimossa');
+      toast.success(tt('toastPhotoRemoved'));
     } catch (err) {
-      toast.error('Impossibile rimuovere la foto');
+      toast.error(tt('toastRemoveFailed'));
     } finally {
       setUploadingPhoto(false);
     }
@@ -127,10 +349,10 @@ export default function UserSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-      toast.success(t('settings.profileUpdated'));
+      toast.success(trS('settings.profileUpdated'));
     },
     onError: () => {
-      toast.error(t('settings.profileError'));
+      toast.error(trS('settings.profileError'));
     },
   });
 
@@ -148,10 +370,10 @@ export default function UserSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notificationPrefs'] });
-      toast.success(t('settings.notifUpdated'));
+      toast.success(trS('settings.notifUpdated'));
     },
     onError: () => {
-      toast.error(t('settings.notifError'));
+      toast.error(trS('settings.notifError'));
     },
   });
 
@@ -165,7 +387,7 @@ export default function UserSettings() {
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
-    toast.success(t('settings.langChanged'));
+    toast.success(trS('settings.langChanged'));
   };
 
   if (userLoading) {
@@ -179,27 +401,27 @@ export default function UserSettings() {
   return (
     <div className="py-8 max-w-4xl mx-auto px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('settings.title')}</h1>
-        <p className="text-slate-600">{t('settings.subtitle')}</p>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">{trS('settings.title')}</h1>
+        <p className="text-slate-600">{trS('settings.subtitle')}</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="profile">
             <User className="h-4 w-4 mr-2" />
-            {t('settings.tab.profile')}
+            {trS('settings.tab.profile')}
           </TabsTrigger>
           <TabsTrigger value="language">
             <Globe className="h-4 w-4 mr-2" />
-            {t('settings.tab.language')}
+            {trS('settings.tab.language')}
           </TabsTrigger>
           <TabsTrigger value="notifications">
             <Bell className="h-4 w-4 mr-2" />
-            {t('settings.tab.notifications')}
+            {trS('settings.tab.notifications')}
           </TabsTrigger>
           <TabsTrigger value="email">
             <Mail className="h-4 w-4 mr-2" />
-            {t('settings.tab.email')}
+            {trS('settings.tab.email')}
           </TabsTrigger>
         </TabsList>
 
@@ -207,81 +429,81 @@ export default function UserSettings() {
         <TabsContent value="profile">
           <Card>
             <CardHeader>
-              <CardTitle>{t('settings.profile.title')}</CardTitle>
-              <CardDescription>{t('settings.profile.desc')}</CardDescription>
+              <CardTitle>{trS('settings.profile.title')}</CardTitle>
+              <CardDescription>{trS('settings.profile.desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <h3 className="text-base font-semibold">Foto profilo</h3>
+                <h3 className="text-base font-semibold">{tt('photoSectionTitle')}</h3>
                 <section id="photo" className="flex flex-col items-center gap-3">
                   {user?.profileImageUrl ? (
-                    <img src={user.profileImageUrl} alt="Foto profilo" className="h-28 w-28 rounded-full object-cover border border-slate-200 shadow-sm" />
+                    <img src={user.profileImageUrl} alt={tt('altProfilePhoto')} className="h-28 w-28 rounded-full object-cover border border-slate-200 shadow-sm" />
                   ) : (
                     <div className="h-28 w-28 rounded-full bg-slate-200 border border-slate-300" />
                   )}
                   <div className="flex items-center gap-2">
                     <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" className="hidden" onChange={handlePhotoFileChange} />
                     <Button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploadingPhoto}>
-                      {uploadingPhoto ? 'Carico…' : user?.profileImageUrl ? 'Cambia foto' : 'Aggiungi foto'}
+                      {uploadingPhoto ? tt('uploadBtnUploading') : user?.profileImageUrl ? tt('uploadBtnChange') : tt('uploadBtnAdd')}
                     </Button>
                     {user?.profileImageUrl && (
                       <Button type="button" variant="outline" onClick={handlePhotoRemove} disabled={uploadingPhoto}>
-                        Rimuovi
+                        {tt('removeBtn')}
                       </Button>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500">Formati: JPG/PNG • Max 5 MB</p>
+                  <p className="text-xs text-slate-500">{tt('formatsHint')}</p>
                 </section>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">{t('settings.profile.firstName')}</Label>
+                  <Label htmlFor="firstName">{trS('settings.profile.firstName')}</Label>
                   <Input
                     id="firstName"
                     value={profileData.firstName}
                     onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
-                    placeholder={t('settings.profile.firstNamePh')}
+                    placeholder={trS('settings.profile.firstNamePh')}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">{t('settings.profile.lastName')}</Label>
+                  <Label htmlFor="lastName">{trS('settings.profile.lastName')}</Label>
                   <Input
                     id="lastName"
                     value={profileData.lastName}
                     onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
-                    placeholder={t('settings.profile.lastNamePh')}
+                    placeholder={trS('settings.profile.lastNamePh')}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">{t('settings.profile.email')}</Label>
+                <Label htmlFor="email">{trS('settings.profile.email')}</Label>
                 <Input
                   id="email"
                   value={user?.email || ''}
                   disabled
                   className="bg-slate-50"
                 />
-                <p className="text-xs text-slate-500">{t('settings.profile.emailNote')}</p>
+                <p className="text-xs text-slate-500">{trS('settings.profile.emailNote')}</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">{t('settings.profile.phone')}</Label>
+                <Label htmlFor="phone">{trS('settings.profile.phone')}</Label>
                 <Input
                   id="phone"
                   value={profileData.phone}
                   onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                  placeholder="+49 123 456789"
+                  placeholder={currentLanguage === 'de' ? '+49 123 456789' : currentLanguage === 'it' ? '+39 345 678 9012' : '+1 555 123 4567'}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">{t('settings.profile.bio')}</Label>
+                <Label htmlFor="bio">{trS('settings.profile.bio')}</Label>
                 <textarea
                   id="bio"
                   value={profileData.bio}
                   onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                  placeholder={t('settings.profile.bioPh')}
+                  placeholder={trS('settings.profile.bioPh')}
                   className="w-full min-h-24 px-3 py-2 border rounded-md"
                   maxLength={500}
                 />
@@ -298,12 +520,12 @@ export default function UserSettings() {
                 {updateProfileMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    {t('settings.saving')}
+                    {trS('settings.saving')}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    {t('settings.saveChanges')}
+                    {trS('settings.saveChanges')}
                   </>
                 )}
               </Button>
@@ -315,15 +537,15 @@ export default function UserSettings() {
         <TabsContent value="language">
           <Card>
             <CardHeader>
-              <CardTitle>{t('settings.lang.title')}</CardTitle>
-              <CardDescription>{t('settings.lang.desc')}</CardDescription>
+              <CardTitle>{trS('settings.lang.title')}</CardTitle>
+              <CardDescription>{trS('settings.lang.desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <Label>{t('settings.lang.select')}</Label>
+                <Label>{trS('settings.lang.select')}</Label>
                 <Select value={currentLanguage} onValueChange={handleLanguageChange}>
                   <SelectTrigger className="w-full md:w-64">
-                    <SelectValue />
+                    <SelectValue placeholder={trS('settings.lang.select')} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
@@ -341,8 +563,8 @@ export default function UserSettings() {
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-blue-900">{t('settings.lang.infoTitle')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('settings.lang.infoDesc')}</p>
+                    <p className="text-sm font-medium text-blue-900">{trS('settings.lang.infoTitle')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{trS('settings.lang.infoDesc')}</p>
                   </div>
                 </div>
               </div>
@@ -354,15 +576,15 @@ export default function UserSettings() {
         <TabsContent value="notifications">
           <Card>
             <CardHeader>
-              <CardTitle>{t('settings.notif.title')}</CardTitle>
-              <CardDescription>{t('settings.notif.desc')}</CardDescription>
+              <CardTitle>{trS('settings.notif.title')}</CardTitle>
+              <CardDescription>{trS('settings.notif.desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.newOffer')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.newOfferDesc')}</p>
+                    <Label>{trS('settings.notif.newOffer')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.newOfferDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.newOfferOnFavorite}
@@ -374,8 +596,8 @@ export default function UserSettings() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.messageReplies')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.messageRepliesDesc')}</p>
+                    <Label>{trS('settings.notif.messageReplies')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.messageRepliesDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.messageReplies}
@@ -387,8 +609,8 @@ export default function UserSettings() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.statusUpdates')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.statusUpdatesDesc')}</p>
+                    <Label>{trS('settings.notif.statusUpdates')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.statusUpdatesDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.statusUpdates}
@@ -400,8 +622,8 @@ export default function UserSettings() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.purchase')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.purchaseDesc')}</p>
+                    <Label>{trS('settings.notif.purchase')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.purchaseDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.purchaseNotifications}
@@ -413,8 +635,8 @@ export default function UserSettings() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.shipping')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.shippingDesc')}</p>
+                    <Label>{trS('settings.notif.shipping')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.shippingDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.shippingNotifications}
@@ -426,8 +648,8 @@ export default function UserSettings() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('settings.notif.priceDrop')}</Label>
-                    <p className="text-sm text-slate-500">{t('settings.notif.priceDropDesc')}</p>
+                    <Label>{trS('settings.notif.priceDrop')}</Label>
+                    <p className="text-sm text-slate-500">{trS('settings.notif.priceDropDesc')}</p>
                   </div>
                   <Switch
                     checked={notifData.priceDropNotifications}
@@ -446,12 +668,12 @@ export default function UserSettings() {
                 {updateNotificationsMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    {t('settings.saving')}
+                    {trS('settings.saving')}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    {t('settings.saveChanges')}
+                    {trS('settings.saveChanges')}
                   </>
                 )}
               </Button>
@@ -463,14 +685,14 @@ export default function UserSettings() {
         <TabsContent value="email">
           <Card>
             <CardHeader>
-              <CardTitle>{t('settings.email.title')}</CardTitle>
-              <CardDescription>{t('settings.email.desc')}</CardDescription>
+              <CardTitle>{trS('settings.email.title')}</CardTitle>
+              <CardDescription>{trS('settings.email.desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>{t('settings.email.notifications')}</Label>
-                  <p className="text-sm text-slate-500">{t('settings.email.notificationsDesc')}</p>
+                  <Label>{trS('settings.email.notifications')}</Label>
+                  <p className="text-sm text-slate-500">{trS('settings.email.notificationsDesc')}</p>
                 </div>
                 <Switch
                   checked={notifData.emailNotifications}
@@ -482,7 +704,7 @@ export default function UserSettings() {
 
               <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
                 <p className="text-sm text-amber-800">
-                  <strong>{t('settings.email.note')}:</strong> {t('settings.email.noteDesc')}
+                  <strong>{trS('settings.email.note')}:</strong> {trS('settings.email.noteDesc')}
                 </p>
               </div>
 
@@ -494,12 +716,12 @@ export default function UserSettings() {
                 {updateNotificationsMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                    {t('settings.saving')}
+                    {trS('settings.saving')}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    {t('settings.saveChanges')}
+                    {trS('settings.saveChanges')}
                   </>
                 )}
               </Button>
