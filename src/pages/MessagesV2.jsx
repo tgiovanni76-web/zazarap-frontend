@@ -30,6 +30,8 @@ export default function MessagesV2() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
+  const [isCheckingUrlChat, setIsCheckingUrlChat] = useState(false);
+  const [chatsLoadedOnce, setChatsLoadedOnce] = useState(false);
 
   useEffect(() => {
     const onResize = () => setIsMobileView(window.innerWidth < 1024);
@@ -44,6 +46,7 @@ export default function MessagesV2() {
       const sp = new URLSearchParams(window.location.search);
       setOpenIntent(sp.get('open'));
       setUrlChatNotFound(false);
+             setIsCheckingUrlChat(false);
     };
     window.addEventListener('popstate', handler);
     return () => window.removeEventListener('popstate', handler);
@@ -98,9 +101,13 @@ export default function MessagesV2() {
       const uniqueChats = Array.from(map.values()).sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
 
       console.debug('[MessagesV2] chats loaded', { total: uniqueChats.length, ids: uniqueChats.map(c => c.id) });
-      return uniqueChats;
-    }
-  });
+       return uniqueChats;
+      }
+      });
+
+      useEffect(() => {
+      if (!chatsLoading) setChatsLoadedOnce(true);
+      }, [chatsLoading]);
 
   // Real-time refresh
   useEffect(() => {
@@ -127,6 +134,8 @@ export default function MessagesV2() {
     if (found) {
       setSelectedChat(found);
       setUrlChatNotFound(false);
+             setIsCheckingUrlChat(false);
+      setIsCheckingUrlChat(false);
     }
   }, [urlChatId, myChats]);
 
@@ -134,6 +143,7 @@ export default function MessagesV2() {
   useEffect(() => {
     if (!urlChatId || selectedChat) return;
     let cancelled = false;
+    setIsCheckingUrlChat(true);
     (async () => {
       try {
         const res = await base44.entities.Chat.filter({ id: urlChatId });
@@ -145,12 +155,15 @@ export default function MessagesV2() {
           if (!cancelled) {
             setSelectedChat(c);
             setUrlChatNotFound(false);
+             setIsCheckingUrlChat(false);
           }
         } else if (!cancelled) {
           setUrlChatNotFound(true);
+        setIsCheckingUrlChat(false);
         }
       } catch (_) {
         if (!cancelled) setUrlChatNotFound(true);
+        setIsCheckingUrlChat(false);
       }
     })();
     return () => { cancelled = true; };
@@ -163,12 +176,11 @@ export default function MessagesV2() {
     const pendingId = (() => { try { return localStorage.getItem('pendingChatId'); } catch { return null; } })();
     if (!urlChatId || !pendingId || pendingId !== urlChatId || selectedChat?.id) return;
     let cancelled = false;
+    setIsCheckingUrlChat(true);
     let tries = 0; const maxTries = 5; const delayMs = 1500;
     console.debug('[MessagesV2] Starting poll for chat ID', urlChatId, '(max 5 tries, 1.5s delay)');
 
     const poll = async () => {
-      // Show loading state instead of not-found while polling
-      setUrlChatNotFound(false);
       while (!cancelled && tries < maxTries && !selectedChat?.id) {
         try {
           const res = await base44.entities.Chat.filter({ id: urlChatId });
@@ -186,6 +198,7 @@ export default function MessagesV2() {
       }
       if (!cancelled && !selectedChat?.id) {
         setUrlChatNotFound(true);
+        setIsCheckingUrlChat(false);
       }
     };
 
@@ -207,6 +220,7 @@ export default function MessagesV2() {
     if (!meta?.listingId || !meta?.sellerId) return;
 
     let cancelled = false;
+    setIsCheckingUrlChat(true);
     (async () => {
       try {
         // Check if it already exists for me (exact case)
@@ -220,6 +234,7 @@ export default function MessagesV2() {
           window.history.replaceState({}, '', url.toString());
           setUrlChatId(existing[0].id);
           setUrlChatNotFound(false);
+             setIsCheckingUrlChat(false);
           return;
         }
         // Create again with my email as buyer
@@ -245,6 +260,7 @@ export default function MessagesV2() {
           window.history.replaceState({}, '', url.toString());
           setUrlChatId(newId);
           setUrlChatNotFound(false);
+             setIsCheckingUrlChat(false);
         }
       } catch (e) {
         console.warn('[MessagesV2] self-heal create failed', e);
@@ -258,6 +274,7 @@ export default function MessagesV2() {
   useEffect(() => {
     if (!awaitingChatFromUrl || selectedChat?.id || !user?.email) return;
     let cancelled = false;
+    setIsCheckingUrlChat(true);
     const timer = setTimeout(async () => {
       if (cancelled || selectedChat?.id) return;
       let meta = null;
@@ -399,10 +416,10 @@ export default function MessagesV2() {
     );
   }
 
-  if (chatsLoading) {
+  if (chatsLoading && !chatsLoadedOnce) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
+        <div className="rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
       </div>
     );
   }
@@ -490,9 +507,9 @@ export default function MessagesV2() {
           />
         </div>
         <div className="col-span-2 h-full min-h-0 overflow-hidden">
-          {awaitingChatFromUrl ? (
+          {isCheckingUrlChat ? (
             <div className="h-full flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
+              <div className="rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
             </div>
           ) : selectedChat?.id ? (
             <ChatWindow
