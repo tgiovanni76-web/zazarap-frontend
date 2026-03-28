@@ -7,6 +7,7 @@ import { createPageUrl } from '@/utils';
 import { useLanguage } from '@/components/LanguageProvider';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
+import { useMessages } from '@/hooks/useMessages';
 import PaymentShippingModal from '@/components/marketplace/PaymentShippingModal';
 import ReportListingModal from '@/components/ReportListingModal';
 import { MessageSquare } from 'lucide-react';
