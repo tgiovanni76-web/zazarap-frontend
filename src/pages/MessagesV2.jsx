@@ -33,6 +33,7 @@ export default function MessagesV2() {
   const [isCheckingUrlChat, setIsCheckingUrlChat] = useState(false);
   const [chatsLoadedOnce, setChatsLoadedOnce] = useState(false);
   const [checkedChatId, setCheckedChatId] = useState(null);
+  const spinnerWhileChecking = isCheckingUrlChat && !selectedChat?.id;
 
   useEffect(() => {
     const onResize = () => setIsMobileView(window.innerWidth < 1024);
@@ -109,6 +110,11 @@ export default function MessagesV2() {
       useEffect(() => {
       if (!chatsLoading) setChatsLoadedOnce(true);
       }, [chatsLoading]);
+      
+      // Ensure spinner stops as soon as a chat is selected
+      useEffect(() => {
+        if (selectedChat?.id) setIsCheckingUrlChat(false);
+      }, [selectedChat?.id]);
 
   // Real-time refresh
   useEffect(() => {
@@ -288,7 +294,7 @@ export default function MessagesV2() {
         const seller = sp.get('seller');
         if (lid && seller) meta = { listingId: lid, sellerId: seller, listingTitle: '', listingImage: '' };
       }
-      if (!meta?.listingId || !meta?.sellerId) return;
+      if (!meta?.listingId || !meta?.sellerId) { setIsCheckingUrlChat(false); return; }
       try {
         const existing = await base44.entities.Chat.filter({ listingId: meta.listingId, buyerId: user.email, sellerId: meta.sellerId }, '-updated_date').catch(() => []);
         if (existing?.length) {
@@ -298,6 +304,7 @@ export default function MessagesV2() {
           url.searchParams.set('chatId', existing[0].id);
           window.history.replaceState({}, '', url.toString());
           setUrlChatId(existing[0].id);
+          setIsCheckingUrlChat(false);
           return;
         }
         const payload = {
@@ -324,6 +331,7 @@ export default function MessagesV2() {
         }
       } catch (e) {
         console.warn('[MessagesV2] early self-heal failed', e);
+        setIsCheckingUrlChat(false);
       }
     }, 700);
     return () => { cancelled = true; clearTimeout(timer); };
@@ -510,7 +518,7 @@ export default function MessagesV2() {
           />
         </div>
         <div className="col-span-2 h-full min-h-0 overflow-hidden">
-          {isCheckingUrlChat ? (
+          {spinnerWhileChecking ? (
             <div className="h-full flex items-center justify-center">
               <div className="rounded-full h-12 w-12 border-b-2 border-[var(--z-primary)]"></div>
             </div>
