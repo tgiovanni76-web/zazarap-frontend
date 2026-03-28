@@ -32,6 +32,7 @@ export default function MessagesV2() {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1024);
   const [isCheckingUrlChat, setIsCheckingUrlChat] = useState(false);
   const [chatsLoadedOnce, setChatsLoadedOnce] = useState(false);
+  const [checkedChatId, setCheckedChatId] = useState(null);
 
   useEffect(() => {
     const onResize = () => setIsMobileView(window.innerWidth < 1024);
@@ -141,7 +142,7 @@ export default function MessagesV2() {
 
   // If list is empty or doesn't include the URL chat, try fetching that chat directly
   useEffect(() => {
-    if (!urlChatId || selectedChat) return;
+    if (!urlChatId || selectedChat || checkedChatId === urlChatId) return;
     let cancelled = false;
     setIsCheckingUrlChat(true);
     (async () => {
@@ -155,14 +156,16 @@ export default function MessagesV2() {
           if (!cancelled) {
             setSelectedChat(c);
             setUrlChatNotFound(false);
+            setCheckedChatId(urlChatId);
              setIsCheckingUrlChat(false);
           }
         } else if (!cancelled) {
           setUrlChatNotFound(true);
+          setCheckedChatId(urlChatId);
         setIsCheckingUrlChat(false);
         }
       } catch (_) {
-        if (!cancelled) setUrlChatNotFound(true);
+        if (!cancelled) { setUrlChatNotFound(true); setCheckedChatId(urlChatId); }
         setIsCheckingUrlChat(false);
       }
     })();
@@ -272,7 +275,7 @@ export default function MessagesV2() {
 
   // Early self-heal: if we are awaiting a chat from URL for >700ms and still none, try to attach/create using meta
   useEffect(() => {
-    if (!awaitingChatFromUrl || selectedChat?.id || !user?.email) return;
+    if (!awaitingChatFromUrl || selectedChat?.id || !user?.email || checkedChatId === urlChatId) return;
     let cancelled = false;
     setIsCheckingUrlChat(true);
     const timer = setTimeout(async () => {
