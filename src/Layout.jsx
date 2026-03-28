@@ -972,7 +972,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className={`container max-w-7xl mx-auto px-4 overflow-x-hidden ${currentPageName === 'Messages' ? 'overflow-y-hidden pb-0' : 'overflow-y-auto pb-24'} h-auto min-h-0`} style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
+      <main id="main-content" role="main" tabIndex={-1} className={`container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto pb-24 h-auto min-h-0`} style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
         <FirstRunChecklist user={user} onAddPhotoClick={onAddPhotoClick} />
         {children}
 
@@ -997,7 +997,6 @@ function LayoutInner({ children, currentPageName }) {
         </Suspense>
 
         {/* Footer inside scrollable content */}
-        {currentPageName !== 'Messages' && (
         <footer className="bg-[var(--z-primary-dark)] text-white/80 mt-12 py-3 md:py-4 lg:py-5">
                     <div className="max-w-[1100px] mx-auto px-4 flex flex-wrap gap-3 md:gap-5">
                       {/* Logo + Newsletter */}
@@ -1095,7 +1094,6 @@ function LayoutInner({ children, currentPageName }) {
                       </p>
                       </div>
                   </footer>
-        )}
       </main>
       </div>
       </ErrorBoundary>
