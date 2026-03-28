@@ -965,7 +965,7 @@ export default function ChatWindow({
       {isListingUnavailable && (
         <div className="px-3 py-2 bg-red-50 border-b border-red-200 text-red-700 text-xs md:text-sm flex items-center gap-2">
           <AlertTriangle className="h-4 w-4" />
-          <span>{isExpired ? 'Annuncio scaduto' : (listing?.status === 'sold' ? 'Annuncio venduto' : 'Annuncio non più disponibile')}</span>
+          <span>{isExpired ? (language==='de'?'Anzeige abgelaufen':language==='en'?'Listing expired':'Annuncio scaduto') : (listing?.status === 'sold' ? (language==='de'?'Anzeige verkauft':language==='en'?'Listing sold':'Annuncio venduto') : (language==='de'?'Anzeige nicht verfügbar':language==='en'?'Listing not available':'Annuncio non più disponibile'))}</span>
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
+import PreChatComposer from '@/components/chat/PreChatComposer';
 import { useMessages } from '@/hooks/useMessages';
 import { useLanguage } from '@/components/LanguageProvider';
 
@@ -13,7 +14,10 @@ export default function MessagesV2() {
   const [initialOfferFlag, setInitialOfferFlag] = useState(false);
   const { t } = useLanguage();
   const [autoFocusComposer, setAutoFocusComposer] = useState(false);
-  const [creatingChat, setCreatingChat] = useState(false);
+  const landingListingId = useMemo(() => {
+    const p = new URLSearchParams(window.location.search);
+    return p.get('listingId') || p.get('listing');
+  }, []);
 
   // Read URL params (chatId + openOffer)
   useEffect(() => {
@@ -54,55 +58,21 @@ export default function MessagesV2() {
     const lId = params.get('listingId') || params.get('listing');
     if (chatId) {
       const found = chats.find((c) => c.id === chatId);
-      setSelectedChat(found || chats[0]);
+      setSelectedChat(found || null);
     } else if (lId) {
       const foundByListing = chats.find((c) => c.listingId === lId);
-      setSelectedChat(foundByListing || chats[0]);
+      if (foundByListing) setSelectedChat(foundByListing);
+      // otherwise PreChatComposer will handle creation
     } else if (!selectedChat) {
-      setSelectedChat(chats[0]);
+      setSelectedChat(chats[0] || null);
     }
   }, [user, chats]);
 
-  // Auto-create chat when coming from a listing without existing chat
+  // Listing pre-chat focus when arriving from listing (without auto-creating chat)
   useEffect(() => {
     if (!user) return;
-    const params = new URLSearchParams(window.location.search);
-    const lId = params.get('listingId') || params.get('listing');
-    if (!lId) return;
-    if (loadingChats) return;
-    const existing = (chats || []).find(c => c.listingId === lId && (c.buyerId === user.email || c.sellerId === user.email));
-    if (existing) {
-      setSelectedChat(existing);
-      setAutoFocusComposer(true);
-      return;
-    }
-    if (creatingChat) return;
-    setCreatingChat(true);
-    (async () => {
-      try {
-        const res = await base44.entities.Listing.filter({ id: lId });
-        const L = Array.isArray(res) ? res[0] : null;
-        if (!L) return;
-        const sellerEmail = L.created_by || L.sellerId;
-        const newChat = await base44.entities.Chat.create({
-          listingId: lId,
-          buyerId: user.email,
-          sellerId: sellerEmail,
-          listingTitle: L.title,
-          listingImage: (L.images && L.images[0]) || '',
-          updatedAt: new Date().toISOString()
-        });
-        setSelectedChat(newChat);
-        setAutoFocusComposer(true);
-        queryClient.invalidateQueries({ queryKey: ['chats'] });
-        const url = new URL(window.location.href);
-        url.searchParams.set('chatId', newChat.id);
-        window.history.replaceState({}, '', url.toString());
-      } finally {
-        setCreatingChat(false);
-      }
-    })();
-  }, [user, chats, loadingChats, creatingChat, queryClient]);
+    if (landingListingId) setAutoFocusComposer(true);
+  }, [user, landingListingId]);
 
   // Listing for selected chat (optional)
   const listingId = selectedChat?.listingId;
@@ -166,11 +136,18 @@ export default function MessagesV2() {
               initialOpenOffer={initialOfferFlag}
               autoFocusComposer={autoFocusComposer}
             />
+          ) : (landingListingId ? (
+            <PreChatComposer
+              listingId={landingListingId}
+              user={user}
+              autoFocusComposer={true}
+              onChatCreated={(chat) => setSelectedChat(chat)}
+            />
           ) : (
             <div className="h-full grid place-items-center bg-white rounded-xl border">
               <div className="text-slate-500 text-sm">{t('selectChat','Seleziona una chat per iniziare')}</div>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
