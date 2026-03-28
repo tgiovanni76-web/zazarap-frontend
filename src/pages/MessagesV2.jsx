@@ -4,12 +4,14 @@ import { base44 } from '@/api/base44Client';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
 import { useMessages } from '@/hooks/useMessages';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function MessagesV2() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedChat, setSelectedChat] = useState(null);
   const [initialOfferFlag, setInitialOfferFlag] = useState(false);
+  const { t } = useLanguage();
 
   // Read URL params (chatId + openOffer)
   useEffect(() => {
@@ -44,9 +46,13 @@ export default function MessagesV2() {
     }
     const params = new URLSearchParams(window.location.search);
     const chatId = params.get('chatId');
+    const lId = params.get('listingId') || params.get('listing');
     if (chatId) {
       const found = chats.find((c) => c.id === chatId);
       setSelectedChat(found || chats[0]);
+    } else if (lId) {
+      const foundByListing = chats.find((c) => c.listingId === lId);
+      setSelectedChat(foundByListing || chats[0]);
     } else if (!selectedChat) {
       setSelectedChat(chats[0]);
     }
@@ -69,7 +75,7 @@ export default function MessagesV2() {
   if (!user) {
     return (
       <div className="min-h-[60vh] grid place-items-center p-6">
-        <div className="text-slate-600">Bitte anmelden…</div>
+        <div className="text-slate-600">{t('pleaseLogin','Effettua il login…')}</div>
       </div>
     );
   }
@@ -115,7 +121,7 @@ export default function MessagesV2() {
             />
           ) : (
             <div className="h-full grid place-items-center bg-white rounded-xl border">
-              <div className="text-slate-500 text-sm">Seleziona una chat per iniziare</div>
+              <div className="text-slate-500 text-sm">{t('selectChat','Seleziona una chat per iniziare')}</div>
             </div>
           )}
         </div>
