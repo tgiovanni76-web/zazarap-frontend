@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -61,13 +61,14 @@ Aufgabe: Finde die ${limit} ähnlichsten Produkte basierend auf:
 Sortiere nach Ähnlichkeit (höchste zuerst).`;
 
     // If reference has images, analyze them
-    if (referenceListing.images && referenceListing.images.length > 0) {
-      similarityPrompt += `\n\nReferenzbild verfügbar. Berücksichtige auch visuelle Ähnlichkeit bei der Bewertung.`;
-      
-      const imageAnalysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `Analysiere dieses Produktbild und beschreibe: Produkttyp, Farbe, Zustand, Stil, Besonderheiten.`,
-        file_urls: [referenceListing.images[0]],
-        response_json_schema: {
+      const firstImage = Array.isArray(referenceListing.images) && referenceListing.images.length > 0 ? referenceListing.images[0] : null;
+      if (firstImage) {
+          similarityPrompt += `\n\nReferenzbild verfügbar. Berücksichtige auch visuelle Ähnlichkeit bei der Bewertung.`;
+
+          const imageAnalysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
+            prompt: `Analysiere dieses Produktbild und beschreibe: Produkttyp, Farbe, Zustand, Stil, Besonderheiten.`,
+            file_urls: [firstImage],
+            response_json_schema: {
           type: 'object',
           properties: {
             productType: { type: 'string' },
@@ -101,14 +102,16 @@ Sortiere nach Ähnlichkeit (höchste zuerst).`;
       }
     });
 
-    // Build result with similarity reasons
-    const similarListings = aiResponse.similarIds
+    // Build result with similarity reasons (defensive)
+    const ids = Array.isArray(aiResponse?.similarIds) ? aiResponse.similarIds : [];
+    const reasons = Array.isArray(aiResponse?.reasons) ? aiResponse.reasons : [];
+    const similarListings = ids
       .map((id, idx) => {
         const listing = filteredCandidates.find(l => l.id === id);
         if (!listing) return null;
         return {
           ...listing,
-          similarityReason: aiResponse.reasons[idx] || 'Ähnliches Produkt'
+          similarityReason: reasons[idx] || 'Ähnliches Produkt'
         };
       })
       .filter(Boolean)

@@ -10,7 +10,7 @@ import PageNotFound from './lib/PageNotFound';
 import Business from './pages/Business';
 import BusinessContact from './pages/BusinessContact';
 import AdminCampaigns from './pages/AdminCampaigns';
-import MessagesV2 from './pages/MessagesV2';
+import MessagesV2 from './pages/MessagesV2.jsx';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
