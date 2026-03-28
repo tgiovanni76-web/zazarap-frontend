@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
+import { useMessages } from '@/hooks/useMessages';
 
 export default function MessagesV2() {
   const queryClient = useQueryClient();
@@ -62,7 +63,8 @@ export default function MessagesV2() {
     enabled: !!listingId,
   });
 
-  // Messages are handled inside ChatWindow via useMessages hook; we only render structure here
+  // Load messages for selected chat
+  const { messages = [], loading: loadingMessages } = useMessages(selectedChat?.id);
 
   if (!user) {
     return (
@@ -103,7 +105,7 @@ export default function MessagesV2() {
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}
-              messages={[]}
+              messages={messages}
               user={user}
               listing={listing}
               onBack={() => setSelectedChat(null)}
