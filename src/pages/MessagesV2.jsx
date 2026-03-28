@@ -86,10 +86,10 @@ export default function MessagesV2() {
   }
 
   return (
-    <div className="h-[calc(100vh- var(--header-height,64px))] min-h-[60vh] -mx-1 md:mx-0">
+    <div className="h-full min-h-[60vh] -mx-1 md:mx-0">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
         {/* Sidebar */}
-        <div className="md:col-span-1 h-full min-h-0">
+        <div className="md:col-span-1 h-full min-h-0 overflow-y-auto">
           <ChatSidebar
             chats={chats}
             selectedChat={selectedChat}
@@ -101,7 +101,7 @@ export default function MessagesV2() {
         </div>
 
         {/* Chat window */}
-        <div className="md:col-span-2 h-full min-h-0">
+        <div className="md:col-span-2 h-full min-h-0 overflow-y-auto">
           {selectedChat ? (
             <ChatWindow
               chat={selectedChat}

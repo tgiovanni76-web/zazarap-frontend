@@ -972,7 +972,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* EmailVerificationBanner removed as requested */}
       
-      <main id="main-content" role="main" tabIndex={-1} className="container max-w-7xl mx-auto px-4 overflow-x-hidden overflow-y-auto h-auto min-h-0 pb-24" style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
+      <main id="main-content" role="main" tabIndex={-1} className={`container max-w-7xl mx-auto px-4 overflow-x-hidden ${currentPageName === 'Messages' ? 'overflow-y-hidden pb-0' : 'overflow-y-auto pb-24'} h-auto min-h-0`} style={{ height: 'calc(100vh - var(--header-height, 64px))', WebkitOverflowScrolling: 'touch' }}>
         <FirstRunChecklist user={user} onAddPhotoClick={onAddPhotoClick} />
         {children}
 
