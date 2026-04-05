@@ -81,15 +81,19 @@ export default function PreChatComposer({ listingId, user, autoFocusComposer = f
         updatedAt: new Date().toISOString(),
         unreadSeller: (chat.unreadSeller || 0) + 1
       });
-      // Notification for seller
-      await base44.functions.invoke('sendNotification', {
-        userId: sellerEmail,
-        type: 'message',
-        title: '💬 Nuovo messaggio',
-        message: `${(listing.title || 'Annuncio')}: ${messageText.substring(0, 50)}`,
-        actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
-        metadata: { chatId: chat.id, listingId }
-      });
+      // Notification for seller (non-blocking)
+      try {
+        await base44.functions.invoke('sendNotification', {
+          userId: sellerEmail,
+          type: 'message',
+          title: '💬 Nuovo messaggio',
+          message: `${(listing.title || 'Annuncio')}: ${messageText.substring(0, 50)}`,
+          actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+          metadata: { chatId: chat.id, listingId }
+        });
+      } catch (e) {
+        console.warn('sendNotification failed, continuing:', e);
+      }
       return chat;
     },
     onSuccess: (chat) => {
@@ -99,6 +103,9 @@ export default function PreChatComposer({ listingId, user, autoFocusComposer = f
       window.history.replaceState({}, '', url.toString());
       onChatCreated?.(chat);
       setMessageText('');
+    },
+    onError: () => {
+      toast.error('Impossibile inviare il messaggio, riprova');
     }
   });
 
