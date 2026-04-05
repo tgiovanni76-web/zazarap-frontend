@@ -297,10 +297,21 @@ export default function ChatWindow({
 
   // Fetch offers for this chat
   const { data: offers = [] } = useQuery({
-    queryKey: ['offers', chat?.id],
-    queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
-    enabled: !!chat?.id,
+      queryKey: ['offers', chat?.id],
+      queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
+      enabled: !!chat?.id,
   });
+
+  // Real-time: keep offers fresh so the receiver sees counteroffers immediately
+  useEffect(() => {
+    if (!chat?.id) return;
+    const unsubscribe = base44.entities.Offer.subscribe((event) => {
+      if (event?.data?.chatId === chat.id) {
+        queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
+      }
+    });
+    return unsubscribe;
+  }, [chat?.id, queryClient]);
 
   // AI assistant suggestions ("Hunger Bot")
   const handleSuggest = async () => {
@@ -546,8 +557,9 @@ export default function ChatWindow({
   };
   
   const handleRejectOffer = (offerId) => {
-    if (!isSeller) {
-      toast.error('Nur der Verkäufer kann Angebote ablehnen');
+    const offer = offers.find(o => o.id === offerId);
+    if (!offer || offer.receiverId !== user?.email) {
+      toast.error('Solo il destinatario può rifiutare');
       return;
     }
     rejectOfferMutation.mutate(offerId);
@@ -1061,7 +1073,7 @@ export default function ChatWindow({
               // Extract offer ID from message text
               const offerIdMatch = msg.text?.match(/\[OFFER_ID:([^\]]+)\]/);
               const linkedOfferId = offerIdMatch ? offerIdMatch[1] : null;
-              const linkedOffer = linkedOfferId ? offers.find(o => o.id === linkedOfferId) : null;
+              const linkedOffer = linkedOfferId ? offers.find(o => o.id === linkedOfferId) : null; // could be null on initial render; realtime/useQuery will hydrate shortly
               const candidateOffer = linkedOffer || offers.find(o => o.status === 'pending' && o.senderId === msg.senderId && Number(o.amount) === Number(msg.price));
               const displayText = msg.text?.replace(/\[OFFER_ID:[^\]]+\]/, '').trim();
 
@@ -1075,7 +1087,7 @@ export default function ChatWindow({
                     }`}>
                       {msg.messageType === 'offer' && (
                         <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
-                          Offerta inviata
+                          {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
                         </div>
                       )}
                       {/* Image */}
