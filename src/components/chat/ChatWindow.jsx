@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Send, Image, Smile, MoreVertical, Phone, Video, 
   Check, CheckCheck, ArrowLeft, Zap, Languages,
-  CreditCard, AlertTriangle, X, Circle, DollarSign, History, Star, Loader2
+  AlertTriangle, X, Circle, DollarSign, History, Star, Loader2
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
@@ -33,8 +33,8 @@ const chatTranslations = {
     reject: 'Ablehnen',
     offerAccepted: 'Angebot angenommen',
     offerRejected: 'Angebot abgelehnt',
-    payNow: 'JETZT BEZAHLEN',
-    offerAcceptedDesc: 'Das Angebot wurde angenommen! Schließen Sie die Zahlung ab.',
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: 'Das Angebot wurde angenommen.',
     makeNewOffer: 'Neues Angebot machen',
     leaveReview: 'Bewertung abgeben',
     reviewPrompt: 'Ihre Meinung ist wichtig! Bewerten Sie',
@@ -56,8 +56,8 @@ const chatTranslations = {
     reject: 'Reject',
     offerAccepted: 'Offer accepted',
     offerRejected: 'Offer rejected',
-    payNow: 'PAY NOW',
-    offerAcceptedDesc: 'The offer has been accepted! Complete the payment.',
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: 'The offer has been accepted.',
     makeNewOffer: 'Make a new offer',
     leaveReview: 'Leave a review',
     reviewPrompt: 'Your opinion matters! Rate',
@@ -79,8 +79,8 @@ const chatTranslations = {
     reject: 'Rifiuta',
     offerAccepted: 'Offerta accettata',
     offerRejected: 'Offerta rifiutata',
-    payNow: 'PAGA ORA',
-    offerAcceptedDesc: "L'offerta è stata accettata! Completa il pagamento.",
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: "Offerta accettata.",
     makeNewOffer: 'Fai una nuova offerta',
     leaveReview: 'Lascia una recensione',
     reviewPrompt: 'La tua opinione è importante! Valuta',
@@ -102,8 +102,8 @@ const chatTranslations = {
     reject: 'Reddet',
     offerAccepted: 'Teklif kabul edildi',
     offerRejected: 'Teklif reddedildi',
-    payNow: 'ŞİMDİ ÖDE',
-    offerAcceptedDesc: 'Teklif kabul edildi! Ödemeyi tamamlayın.',
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: 'Teklif kabul edildi.',
     makeNewOffer: 'Yeni teklif ver',
     leaveReview: 'Değerlendirme bırak',
     reviewPrompt: 'Görüşünüz önemli! Değerlendirin',
@@ -125,8 +125,8 @@ const chatTranslations = {
     reject: 'Відхилити',
     offerAccepted: 'Пропозицію прийнято',
     offerRejected: 'Пропозицію відхилено',
-    payNow: 'ОПЛАТИТИ ЗАРАЗ',
-    offerAcceptedDesc: 'Пропозицію прийнято! Завершіть оплату.',
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: 'Пропозицію прийнято.',
     makeNewOffer: 'Зробити нову пропозицію',
     leaveReview: 'Залишити відгук',
     reviewPrompt: 'Ваша думка важлива! Оцініть',
@@ -148,8 +148,8 @@ const chatTranslations = {
     reject: 'Refuser',
     offerAccepted: 'Offre acceptée',
     offerRejected: 'Offre refusée',
-    payNow: 'PAYER MAINTENANT',
-    offerAcceptedDesc: "L'offre a été acceptée ! Complétez le paiement.",
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: "Offre acceptée.",
     makeNewOffer: 'Faire une nouvelle offre',
     leaveReview: 'Laisser un avis',
     reviewPrompt: 'Votre avis compte ! Évaluez',
@@ -171,8 +171,8 @@ const chatTranslations = {
     reject: 'Odrzuć',
     offerAccepted: 'Oferta zaakceptowana',
     offerRejected: 'Oferta odrzucona',
-    payNow: 'ZAPŁAĆ TERAZ',
-    offerAcceptedDesc: 'Oferta została zaakceptowana! Dokończ płatność.',
+    /* payNow removed per business model (no payments handled) */
+    offerAcceptedDesc: 'Oferta została zaakceptowana.',
     makeNewOffer: 'Złóż nową ofertę',
     leaveReview: 'Zostaw opinię',
     reviewPrompt: 'Twoja opinia jest ważna! Oceń',
@@ -738,7 +738,7 @@ export default function ChatWindow({
         chatId: chat.id,
         senderId: user.email,
         receiverId: otherUser,
-        text: `✅ Angebot von ${offerToAccept.amount}€ angenommen – Anzeige reserviert! Käufer hat 48h Zeit zum Bezahlen.`,
+        text: `✅ Angebot von ${offerToAccept.amount}€ angenommen – Anzeige reserviert. Zahlung und Übergabe bitte direkt im Chat abstimmen.`,
         messageType: 'system'
       });
 
@@ -762,7 +762,7 @@ export default function ChatWindow({
         userId: offerToAccept.senderId,
         type: 'status_update',
         title: '✅ Angebot angenommen - Reserviert!',
-        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title || chat?.listingTitle}" wurde angenommen! Anzeige ist für dich reserviert. Schließe die Zahlung innerhalb von 48h ab.`,
+        message: `Dein Angebot von ${offerToAccept.amount}€ für "${listing?.title || chat?.listingTitle}" wurde angenommen. Die Anzeige ist für dich reserviert. Bitte klärt Zahlung und Übergabe privat im Chat.`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id }
       });
@@ -1299,7 +1299,6 @@ export default function ChatWindow({
         <div className="p-2 md:p-3 bg-yellow-50 border-t space-y-2">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-yellow-800 font-medium">🔒 Anzeige reserviert</span>
-            <span className="text-xs text-yellow-600">48h Timeout aktiv</span>
           </div>
           <div className="flex gap-2">
             <Button 
@@ -1321,18 +1320,13 @@ export default function ChatWindow({
         </div>
       )}
 
-      {/* Payment Button (for buyer after acceptance) */}
-      {derivedChatStatus === 'accettata' && !isSeller && (
-        <div className="p-2 md:p-3 bg-green-50 border-t">
-          <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
-            <CreditCard className="h-5 w-5 mr-2" />
-            💳 {ct.payNow} - {chat.lastPrice}€
-          </Button>
-          <p className="text-center text-xs text-green-700 mt-2">
-            {ct.offerAcceptedDesc}
-          </p>
-          <p className="text-center text-xs text-yellow-600 mt-1">
-            ⏰ Reservierung läuft 48h - danach wird die Anzeige automatisch freigegeben
+      {/* Accepted state — informational only, no payments */}
+      {derivedChatStatus === 'accettata' && (
+        <div className="p-2 md:p-3 bg-green-50 border-t text-center">
+          <p className="text-sm text-green-800">
+            {language==='de' ? 'Angebot angenommen – Anzeige reserviert. Zahlung/Übergabe werden privat zwischen den Parteien geregelt.' :
+             language==='en' ? 'Offer accepted — listing reserved. Payment/delivery are arranged privately between the parties.' :
+             'Offerta accettata — annuncio riservato. Pagamento/consegna sono concordati privatamente tra le parti.'}
           </p>
         </div>
       )}
