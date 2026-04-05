@@ -232,6 +232,7 @@ export default function ChatWindow({
   const isSeller = chat?.sellerId === user?.email;
   const isBuyer = chat?.buyerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+  const isRecipient = (offer) => offer?.receiverId === user?.email;
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
@@ -536,8 +537,9 @@ export default function ChatWindow({
   };
 
   const handleAcceptOffer = (offerId) => {
-    if (!isSeller) {
-      toast.error('Nur der Verkäufer kann Angebote annehmen');
+    const offer = offers.find(o => o.id === offerId);
+    if (!offer || offer.receiverId !== user?.email) {
+      toast.error('Solo il destinatario può accettare');
       return;
     }
     acceptOfferMutation.mutate(offerId);
@@ -552,8 +554,8 @@ export default function ChatWindow({
   };
 
   const handleCounterOffer = (offerToCounter) => {
-    if (!isSeller) {
-      toast.error('Nur der Verkäufer kann Gegenangebote machen');
+    if (!offerToCounter || offerToCounter.receiverId !== user?.email) {
+      toast.error('Solo il destinatario può fare una controproposta');
       return;
     }
     setIsCounterOffer(true);
@@ -590,10 +592,6 @@ export default function ChatWindow({
         throw new Error('Nur Käufer können initiale Angebote senden');
       }
 
-      // Validation: Only seller can make counter offers
-      if (type === 'counter' && !isSeller) {
-        throw new Error('Nur Verkäufer können Gegenangebote machen');
-      }
 
       // Update previous pending offers to 'countered'
       const pendingOffers = offers.filter(o => o.status === 'pending');
@@ -673,13 +671,14 @@ export default function ChatWindow({
   // Accept offer mutation (Reserve)
   const acceptOfferMutation = useMutation({
     mutationFn: async (offerId) => {
-      // Validation: Only seller can accept
-      if (!isSeller) {
-        throw new Error('Nur der Verkäufer kann Angebote annehmen');
-      }
-
       const offerToAccept = offers.find(o => o.id === offerId);
-      if (!offerToAccept || offerToAccept.status !== 'pending') {
+      if (!offerToAccept) {
+        throw new Error('Offerta non trovata');
+      }
+      if (offerToAccept.receiverId !== user?.email) {
+        throw new Error('Solo il destinatario può accettare');
+      }
+      if (offerToAccept.status !== 'pending') {
         throw new Error('Angebot ist nicht mehr gültig');
       }
 
@@ -1067,6 +1066,7 @@ export default function ChatWindow({
               const offerIdMatch = msg.text?.match(/\[OFFER_ID:([^\]]+)\]/);
               const linkedOfferId = offerIdMatch ? offerIdMatch[1] : null;
               const linkedOffer = linkedOfferId ? offers.find(o => o.id === linkedOfferId) : null;
+              const candidateOffer = linkedOffer || offers.find(o => o.status === 'pending' && o.senderId === msg.senderId && Number(o.amount) === Number(msg.price));
               const displayText = msg.text?.replace(/\[OFFER_ID:[^\]]+\]/, '').trim();
 
               return (
@@ -1123,27 +1123,27 @@ export default function ChatWindow({
                       )}
 
                       {/* Offer Action Buttons (only for pending offers and receiver) */}
-                      {msg.messageType === 'offer' && linkedOffer && linkedOffer.status === 'pending' && !isOwn && isSeller && (
+                      {msg.messageType === 'offer' && candidateOffer && candidateOffer.status === 'pending' && !isOwn && isRecipient(candidateOffer) && (
                         <div className="flex flex-col sm:flex-row gap-2 mt-2">
                           <Button
                             size="sm"
-                            onClick={() => handleAcceptOffer(linkedOffer.id)}
+                            onClick={() => handleAcceptOffer(candidateOffer.id)}
                             disabled={acceptOfferMutation.isPending}
                             className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                           >
-                            ✓ Annehmen
+                            {language==='it' ? 'Accetta offerta' : ct.accept}
                           </Button>
                           <Button
                             size="sm"
-                            onClick={() => handleCounterOffer(linkedOffer)}
+                            onClick={() => handleCounterOffer(candidateOffer)}
                             variant="outline"
                             className="flex-1"
-                          >
-                            🔄 Gegenangebot
+>
+                            {language==='it' ? 'Controproposta' : ct.counterOffer}
                           </Button>
                           <Button
                             size="sm"
-                            onClick={() => handleRejectOffer(linkedOffer.id)}
+                            onClick={() => handleRejectOffer(candidateOffer.id)}
                             disabled={rejectOfferMutation.isPending}
                             variant="destructive"
                             className="flex-1"
@@ -1154,21 +1154,21 @@ export default function ChatWindow({
                       )}
 
                       {/* Offer Status Badge */}
-                      {msg.messageType === 'offer' && linkedOffer && linkedOffer.status !== 'pending' && (
+                      {msg.messageType === 'offer' && candidateOffer && candidateOffer.status !== 'pending' && (
                         <div className="mt-2">
                           <Badge 
                             variant={
-                              linkedOffer.status === 'accepted_reserved' ? 'default' : 
-                              linkedOffer.status === 'rejected' ? 'destructive' : 
+                              candidateOffer.status === 'accepted_reserved' ? 'default' : 
+                              candidateOffer.status === 'rejected' ? 'destructive' : 
                               'secondary'
                             }
                             className="text-xs"
                           >
-                            {linkedOffer.status === 'accepted_reserved' && '✓ Angenommen - Reserviert'}
-                            {linkedOffer.status === 'rejected' && '✕ Abgelehnt'}
-                            {linkedOffer.status === 'countered' && '🔄 Kontriert'}
-                            {linkedOffer.status === 'withdrawn' && '🚫 Zurückgezogen'}
-                            {linkedOffer.status === 'expired' && '⏰ Abgelaufen'}
+                            {candidateOffer.status === 'accepted_reserved' && '✓ Angenommen - Reserviert'}
+                            {candidateOffer.status === 'rejected' && '✕ Abgelehnt'}
+                            {candidateOffer.status === 'countered' && '🔄 Kontriert'}
+                            {candidateOffer.status === 'withdrawn' && '🚫 Zurückgezogen'}
+                            {candidateOffer.status === 'expired' && '⏰ Abgelaufen'}
                           </Badge>
                         </div>
                       )}
