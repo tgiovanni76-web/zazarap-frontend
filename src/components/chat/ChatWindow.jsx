@@ -1069,6 +1069,11 @@ export default function ChatWindow({
                         ? 'bg-[#d62828] text-white rounded-br-md' 
                         : 'bg-white border shadow-sm rounded-bl-md'
                     }`}>
+                      {msg.messageType === 'offer' && (
+                        <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
+                          Offerta inviata
+                        </div>
+                      )}
                       {/* Image */}
                       {msg.imageUrl && (
                         <img 
