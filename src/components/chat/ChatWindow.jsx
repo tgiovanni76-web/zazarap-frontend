@@ -209,6 +209,16 @@ const statusLabels = {
   }
 };
 
+// Ring highlight per l'offerta attiva (lastOffer) in base allo stato
+const offerRingClasses = {
+  pending: 'ring-2 ring-green-500',
+  accepted_reserved: 'ring-2 ring-green-600',
+  rejected: 'ring-2 ring-red-500',
+  countered: 'ring-2 ring-amber-500',
+  withdrawn: 'ring-2 ring-slate-400',
+  expired: 'ring-2 ring-amber-400'
+};
+
 function formatMessageDate(dateStr, lang = 'de') {
   const date = new Date(dateStr);
   const ct = chatTranslations[lang] || chatTranslations.de;
@@ -1072,6 +1082,7 @@ export default function ChatWindow({
           {chat.lastPrice && (displayPrice === null || chat.lastPrice !== displayPrice) && (
             <Badge variant="outline" className="text-xs">
               {ct.lastOffer}: {lastOffer?.amount ?? chat.lastPrice}€
+              {lastOffer && lastOffer.status === 'pending' && (language==='de' ? ' • Aktiv' : language==='en' ? ' • Active' : ' • Attiva')}
             </Badge>
           )}
           <Badge className={(statusColors[derivedChatStatus] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
@@ -1159,7 +1170,7 @@ export default function ChatWindow({
               return (
                 <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[95%] md:max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md'} ${candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && candidateOffer.status === 'pending' ? 'ring-2 ring-green-500 shadow-md' : ''}`}>
+                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md'} ${candidateOffer && lastOffer && candidateOffer.id === lastOffer.id ? `${offerRingClasses[lastOffer.status] || 'ring-2 ring-slate-400'} shadow-md` : ''}`}>
                       {msg.messageType === 'offer' && (
                         <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
                           {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
