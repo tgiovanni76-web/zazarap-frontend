@@ -48,13 +48,8 @@ Deno.serve(async (req) => {
       status_update: 'statusUpdates'
     };
 
-    // Check if notification type is enabled
-    if (prefMapping[type] && !userPrefs[prefMapping[type]]) {
-      return Response.json({ 
-        success: false, 
-        message: 'Notification disabled by user preferences' 
-      });
-    }
+    // Respect user prefs for EMAIL ONLY; in-app notifications are always created
+    const emailAllowed = !!(userPrefs.emailNotifications && (!prefMapping[type] || userPrefs[prefMapping[type]]));
 
     // Create notification (service role bypasses RLS)
     const notification = await base44.asServiceRole.entities.Notification.create({
@@ -67,8 +62,8 @@ Deno.serve(async (req) => {
       read: false
     });
 
-    // Send email if enabled or type is offer/status update
-    if (userPrefs.emailNotifications && type !== 'message_received') {
+    // Send email only when allowed by prefs and not for direct chat messages
+    if (emailAllowed && type !== 'message') {
       try {
         await base44.integrations.Core.SendEmail({
           to: userId,

@@ -40,7 +40,7 @@ export default function MessagesV2() {
     queryKey: ['chats'],
     queryFn: async () => {
       // Most recent first
-      const list = await base44.entities.Chat.list('-updated_date');
+      const list = await base44.entities.Chat.list('-updated_date', 200);
       return Array.isArray(list) ? list : [];
     },
     enabled: !!user,
