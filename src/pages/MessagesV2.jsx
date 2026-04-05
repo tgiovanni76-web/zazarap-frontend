@@ -16,7 +16,7 @@ export default function MessagesV2() {
   const [autoFocusComposer, setAutoFocusComposer] = useState(false);
   const landingListingId = useMemo(() => {
     const p = new URLSearchParams(window.location.search);
-    return p.get('listingId') || p.get('listing');
+    return p.get('listingId') || p.get('listing') || p.get('lid');
   }, []);
 
   // Read URL params (chatId + openOffer)
@@ -24,7 +24,7 @@ export default function MessagesV2() {
     const params = new URLSearchParams(window.location.search);
     const openOffer = params.get('openOffer') === '1' || params.get('offer') === '1';
     setInitialOfferFlag(openOffer);
-    if (params.get('listingId') || params.get('listing')) {
+    if (params.get('listingId') || params.get('listing') || params.get('lid')) {
       setAutoFocusComposer(true);
     }
   }, []);
@@ -54,17 +54,31 @@ export default function MessagesV2() {
       return;
     }
     const params = new URLSearchParams(window.location.search);
-    const chatId = params.get('chatId');
-    const lId = params.get('listingId') || params.get('listing');
+    const chatId = params.get('chatId') || params.get('cid');
+    const lId = params.get('listingId') || params.get('listing') || params.get('lid');
+    const sellerEmail = params.get('seller');
+
+    const pickFirst = () => { if (!selectedChat) setSelectedChat(chats[0] || null); };
+
     if (chatId) {
       const found = chats.find((c) => c.id === chatId);
-      setSelectedChat(found || null);
+      if (found) {
+        setSelectedChat(found);
+      } else {
+        // Fallback: fetch chat directly by id if not in the preloaded list
+        base44.entities.Chat.filter({ id: chatId }).then((res) => {
+          if (Array.isArray(res) && res[0]) setSelectedChat(res[0]);
+          else pickFirst();
+        }).catch(() => pickFirst());
+      }
     } else if (lId) {
-      const foundByListing = chats.find((c) => c.listingId === lId);
+      // Try match by listing id (+ optional seller email)
+      let foundByListing = chats.find((c) => c.listingId === lId && (!sellerEmail || c.sellerId === sellerEmail || c.buyerId === sellerEmail));
+      if (!foundByListing) foundByListing = chats.find((c) => c.listingId === lId);
       if (foundByListing) setSelectedChat(foundByListing);
       // otherwise PreChatComposer will handle creation
-    } else if (!selectedChat) {
-      setSelectedChat(chats[0] || null);
+    } else {
+      pickFirst();
     }
   }, [user, chats]);
 
