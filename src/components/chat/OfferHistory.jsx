@@ -7,12 +7,14 @@ import { useLanguage } from '../LanguageProvider';
 const statusConfig = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
   accepted: { label: 'Accettata', color: 'bg-green-100 text-green-800', icon: Check },
+  accepted_reserved: { label: 'Accettata (riservato)', color: 'bg-green-100 text-green-800', icon: Check },
   rejected: { label: 'Rifiutata', color: 'bg-red-100 text-red-800', icon: X },
   countered: { label: 'Contro-offerta', color: 'bg-blue-100 text-blue-800', icon: RotateCcw },
+  withdrawn: { label: 'Ritirata', color: 'bg-slate-100 text-slate-700', icon: RotateCcw },
   expired: { label: 'Scaduta', color: 'bg-slate-100 text-slate-600', icon: Clock }
 };
 
-export default function OfferHistory({ offers, userEmail, listingPrice }) {
+export default function OfferHistory({ offers, userEmail, listingPrice, lastOfferId }) {
   const { t } = useLanguage();
 
   if (!offers || offers.length === 0) {
@@ -24,7 +26,7 @@ export default function OfferHistory({ offers, userEmail, listingPrice }) {
   }
 
   const sortedOffers = [...offers].sort((a, b) => 
-    new Date(b.created_date) - new Date(a.created_date)
+    new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date)
   );
 
   return (
@@ -48,7 +50,7 @@ export default function OfferHistory({ offers, userEmail, listingPrice }) {
             key={offer.id} 
             className={`p-2 rounded-lg border text-sm ${
               isOwn ? 'bg-blue-50 border-blue-200' : 'bg-slate-50 border-slate-200'
-            }`}
+            } ${lastOfferId === offer.id ? 'ring-2 ring-green-500 shadow' : ''}`}
           >
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2">

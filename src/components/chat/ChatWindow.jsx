@@ -361,16 +361,24 @@ export default function ChatWindow({
     }
   };
 
-  const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
+  const lastOffer = React.useMemo(() => {
+    if (!offers || offers.length === 0) return null;
+    return [...offers]
+      .sort((a,b) => new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
+  }, [offers]);
   const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
   const derivedChatStatus = React.useMemo(() => {
-    if (!offers || offers.length === 0) return chat?.status;
-    if (offers.some(o => o.status === 'accepted_reserved')) return 'accettata';
-    if (offers.some(o => o.status === 'pending')) return 'in_attesa';
-    const latest = [...offers].sort((a,b)=> new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
-    if (latest?.status === 'rejected') return 'rifiutata';
-    return chat?.status;
-  }, [offers, chat?.status]);
+    if (!lastOffer) return chat?.status;
+    switch (lastOffer.status) {
+      case 'pending': return 'in_attesa';
+      case 'accepted_reserved': return 'accettata';
+      case 'rejected': return 'rifiutata';
+      case 'countered': return 'in_attesa';
+      case 'withdrawn': return 'rifiutata';
+      case 'expired': return 'rifiutata';
+      default: return chat?.status;
+    }
+  }, [lastOffer, chat?.status]);
   const displayPrice = (listing && typeof listing.price === 'number') ? listing.price : (typeof chat?.lastPrice === 'number' ? chat.lastPrice : null);
 
   // Listing availability helpers
@@ -1063,7 +1071,7 @@ export default function ChatWindow({
           )}
           {chat.lastPrice && (displayPrice === null || chat.lastPrice !== displayPrice) && (
             <Badge variant="outline" className="text-xs">
-              {ct.lastOffer}: {chat.lastPrice}€
+              {ct.lastOffer}: {lastOffer?.amount ?? chat.lastPrice}€
             </Badge>
           )}
           <Badge className={(statusColors[derivedChatStatus] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
@@ -1105,7 +1113,8 @@ export default function ChatWindow({
           <OfferHistory 
             offers={offers} 
             userEmail={user?.email} 
-            listingPrice={listing?.price} 
+            listingPrice={listing?.price}
+            lastOfferId={lastOffer?.id}
           />
         </div>
       )}
@@ -1150,11 +1159,7 @@ export default function ChatWindow({
               return (
                 <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[95%] md:max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${
-                      isOwn 
-                        ? 'bg-[#d62828] text-white rounded-br-md' 
-                        : 'bg-white border shadow-sm rounded-bl-md'
-                    }`}>
+                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md'} ${candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && candidateOffer.status === 'pending' ? 'ring-2 ring-green-500 shadow-md' : ''}`}>
                       {msg.messageType === 'offer' && (
                         <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
                           {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
@@ -1201,7 +1206,7 @@ export default function ChatWindow({
                       )}
 
                       {/* Offer Action Buttons (only for pending offers and receiver) */}
-                      {msg.messageType === 'offer' && candidateOffer && candidateOffer.status === 'pending' && !isOwn && isRecipient(candidateOffer) && (
+                      {msg.messageType === 'offer' && candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && candidateOffer.status === 'pending' && !isOwn && isRecipient(candidateOffer) && (
                         <div className="flex flex-col sm:flex-row gap-2 mt-2">
                           <Button
                             size="sm"
