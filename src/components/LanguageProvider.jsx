@@ -2792,10 +2792,7 @@ export function useLanguage() {
 
 /** @param {{children: React.ReactNode}} props */
 export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState(() => {
-    // For a consistent single-language UI, default to Italian
-    return 'it';
-  });
+  const [language, setLanguageState] = useState(() => { try { const s=(typeof localStorage!=='undefined'&&localStorage.getItem('zazarap_language'))||(typeof document!=='undefined'&&(document.cookie.match(/(?:^|; )zazarap_lang=([^;]+)/)||[])[1]); if(s&&SUPPORTED_LANGS.includes(s)) return s; const h=typeof window!=='undefined'?window.location.hostname:''; if(h&&(h.endsWith('.de')||h.includes('zazarap.de'))) return 'de'; const n=(typeof navigator!=='undefined'?(navigator.language||''):'').split('-')[0]; if(SUPPORTED_LANGS.includes(n)) return n; } catch(_) {} return DEFAULT_LANG; });
 
   const setLanguage = (newLang) => {
     if (!SUPPORTED_LANGS.includes(newLang)) return;
