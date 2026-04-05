@@ -37,11 +37,19 @@ export default function MessagesV2() {
 
   // Chats for current user (RLS already restricts)
   const { data: chats = [], isLoading: loadingChats } = useQuery({
-    queryKey: ['chats'],
+    queryKey: ['chats', user?.email],
     queryFn: async () => {
-      // Most recent first
-      const list = await base44.entities.Chat.list('-updated_date', 200);
-      return Array.isArray(list) ? list : [];
+      if (!user?.email) return [];
+      const [asBuyer, asSeller] = await Promise.all([
+        base44.entities.Chat.filter({ buyerId: user.email }, '-updated_date', 200),
+        base44.entities.Chat.filter({ sellerId: user.email }, '-updated_date', 200),
+      ]);
+      const merged = [...(Array.isArray(asBuyer) ? asBuyer : []), ...(Array.isArray(asSeller) ? asSeller : [])];
+      const map = new Map();
+      merged.forEach(c => { if (c?.id) map.set(c.id, c); });
+      const unique = Array.from(map.values());
+      unique.sort((a, b) => new Date(b.updated_date || b.updatedAt || 0) - new Date(a.updated_date || a.updatedAt || 0));
+      return unique;
     },
     enabled: !!user,
   });
