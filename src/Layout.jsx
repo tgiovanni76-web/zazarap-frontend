@@ -126,7 +126,7 @@ function LayoutInner({ children, currentPageName }) {
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email, 'unread'],
-    queryFn: () => base44.entities.Notification.filter({ read: false }, '-created_date'),
+    queryFn: () => base44.entities.Notification.filter({ read: false, userId: user.email }, '-created_date'),
     enabled: !!user,
   });
 
