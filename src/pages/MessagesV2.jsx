@@ -9,6 +9,7 @@ import { useLanguage } from '@/components/LanguageProvider';
 
 export default function MessagesV2() {
   const queryClient = useQueryClient();
+  useEffect(() => { console.warn('[RouteEnter]/messages', window.location.href); }, []);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedChat, setSelectedChat] = useState(null);
   const [initialOfferFlag, setInitialOfferFlag] = useState(false);

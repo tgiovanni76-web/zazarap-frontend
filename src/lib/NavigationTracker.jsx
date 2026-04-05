@@ -12,6 +12,7 @@ export default function NavigationTracker() {
 
     // Post navigation changes to parent window
     useEffect(() => {
+        console.warn('[NavigationTracker] location:', location.pathname + location.search + location.hash);
         window.parent?.postMessage({
             type: "app_changed_url",
             url: window.location.href

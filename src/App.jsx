@@ -22,6 +22,12 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
+const CanonicalMessagesRedirect = () => {
+  const to = `/messages${window.location.search || ''}${window.location.hash || ''}`;
+  console.warn('[RouteAlias][/Messages->]', to);
+  return <Navigate to={to} replace />;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
 
@@ -36,12 +42,21 @@ const AuthenticatedApp = () => {
 
   // Handle authentication errors
   if (authError) {
+    const currentPath = (window.location.pathname || '').toLowerCase();
+    console.warn('[AuthGuard] authError:', authError?.type, 'path=', currentPath);
     if (authError.type === 'user_not_registered') {
+      console.warn('[AuthGuard] Rendering UserNotRegisteredError');
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
+      // TEMP bypass for /messages to avoid redirect loop in Preview
+      if (currentPath === '/messages') {
+        console.warn('[AuthGuard] Bypass login redirect on /messages (temporary)');
+        // fall through to render app normally so /messages can show its own login prompt
+      } else {
+        console.warn('[AuthGuard] Redirecting to login');
+        navigateToLogin();
+        return null;
+      }
     }
   }
 
@@ -68,7 +83,7 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
       {/* One-way alias: /Messages -> /messages (preserve query/hash) */}
-      <Route path="/Messages" element={<Navigate to={`/messages${window.location.search || ''}${window.location.hash || ''}`} replace />} />
+      <Route path="/Messages" element={<CanonicalMessagesRedirect />} />
 
       <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
       <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />

@@ -125,6 +125,7 @@ export const AuthProvider = ({ children }) => {
 
   const navigateToLogin = () => {
     // Use the SDK's redirectToLogin method
+    console.warn('[AuthContext] redirectToLogin called with next=', window.location.href);
     base44.auth.redirectToLogin(window.location.href);
   };
 
