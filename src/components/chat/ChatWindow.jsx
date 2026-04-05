@@ -612,7 +612,7 @@ export default function ChatWindow({
         message
       });
 
-      // Create chat message of type 'offer' - this will be visible to both parties
+      // Create chat message of type 'offer' - include OFFER_ID for robust linking
       const offerText = message 
         ? `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€\n"${message}"` 
         : `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€`;
@@ -621,18 +621,13 @@ export default function ChatWindow({
         chatId: chat.id,
         senderId: user.email,
         receiverId: otherUser,
-        text: offerText,
+        text: offerText + `\n[OFFER_ID:${offer.id}]`,
         price: amount,
         messageType: 'offer',
         read: false
       });
 
-      // Store offer ID in message for later reference (admin-only by RLS)
-      if (user?.role === 'admin') {
-        await base44.entities.ChatMessage.update(offerMessage.id, {
-          text: offerText + `\n[OFFER_ID:${offer.id}]`
-        });
-      }
+
 
       // Update chat with new offer price and increment unread counter for receiver
       const unreadField = isSeller ? 'unreadBuyer' : 'unreadSeller';
@@ -844,14 +839,15 @@ export default function ChatWindow({
   // Reject offer mutation
   const rejectOfferMutation = useMutation({
     mutationFn: async (offerId) => {
-      // Validation: Only seller can reject
-      if (!isSeller) {
-        throw new Error('Nur der Verkäufer kann Angebote ablehnen');
-      }
-
       const offerToReject = offers.find(o => o.id === offerId);
-      if (!offerToReject || offerToReject.status !== 'pending') {
-        throw new Error('Angebot ist nicht mehr gültig');
+      if (!offerToReject) {
+        throw new Error('Offerta non trovata');
+      }
+      if (offerToReject.receiverId !== user?.email) {
+        throw new Error('Solo il destinatario può rifiutare');
+      }
+      if (offerToReject.status !== 'pending') {
+        throw new Error('Offerta non più valida');
       }
 
       // Update offer status to rejected
@@ -1148,7 +1144,7 @@ export default function ChatWindow({
                             variant="destructive"
                             className="flex-1"
                           >
-                            ✕ Ablehnen
+                            {language==='it' ? 'Rifiuta' : ct.reject}
                           </Button>
                         </div>
                       )}
