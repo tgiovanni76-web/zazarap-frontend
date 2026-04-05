@@ -230,11 +230,12 @@ export default function ChatWindow({
   const queryClient = useQueryClient();
 
   const isSeller = chat?.sellerId === user?.email;
+  const isBuyer = chat?.buyerId === user?.email;
   const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
-    if (initialOpenOffer && !isSeller) {
+    if (initialOpenOffer && isBuyer) {
       setIsCounterOffer(false);
       setShowOfferModal(true);
     }
@@ -994,7 +995,7 @@ export default function ChatWindow({
             <History className="h-4 w-4 mr-1" />
             {offers.length}
              </Button>
-             {!isSeller && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
+             {isBuyer && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
                <Button 
                  size="sm" 
                  onClick={handleMakeOffer}
@@ -1246,7 +1247,7 @@ export default function ChatWindow({
       )}
 
       {/* Buyer can make new offer after rejection */}
-      {chat.status === 'rifiutata' && !isSeller && (
+      {chat.status === 'rifiutata' && isBuyer && (
         <div className="p-2 md:p-3 bg-orange-50 border-t">
           <Button onClick={handleMakeOffer} className="w-full bg-orange-500 hover:bg-orange-600">
             <DollarSign className="h-4 w-4 mr-2" />
