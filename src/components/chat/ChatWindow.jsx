@@ -641,7 +641,7 @@ export default function ChatWindow({
       // Create notification for receiver (service role)
       await base44.functions.invoke('sendNotification', {
         userId: otherUser,
-        type: 'offer',
+        type: 'offer', // aligned with Notification entity; function maps to prefs
         title: type === 'counter' ? '🔄 Neues Gegenangebot!' : '💰 Neues Angebot!',
         message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title || chat?.listingTitle}" gemacht`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,

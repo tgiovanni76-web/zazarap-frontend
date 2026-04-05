@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -34,13 +34,18 @@ Deno.serve(async (req) => {
 
     // Map notification types to preference keys
     const prefMapping = {
+      // Legacy types
       order_shipped: 'shippingNotifications',
       order_delivered: 'shippingNotifications',
       order_update: 'statusUpdates',
-      message_received: 'messageReplies',
-      new_offer: 'newOfferOnFavorite',
       price_drop: 'priceDropNotifications',
-      purchase_complete: 'purchaseNotifications'
+      purchase_complete: 'purchaseNotifications',
+      new_offer: 'newOfferOnFavorite', // legacy naming
+      message_received: 'messageReplies',
+      // App types (entity Notification.type)
+      offer: 'newOfferOnFavorite',
+      message: 'messageReplies',
+      status_update: 'statusUpdates'
     };
 
     // Check if notification type is enabled
