@@ -219,6 +219,8 @@ const offerRingClasses = {
   expired: 'ring-2 ring-amber-400'
 };
 
+const CHAT_WINDOW_BUILD_ID = 'chatwindow-2026-04-05T00:00:00Z';
+
 function formatMessageDate(dateStr, lang = 'de') {
   const date = new Date(dateStr);
   const ct = chatTranslations[lang] || chatTranslations.de;
@@ -1010,7 +1012,7 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="flex flex-col h-full min-h-0 w-full bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-hidden">
+    <div data-offer-build={CHAT_WINDOW_BUILD_ID} className="flex flex-col h-full min-h-0 w-full bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center gap-2 p-2 md:p-3 border-b bg-gradient-to-r from-[var(--z-primary)] to-[var(--z-primary-dark)] text-white">
         <Button 
@@ -1175,6 +1177,9 @@ export default function ChatWindow({
                         <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
                           {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
                         </div>
+                      )}
+                      {candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && (
+                        <Badge variant="secondary" className="text-[10px] mr-2">ACTIVE_OFFER_DEBUG</Badge>
                       )}
                       {/* Image */}
                       {msg.imageUrl && (
