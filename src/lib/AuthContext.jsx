@@ -3,6 +3,28 @@ import { base44 } from '@/api/base44Client';
 import { appParams } from '@/lib/app-params';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
 
+// Helper to capture token from URL into localStorage and strip it once
+const ensureTokenFromUrl = () => {
+  try {
+    const params = new URLSearchParams(window.location.search || '');
+    const t = params.get('access_token');
+    if (t) {
+      localStorage.setItem('base44_access_token', t);
+      params.delete('access_token');
+      const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash || ''}`;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  } catch {}
+};
+
+const getStoredToken = () => {
+  try {
+    return localStorage.getItem('base44_access_token') || null;
+  } catch {
+    return null;
+  }
+};
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,6 +36,8 @@ export const AuthProvider = ({ children }) => {
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
 
   useEffect(() => {
+    // On mount, capture token from URL to storage and then check state
+    ensureTokenFromUrl();
     checkAppState();
   }, []);
 
@@ -24,12 +48,16 @@ export const AuthProvider = ({ children }) => {
       
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
+      // Refresh token from URL/localStorage before hitting public settings
+      ensureTokenFromUrl();
+      const freshToken = getStoredToken() || appParams.token;
+
       const appClient = createAxiosClient({
         baseURL: `${appParams.serverUrl}/api/apps/public`,
         headers: {
           'X-App-Id': appParams.appId
         },
-        token: appParams.token, // Include token if available
+        token: freshToken, // Always use the freshest token
         interceptResponses: true
       });
       
@@ -38,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         setAppPublicSettings(publicSettings);
         
         // If we got the app public settings successfully, check if user is authenticated
-        if (appParams.token) {
+        if (freshToken) {
           await checkUserAuth();
         } else {
           setIsLoadingAuth(false);
@@ -124,7 +152,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
+    // If a fresh token exists (just returned from OAuth), avoid another redirect
+    try {
+      const t = localStorage.getItem('base44_access_token');
+      if (t) return;
+    } catch {}
     console.warn('[AuthContext] redirectToLogin called with next=', window.location.href);
     base44.auth.redirectToLogin(window.location.href);
   };

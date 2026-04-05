@@ -29,7 +29,7 @@ const CanonicalMessagesRedirect = () => {
 };
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin, checkAppState } = useAuth();
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -48,15 +48,19 @@ const AuthenticatedApp = () => {
       console.warn('[AuthGuard] Rendering UserNotRegisteredError');
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // TEMP bypass for /messages to avoid redirect loop in Preview
-      if (currentPath === '/messages') {
-        console.warn('[AuthGuard] Bypass login redirect on /messages (temporary)');
-        // fall through to render app normally so /messages can show its own login prompt
-      } else {
-        console.warn('[AuthGuard] Redirecting to login');
-        navigateToLogin();
-        return null;
+      const tokenInStorage = (() => { try { return localStorage.getItem('base44_access_token'); } catch { return null; } })();
+      if (tokenInStorage) {
+        console.warn('[AuthGuard] Token found in storage; re-checking auth before redirect');
+        checkAppState();
+        return (
+          <div className="fixed inset-0 flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+          </div>
+        );
       }
+      console.warn('[AuthGuard] Redirecting to login');
+      navigateToLogin();
+      return null;
     }
   }
 
