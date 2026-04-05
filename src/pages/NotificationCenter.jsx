@@ -23,7 +23,7 @@ export default function NotificationCenter() {
 
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ userId: user.email }, '-created_date'),
+    queryFn: () => base44.entities.Notification.list('-created_date', 200),
     enabled: !!user,
   });
 
