@@ -24,6 +24,15 @@ export default function Notifications() {
     enabled: !!user,
   });
 
+  React.useEffect(() => {
+    if (user) {
+      console.log('[Notifications] env', window.location.hostname);
+      console.log('[Notifications] user', user.email);
+      console.log('[Notifications] count', Array.isArray(notifications) ? notifications.length : 'n/a');
+      if (notifications && notifications[0]) console.log('[Notifications] sample', notifications[0]);
+    }
+  }, [user, notifications]);
+
   const markAsReadMutation = useMutation({
     mutationFn: (id) => base44.entities.Notification.update(id, { read: true }),
     onSuccess: () => {

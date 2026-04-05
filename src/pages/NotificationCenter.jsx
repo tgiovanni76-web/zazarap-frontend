@@ -27,6 +27,15 @@ export default function NotificationCenter() {
     enabled: !!user,
   });
 
+  React.useEffect(() => {
+    if (user) {
+      console.log('[NotificationCenter] env', window.location.hostname);
+      console.log('[NotificationCenter] user', user.email);
+      console.log('[NotificationCenter] count', Array.isArray(notifications) ? notifications.length : 'n/a');
+      if (notifications && notifications[0]) console.log('[NotificationCenter] sample', notifications[0]);
+    }
+  }, [user, notifications]);
+
   const { data: preferences = [{}] } = useQuery({
     queryKey: ['notificationPrefs', user?.email],
     queryFn: async () => {
