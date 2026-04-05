@@ -46,8 +46,19 @@ export const useMessages = (chatId) => {
       });
     });
 
+    // Fallback polling (ensures delivery for users with flaky realtime)
+    const poller = setInterval(async () => {
+      try {
+        const list = await base44.entities.ChatMessage.filter({ chatId }, 'created_date');
+        if (active) setMessages(list || []);
+      } catch (_) {
+        // ignore polling errors silently
+      }
+    }, 5000);
+
     return () => {
       active = false;
+      clearInterval(poller);
       unsubscribe?.();
     };
   }, [chatId]);

@@ -384,21 +384,23 @@ export default function ChatWindow({
     }
   }, [messages]);
 
-  // Mark messages as read
+  // Mark messages as read (ChatMessage.update is admin-only by RLS)
   useEffect(() => {
     if (chat && messages.length > 0) {
       const unreadMessages = messages.filter(m => !m.read && m.senderId !== user?.email);
-      unreadMessages.forEach(async (msg) => {
-        await base44.entities.ChatMessage.update(msg.id, { read: true });
-      });
+      if (user?.role === 'admin') {
+        unreadMessages.forEach(async (msg) => {
+          await base44.entities.ChatMessage.update(msg.id, { read: true });
+        });
+      }
       
-      // Update chat unread count
+      // Always zero the chat-side counter (allowed for buyer/seller)
       const updateField = isSeller ? 'unreadSeller' : 'unreadBuyer';
       if (chat[updateField] > 0) {
         base44.entities.Chat.update(chat.id, { [updateField]: 0 });
       }
     }
-  }, [chat, messages, user, isSeller]);
+  }, [chat, messages, user?.role, isSeller]);
 
   const sendMessageMutation = useMutation({
     mutationFn: async ({ text, imageUrl, price, messageType = 'text' }) => {
@@ -490,6 +492,10 @@ export default function ChatWindow({
       queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
       queryClient.invalidateQueries({ queryKey: ['chats'] });
       setMessageText('');
+    },
+    onError: (error) => {
+      console.error('Send message error:', error);
+      toast.error('Invio non riuscito, riprova');
     }
   });
 
@@ -623,10 +629,12 @@ export default function ChatWindow({
         read: false
       });
 
-      // Store offer ID in message for later reference
-      await base44.entities.ChatMessage.update(offerMessage.id, {
-        text: offerText + `\n[OFFER_ID:${offer.id}]`
-      });
+      // Store offer ID in message for later reference (admin-only by RLS)
+      if (user?.role === 'admin') {
+        await base44.entities.ChatMessage.update(offerMessage.id, {
+          text: offerText + `\n[OFFER_ID:${offer.id}]`
+        });
+      }
 
       // Update chat with new offer price and increment unread counter for receiver
       const unreadField = isSeller ? 'unreadBuyer' : 'unreadSeller';
