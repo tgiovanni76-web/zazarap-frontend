@@ -53,8 +53,8 @@ const AuthenticatedApp = () => {
           <MainPage />
         </LayoutWrapper>
       } />
-      {/* Force new chat experience */}
-      <Route path="/Messages" element={<LayoutWrapper currentPageName="Messages"><MessagesV2 /></LayoutWrapper>} />
+      {/* Force new chat experience - canonical lowercase path */}
+      <Route path="/messages" element={<LayoutWrapper currentPageName="Messages"><MessagesV2 /></LayoutWrapper>} />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
@@ -67,8 +67,8 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
-      {/* Alias lowercase to canonical cased route to avoid redirect loops */}
-      <Route path="/messages" element={<Navigate to="/Messages" replace />} />
+      {/* Alias uppercase to lowercase to avoid redirect loops */}
+      <Route path="/Messages" element={<Navigate to="/messages" replace />} />
 
       <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
       <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />

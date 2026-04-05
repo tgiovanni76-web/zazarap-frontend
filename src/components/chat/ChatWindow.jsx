@@ -188,6 +188,27 @@ const statusColors = {
   'completata': 'bg-blue-500'
 };
 
+const statusLabels = {
+  it: {
+    in_attesa: 'In attesa',
+    accettata: 'Accettata',
+    rifiutata: 'Rifiutata',
+    completata: 'Completata',
+  },
+  de: {
+    in_attesa: 'Ausstehend',
+    accettata: 'Angenommen',
+    rifiutata: 'Abgelehnt',
+    completata: 'Abgeschlossen',
+  },
+  en: {
+    in_attesa: 'Pending',
+    accettata: 'Accepted',
+    rifiutata: 'Rejected',
+    completata: 'Completed',
+  }
+};
+
 function formatMessageDate(dateStr, lang = 'de') {
   const date = new Date(dateStr);
   const ct = chatTranslations[lang] || chatTranslations.de;
@@ -1025,7 +1046,7 @@ export default function ChatWindow({
             </Badge>
           )}
           <Badge className={(statusColors[chat.status] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
-            {chat.status}
+            {statusLabels[language]?.[chat.status] || chat.status}
           </Badge>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
