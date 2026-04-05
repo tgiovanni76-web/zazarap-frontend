@@ -53,6 +53,8 @@ const AuthenticatedApp = () => {
           <MainPage />
         </LayoutWrapper>
       } />
+      {/* Force new chat experience */}
+      <Route path="/Messages" element={<LayoutWrapper currentPageName="Messages"><MessagesV2 /></LayoutWrapper>} />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}

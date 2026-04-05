@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -912,7 +912,35 @@ export default function ChatWindow({
     setTimeout(() => messageInputRef.current?.focus(), 100);
   };
 
-  const groupedMessages = messages.reduce((groups, message) => {
+  const messagesWithOffers = React.useMemo(() => {
+    const list = Array.isArray(messages) ? [...messages] : [];
+    const hasLinked = (offer) => list.some(m => m.messageType === 'offer' && (
+      (typeof m.text === 'string' && m.text.includes(`[OFFER_ID:${offer.id}]`)) ||
+      (m.senderId === offer.senderId && Number(m.price) === Number(offer.amount))
+    ));
+
+    (offers || []).forEach((offer) => {
+      if (!hasLinked(offer)) {
+        list.push({
+          id: `virtual-${offer.id}`,
+          chatId: chat.id,
+          senderId: offer.senderId,
+          receiverId: offer.receiverId,
+          text: `${(offer.type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot')}: ${offer.amount}€ [OFFER_ID:${offer.id}]`,
+          price: offer.amount,
+          messageType: 'offer',
+          created_date: offer.created_date || offer.updated_date || new Date().toISOString(),
+          read: false,
+        });
+      }
+    });
+
+    // Ensure chronological order
+    list.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+    return list;
+  }, [messages, offers, chat?.id]);
+
+  const groupedMessages = messagesWithOffers.reduce((groups, message) => {
     const date = formatMessageDate(message.created_date, language);
     if (!groups[date]) groups[date] = [];
     groups[date].push(message);
