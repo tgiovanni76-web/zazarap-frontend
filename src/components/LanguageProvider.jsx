@@ -2793,28 +2793,8 @@ export function useLanguage() {
 /** @param {{children: React.ReactNode}} props */
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
-    // 1. Check URL path prefix (/de, /it, etc.)
-    if (typeof window !== 'undefined') {
-      const pathLang = window.location.pathname.split('/')[1];
-      if (SUPPORTED_LANGS.includes(pathLang)) {
-        return pathLang;
-      }
-    }
-
-    // 2. Check cookie
-    if (typeof document !== 'undefined') {
-      const cookieLang = document.cookie.split('; ').find(row => row.startsWith('zazarap_lang='));
-      if (cookieLang) {
-        const lang = cookieLang.split('=')[1];
-        if (SUPPORTED_LANGS.includes(lang)) return lang;
-      }
-    }
-
-    // 3. Check localStorage (backward compatibility)
-    const saved = localStorage.getItem('zazarap_language');
-    if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
-
-    return DEFAULT_LANG;
+    // For a consistent single-language UI, default to Italian
+    return 'it';
   });
 
   const setLanguage = (newLang) => {

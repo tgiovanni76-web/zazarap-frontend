@@ -857,7 +857,7 @@ function LayoutInner({ children, currentPageName }) {
                                       <div className="flex items-center gap-4">
                                         <Link to={createPageUrl('Marketplace')} className="no-underline flex flex-col leading-tight">
                                           <span className="text-[18px] md:text-[26px] font-extrabold" style={{ color: 'var(--z-accent)', textShadow: '0 1px 0 rgba(0,0,0,0.25)' }}>Zazarap.de</span>
-                                          <span className="text-[10px] md:text-xs tracking-wide text-white/80 mt-0.5">kleinanzeigen</span>
+                                          <span className="text-[10px] md:text-xs tracking-wide text-white/80 mt-0.5">{t('tagline')}</span>
                                           </Link>
 
                                       </div>
@@ -912,14 +912,7 @@ function LayoutInner({ children, currentPageName }) {
                         {/* Menu profilo 👤 */}
                         {user && (
                           <span className="hidden md:inline text-white/70 text-[11px] md:text-xs mr-1 md:mr-2 truncate max-w-[90px] md:max-w-none">
-                            👋 {(
-                              currentLanguage === 'it' ? 'Ciao' :
-                              currentLanguage === 'de' ? 'Hallo' :
-                              currentLanguage === 'en' ? 'Hello' :
-                              currentLanguage === 'fr' ? 'Bonjour' :
-                              currentLanguage === 'pl' ? 'Cześć' :
-                              currentLanguage === 'tr' ? 'Merhaba' : 'Hallo'
-                            )}, {user.full_name?.split(' ')[0] || user.email?.split('@')[0]}
+                            👋 {t('welcome')}, {user.full_name?.split(' ')[0] || user.email?.split('@')[0]}
                           </span>
                         )}
                         <DropdownMenu>
@@ -943,23 +936,23 @@ function LayoutInner({ children, currentPageName }) {
                           <DropdownMenuContent align="end" className="min-w-[220px]">
                             {user ? (
                               <>
-                                <Link to={createPageUrl('UserProfile')}><DropdownMenuItem>Mein Konto</DropdownMenuItem></Link>
-                                <Link to={createPageUrl('UserSettings')}><DropdownMenuItem>Einstellungen</DropdownMenuItem></Link>
-                                <Link to={createPageUrl('MyListings')}><DropdownMenuItem>Meine Anzeigen</DropdownMenuItem></Link>
-                                <Link to={createPageUrl('Messages')}><DropdownMenuItem>Nachrichten</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('UserProfile')}><DropdownMenuItem>{t('settings.title')}</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('UserSettings')}><DropdownMenuItem>{t('settings.title')}</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('MyListings')}><DropdownMenuItem>{t('menu.myListings')}</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('Messages')}><DropdownMenuItem>{t('messages')}</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('WarumPremium')}><DropdownMenuItem>Premium</DropdownMenuItem></Link>
       {user?.role === 'admin' && (
-        <Link to={createPageUrl('AdminDashboard')}><DropdownMenuItem>Admin-Panel</DropdownMenuItem></Link>
+        <Link to={createPageUrl('AdminDashboard')}><DropdownMenuItem>{t('admin.panel')}</DropdownMenuItem></Link>
       )}
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Benutzer wechseln</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Home'))}>Abmelden</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>{t('menu.switchUser')}</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.logout(createPageUrl('Home'))}>{t('menu.logout')}</DropdownMenuItem>
                               </>
                             ) : (
                               <>
-                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Anmelden</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>{t('menu.login')}</DropdownMenuItem>
                                 <Link to={createPageUrl('WarumPremium')}><DropdownMenuItem>Premium</DropdownMenuItem></Link>
-                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>Registrieren</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}>{t('menu.register')}</DropdownMenuItem>
                               </>
                             )}
                           </DropdownMenuContent>
