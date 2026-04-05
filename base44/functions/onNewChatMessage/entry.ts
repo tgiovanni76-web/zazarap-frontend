@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 function safeText(t, max = 140) {
   if (!t) return '';
@@ -20,16 +20,28 @@ Deno.serve(async (req) => {
     // Ensure we have the message data
     let message = data;
     if (!message || payload_too_large) {
-      if (!event?.entity_id) return Response.json({ ok: false, error: 'Missing entity_id' }, { status: 400 });
-      message = await base44.asServiceRole.entities.get('ChatMessage', event.entity_id);
+      if (!event?.entity_id) return Response.json({ ok: true, skipped: true, reason: 'missing entity_id' });
+      try {
+        const arr = await base44.asServiceRole.entities.ChatMessage.filter({ id: event.entity_id });
+        message = Array.isArray(arr) ? arr[0] : null;
+      } catch (_) {
+        message = null;
+      }
     }
+    if (!message) return Response.json({ ok: true, skipped: true, reason: 'message not found' });
 
     if (!message?.chatId || !message?.senderId) {
       return Response.json({ ok: true, skipped: true, reason: 'missing chatId or senderId' });
     }
 
     // Fetch chat to determine participants
-    const chat = await base44.asServiceRole.entities.get('Chat', message.chatId).catch(() => null);
+    let chat = null;
+    try {
+      const arr = await base44.asServiceRole.entities.Chat.filter({ id: message.chatId });
+      chat = Array.isArray(arr) ? arr[0] : null;
+    } catch (_) {
+      chat = null;
+    }
     if (!chat) {
       return Response.json({ ok: true, skipped: true, reason: 'chat not found' });
     }
@@ -53,7 +65,7 @@ Deno.serve(async (req) => {
         type: 'message',
         title,
         message: safeText(message.text || message.message || ''),
-        linkUrl: `/Messages?chatId=${message.chatId}`,
+        linkUrl: `/messages?chatId=${message.chatId}`,
         relatedId: message.chatId,
       };
       await base44.asServiceRole.entities.Notification.create(note);

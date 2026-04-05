@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 function safeText(t, max = 140) {
   if (!t) return '';
@@ -31,14 +31,26 @@ Deno.serve(async (req) => {
     // Ensure we have the offer data
     let offer = data;
     if (!offer || payload_too_large) {
-      if (!event?.entity_id) return Response.json({ ok: false, error: 'Missing entity_id' }, { status: 400 });
-      offer = await base44.asServiceRole.entities.get('Offer', event.entity_id);
+      if (!event?.entity_id) return Response.json({ ok: true, skipped: true, reason: 'missing entity_id' });
+      try {
+        const arr = await base44.asServiceRole.entities.Offer.filter({ id: event.entity_id });
+        offer = Array.isArray(arr) ? arr[0] : null;
+      } catch (_) {
+        offer = null;
+      }
     }
+    if (!offer) return Response.json({ ok: true, skipped: true, reason: 'offer not found' });
 
     if (!offer?.chatId || !offer?.senderId || (evtType === 'create' && !offer?.receiverId)) {
       // Try to compute missing ends using Chat
       if (offer?.chatId) {
-        const chat = await base44.asServiceRole.entities.get('Chat', offer.chatId).catch(() => null);
+        let chat = null;
+        try {
+          const arr = await base44.asServiceRole.entities.Chat.filter({ id: offer.chatId });
+          chat = Array.isArray(arr) ? arr[0] : null;
+        } catch (_) {
+          chat = null;
+        }
         if (chat) {
           const buyer = chat.buyerId;
           const seller = chat.sellerId;
@@ -54,7 +66,13 @@ Deno.serve(async (req) => {
     }
 
     // Fetch chat for listing title
-    const chat = await base44.asServiceRole.entities.get('Chat', offer.chatId).catch(() => null);
+    let chat = null;
+    try {
+      const arr = await base44.asServiceRole.entities.Chat.filter({ id: offer.chatId });
+      chat = Array.isArray(arr) ? arr[0] : null;
+    } catch (_) {
+      chat = null;
+    }
     const title = buildTitle(offer.status, chat?.listingTitle);
 
     // Decide who to notify
@@ -68,7 +86,7 @@ Deno.serve(async (req) => {
       type: 'offer',
       title,
       message: safeText(message),
-      linkUrl: `/Messages?chatId=${offer.chatId}`,
+      linkUrl: `/messages?chatId=${offer.chatId}`,
       relatedId: offer.chatId,
     });
 
