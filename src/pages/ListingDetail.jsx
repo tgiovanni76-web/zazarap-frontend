@@ -307,14 +307,14 @@ export default function ListingDetail() {
       if (!chatId) {
         console.error('[ContactSeller] missing chatId after creation, aborting navigation');
         toast.error('Impossibile aprire la chat, riprova.');
-        navigate(createPageUrl('Messages'));
+        navigate(createPageUrl('messages'));
         return;
       }
       try { 
         localStorage.setItem('pendingChatId', chatId);
         // Keep pendingChatMeta for self-heal in Messages until it confirms load
       } catch {}
-      let targetUrl = createPageUrl('Messages') + `?chatId=${encodeURIComponent(chatId)}&lid=${encodeURIComponent(listingId)}&seller=${encodeURIComponent(sellerEmailRaw)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
+      let targetUrl = createPageUrl('messages') + `?chatId=${encodeURIComponent(chatId)}&lid=${encodeURIComponent(listingId)}&seller=${encodeURIComponent(sellerEmailRaw)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
       if (opts.openOffer) { targetUrl += '&open=offer'; }
       console.debug('[ContactSeller] redirecting to', targetUrl);
       navigate(targetUrl);

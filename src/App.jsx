@@ -67,8 +67,8 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
-      {/* Alias uppercase to lowercase to avoid redirect loops */}
-      <Route path="/Messages" element={<Navigate to="/messages" replace />} />
+      {/* One-way alias: /Messages -> /messages (preserve query/hash) */}
+      <Route path="/Messages" element={<Navigate to={`/messages${window.location.search || ''}${window.location.hash || ''}`} replace />} />
 
       <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
       <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />

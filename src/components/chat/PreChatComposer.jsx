@@ -88,7 +88,7 @@ export default function PreChatComposer({ listingId, user, autoFocusComposer = f
           type: 'message',
           title: '💬 Nuovo messaggio',
           message: `${(listing.title || 'Annuncio')}: ${messageText.substring(0, 50)}`,
-          actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
+          actionUrl: createPageUrl('messages') + `?chatId=${chat.id}`,
           metadata: { chatId: chat.id, listingId }
         });
       } catch (e) {

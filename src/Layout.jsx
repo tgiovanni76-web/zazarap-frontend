@@ -939,7 +939,7 @@ function LayoutInner({ children, currentPageName }) {
                                 <Link to={createPageUrl('UserProfile')}><DropdownMenuItem>{t('settings.title')}</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('UserSettings')}><DropdownMenuItem>{t('settings.title')}</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('MyListings')}><DropdownMenuItem>{t('menu.myListings')}</DropdownMenuItem></Link>
-                                <Link to={createPageUrl('Messages')}><DropdownMenuItem>{t('messages')}</DropdownMenuItem></Link>
+                                <Link to={createPageUrl('messages')}><DropdownMenuItem>{t('messages')}</DropdownMenuItem></Link>
                                 <Link to={createPageUrl('WarumPremium')}><DropdownMenuItem>Premium</DropdownMenuItem></Link>
       {user?.role === 'admin' && (
         <Link to={createPageUrl('AdminDashboard')}><DropdownMenuItem>{t('admin.panel')}</DropdownMenuItem></Link>

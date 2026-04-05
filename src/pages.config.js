@@ -75,7 +75,6 @@ import ListingDetail from './pages/ListingDetail';
 import ManageCategories from './pages/ManageCategories';
 import ManageUsers from './pages/ManageUsers';
 import Marketplace from './pages/Marketplace';
-import Messages from './pages/MessagesV2';
 import MobileAppChecklist from './pages/MobileAppChecklist';
 import ModerateListings from './pages/ModerateListings';
 import MyListings from './pages/MyListings';
@@ -135,7 +134,6 @@ export const PAGES = {
     "ManageCategories": ManageCategories,
     "ManageUsers": ManageUsers,
     "Marketplace": Marketplace,
-    "Messages": Messages,
     "MobileAppChecklist": MobileAppChecklist,
     "ModerateListings": ModerateListings,
     "MyListings": MyListings,
