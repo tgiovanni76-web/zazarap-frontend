@@ -49,6 +49,7 @@ const AuthenticatedApp = () => {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
       const tokenInStorage = (() => { try { return localStorage.getItem('base44_access_token'); } catch { return null; } })();
+      const inPreview = (() => { try { return (window.location.hostname || '').includes('preview-sandbox') || window.top !== window.self; } catch { return false; } })();
       if (tokenInStorage) {
         console.warn('[AuthGuard] Token found in storage; re-checking auth before redirect');
         checkAppState();
@@ -58,9 +59,15 @@ const AuthenticatedApp = () => {
           </div>
         );
       }
-      console.warn('[AuthGuard] Redirecting to login');
-      navigateToLogin();
-      return null;
+      const currentPath = (window.location.pathname || '').toLowerCase();
+      if (inPreview) {
+        console.warn('[AuthGuard] Preview sandbox detected; skipping auto-redirect on', currentPath);
+        // Let the route render; components should show their own login prompts
+      } else {
+        console.warn('[AuthGuard] Redirecting to login');
+        navigateToLogin();
+        return null;
+      }
     }
   }
 

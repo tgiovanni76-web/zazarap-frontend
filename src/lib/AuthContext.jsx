@@ -10,9 +10,16 @@ const ensureTokenFromUrl = () => {
     const t = params.get('access_token');
     if (t) {
       localStorage.setItem('base44_access_token', t);
-      params.delete('access_token');
-      const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash || ''}`;
-      window.history.replaceState({}, document.title, newUrl);
+      const host = window.location?.hostname || '';
+      const inPreview = host.includes('preview-sandbox') || window.top !== window.self;
+      if (!inPreview) {
+        // Outside preview we can safely strip the token from URL
+        params.delete('access_token');
+        const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash || ''}`;
+        window.history.replaceState({}, document.title, newUrl);
+      } else {
+        console.warn('[AuthContext] Preview sandbox: keeping access_token in URL to avoid host rewrite loop');
+      }
     }
   } catch {}
 };
@@ -22,6 +29,16 @@ const getStoredToken = () => {
     return localStorage.getItem('base44_access_token') || null;
   } catch {
     return null;
+  }
+};
+
+// Detect if running in the Base44 preview sandbox (iframe)
+const isInPreviewSandbox = () => {
+  try {
+    const host = window.location.hostname || '';
+    return host.includes('preview-sandbox') || window.top !== window.self;
+  } catch {
+    return false;
   }
 };
 
@@ -155,8 +172,18 @@ export const AuthProvider = ({ children }) => {
     // If a fresh token exists (just returned from OAuth), avoid another redirect
     try {
       const t = localStorage.getItem('base44_access_token');
-      if (t) return;
+      if (t) {
+        console.warn('[AuthContext] Token present; skip redirectToLogin');
+        return;
+      }
     } catch {}
+
+    // In preview sandbox, do NOT auto-redirect to avoid iframe redirect loops
+    if (isInPreviewSandbox()) {
+      console.warn('[AuthContext] Preview sandbox detected; skipping auto redirect to login');
+      return;
+    }
+
     console.warn('[AuthContext] redirectToLogin called with next=', window.location.href);
     base44.auth.redirectToLogin(window.location.href);
   };

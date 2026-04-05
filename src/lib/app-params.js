@@ -39,7 +39,18 @@ const getAppParams = () => {
 		appId: getAppParamValue("app_id", { defaultValue: import.meta.env.VITE_BASE44_APP_ID }),
 		serverUrl: getAppParamValue("server_url", { defaultValue: import.meta.env.VITE_BASE44_BACKEND_URL }),
 		// Do not rely solely on URL param here; it may be removed post-login. Prefer stored token.
-		token: (typeof window !== 'undefined' && window.localStorage?.getItem('base44_access_token')) || getAppParamValue("access_token", { removeFromUrl: true }),
+		// Prefer stored token; in Preview sandbox, DO NOT strip access_token from URL to avoid host ping-pong
+		token: (() => {
+			try {
+				const host = window.location?.hostname || '';
+				const inPreview = host.includes('preview-sandbox') || window.top !== window.self;
+				const fromStorage = window.localStorage?.getItem('base44_access_token');
+				const fromUrl = getAppParamValue("access_token", { removeFromUrl: !inPreview });
+				return fromStorage || fromUrl;
+			} catch {
+				return getAppParamValue("access_token");
+			}
+		})(),
 		fromUrl: getAppParamValue("from_url", { defaultValue: window.location.href }),
 		functionsVersion: getAppParamValue("functions_version"),
 	}

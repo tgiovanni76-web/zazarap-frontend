@@ -13,10 +13,18 @@ export default function NavigationTracker() {
     // Post navigation changes to parent window
     useEffect(() => {
         console.warn('[NavigationTracker] location:', location.pathname + location.search + location.hash);
-        window.parent?.postMessage({
-            type: "app_changed_url",
-            url: window.location.href
-        }, '*');
+        // In preview, avoid sending rapid-fire updates when URL carries access_token
+        const host = window.location.hostname || '';
+        const inPreview = host.includes('preview-sandbox') || window.top !== window.self;
+        const hasAccessToken = (window.location.search || '').includes('access_token=');
+        if (inPreview && hasAccessToken) {
+            console.warn('[NavigationTracker] Suppressing app_changed_url post due to access_token in URL (preview)');
+        } else {
+            window.parent?.postMessage({
+                type: "app_changed_url",
+                url: window.location.href
+            }, '*');
+        }
     }, [location]);
 
     // Log user activity when navigating to a page
