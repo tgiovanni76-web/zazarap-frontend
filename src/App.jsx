@@ -5,7 +5,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import Business from './pages/Business';
 import BusinessContact from './pages/BusinessContact';
@@ -65,7 +65,9 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/listingdetail" element={<LayoutWrapper currentPageName="ListingDetail"><Pages.ListingDetail /></LayoutWrapper>} />
-      <Route path="/messages" element={<LayoutWrapper currentPageName="Messages"><MessagesV2 /></LayoutWrapper>} />
+      {/* Alias lowercase to canonical cased route to avoid redirect loops */}
+      <Route path="/messages" element={<Navigate to="/Messages" replace />} />
+
       <Route path="/Business" element={<LayoutWrapper currentPageName="Business"><Business /></LayoutWrapper>} />
       <Route path="/BusinessContact" element={<LayoutWrapper currentPageName="BusinessContact"><BusinessContact /></LayoutWrapper>} />
       <Route path="/AdminCampaigns" element={<LayoutWrapper currentPageName="AdminCampaigns"><AdminCampaigns /></LayoutWrapper>} />
