@@ -250,9 +250,16 @@ export default function ChatWindow({
   const messageInputRef = useRef(null);
   const queryClient = useQueryClient();
 
-  const isSeller = chat?.sellerId === user?.email;
-  const isBuyer = chat?.buyerId === user?.email;
-  const otherUser = isSeller ? chat?.buyerId : chat?.sellerId;
+  const role = React.useMemo(() => {
+    const email = user?.email;
+    if (!email || !chat) return 'unknown';
+    if (chat.sellerId === email) return 'seller';
+    if (chat.buyerId === email) return 'buyer';
+    return 'unknown';
+  }, [user?.email, chat?.sellerId, chat?.buyerId]);
+  const isSeller = role === 'seller';
+  const isBuyer = role === 'buyer';
+  const otherUser = React.useMemo(() => (isSeller ? chat?.buyerId : chat?.sellerId), [isSeller, chat?.buyerId, chat?.sellerId]);
   const isRecipient = (offer) => offer?.receiverId === user?.email;
 
   // Auto-open Offer modal when requested via URL (only for buyer)
@@ -261,7 +268,7 @@ export default function ChatWindow({
       setIsCounterOffer(false);
       setShowOfferModal(true);
     }
-  }, [initialOpenOffer, isSeller]);
+  }, [initialOpenOffer, isBuyer]);
 
   // Focus composer when requested
   useEffect(() => {
@@ -317,7 +324,7 @@ export default function ChatWindow({
   };
 
   // Fetch offers for this chat
-  const { data: offers = [] } = useQuery({
+  const { data: offers = [], isLoading: isLoadingOffers } = useQuery({
       queryKey: ['offers', chat?.id],
       queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
       enabled: !!chat?.id,
@@ -356,6 +363,14 @@ export default function ChatWindow({
 
   const lastOffer = offers.find(o => o.status === 'pending') || offers[0];
   const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
+  const derivedChatStatus = React.useMemo(() => {
+    if (!offers || offers.length === 0) return chat?.status;
+    if (offers.some(o => o.status === 'accepted_reserved')) return 'accettata';
+    if (offers.some(o => o.status === 'pending')) return 'in_attesa';
+    const latest = [...offers].sort((a,b)=> new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
+    if (latest?.status === 'rejected') return 'rifiutata';
+    return chat?.status;
+  }, [offers, chat?.status]);
   const displayPrice = (listing && typeof listing.price === 'number') ? listing.price : (typeof chat?.lastPrice === 'number' ? chat.lastPrice : null);
 
   // Listing availability helpers
@@ -968,7 +983,13 @@ export default function ChatWindow({
     return groups;
   }, {});
 
-  if (!chat) return null;
+  if (!chat || !user?.email || isLoadingOffers) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-0 w-full bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-hidden">
@@ -1014,7 +1035,7 @@ export default function ChatWindow({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${statusColors[chat.status]}`} />
+          <span className={`w-2 h-2 rounded-full ${statusColors[derivedChatStatus]}`} />
           <Button 
             variant="ghost" 
             size="sm" 
@@ -1045,8 +1066,8 @@ export default function ChatWindow({
               {ct.lastOffer}: {chat.lastPrice}€
             </Badge>
           )}
-          <Badge className={(statusColors[chat.status] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
-            {statusLabels[language]?.[chat.status] || chat.status}
+          <Badge className={(statusColors[derivedChatStatus] || 'bg-slate-200 text-slate-700').replace('bg-', 'bg-opacity-20 text-').replace('-500', '-700')}>
+            {statusLabels[language]?.[derivedChatStatus] || derivedChatStatus}
           </Badge>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
@@ -1059,7 +1080,7 @@ export default function ChatWindow({
             <History className="h-4 w-4 mr-1" />
             {offers.length}
              </Button>
-             {isBuyer && chat.status !== 'accettata' && chat.status !== 'completata' && !hasActiveReservation && (
+             {isBuyer && derivedChatStatus !== 'accettata' && derivedChatStatus !== 'completata' && !hasActiveReservation && (
                <Button 
                  size="sm" 
                  onClick={handleMakeOffer}
@@ -1301,7 +1322,7 @@ export default function ChatWindow({
       )}
 
       {/* Payment Button (for buyer after acceptance) */}
-      {chat.status === 'accettata' && !isSeller && (
+      {derivedChatStatus === 'accettata' && !isSeller && (
         <div className="p-2 md:p-3 bg-green-50 border-t">
           <Button onClick={onOpenPayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-6">
             <CreditCard className="h-5 w-5 mr-2" />
@@ -1317,7 +1338,7 @@ export default function ChatWindow({
       )}
 
       {/* Buyer can make new offer after rejection */}
-      {chat.status === 'rifiutata' && isBuyer && (
+      {derivedChatStatus === 'rifiutata' && isBuyer && (
         <div className="p-2 md:p-3 bg-orange-50 border-t">
           <Button onClick={handleMakeOffer} className="w-full bg-orange-500 hover:bg-orange-600">
             <DollarSign className="h-4 w-4 mr-2" />
@@ -1327,7 +1348,7 @@ export default function ChatWindow({
       )}
 
       {/* Review prompt after transaction completed */}
-      {chat.status === 'completata' && !hasLeftReview && (
+      {derivedChatStatus === 'completata' && !hasLeftReview && (
         <div className="p-2 md:p-3 bg-yellow-50 border-t">
           <Button 
             onClick={() => setShowReviewModal(true)} 
@@ -1343,7 +1364,7 @@ export default function ChatWindow({
       )}
 
       {/* Already reviewed message */}
-      {chat.status === 'completata' && hasLeftReview && (
+      {derivedChatStatus === 'completata' && hasLeftReview && (
         <div className="p-2 md:p-3 bg-green-50 border-t text-center">
           <p className="text-sm text-green-700 flex items-center justify-center gap-2">
             <Check className="h-4 w-4" />
