@@ -1,0 +1,105 @@
+{
+  "name": "Chat",
+  "type": "object",
+  "properties": {
+    "listingId": {
+      "type": "string",
+      "description": "ID dell'annuncio"
+    },
+    "buyerId": {
+      "type": "string",
+      "description": "ID dell'acquirente"
+    },
+    "sellerId": {
+      "type": "string",
+      "description": "ID del venditore"
+    },
+    "lastMessage": {
+      "type": "string",
+      "description": "Ultimo messaggio"
+    },
+    "lastPrice": {
+      "type": "number",
+      "description": "Ultimo prezzo proposto"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_attesa",
+        "accettata",
+        "rifiutata",
+        "completata"
+      ],
+      "default": "in_attesa",
+      "description": "Stato della trattativa"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data ultimo aggiornamento"
+    },
+    "unreadBuyer": {
+      "type": "number",
+      "default": 0,
+      "description": "Messaggi non letti dall'acquirente"
+    },
+    "unreadSeller": {
+      "type": "number",
+      "default": 0,
+      "description": "Messaggi non letti dal venditore"
+    },
+    "listingTitle": {
+      "type": "string",
+      "description": "Titolo annuncio (cache)"
+    },
+    "listingImage": {
+      "type": "string",
+      "description": "Immagine annuncio (cache)"
+    }
+  },
+  "required": [
+    "listingId",
+    "buyerId",
+    "sellerId"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.buyerId": "{{user.email}}"
+        },
+        {
+          "data.sellerId": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.buyerId": "{{user.email}}"
+        },
+        {
+          "data.sellerId": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

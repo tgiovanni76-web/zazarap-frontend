@@ -1,0 +1,90 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Email dell'utente destinatario"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "offer",
+        "message",
+        "status_update",
+        "reminder"
+      ],
+      "description": "Tipo di notifica"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titolo della notifica"
+    },
+    "message": {
+      "type": "string",
+      "description": "Messaggio della notifica"
+    },
+    "linkUrl": {
+      "type": "string",
+      "description": "URL di destinazione"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Notifica letta"
+    },
+    "relatedId": {
+      "type": "string",
+      "description": "ID dell'entit\u00e0 correlata (chat, listing, etc)"
+    }
+  },
+  "required": [
+    "userId",
+    "type",
+    "title",
+    "message"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.userId": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.userId": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.userId": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
