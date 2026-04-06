@@ -41,6 +41,7 @@ function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
     queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
     enabled: !!chat?.id,
   });
+  const offersForChat = React.useMemo(() => (offers || []).filter(o => o.chatId === chat?.id), [offers, chat?.id]);
 
   React.useEffect(() => {
     if (!chat?.id) return;
@@ -53,13 +54,13 @@ function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
   }, [chat?.id, queryClient]);
 
   const derivedStatus = React.useMemo(() => {
-    if (!offers || offers.length === 0) return chat?.status; // fallback solo se non ci sono offer
-    if (offers.some(o => o.status === 'accepted_reserved')) return 'accettata';
-    if (offers.some(o => o.status === 'pending')) return 'in_attesa';
-    const latest = [...offers].sort((a,b)=> new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
+    if (!offersForChat || offersForChat.length === 0) return chat?.status; // fallback solo se non ci sono offer
+    if (offersForChat.some(o => o.status === 'accepted_reserved')) return 'accettata';
+    if (offersForChat.some(o => o.status === 'pending')) return 'in_attesa';
+    const latest = [...offersForChat].sort((a,b)=> new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
     if (latest?.status === 'rejected') return 'rifiutata';
     return chat?.status;
-  }, [offers, chat?.status]);
+  }, [offersForChat, chat?.status]);
 
   const emoji = statusEmoji[derivedStatus] || '';
   const isSelected = !!selected;

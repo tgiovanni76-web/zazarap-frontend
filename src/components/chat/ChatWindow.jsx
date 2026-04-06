@@ -346,6 +346,7 @@ export default function ChatWindow({
       queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
       enabled: !!chat?.id,
   });
+  const offersForChat = React.useMemo(() => (offers || []).filter(o => o.chatId === chat?.id), [offers, chat?.id]);
 
   // Real-time: keep offers fresh so the receiver sees counteroffers immediately
   useEffect(() => {
@@ -379,13 +380,14 @@ export default function ChatWindow({
   };
 
   const lastOffer = React.useMemo(() => {
-    if (!offers || offers.length === 0) return null;
-    return [...offers]
+    if (!offersForChat || offersForChat.length === 0) return null;
+    return [...offersForChat]
       .sort((a,b) => new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
-  }, [offers]);
-  const hasActiveReservation = listing?.status === 'reserved' && offers.some(o => o.status === 'accepted_reserved');
+  }, [offersForChat]);
+  const hasActiveReservation = listing?.status === 'reserved' && (offersForChat || []).some(o => o.status === 'accepted_reserved');
   const derivedChatStatus = React.useMemo(() => {
     if (!lastOffer) return chat?.status;
+    if (lastOffer.chatId && lastOffer.chatId !== chat?.id) return chat?.status; // hard guard
     switch (lastOffer.status) {
       case 'pending': return 'in_attesa';
       case 'accepted_reserved': return 'accettata';
@@ -980,7 +982,7 @@ export default function ChatWindow({
       (m.senderId === offer.senderId && Number(m.price) === Number(offer.amount))
     ));
 
-    (offers || []).forEach((offer) => {
+    (offersForChat || []).forEach((offer) => {
       if (!hasLinked(offer)) {
         list.push({
           id: `virtual-${offer.id}`,
@@ -1118,7 +1120,7 @@ export default function ChatWindow({
             className="text-xs"
           >
             <History className="h-4 w-4 mr-1" />
-            {offers.length}
+            {offersForChat.length}
              </Button>
              {isBuyer && derivedChatStatus !== 'accettata' && derivedChatStatus !== 'completata' && !hasActiveReservation && (
                <Button 
@@ -1143,7 +1145,7 @@ export default function ChatWindow({
       {showOfferHistory && (
         <div className="p-3 bg-slate-100 border-b">
           <OfferHistory 
-            offers={offers} 
+            offers={offersForChat} 
             userEmail={user?.email} 
             listingPrice={listing?.price}
             lastOfferId={lastOffer?.id}
@@ -1185,7 +1187,7 @@ export default function ChatWindow({
               const offerIdMatch = msg.text?.match(/\[OFFER_ID:([^\]]+)\]/);
               const linkedOfferId = offerIdMatch ? offerIdMatch[1] : null;
               const linkedOffer = linkedOfferId ? offers.find(o => o.id === linkedOfferId) : null; // could be null on initial render; realtime/useQuery will hydrate shortly
-              const candidateOffer = linkedOffer || offers.find(o => o.status === 'pending' && o.senderId === msg.senderId && Number(o.amount) === Number(msg.price));
+              const candidateOffer = linkedOffer || offersForChat.find(o => o.status === 'pending' && o.senderId === msg.senderId && Number(o.amount) === Number(msg.price));
               const displayText = msg.text?.replace(/\[OFFER_ID:[^\]]+\]/, '').trim();
 
               return (
