@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ChatSidebar from '@/components/chat/ChatSidebar';
@@ -11,7 +11,8 @@ export default function MessagesV2() {
   const queryClient = useQueryClient();
   useEffect(() => { console.warn('[RouteEnter]/messages', window.location.href); }, []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedChatId, setSelectedChatId] = useState(null);
+  const initializedRef = useRef(false);
   const [initialOfferFlag, setInitialOfferFlag] = useState(false);
   const { t } = useLanguage();
   const [autoFocusComposer, setAutoFocusComposer] = useState(false);
@@ -55,52 +56,35 @@ export default function MessagesV2() {
     enabled: !!user,
   });
 
-  // Selection logic: preserve current selection; only use URL on first pick
+  // Initial selection: run once from URL or fallback, then never override from URL again
   useEffect(() => {
     if (!user) return;
-    if (!chats || chats.length === 0) {
-      setSelectedChat(null);
-      return;
-    }
-
-    // If a chat is already selected, keep it (and refresh the object from latest list)
-    if (selectedChat?.id) {
-      const stillThere = chats.find((c) => c.id === selectedChat.id);
-      if (stillThere && stillThere !== selectedChat) setSelectedChat(stillThere);
-      return;
-    }
-
-    // No selection yet → honor URL params once
+    if (initializedRef.current) return;
     const params = new URLSearchParams(window.location.search);
     const chatId = params.get('chatId') || params.get('cid');
     const lId = params.get('listingId') || params.get('listing') || params.get('lid');
     const sellerEmail = params.get('seller');
-
-    if (chatId) {
-      const found = chats.find((c) => c.id === chatId);
-      if (found) { setSelectedChat(found); return; }
-      base44.entities.Chat.filter({ id: chatId })
-        .then((res) => setSelectedChat((Array.isArray(res) && res[0]) ? res[0] : (chats[0] || null)))
-        .catch(() => setSelectedChat(chats[0] || null));
-      return;
+    let nextId = null;
+    if (chatId && chats && chats.length) {
+      const found = chats.find(c => c.id === chatId);
+      if (found) nextId = found.id;
+    } else if (lId && chats && chats.length) {
+      let foundByListing = chats.find(c => c.listingId === lId && (!sellerEmail || c.sellerId === sellerEmail || c.buyerId === sellerEmail));
+      if (!foundByListing) foundByListing = chats.find(c => c.listingId === lId);
+      if (foundByListing) nextId = foundByListing.id;
+    } else if (chats && chats.length) {
+      nextId = chats[0].id;
     }
-
-    if (lId) {
-      let foundByListing = chats.find((c) => c.listingId === lId && (!sellerEmail || c.sellerId === sellerEmail || c.buyerId === sellerEmail));
-      if (!foundByListing) foundByListing = chats.find((c) => c.listingId === lId);
-      setSelectedChat(foundByListing || chats[0] || null);
-      return;
-    }
-
-    setSelectedChat(chats[0] || null);
-  }, [user, chats, selectedChat?.id]);
+    if (nextId) setSelectedChatId(nextId);
+    initializedRef.current = true;
+  }, [user, chats]);
 
   // Keep URL in sync with the current selection to avoid stale params overriding selection later
   useEffect(() => {
-    if (!selectedChat?.id) return;
+    if (!selectedChatId) return;
     try {
       const url = new URL(window.location.href);
-      url.searchParams.set('chatId', selectedChat.id);
+      url.searchParams.set('chatId', selectedChatId);
       // Clear pre-chat params that could conflict
       url.searchParams.delete('listingId');
       url.searchParams.delete('listing');
@@ -108,13 +92,15 @@ export default function MessagesV2() {
       url.searchParams.delete('seller');
       window.history.replaceState({}, '', url.toString());
     } catch {}
-  }, [selectedChat?.id]);
+  }, [selectedChatId]);
 
   // Listing pre-chat focus when arriving from listing (without auto-creating chat)
   useEffect(() => {
     if (!user) return;
     if (landingListingId) setAutoFocusComposer(true);
   }, [user, landingListingId]);
+
+  const selectedChat = useMemo(() => (chats || []).find(c => c.id === selectedChatId) || null, [chats, selectedChatId]);
 
   // Listing for selected chat (optional)
   const listingId = selectedChat?.listingId;
@@ -128,14 +114,27 @@ export default function MessagesV2() {
   });
 
   // Load messages for selected chat
-  const { messages = [], loading: loadingMessages } = useMessages(selectedChat?.id);
+  const { messages = [], loading: loadingMessages } = useMessages(selectedChatId);
+
+// Do NOT let chat list refresh override current selection
+useEffect(() => {
+  if (!initializedRef.current) return;
+  if (!selectedChatId) return;
+  // If the selected chat disappeared (e.g., deleted), keep selection null; otherwise keep as-is
+  const exists = (chats || []).some(c => c.id === selectedChatId);
+  if (!exists) {
+    // Do not auto-switch to another chat; user will pick manually
+    // setSelectedChatId(null); // intentionally commented to avoid sudden jump
+  }
+  // else: no-op to preserve selection
+}, [chats, selectedChatId]);
 
   // Debug: log selected chat + messages
   useEffect(() => {
-    if (selectedChat && user) {
-      try { console.warn('[ChatDBG] selectedChat', { chatId: selectedChat.id, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId, me: user.email, msgCount: (messages||[]).length }); } catch(_){}
+    if (selectedChatId && user) {
+      try { console.warn('[ChatDBG] selectedChat', { chatId: selectedChatId, buyerId: selectedChat?.buyerId, sellerId: selectedChat?.sellerId, me: user.email, msgCount: (messages||[]).length }); } catch(_){}
     }
-  }, [selectedChat?.id, user?.email, messages?.length]);
+  }, [selectedChatId, user?.email, messages?.length]);
 
   if (!user) {
     return (
@@ -164,7 +163,7 @@ export default function MessagesV2() {
           <ChatSidebar
             chats={chats}
             selectedChat={selectedChat}
-            onSelectChat={(c) => setSelectedChat(c)}
+            onSelectChat={(c) => setSelectedChatId(c.id)}
             user={user}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -179,7 +178,7 @@ export default function MessagesV2() {
               messages={messages}
               user={user}
               listing={listing}
-              onBack={() => setSelectedChat(null)}
+              onBack={() => setSelectedChatId(null)}
               onOpenPayment={() => {}}
               onReport={() => {}}
               initialOpenOffer={initialOfferFlag}
@@ -190,7 +189,7 @@ export default function MessagesV2() {
               listingId={landingListingId}
               user={user}
               autoFocusComposer={true}
-              onChatCreated={(chat) => setSelectedChat(chat)}
+              onChatCreated={(chat) => setSelectedChatId(chat.id)}
             />
           ) : (
             <div className="h-full grid place-items-center bg-white rounded-xl border">
