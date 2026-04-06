@@ -292,12 +292,13 @@ export default function ListingDetail() {
 
         // Begrüßungs‑Systemnachricht (non bloccante)
         try {
-          await base44.entities.ChatMessage.create({
-            chatId: chatId,
-            senderId: 'system',
-            text: `💬 Chat gestartet für "${listing.title}" – Preis: ${listing.price}€`,
-            messageType: 'system'
-          });
+          const buyerId = buyerEmailRaw;
+          const sellerId = sellerEmailRaw;
+          const text = `💬 Chat gestartet für "${listing.title}" – Preis: ${listing.price}€`;
+          await Promise.all([
+            base44.entities.ChatMessage.create({ chatId: chatId, senderId: 'system', receiverId: buyerId, text, messageType: 'system' }),
+            base44.entities.ChatMessage.create({ chatId: chatId, senderId: 'system', receiverId: sellerId, text, messageType: 'system' }),
+          ]);
         } catch (e) {
           console.warn('[ContactSeller] welcome message failed', e);
         }

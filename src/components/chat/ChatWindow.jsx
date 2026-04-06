@@ -272,6 +272,11 @@ export default function ChatWindow({
   const isSeller = role === 'seller';
   const isBuyer = role === 'buyer';
   const otherUser = React.useMemo(() => (isSeller ? chat?.buyerId : chat?.sellerId), [isSeller, chat?.buyerId, chat?.sellerId]);
+  
+  // Always act on behalf of real participants (buyer/seller), never admin
+  const senderEmail = isSeller ? chat?.sellerId : isBuyer ? chat?.buyerId : chat?.buyerId; // admin fallback: act as buyer
+  const receiverEmail = isSeller ? chat?.buyerId : isBuyer ? chat?.sellerId : chat?.sellerId; // admin fallback: other participant
+  
   const isRecipient = (offer) => offer?.receiverId === user?.email;
 
   // Auto-open Offer modal when requested via URL (only for buyer)
@@ -473,9 +478,9 @@ export default function ChatWindow({
   const sendMessageMutation = useMutation({
     mutationFn: async ({ text, imageUrl, price, messageType = 'text' }) => {
       const message = await base44.entities.ChatMessage.create({
-        chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
+       chatId: chat.id,
+       senderId: senderEmail,
+       receiverId: receiverEmail,
         text: text || '',
         imageUrl,
         price,
@@ -671,8 +676,8 @@ export default function ChatWindow({
       const offer = await base44.entities.Offer.create({
         chatId: chat.id,
         listingId: chat.listingId,
-        senderId: user.email,
-        receiverId: otherUser,
+        senderId: senderEmail,
+        receiverId: receiverEmail,
         amount,
         previousAmount: lastOffer?.amount || listing?.price,
         status: 'pending',
@@ -687,8 +692,8 @@ export default function ChatWindow({
       
       const offerMessage = await base44.entities.ChatMessage.create({
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
+        senderId: senderEmail,
+        receiverId: receiverEmail,
         text: offerText + `\n[OFFER_ID:${offer.id}]`,
         price: amount,
         messageType: 'offer',
@@ -712,7 +717,7 @@ export default function ChatWindow({
         userId: otherUser,
         type: 'offer', // aligned with Notification entity; function maps to prefs
         title: type === 'counter' ? '🔄 Neues Gegenangebot!' : '💰 Neues Angebot!',
-        message: `${user.email.split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title || chat?.listingTitle}" gemacht`,
+        message: `${(senderEmail || user.email).split('@')[0]} hat ${type === 'counter' ? 'ein Gegenangebot' : 'ein Angebot'} von ${amount}€ für "${listing?.title || chat?.listingTitle}" gemacht`,
         actionUrl: createPageUrl('Messages') + `?chatId=${chat.id}`,
         metadata: { chatId: chat.id, offerId: offer.id, listingId: chat.listingId }
       });
