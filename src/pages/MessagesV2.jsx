@@ -55,41 +55,60 @@ export default function MessagesV2() {
     enabled: !!user,
   });
 
-  // Select chat from URL (?chatId) or default to most recent
+  // Selection logic: preserve current selection; only use URL on first pick
   useEffect(() => {
     if (!user) return;
     if (!chats || chats.length === 0) {
       setSelectedChat(null);
       return;
     }
+
+    // If a chat is already selected, keep it (and refresh the object from latest list)
+    if (selectedChat?.id) {
+      const stillThere = chats.find((c) => c.id === selectedChat.id);
+      if (stillThere && stillThere !== selectedChat) setSelectedChat(stillThere);
+      return;
+    }
+
+    // No selection yet → honor URL params once
     const params = new URLSearchParams(window.location.search);
     const chatId = params.get('chatId') || params.get('cid');
     const lId = params.get('listingId') || params.get('listing') || params.get('lid');
     const sellerEmail = params.get('seller');
 
-    const pickFirst = () => { if (!selectedChat) setSelectedChat(chats[0] || null); };
-
     if (chatId) {
       const found = chats.find((c) => c.id === chatId);
-      if (found) {
-        setSelectedChat(found);
-      } else {
-        // Fallback: fetch chat directly by id if not in the preloaded list
-        base44.entities.Chat.filter({ id: chatId }).then((res) => {
-          if (Array.isArray(res) && res[0]) setSelectedChat(res[0]);
-          else pickFirst();
-        }).catch(() => pickFirst());
-      }
-    } else if (lId) {
-      // Try match by listing id (+ optional seller email)
+      if (found) { setSelectedChat(found); return; }
+      base44.entities.Chat.filter({ id: chatId })
+        .then((res) => setSelectedChat((Array.isArray(res) && res[0]) ? res[0] : (chats[0] || null)))
+        .catch(() => setSelectedChat(chats[0] || null));
+      return;
+    }
+
+    if (lId) {
       let foundByListing = chats.find((c) => c.listingId === lId && (!sellerEmail || c.sellerId === sellerEmail || c.buyerId === sellerEmail));
       if (!foundByListing) foundByListing = chats.find((c) => c.listingId === lId);
-      if (foundByListing) setSelectedChat(foundByListing);
-      // otherwise PreChatComposer will handle creation
-    } else {
-      pickFirst();
+      setSelectedChat(foundByListing || chats[0] || null);
+      return;
     }
-  }, [user, chats]);
+
+    setSelectedChat(chats[0] || null);
+  }, [user, chats, selectedChat?.id]);
+
+  // Keep URL in sync with the current selection to avoid stale params overriding selection later
+  useEffect(() => {
+    if (!selectedChat?.id) return;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('chatId', selectedChat.id);
+      // Clear pre-chat params that could conflict
+      url.searchParams.delete('listingId');
+      url.searchParams.delete('listing');
+      url.searchParams.delete('lid');
+      url.searchParams.delete('seller');
+      window.history.replaceState({}, '', url.toString());
+    } catch {}
+  }, [selectedChat?.id]);
 
   // Listing pre-chat focus when arriving from listing (without auto-creating chat)
   useEffect(() => {
