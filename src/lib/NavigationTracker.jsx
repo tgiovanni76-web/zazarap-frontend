@@ -13,18 +13,23 @@ export default function NavigationTracker() {
     // Post navigation changes to parent window
     useEffect(() => {
         console.warn('[NavigationTracker] location:', location.pathname + location.search + location.hash);
-        // In preview, avoid sending rapid-fire updates when URL carries access_token
+        // In preview, if URL carries access_token, send a sanitized URL (without the token) instead of suppressing
         const host = window.location.hostname || '';
         const inPreview = host.includes('preview-sandbox') || window.top !== window.self;
         const hasAccessToken = (window.location.search || '').includes('access_token=');
-        if (inPreview && hasAccessToken) {
-            console.warn('[NavigationTracker] Suppressing app_changed_url post due to access_token in URL (preview)');
-        } else {
-            window.parent?.postMessage({
-                type: "app_changed_url",
-                url: window.location.href
-            }, '*');
-        }
+        const buildSanitizedUrl = () => {
+            try {
+                const u = new URL(window.location.href);
+                u.searchParams.delete('access_token');
+                return u.toString();
+            } catch {
+                return window.location.href
+                  .replace(/([?&])access_token=[^&#]*/, '$1')
+                  .replace(/[?&]$/, '');
+            }
+        };
+        const urlToPost = inPreview && hasAccessToken ? buildSanitizedUrl() : window.location.href;
+        window.parent?.postMessage({ type: "app_changed_url", url: urlToPost }, '*');
     }, [location]);
 
     // Log user activity when navigating to a page
