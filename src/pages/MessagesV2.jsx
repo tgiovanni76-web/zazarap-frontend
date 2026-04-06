@@ -111,6 +111,13 @@ export default function MessagesV2() {
   // Load messages for selected chat
   const { messages = [], loading: loadingMessages } = useMessages(selectedChat?.id);
 
+  // Debug: log selected chat + messages
+  useEffect(() => {
+    if (selectedChat && user) {
+      try { console.warn('[ChatDBG] selectedChat', { chatId: selectedChat.id, buyerId: selectedChat.buyerId, sellerId: selectedChat.sellerId, me: user.email, msgCount: (messages||[]).length }); } catch(_){}
+    }
+  }, [selectedChat?.id, user?.email, messages?.length]);
+
   if (!user) {
     return (
       <div className="min-h-[60vh] grid place-items-center p-6">
