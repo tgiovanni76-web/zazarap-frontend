@@ -1001,7 +1001,21 @@ export default function ChatWindow({
     return list;
   }, [messages, offers, chat?.id]);
 
-  const groupedMessages = messagesWithOffers.reduce((groups, message) => {
+  const timelineMessages = React.useMemo(() => {
+    const deduped = [];
+    const seenSystemTexts = new Set();
+    for (const m of messagesWithOffers) {
+      if (m?.messageType === 'system' && typeof m?.text === 'string') {
+        const key = m.text.trim();
+        if (seenSystemTexts.has(key)) continue;
+        seenSystemTexts.add(key);
+      }
+      deduped.push(m);
+    }
+    return deduped;
+  }, [messagesWithOffers]);
+
+  const groupedMessages = timelineMessages.reduce((groups, message) => {
     const date = formatMessageDate(message.created_date, language);
     if (!groups[date]) groups[date] = [];
     groups[date].push(message);

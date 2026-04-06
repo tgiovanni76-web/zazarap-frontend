@@ -295,10 +295,13 @@ export default function ListingDetail() {
           const buyerId = buyerEmailRaw;
           const sellerId = sellerEmailRaw;
           const text = `💬 Chat gestartet für "${listing.title}" – Preis: ${listing.price}€`;
-          await Promise.all([
-            base44.entities.ChatMessage.create({ chatId: chatId, senderId: 'system', receiverId: buyerId, text, messageType: 'system' }),
-            base44.entities.ChatMessage.create({ chatId: chatId, senderId: 'system', receiverId: sellerId, text, messageType: 'system' }),
-          ]);
+          await base44.entities.ChatMessage.create({
+            chatId: chatId,
+            senderId: sellerId,
+            receiverId: buyerId,
+            text,
+            messageType: 'system'
+          });
         } catch (e) {
           console.warn('[ContactSeller] welcome message failed', e);
         }
