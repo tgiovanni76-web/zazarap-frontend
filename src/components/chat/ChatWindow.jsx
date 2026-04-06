@@ -1172,9 +1172,16 @@ export default function ChatWindow({
               return (
                 <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[95%] md:max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md'} ${candidateOffer && lastOffer && candidateOffer.id === lastOffer.id ? `${offerRingClasses[lastOffer.status] || 'ring-2 ring-slate-400'} shadow-md` : ''}`}>
+                    <div className={`rounded-2xl px-3 py-2 md:px-4 ${
+                        msg.messageType === 'offer'
+                          ? ((candidateOffer && lastOffer && candidateOffer.id === lastOffer.id)
+                              ? (isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md')
+                              : (isOwn ? 'bg-white border shadow-sm text-slate-800 rounded-br-md' : 'bg-slate-50 border-slate-200 rounded-bl-md')
+                            )
+                          : (isOwn ? 'bg-[#d62828] text-white rounded-br-md' : 'bg-white border shadow-sm rounded-bl-md')
+                      } ${ (candidateOffer && lastOffer && candidateOffer.id === lastOffer.id) ? `${offerRingClasses[lastOffer.status] || 'ring-2 ring-slate-400'} shadow-md` : ''}`}>
                       {msg.messageType === 'offer' && (
-                        <div className={`${isOwn ? 'text-red-200' : 'text-red-600'} text-xs font-semibold mb-1`}>
+                        <div className={`${(candidateOffer && lastOffer && candidateOffer.id === lastOffer.id) ? (isOwn ? 'text-red-200' : 'text-red-600') : 'text-slate-400'} text-xs font-semibold mb-1`}>
                           {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
                         </div>
                       )}
@@ -1216,10 +1223,14 @@ export default function ChatWindow({
 
                       {/* Price */}
                       {msg.price && (
-                        <div className={`mt-1 font-bold ${isOwn ? 'text-yellow-300' : 'text-green-600'}`}>
-                          💰 {msg.price}€
-                        </div>
-                      )}
+                                                <div className={`mt-1 font-bold ${
+                                                  (msg.messageType === 'offer' && candidateOffer && lastOffer && candidateOffer.id === lastOffer.id)
+                                                    ? (isOwn ? 'text-yellow-300' : 'text-green-600')
+                                                    : 'text-slate-500'
+                                                }`}>
+                                                  💰 {msg.price}€
+                                                </div>
+                                              )}
 
                       {/* Offer Action Buttons (only for pending offers and receiver) */}
                       {msg.messageType === 'offer' && candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && candidateOffer.status === 'pending' && !isOwn && isRecipient(candidateOffer) && (
@@ -1253,7 +1264,7 @@ export default function ChatWindow({
                       )}
 
                       {/* Offer Status Badge */}
-                      {msg.messageType === 'offer' && candidateOffer && candidateOffer.status !== 'pending' && (
+                      {msg.messageType === 'offer' && candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && candidateOffer.status !== 'pending' && (
                         <div className="mt-2">
                           <Badge 
                             variant={
