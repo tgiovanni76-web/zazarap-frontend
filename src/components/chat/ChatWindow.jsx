@@ -976,6 +976,8 @@ export default function ChatWindow({
   };
 
   const messagesWithOffers = React.useMemo(() => {
+    // Hard guard: never mix messages across chats
+    const safeOffers = (offersForChat || []).filter(o => o.chatId === chat?.id);
     const list = Array.isArray(messages) ? [...messages] : [];
     const hasLinked = (offer) => list.some(m => m.messageType === 'offer' && (
       (typeof m.text === 'string' && m.text.includes(`[OFFER_ID:${offer.id}]`)) ||
@@ -1024,7 +1026,7 @@ export default function ChatWindow({
     return groups;
   }, {});
 
-  if (!chat || !user?.email || isLoadingOffers) {
+  if (!chat || !user?.email) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-5 w-5 animate-spin text-slate-400" />

@@ -18,12 +18,16 @@ export const useMessages = (chatId) => {
     }
 
     setLoading(true);
+    try { console.warn('[useMessages] init', { chatId }); } catch (_) {}
 
     // Initial fetch
     (async () => {
       try {
         const list = await base44.entities.ChatMessage.filter({ chatId }, 'created_date');
-        if (active) setMessages(list || []);
+        if (active) {
+          try { console.warn('[useMessages] fetched (poll)', { chatId, count: (list || []).length }); } catch (_) {}
+          setMessages(list || []);
+        }
       } catch (_) {
         if (active) setError('Errore nel caricamento');
       } finally {
@@ -50,7 +54,10 @@ export const useMessages = (chatId) => {
     const poller = setInterval(async () => {
       try {
         const list = await base44.entities.ChatMessage.filter({ chatId }, 'created_date');
-        if (active) setMessages(list || []);
+        if (active) {
+          try { console.warn('[useMessages] fetched (poll)', { chatId, count: (list || []).length }); } catch (_) {}
+          setMessages(list || []);
+        }
       } catch (_) {
         // ignore polling errors silently
       }
