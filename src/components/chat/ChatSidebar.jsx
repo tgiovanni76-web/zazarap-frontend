@@ -6,7 +6,7 @@ import { Search, MessageSquare } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
 import { formatCurrency } from '@/components/utils/format';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+
 
 const statusColors = {
   'in_attesa': 'bg-yellow-100 text-yellow-800',
@@ -34,33 +34,11 @@ function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
   const isSeller = chat.sellerId === user?.email;
   const otherUser = isSeller ? chat.buyerId : chat.sellerId;
   const unreadCount = isSeller ? chat.unreadSeller : chat.unreadBuyer;
-  const queryClient = useQueryClient();
 
-  const { data: offers = [] } = useQuery({
-    queryKey: ['offers', chat.id],
-    queryFn: () => base44.entities.Offer.filter({ chatId: chat.id }, '-created_date'),
-    enabled: !!chat?.id,
-  });
-  const offersForChat = React.useMemo(() => (offers || []).filter(o => o.chatId === chat?.id), [offers, chat?.id]);
 
-  React.useEffect(() => {
-    if (!chat?.id) return;
-    const unsubscribe = base44.entities.Offer.subscribe((event) => {
-      if (event?.data?.chatId === chat.id) {
-        queryClient.invalidateQueries({ queryKey: ['offers', chat.id] });
-      }
-    });
-    return unsubscribe;
-  }, [chat?.id, queryClient]);
 
-  const derivedStatus = React.useMemo(() => {
-    if (!offersForChat || offersForChat.length === 0) return chat?.status; // fallback solo se non ci sono offer
-    if (offersForChat.some(o => o.status === 'accepted_reserved')) return 'accettata';
-    if (offersForChat.some(o => o.status === 'pending')) return 'in_attesa';
-    const latest = [...offersForChat].sort((a,b)=> new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date))[0];
-    if (latest?.status === 'rejected') return 'rifiutata';
-    return chat?.status;
-  }, [offersForChat, chat?.status]);
+
+  const derivedStatus = React.useMemo(() => chat?.status, [chat?.status]);
 
   const emoji = statusEmoji[derivedStatus] || '';
   const isSelected = !!selected;

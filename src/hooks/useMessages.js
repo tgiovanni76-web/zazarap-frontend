@@ -51,6 +51,7 @@ export const useMessages = (chatId) => {
     });
 
     // Fallback polling (ensures delivery for users with flaky realtime)
+    const intervalMs = 12000 + Math.floor(Math.random() * 4000);
     const poller = setInterval(async () => {
       try {
         const list = await base44.entities.ChatMessage.filter({ chatId }, 'created_date');
@@ -61,7 +62,7 @@ export const useMessages = (chatId) => {
       } catch (_) {
         // ignore polling errors silently
       }
-    }, 5000);
+    }, intervalMs);
 
     return () => {
       active = false;
