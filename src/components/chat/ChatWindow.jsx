@@ -284,6 +284,30 @@ export default function ChatWindow({
   const isSeller = role === 'seller';
   const isBuyer = role === 'buyer';
   const otherUser = React.useMemo(() => (isSeller ? chat?.buyerId : chat?.sellerId), [isSeller, chat?.buyerId, chat?.sellerId]);
+  // Debug flag via URL (?debug=1 or ?debugParticipants=1)
+  const debugParticipants = React.useMemo(() => {
+    try {
+      const p = new URLSearchParams(window.location.search || '');
+      return p.get('debug') === '1' || p.get('debugParticipants') === '1';
+    } catch { return false; }
+  }, []);
+
+  // Log key ids when debugging
+  useEffect(() => {
+    if (debugParticipants) {
+      // eslint-disable-next-line no-console
+      console.log('[Chat Debug]', {
+        chatId: chat?.id,
+        buyerId: chat?.buyerId,
+        sellerId: chat?.sellerId,
+        currentUserId: user?.id,
+        currentUserEmail: user?.email,
+        role,
+        lastOfferId: (typeof lastOffer === 'object' && lastOffer) ? lastOffer.id : undefined,
+        lastOfferReceiverId: (typeof lastOffer === 'object' && lastOffer) ? lastOffer.receiverId : undefined,
+      });
+    }
+  }, [debugParticipants, chat?.id, chat?.buyerId, chat?.sellerId, user?.id, user?.email, role, lastOffer]);
   
   // Always act on behalf of real participants (buyer/seller), never admin
   const senderEmail = isSeller ? chat?.sellerId : isBuyer ? chat?.buyerId : chat?.buyerId; // admin fallback: act as buyer
@@ -1106,6 +1130,23 @@ export default function ChatWindow({
           </Button>
         </div>
       </div>
+
+      {/* Debug Participants Panel */}
+      {debugParticipants && (
+        <div className="m-2 md:m-3 p-2 md:p-3 border rounded-lg bg-yellow-50 text-[11px] md:text-xs text-yellow-900">
+          <div className="font-semibold mb-1">Debug partecipanti</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
+            <div><span className="text-yellow-700">chatId:</span> <code>{String(chat?.id || '')}</code></div>
+            <div><span className="text-yellow-700">currentUser.id:</span> <code>{String(user?.id || '')}</code></div>
+            <div><span className="text-yellow-700">buyerId:</span> <code>{String(chat?.buyerId || '')}</code></div>
+            <div><span className="text-yellow-700">sellerId:</span> <code>{String(chat?.sellerId || '')}</code></div>
+            {lastOffer && (
+              <div className="md:col-span-2"><span className="text-yellow-700">lastOffer.receiverId:</span> <code>{String(lastOffer?.receiverId || '')}</code></div>
+            )}
+            <div className="md:col-span-2"><span className="text-yellow-700">role calcolato:</span> <code>{role}</code></div>
+          </div>
+        </div>
+      )}
 
       {/* Unavailable Listing Banner */}
       {isListingUnavailable && (
