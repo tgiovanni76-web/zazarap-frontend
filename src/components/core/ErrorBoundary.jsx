@@ -1,5 +1,13 @@
 import React from 'react';
 
+// TS types removed for JS compatibility
+  children: React.ReactNode;
+}
+
+// TS types removed for JS compatibility
+  hasError: boolean;
+  error?: any;
+}
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
