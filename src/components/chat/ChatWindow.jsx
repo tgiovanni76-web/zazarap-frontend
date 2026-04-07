@@ -318,20 +318,25 @@ export default function ChatWindow({
   
   const isRecipient = (offer) => {
     if (!offer) return false;
-    // Direct match (includes both id and raw email in meIds)
+    // 1) Direct match (id or email)
     if (offer.receiverId && meIds.includes(offer.receiverId)) return true;
-    // Also consider normalized email equality
+    // 2) Normalized email match
     const myEmailNorm = normalizeEmail(user?.email);
     if (offer.receiverId && myEmailNorm && offer.receiverId === myEmailNorm) return true;
-    // Failsafe: if receiverId is wrong, let the opposite participant of the sender act
+    // 3) Opposite participant of the sender (when receiverId is wrong)
     const senderNorm = normalizeEmail(offer.senderId) || offer.senderId;
     const sellerNorm = normalizeEmail(chat?.sellerId) || chat?.sellerId;
     const buyerNorm = normalizeEmail(chat?.buyerId) || chat?.buyerId;
+    const iAmSeller = (sellerNorm && (meIds.includes(sellerNorm) || normalizeEmail(user?.email) === sellerNorm));
+    const iAmBuyer  = (buyerNorm && (meIds.includes(buyerNorm)  || normalizeEmail(user?.email) === buyerNorm));
     const senderIsSeller = senderNorm && sellerNorm && senderNorm === sellerNorm;
-    const senderIsBuyer = senderNorm && buyerNorm && senderNorm === buyerNorm;
-    if ((senderIsSeller && isBuyer) || (senderIsBuyer && isSeller)) return true;
+    const senderIsBuyer  = senderNorm && buyerNorm  && senderNorm === buyerNorm;
+    if ((senderIsSeller && iAmBuyer) || (senderIsBuyer && iAmSeller)) return true;
+    // 4) Last-resort: participant who is NOT the sender can act on pending offers
+    if ((iAmSeller || iAmBuyer) && !meIds.includes(offer.senderId) && offer.status === 'pending') return true;
     return false;
   };
+
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
@@ -664,7 +669,7 @@ export default function ChatWindow({
 
   const handleAcceptOffer = (offerId) => {
     const offer = offers.find(o => o.id === offerId);
-    if (!offer || !meIds.includes(offer.receiverId)) {
+    if (!offer || !isRecipient(offer)) {
       toast.error('Solo il destinatario può accettare');
       return;
     }
@@ -673,7 +678,7 @@ export default function ChatWindow({
   
   const handleRejectOffer = (offerId) => {
     const offer = offers.find(o => o.id === offerId);
-    if (!offer || !meIds.includes(offer.receiverId)) {
+    if (!offer || !isRecipient(offer)) {
       toast.error('Solo il destinatario può rifiutare');
       return;
     }
@@ -681,7 +686,7 @@ export default function ChatWindow({
   };
 
   const handleCounterOffer = (offerToCounter) => {
-    if (!offerToCounter || !meIds.includes(offerToCounter.receiverId)) {
+    if (!offerToCounter || !isRecipient(offerToCounter)) {
       toast.error('Solo il destinatario può fare una controproposta');
       return;
     }
