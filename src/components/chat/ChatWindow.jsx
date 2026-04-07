@@ -292,9 +292,10 @@ export default function ChatWindow({
     } catch { return false; }
   }, []);
 
-  // Log key ids when debugging
+  // Log key ids when debugging (deferred to avoid TDZ on lastOffer)
   useEffect(() => {
-    if (debugParticipants) {
+    if (!debugParticipants) return;
+    const timer = setTimeout(() => {
       // eslint-disable-next-line no-console
       console.log('[Chat Debug]', {
         chatId: chat?.id,
@@ -303,11 +304,13 @@ export default function ChatWindow({
         currentUserId: user?.id,
         currentUserEmail: user?.email,
         role,
-        lastOfferId: (typeof lastOffer === 'object' && lastOffer) ? lastOffer.id : undefined,
-        lastOfferReceiverId: (typeof lastOffer === 'object' && lastOffer) ? lastOffer.receiverId : undefined,
+        lastOfferId: lastOffer?.id,
+        lastOfferReceiverId: lastOffer?.receiverId,
       });
-    }
-  }, [debugParticipants, chat?.id, chat?.buyerId, chat?.sellerId, user?.id, user?.email, role, lastOffer]);
+    }, 0);
+    return () => clearTimeout(timer);
+  // Do NOT add lastOffer to deps — would reintroduce TDZ at render time
+  }, [debugParticipants, chat?.id, chat?.buyerId, chat?.sellerId, user?.id, user?.email, role]);
   
   // Always act on behalf of real participants (buyer/seller), never admin
   const senderEmail = isSeller ? chat?.sellerId : isBuyer ? chat?.buyerId : chat?.buyerId; // admin fallback: act as buyer
