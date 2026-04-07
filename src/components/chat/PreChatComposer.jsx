@@ -66,13 +66,10 @@ export default function PreChatComposer({ listingId, user, autoFocusComposer = f
         updatedAt: new Date().toISOString()
       });
       // First message
-      await base44.entities.ChatMessage.create({
+      await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: sellerEmail,
         text: messageText,
-        messageType: 'text',
-        read: false
+        messageType: 'text'
       });
       // Update chat last fields + unread for seller
       await base44.entities.Chat.update(chat.id, {

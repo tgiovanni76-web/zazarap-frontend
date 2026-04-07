@@ -479,16 +479,14 @@ export default function ChatWindow({
 
   const sendMessageMutation = useMutation({
     mutationFn: async ({ text, imageUrl, price, messageType = 'text' }) => {
-      const message = await base44.entities.ChatMessage.create({
+      const messageRes = await base44.functions.invoke('createChatMessage', {
        chatId: chat.id,
-       senderId: senderEmail,
-       receiverId: receiverEmail,
-        text: text || '',
-        imageUrl,
-        price,
-        messageType,
-        read: false
+       text: text || '',
+       imageUrl,
+       price,
+       messageType
       });
+      const message = messageRes.data;
 
       // Update chat
       const unreadField = isSeller ? 'unreadBuyer' : 'unreadSeller';
@@ -692,15 +690,13 @@ export default function ChatWindow({
         ? `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€\n"${message}"` 
         : `${type === 'counter' ? '🔄 Gegenangebot' : '💰 Angebot'}: ${amount}€`;
       
-      const offerMessage = await base44.entities.ChatMessage.create({
+      const offerMessageRes = await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: senderEmail,
-        receiverId: receiverEmail,
         text: offerText + `\n[OFFER_ID:${offer.id}]`,
         price: amount,
-        messageType: 'offer',
-        read: false
+        messageType: 'offer'
       });
+      const offerMessage = offerMessageRes.data;
 
 
 
@@ -761,10 +757,8 @@ export default function ChatWindow({
       await base44.entities.Offer.update(offerId, { status: 'accepted_reserved' });
 
       // Create system message
-      await base44.entities.ChatMessage.create({
+      await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
         text: `✅ Angebot von ${offerToAccept.amount}€ angenommen – Anzeige reserviert. Zahlung und Übergabe bitte direkt im Chat abstimmen.`,
         messageType: 'system'
       });
@@ -829,10 +823,8 @@ export default function ChatWindow({
       }
 
       // Create system message
-      await base44.entities.ChatMessage.create({
+      await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
         text: '🔓 Reservierung wurde vom Verkäufer aufgehoben. Anzeige ist wieder verfügbar.',
         messageType: 'system'
       });
@@ -872,10 +864,8 @@ export default function ChatWindow({
       });
 
       // Create system message
-      await base44.entities.ChatMessage.create({
+      await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
         text: '✅ Anzeige wurde als verkauft markiert.',
         messageType: 'system'
       });
@@ -927,10 +917,8 @@ export default function ChatWindow({
       await base44.entities.Offer.update(offerId, { status: 'rejected' });
 
       // Create system message
-      await base44.entities.ChatMessage.create({
+      await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
-        senderId: user.email,
-        receiverId: otherUser,
         text: `❌ Angebot von ${offerToReject.amount}€ abgelehnt`,
         messageType: 'system'
       });
