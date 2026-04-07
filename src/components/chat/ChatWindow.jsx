@@ -668,8 +668,8 @@ export default function ChatWindow({
       }
 
 
-      // Update previous pending offers to 'countered'
-      const pendingOffers = offers.filter(o => o.status === 'pending');
+      // Update my previous pending offers to 'countered' (respect RLS)
+      const pendingOffers = offers.filter(o => o.status === 'pending' && o.senderId === senderEmail);
       for (const offer of pendingOffers) {
         await base44.entities.Offer.update(offer.id, { status: 'countered' });
       }
@@ -777,11 +777,9 @@ export default function ChatWindow({
         updatedAt: new Date().toISOString()
       });
 
-      // Set listing to reserved
-      if (listing) {
-        await base44.entities.Listing.update(listing.id, { 
-          status: 'reserved' 
-        });
+      // Set listing to reserved (only by listing owner)
+      if (listing && listing.created_by === user.email) {
+        await base44.entities.Listing.update(listing.id, { status: 'reserved' });
       }
 
       // Notify buyer via backend

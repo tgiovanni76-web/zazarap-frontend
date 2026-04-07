@@ -1,0 +1,50 @@
+{
+  "name": "Offer",
+  "type": "object",
+  "properties": {
+    "chatId": { "type": "string", "description": "ID della chat" },
+    "listingId": { "type": "string", "description": "ID dell'annuncio" },
+    "senderId": { "type": "string", "description": "Email di chi fa l'offerta" },
+    "receiverId": { "type": "string", "description": "Email di chi riceve l'offerta" },
+    "amount": { "type": "number", "description": "Importo dell'offerta" },
+    "previousAmount": { "type": "number", "description": "Importo offerta precedente (per contro-offerte)" },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "accepted_reserved", "rejected", "countered", "withdrawn", "expired"],
+      "default": "pending",
+      "description": "Stato dell'offerta"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["initial", "counter"],
+      "default": "initial",
+      "description": "Tipo di offerta"
+    },
+    "message": { "type": "string", "description": "Messaggio opzionale con l'offerta" },
+    "expiresAt": { "type": "string", "format": "date-time", "description": "Data di scadenza offerta" }
+  },
+  "required": ["chatId", "listingId", "senderId", "receiverId", "amount"],
+  "rls": {
+    "create": { "created_by": "{{user.email}}" },
+    "read": {
+      "$or": [
+        { "senderId": "{{user.email}}" },
+        { "receiverId": "{{user.email}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "update": {
+      "$or": [
+        { "senderId": "{{user.email}}" },
+        { "receiverId": "{{user.email}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "delete": {
+      "$or": [
+        { "senderId": "{{user.email}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    }
+  }
+}
