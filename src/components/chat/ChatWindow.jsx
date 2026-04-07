@@ -337,6 +337,20 @@ export default function ChatWindow({
     return false;
   };
 
+  // Friendly display name for the OTHER participant (avoid showing raw IDs)
+  const friendlyOtherName = React.useMemo(() => {
+    const emailLocal = (v) => (typeof v === 'string' && v.includes('@') ? v.split('@')[0] : null);
+    if (isBuyer) {
+      // Show seller name: prefer listing creator email, then chat.sellerId
+      return emailLocal(listing?.created_by) || emailLocal(chat?.sellerId) || (language==='de' ? 'Verkäufer' : language==='en' ? 'Seller' : 'Venditore');
+    }
+    if (isSeller) {
+      // Show buyer name: if chat.buyerId is an email, use its local part; otherwise fallback to label only
+      return emailLocal(chat?.buyerId) || (language==='de' ? 'Käufer' : language==='en' ? 'Buyer' : 'Acquirente');
+    }
+    return emailLocal(otherUser) || (language==='de' ? 'Nutzer' : language==='en' ? 'User' : 'Utente');
+  }, [isBuyer, isSeller, listing?.created_by, chat?.sellerId, chat?.buyerId, otherUser, language]);
+
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
@@ -1132,12 +1146,7 @@ export default function ChatWindow({
               {isSeller ? (language==='it'?'Tu: Venditore':language==='de'?'Ich: Verkäufer':language==='en'?'You: Seller':ct.seller) : (language==='it'?'Tu: Acquirente':language==='de'?'Ich: Käufer':language==='en'?'You: Buyer':ct.buyer)}
             </span>
             <span className="opacity-70">•</span>
-            {(isSeller ? ct.buyer : ct.seller)}: {(() => {
-              const v = otherUser || '';
-              if (typeof v !== 'string') return '—';
-              const at = v.indexOf('@');
-              return at > 0 ? v.slice(0, at) : v;
-            })()}
+            {(isSeller ? ct.buyer : ct.seller)}: {friendlyOtherName}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
           </p>
         </div>
