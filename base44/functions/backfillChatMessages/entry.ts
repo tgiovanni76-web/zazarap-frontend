@@ -16,8 +16,6 @@ Deno.serve(async (req) => {
 
     for (const msg of (messages || [])) {
       totalProcessed++;
-      if (msg.buyerId && msg.sellerId) continue;
-
       // Load related chat to copy buyer/seller
       const chats = await base44.asServiceRole.entities.Chat.filter({ id: msg.chatId });
       const chat = Array.isArray(chats) ? chats[0] : null;
@@ -29,23 +27,26 @@ Deno.serve(async (req) => {
       // Resolve emails -> user.id where possible (admin privileges)
       async function resolveToUserId(value) {
         if (!value) return null;
-        // Heuristic: if value looks like an email, try to fetch the user by email
-        const looksLikeEmail = typeof value === 'string' && value.includes('@');
-        if (looksLikeEmail) {
+        const isEmail = typeof value === 'string' && value.includes('@');
+        if (isEmail) {
           try {
             const found = await base44.asServiceRole.entities.User.filter({ email: value });
             if (Array.isArray(found) && found[0]?.id) return found[0].id;
           } catch (_) {}
         }
-        return value; // already an id or unknown, keep as-is
+        return value;
       }
 
       const patch = {};
       const resolvedBuyer = await resolveToUserId(buyerKey);
       const resolvedSeller = await resolveToUserId(sellerKey);
+      const resolvedSender = await resolveToUserId(msg.senderId);
+      const resolvedReceiver = await resolveToUserId(msg.receiverId);
 
       if (!msg.buyerId && resolvedBuyer) patch.buyerId = resolvedBuyer;
       if (!msg.sellerId && resolvedSeller) patch.sellerId = resolvedSeller;
+      if (resolvedSender && resolvedSender !== msg.senderId) patch.senderId = resolvedSender;
+      if (resolvedReceiver && resolvedReceiver !== msg.receiverId) patch.receiverId = resolvedReceiver;
 
       if (Object.keys(patch).length > 0) {
         await base44.asServiceRole.entities.ChatMessage.update(msg.id, patch);

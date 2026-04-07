@@ -152,194 +152,22 @@ export default function ListingDetail() {
 
   const handleContactSeller = async (opts = {}) => {
     if (!listing) { toast.error('Anzeige nicht gefunden'); return; }
-    if (!user) {
-      base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`);
-      return;
-    }
-    // Ensure listingId and seller are valid
-    if (!listingId) {
-      console.error('[ContactSeller] missing listingId in URL');
-      toast.error('Fehler: Ungültige URL');
-      return;
-    }
-
-    // Log current user ids for diagnostics
-    console.debug('[ContactSeller] current user', { id: user.id, email: user.email });
-    console.debug('[ContactSeller] listing owner fields', { created_by: listing.created_by, sellerId: listing.sellerId, ownerEmail: listing.ownerEmail, ownerId: listing.ownerId });
-
-    const normalizeEmail = (s) => (s || '').toString().trim().toLowerCase();
-    const buyerEmailRaw = (user.email || '').toString().trim();
-    const sellerEmailRaw = (() => {
-      const v = [
-        listing.created_by,
-        listing.ownerEmail,
-        listing.sellerId,
-        listing.ownerId,
-      ].find(v => typeof v === 'string' && v.includes('@'));
-      return (v || listing.created_by || listing.ownerEmail || '').toString().trim();
-    })();
-    const buyerEmail = normalizeEmail(buyerEmailRaw);
-    const sellerEmail = normalizeEmail(sellerEmailRaw);
-
-    if (!sellerEmail) {
-      console.error('[ContactSeller] sellerEmail missing/invalid on listing', { listingId, listing });
-      toast.error('Fehler: Verkäufer nicht gefunden');
-      return;
-    }
-    if (buyerEmail === sellerEmail) {
-      toast.error('Sie können Ihre eigene Anzeige nicht kontaktieren');
-      return;
-    }
-
+    if (!user) { base44.auth.redirectToLogin(createPageUrl('ListingDetail') + `?id=${listingId}`); return; }
     setIsContactingLoading(true);
     try {
-      console.debug('[ContactSeller] click', { listingId, buyerEmail, sellerEmail });
-
-      // Prüfen: existiert bereits eine Chat‑Konversation? Fehler ignorieren → anlegen
-      let existingChats = [];
+      const chatRes = await base44.functions.invoke('createOrGetChat', { listingId });
+      const chat = chatRes.data; const chatId = chat?.id; if (!chatId) throw new Error('Missing chat id');
       try {
-        // First try exact-case match (RLS requires exact equality with user.email)
-        existingChats = await base44.entities.Chat.filter(
-          { listingId: listingId, buyerId: buyerEmailRaw, sellerId: sellerEmailRaw },
-          '-updated_date'
-        );
-        // Fallback: try lowercased legacy records (created previously)
-        if (!existingChats?.length) {
-          existingChats = await base44.entities.Chat.filter(
-            { listingId: listingId, buyerId: buyerEmail, sellerId: sellerEmail },
-            '-updated_date'
-          ).catch(() => []);
-        }
-      } catch (e) {
-        console.warn('[ContactSeller] existingChats filter failed, will create new chat', e);
-        existingChats = [];
-      }
-      console.debug('[ContactSeller] filter for existing', { listingId, buyerIdRaw: buyerEmailRaw, sellerIdRaw: sellerEmailRaw, buyerLower: buyerEmail, sellerLower: sellerEmail });
-      console.debug('[ContactSeller] existingChats count', existingChats?.length, existingChats?.map(c => c.id));
-
-      let chatId;
-
-      if (existingChats && existingChats.length > 0) {
-        chatId = existingChats[0].id;
-        console.debug('[ContactSeller] using existing chat', { chatId });
-      } else {
-        // Neue Chat-Konversation anlegen
-        const payload = {
-          listingId: listingId,
-          buyerId: buyerEmailRaw,
-          sellerId: sellerEmailRaw,
-          status: 'in_attesa',
-          lastMessage: '',
-          listingTitle: listing.title,
-          listingImage: listing.images?.[0] || '',
-          lastPrice: typeof listing.price === 'number' ? listing.price : undefined,
-          updatedAt: new Date().toISOString(),
-          unreadBuyer: 0,
-          unreadSeller: 0
-        };
-        console.debug('[ContactSeller] creating chat payload', payload);
-        try {
-          localStorage.setItem('pendingChatMeta', JSON.stringify({
-            listingId,
-            buyerId: user.email,
-            sellerId: sellerEmailRaw,
-            listingTitle: listing.title,
-            listingImage: listing.images?.[0] || '',
-            lastPrice: typeof listing.price === 'number' ? listing.price : null
-          }));
-        } catch {}
-        console.debug('[ContactSeller] creating chat with payload', payload);
-        const newChat = await base44.entities.Chat.create(payload);
-        chatId = newChat?.id || newChat?.data?.id || newChat?.inserted_id;
-        console.debug('[ContactSeller] new chat created', { chatId, newChat });
-        // Fallback + robust wait loop: if ID missing, poll until record is visible
-        if (!chatId) {
-          for (let i = 0; i < 30 && !chatId; i++) { // ~30 * 300ms ≈ 9s max
-            try {
-              // Try exact-case first (RLS is case-sensitive)
-              let retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmailRaw, sellerId: sellerEmailRaw }, '-updated_date').catch(() => []);
-              if (!retry?.length) {
-                // Fallback: exact buyer only
-                retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmailRaw }, '-updated_date').catch(() => []);
-              }
-              if (!retry?.length) {
-                // Fallback: lowercase legacy records
-                retry = await base44.entities.Chat.filter({ listingId: listingId, buyerId: buyerEmail }, '-updated_date').catch(() => []);
-              }
-              chatId = retry?.[0]?.id || null;
-              if (chatId) {
-                console.debug('[ContactSeller] fallback found chat id', { chatId, try: i + 1 });
-                break;
-              }
-            } catch (e) {
-              console.warn('[ContactSeller] fallback fetch failed (try loop)', e);
-            }
-            await new Promise(r => setTimeout(r, 300));
-          }
-        }
-
-        // Verify persistence by id (best-effort)
-        if (chatId) {
-          try {
-            const verify = await base44.entities.Chat.filter({ id: chatId });
-            console.debug('[ContactSeller] persisted chat', verify?.[0]);
-            if (verify && verify[0]) {
-              const ch = verify[0];
-              console.debug('[ContactSeller] persisted fields', { listingId: ch.listingId, buyerId: ch.buyerId, sellerId: ch.sellerId });
-            }
-          } catch {}
-        }
-
-        // Begrüßungs‑Systemnachricht (non bloccante)
-        try {
-          const buyerId = buyerEmailRaw;
-          const sellerId = sellerEmailRaw;
-          const text = `💬 Chat gestartet für "${listing.title}" – Preis: ${listing.price}€`;
-          await base44.entities.ChatMessage.create({
-            chatId: chatId,
-            senderId: sellerId,
-            receiverId: buyerId,
-            text,
-            messageType: 'system'
-          });
-        } catch (e) {
-          console.warn('[ContactSeller] welcome message failed', e);
-        }
-      }
-
-      // Direkt zur Chat-Seite mit chatId navigieren (mit Fallback)
-      if (!chatId) {
-        console.error('[ContactSeller] missing chatId after creation, aborting navigation');
-        toast.error('Impossibile aprire la chat, riprova.');
-        navigate(createPageUrl('messages'));
-        return;
-      }
-      try { 
         localStorage.setItem('pendingChatId', chatId);
-        // Keep pendingChatMeta for self-heal in Messages until it confirms load
+        localStorage.setItem('pendingChatMeta', JSON.stringify({ listingId, buyerId: user.id, sellerId: chat?.sellerId, listingTitle: listing.title, listingImage: listing.images?.[0] || '', lastPrice: typeof listing.price === 'number' ? listing.price : null }));
       } catch {}
-      let targetUrl = createPageUrl('messages') + `?chatId=${encodeURIComponent(chatId)}&lid=${encodeURIComponent(listingId)}&seller=${encodeURIComponent(sellerEmailRaw)}`; try { localStorage.setItem('pendingChatId', chatId); } catch {}
-      if (opts.openOffer) { targetUrl += '&open=offer'; }
-      console.debug('[ContactSeller] redirecting to', targetUrl);
+      let targetUrl = createPageUrl('messages') + `?chatId=${encodeURIComponent(chatId)}&lid=${encodeURIComponent(listingId)}`;
+      if (opts.openOffer) targetUrl += '&open=offer';
       navigate(targetUrl);
-      // Fallback: falls der Router die Query verliert, erzwinge Navigation
-      const ensureNav = () => {
-        const present = new URLSearchParams(window.location.search).get('chatId');
-        if (!present) {
-          console.warn('[ContactSeller] router lost chatId, forcing location.assign', { targetUrl });
-          window.location.assign(targetUrl);
-        } else {
-          console.debug('[ContactSeller] router confirmed chatId in URL', { chatId: present });
-        }
-      };
-      setTimeout(ensureNav, 150);
-      setTimeout(ensureNav, 400);
-    } catch (error) {
-      console.error('[ContactSeller] Error creating/getting chat:', error);
-      toast.error('Fehler beim Starten des Chats');
-    } finally {
-      setIsContactingLoading(false);
-    }
+      const ensureNav = () => { const present = new URLSearchParams(window.location.search).get('chatId'); if (!present) { window.location.assign(targetUrl); } };
+      setTimeout(ensureNav, 150); setTimeout(ensureNav, 400);
+    } catch (error) { console.error('[ContactSeller] Error creating/getting chat:', error); toast.error('Fehler beim Starten des Chats'); }
+    finally { setIsContactingLoading(false); }
   };
 
   const handleMakeOffer = async () => {

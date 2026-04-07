@@ -69,10 +69,10 @@
     "read": {
       "$or": [
         {
-          "data.buyerId": "{{user.email}}"
+          "data.buyerId": "{{user.id}}"
         },
         {
-          "data.sellerId": "{{user.email}}"
+          "data.sellerId": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -84,10 +84,10 @@
     "update": {
       "$or": [
         {
-          "data.buyerId": "{{user.email}}"
+          "data.buyerId": "{{user.id}}"
         },
         {
-          "data.sellerId": "{{user.email}}"
+          "data.sellerId": "{{user.id}}"
         },
         {
           "user_condition": {

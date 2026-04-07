@@ -56,22 +56,16 @@ export default function PreChatComposer({ listingId, user, autoFocusComposer = f
     mutationFn: async () => {
       if (!user || !listing) throw new Error('Missing data');
       const sellerEmail = listing.created_by || listing.sellerId;
-      // Create chat
-      const chat = await base44.entities.Chat.create({
-        listingId,
-        buyerId: user.email,
-        sellerId: sellerEmail,
-        listingTitle: listing.title,
-        listingImage: (listing.images && listing.images[0]) || '',
-        updatedAt: new Date().toISOString()
-      });
+      // Create or get chat via backend (ids, not emails)
+      const chatRes = await base44.functions.invoke('createOrGetChat', { listingId });
+      const chat = chatRes.data;
       // First message
       await base44.functions.invoke('createChatMessage', {
         chatId: chat.id,
         text: messageText,
         messageType: 'text'
       });
-      // Update chat last fields + unread for seller
+      // Update chat last fields + unread for seller (IDs already consistent)
       await base44.entities.Chat.update(chat.id, {
         lastMessage: messageText.substring(0, 50),
         lastPrice: chat.lastPrice,

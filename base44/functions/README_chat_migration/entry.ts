@@ -1,0 +1,1 @@
+Deno.serve((req) => new Response(JSON.stringify({ status: 'ok', note: 'placeholder' }), { headers: { 'Content-Type': 'application/json' } }));
