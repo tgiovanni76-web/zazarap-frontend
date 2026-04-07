@@ -115,7 +115,8 @@ export default function MessagesV2() {
     queryKey: ['listing', listingId],
     queryFn: async () => {
       const res = await base44.entities.Listing.filter({ id: listingId });
-      return Array.isArray(res) ? res[0] : null;
+      // Ensure a defined value is always returned to satisfy React Query
+      return Array.isArray(res) && res.length > 0 ? res[0] : null;
     },
     enabled: !!listingId,
   });
