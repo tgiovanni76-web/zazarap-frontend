@@ -25,9 +25,21 @@ Deno.serve(async (req) => {
       return id;
     };
 
+    // Counters
+    let chatsWithEmailIds = 0;
+    let unreadMismatches = 0;
+
     // Load a window of recent chats, then filter in-memory for those needing migration
     const windowSize = 400; // safety: large enough window, still bounded
     const chatsWindow = await base44.asServiceRole.entities.Chat.list('-updated_date', windowSize);
+
+    // Count chats with email-based IDs in the current window
+    chatsWithEmailIds = (chatsWindow || []).reduce((acc, c) => {
+      const b = c?.buyerId, s = c?.sellerId;
+      const be = typeof b === 'string' && b.includes('@');
+      const se = typeof s === 'string' && s.includes('@');
+      return acc + (be || se ? 1 : 0);
+    }, 0);
 
     const needsMigration = [];
     for (const c of chatsWindow || []) {
@@ -96,6 +108,10 @@ Deno.serve(async (req) => {
         }
       }
 
+      // Track unread mismatches (before update)
+      if ((chat.unreadBuyer ?? 0) !== unreadBuyer || (chat.unreadSeller ?? 0) !== unreadSeller) {
+        unreadMismatches += 1;
+      }
       patch.lastMessage = lastMessage ?? null;
       patch.lastPrice = typeof lastPrice === 'number' ? lastPrice : null;
       patch.unreadBuyer = unreadBuyer;
@@ -108,6 +124,8 @@ Deno.serve(async (req) => {
 
     return Response.json({
       processedCount: processed.length,
+      chatsWithEmailIds,
+      unreadMismatches,
       notMigratableCount: notMigratable.length,
       notMigratable: notMigratable.slice(0, 50), // cap output
     });

@@ -1,14 +1,5 @@
 import React from 'react';
 
-// TS types removed for JS compatibility
-  children: React.ReactNode;
-}
-
-// TS types removed for JS compatibility
-  hasError: boolean;
-  error?: any;
-}
-
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +10,7 @@ export default class ErrorBoundary extends React.Component {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: any, info: any) {
     // Basic logging – could be extended to send to backend
     // eslint-disable-next-line no-console
     console.error('UI ErrorBoundary caught:', error, info);

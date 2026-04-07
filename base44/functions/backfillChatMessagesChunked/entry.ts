@@ -31,18 +31,34 @@ Deno.serve(async (req) => {
     const windowSize = 200;
     const messagesWindow = await base44.asServiceRole.entities.ChatMessage.list('-updated_date', windowSize);
 
+    // Also count chats with email-based IDs in a similar window
+    const chatsWindow = await base44.asServiceRole.entities.Chat.list('-updated_date', windowSize);
+    for (const c of chatsWindow || []) {
+      const b = c?.buyerId, s = c?.sellerId;
+      const bEmail = typeof b === 'string' && b.includes('@');
+      const sEmail2 = typeof s === 'string' && s.includes('@');
+      if (bEmail || sEmail2) chatsWithEmailIds += 1;
+    }
+
     const needsWork = [];
     for (const m of messagesWindow || []) {
       const s = m?.senderId, r = m?.receiverId;
       const sEmail = typeof s === 'string' && s.includes('@');
       const rEmail = typeof r === 'string' && r.includes('@');
       const missingBR = !m?.buyerId || !m?.sellerId;
+      if (sEmail || rEmail) messagesWithEmailIds += 1;
+      if (missingBR) messagesMissingBuyerSeller += 1;
       if (sEmail || rEmail || missingBR) needsWork.push(m);
       if (needsWork.length >= BATCH_LIMIT) break;
     }
 
+    let chatsWithEmailIds = 0;
+    let messagesWithEmailIds = 0;
+    let messagesMissingBuyerSeller = 0;
     let participantsMismatch = 0;
     let orphanMessage = 0;
+    let unreadMismatches = 0;
+    const checkedChats = new Set();
 
     const processed = [];
     const notMigratable = [];
@@ -54,6 +70,21 @@ Deno.serve(async (req) => {
         // Orphan message: parent chat missing
         orphanMessage += 1;
         continue;
+      }
+      // Check unread counters mismatch once per chat
+      if (!checkedChats.has(chat.id)) {
+        const msgsForChat = await base44.asServiceRole.entities.ChatMessage.filter({ chatId }, '-created_date');
+        let uBuyer = 0, uSeller = 0;
+        for (const mm of msgsForChat || []) {
+          if (!mm.read) {
+            if (mm.receiverId === chat.buyerId) uBuyer += 1;
+            else if (mm.receiverId === chat.sellerId) uSeller += 1;
+          }
+        }
+        if ((chat.unreadBuyer ?? 0) !== uBuyer || (chat.unreadSeller ?? 0) !== uSeller) {
+          unreadMismatches += 1;
+        }
+        checkedChats.add(chat.id);
       }
 
       // Normalize sender/receiver if they look like emails
@@ -103,8 +134,12 @@ Deno.serve(async (req) => {
 
     return Response.json({
       processedCount: processed.length,
+      chatsWithEmailIds,
+      messagesWithEmailIds,
+      messagesMissingBuyerSeller,
       participantsMismatch,
       orphanMessage,
+      unreadMismatches,
       notMigratableCount: notMigratable.length,
       notMigratable: notMigratable.slice(0, 50),
     });
