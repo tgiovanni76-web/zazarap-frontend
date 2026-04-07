@@ -62,18 +62,19 @@ Deno.serve(async (req) => {
       read: false
     });
 
-    // Send email only when allowed by prefs and not for direct chat messages
-    if (emailAllowed && type !== 'message') {
-      try {
-        await base44.integrations.Core.SendEmail({
-          to: userId,
-          subject: title,
-          body: `${message}\n\n${actionUrl ? `Visualizza: ${actionUrl}` : ''}`
-        });
-      } catch (e) {
-        console.log('Email send failed:', e);
-      }
-    }
+    // Email sending disabled in preview/this build to avoid provider restrictions.
+    // In-app notifications are created above and are sufficient for UX.
+    // if (emailAllowed && type !== 'message') {
+    //   try {
+    //     await base44.integrations.Core.SendEmail({
+    //       to: userId,
+    //       subject: title,
+    //       body: `${message}\n\n${actionUrl ? `Visualizza: ${actionUrl}` : ''}`
+    //     });
+    //   } catch (e) {
+    //     console.log('Email send failed:', e);
+    //   }
+    // }
 
     return Response.json({
       success: true,
