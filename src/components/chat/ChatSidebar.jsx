@@ -31,7 +31,7 @@ function formatChatTime(dateStr) {
 }
 
 function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
-  const isSeller = chat.sellerId === user?.email;
+  const isSeller = [user?.id, user?.email].includes(chat.sellerId);
   const otherUser = isSeller ? chat.buyerId : chat.sellerId;
   const unreadCount = isSeller ? chat.unreadSeller : chat.unreadBuyer;
 

@@ -42,11 +42,18 @@ export default function MessagesV2() {
     queryKey: ['chats', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      const [asBuyer, asSeller] = await Promise.all([
+      const [asBuyerId, asSellerId, asBuyerEmail, asSellerEmail] = await Promise.all([
+        base44.entities.Chat.filter({ buyerId: user.id }, '-updated_date', 200),
+        base44.entities.Chat.filter({ sellerId: user.id }, '-updated_date', 200),
         base44.entities.Chat.filter({ buyerId: user.email }, '-updated_date', 200),
         base44.entities.Chat.filter({ sellerId: user.email }, '-updated_date', 200),
       ]);
-      const merged = [...(Array.isArray(asBuyer) ? asBuyer : []), ...(Array.isArray(asSeller) ? asSeller : [])];
+      const merged = [
+        ...(Array.isArray(asBuyerId) ? asBuyerId : []),
+        ...(Array.isArray(asSellerId) ? asSellerId : []),
+        ...(Array.isArray(asBuyerEmail) ? asBuyerEmail : []),
+        ...(Array.isArray(asSellerEmail) ? asSellerEmail : []),
+      ];
       const map = new Map();
       merged.forEach(c => { if (c?.id) map.set(c.id, c); });
       const unique = Array.from(map.values());

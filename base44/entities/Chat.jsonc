@@ -75,6 +75,12 @@
           "data.sellerId": "{{user.id}}"
         },
         {
+          "data.buyerId": "{{user.email}}"
+        },
+        {
+          "data.sellerId": "{{user.email}}"
+        },
+        {
           "user_condition": {
             "role": "admin"
           }
