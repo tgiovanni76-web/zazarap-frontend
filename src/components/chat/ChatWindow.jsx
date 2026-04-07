@@ -817,7 +817,7 @@ export default function ChatWindow({
       if (!offerToAccept) {
         throw new Error('Offerta non trovata');
       }
-      if (!meIds.includes(offerToAccept.receiverId)) {
+      if (!isRecipient(offerToAccept)) {
         throw new Error('Solo il destinatario può accettare');
       }
       if (offerToAccept.status !== 'pending') {
@@ -988,7 +988,7 @@ export default function ChatWindow({
       if (!offerToReject) {
         throw new Error('Offerta non trovata');
       }
-      if (!meIds.includes(offerToReject.receiverId)) {
+      if (!isRecipient(offerToReject)) {
         throw new Error('Solo il destinatario può rifiutare');
       }
       if (offerToReject.status !== 'pending') {
