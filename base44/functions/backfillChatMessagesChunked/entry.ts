@@ -31,6 +31,14 @@ Deno.serve(async (req) => {
     const windowSize = 200;
     const messagesWindow = await base44.asServiceRole.entities.ChatMessage.list('-updated_date', windowSize);
 
+    // Counters
+    let chatsWithEmailIds = 0;
+    let messagesWithEmailIds = 0;
+    let messagesMissingBuyerSeller = 0;
+    let participantsMismatch = 0;
+    let orphanMessage = 0;
+    let unreadMismatches = 0;
+
     // Also count chats with email-based IDs in a similar window
     const chatsWindow = await base44.asServiceRole.entities.Chat.list('-updated_date', windowSize);
     for (const c of chatsWindow || []) {
@@ -52,12 +60,6 @@ Deno.serve(async (req) => {
       if (needsWork.length >= BATCH_LIMIT) break;
     }
 
-    let chatsWithEmailIds = 0;
-    let messagesWithEmailIds = 0;
-    let messagesMissingBuyerSeller = 0;
-    let participantsMismatch = 0;
-    let orphanMessage = 0;
-    let unreadMismatches = 0;
     const checkedChats = new Set();
 
     const processed = [];

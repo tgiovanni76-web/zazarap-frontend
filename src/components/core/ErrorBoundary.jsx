@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -10,7 +12,7 @@ export default class ErrorBoundary extends React.Component {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: any, info: any) {
+  componentDidCatch(error, info) {
     // Basic logging – could be extended to send to backend
     // eslint-disable-next-line no-console
     console.error('UI ErrorBoundary caught:', error, info);
