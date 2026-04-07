@@ -31,10 +31,18 @@ function formatChatTime(dateStr) {
 }
 
 function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
-  const meIds = useMemo(() => [user?.id, user?.email].filter(Boolean), [user?.id, user?.email]);
-  const isSeller = meIds.includes(chat.sellerId);
-  const otherUser = isSeller ? chat.buyerId : chat.sellerId;
-  const unreadCount = isSeller ? chat.unreadSeller : chat.unreadBuyer;
+  const normalizeEmail = (v) => (typeof v === 'string' && v.includes('@') ? v.trim().toLowerCase() : v);
+  const isSeller = useMemo(() => {
+    if (!user) return false;
+    const seller = chat?.sellerId;
+    if (!seller) return false;
+    if (seller === user.id) return true;
+    const sellerEmail = normalizeEmail(seller);
+    const meEmail = normalizeEmail(user.email);
+    return !!(sellerEmail && meEmail && sellerEmail === meEmail);
+  }, [chat?.sellerId, user?.id, user?.email]);
+  const otherUser = isSeller ? (chat?.buyerId ?? null) : (chat?.sellerId ?? null);
+  const unreadCount = isSeller ? (chat?.unreadSeller ?? 0) : (chat?.unreadBuyer ?? 0);
 
 
 
@@ -90,7 +98,12 @@ function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
           </div>
           <p className="text-xs text-slate-500 truncate mb-1">
             {isSeller ? `${t('buyer') || 'Acquirente'}: ` : `${t('seller') || 'Venditore'}: `}
-            {otherUser?.split('@')[0]}
+            {(() => {
+              const v = otherUser || '';
+              if (typeof v !== 'string') return '—';
+              const at = v.indexOf('@');
+              return at > 0 ? v.slice(0, at) : v;
+            })()}
           </p>
           <div className="flex items-center justify-between">
             <p className={`text-xs truncate flex-1 ${unreadCount > 0 ? 'font-semibold text-slate-700' : 'text-slate-400'}`}>

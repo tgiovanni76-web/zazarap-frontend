@@ -263,12 +263,24 @@ export default function ChatWindow({
   const queryClient = useQueryClient();
 
   const meIds = React.useMemo(() => [user?.id, user?.email].filter(Boolean), [user?.id, user?.email]);
+  const normalizeEmail = (v) => (typeof v === 'string' && v.includes('@') ? v.trim().toLowerCase() : v);
   const role = React.useMemo(() => {
-    if (!chat || meIds.length === 0) return 'unknown';
-    if (meIds.includes(chat.sellerId)) return 'seller';
-    if (meIds.includes(chat.buyerId)) return 'buyer';
+    if (!chat) return 'unknown';
+    const seller = chat?.sellerId;
+    const buyer = chat?.buyerId;
+    // Prefer exact id match
+    if (seller && seller === user?.id) return 'seller';
+    if (buyer && buyer === user?.id) return 'buyer';
+    // Fallback to normalized email match
+    const meEmail = normalizeEmail(user?.email);
+    if (meEmail) {
+      const sellerEmail = normalizeEmail(seller);
+      const buyerEmail = normalizeEmail(buyer);
+      if (sellerEmail && sellerEmail === meEmail) return 'seller';
+      if (buyerEmail && buyerEmail === meEmail) return 'buyer';
+    }
     return 'unknown';
-  }, [meIds, chat?.sellerId, chat?.buyerId]);
+  }, [chat?.sellerId, chat?.buyerId, user?.id, user?.email]);
   const isSeller = role === 'seller';
   const isBuyer = role === 'buyer';
   const otherUser = React.useMemo(() => (isSeller ? chat?.buyerId : chat?.sellerId), [isSeller, chat?.buyerId, chat?.sellerId]);
@@ -1062,7 +1074,12 @@ export default function ChatWindow({
               {isSeller ? (language==='it'?'Tu: Venditore':language==='de'?'Ich: Verkäufer':language==='en'?'You: Seller':ct.seller) : (language==='it'?'Tu: Acquirente':language==='de'?'Ich: Käufer':language==='en'?'You: Buyer':ct.buyer)}
             </span>
             <span className="opacity-70">•</span>
-            {(isSeller ? ct.buyer : ct.seller)}: {otherUser?.split('@')[0]}
+            {(isSeller ? ct.buyer : ct.seller)}: {(() => {
+              const v = otherUser || '';
+              if (typeof v !== 'string') return '—';
+              const at = v.indexOf('@');
+              return at > 0 ? v.slice(0, at) : v;
+            })()}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
           </p>
         </div>
