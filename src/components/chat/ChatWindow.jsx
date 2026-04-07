@@ -316,7 +316,22 @@ export default function ChatWindow({
   const senderEmail = isSeller ? chat?.sellerId : isBuyer ? chat?.buyerId : chat?.buyerId; // admin fallback: act as buyer
   const receiverEmail = isSeller ? chat?.buyerId : isBuyer ? chat?.sellerId : chat?.sellerId; // admin fallback: other participant
   
-  const isRecipient = (offer) => offer?.receiverId && meIds.includes(offer.receiverId);
+  const isRecipient = (offer) => {
+    if (!offer) return false;
+    // Direct match (includes both id and raw email in meIds)
+    if (offer.receiverId && meIds.includes(offer.receiverId)) return true;
+    // Also consider normalized email equality
+    const myEmailNorm = normalizeEmail(user?.email);
+    if (offer.receiverId && myEmailNorm && offer.receiverId === myEmailNorm) return true;
+    // Failsafe: if receiverId is wrong, let the opposite participant of the sender act
+    const senderNorm = normalizeEmail(offer.senderId) || offer.senderId;
+    const sellerNorm = normalizeEmail(chat?.sellerId) || chat?.sellerId;
+    const buyerNorm = normalizeEmail(chat?.buyerId) || chat?.buyerId;
+    const senderIsSeller = senderNorm && sellerNorm && senderNorm === sellerNorm;
+    const senderIsBuyer = senderNorm && buyerNorm && senderNorm === buyerNorm;
+    if ((senderIsSeller && isBuyer) || (senderIsBuyer && isSeller)) return true;
+    return false;
+  };
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
@@ -715,8 +730,9 @@ export default function ChatWindow({
       const offer = await base44.entities.Offer.create({
         chatId: chat.id,
         listingId: chat.listingId,
-        senderId: senderEmail,
-        receiverId: receiverEmail,
+        // Ensure correct participants: initial offer always buyer -> seller
+        senderId: type === 'initial' ? (chat?.buyerId || senderEmail) : senderEmail,
+        receiverId: type === 'initial' ? (chat?.sellerId || receiverEmail) : receiverEmail,
         amount,
         previousAmount: lastOffer?.amount || listing?.price,
         status: 'pending',
