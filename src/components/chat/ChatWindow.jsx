@@ -262,13 +262,13 @@ export default function ChatWindow({
   const messageInputRef = useRef(null);
   const queryClient = useQueryClient();
 
+  const meIds = React.useMemo(() => [user?.id, user?.email].filter(Boolean), [user?.id, user?.email]);
   const role = React.useMemo(() => {
-    const email = user?.email;
-    if (!email || !chat) return 'unknown';
-    if (chat.sellerId === email) return 'seller';
-    if (chat.buyerId === email) return 'buyer';
+    if (!chat || meIds.length === 0) return 'unknown';
+    if (meIds.includes(chat.sellerId)) return 'seller';
+    if (meIds.includes(chat.buyerId)) return 'buyer';
     return 'unknown';
-  }, [user?.email, chat?.sellerId, chat?.buyerId]);
+  }, [meIds, chat?.sellerId, chat?.buyerId]);
   const isSeller = role === 'seller';
   const isBuyer = role === 'buyer';
   const otherUser = React.useMemo(() => (isSeller ? chat?.buyerId : chat?.sellerId), [isSeller, chat?.buyerId, chat?.sellerId]);
@@ -277,7 +277,7 @@ export default function ChatWindow({
   const senderEmail = isSeller ? chat?.sellerId : isBuyer ? chat?.buyerId : chat?.buyerId; // admin fallback: act as buyer
   const receiverEmail = isSeller ? chat?.buyerId : isBuyer ? chat?.sellerId : chat?.sellerId; // admin fallback: other participant
   
-  const isRecipient = (offer) => offer?.receiverId === user?.email;
+  const isRecipient = (offer) => offer?.receiverId && meIds.includes(offer.receiverId);
 
   // Auto-open Offer modal when requested via URL (only for buyer)
   useEffect(() => {
@@ -462,7 +462,7 @@ export default function ChatWindow({
   // Mark messages as read (ChatMessage.update is admin-only by RLS)
   useEffect(() => {
     if (chat && messages.length > 0) {
-      const unreadMessages = messages.filter(m => !m.read && m.senderId !== user?.email);
+      const unreadMessages = messages.filter(m => !m.read && !meIds.includes(m.senderId));
       if (user?.role === 'admin') {
         unreadMessages.forEach(async (msg) => {
           await base44.entities.ChatMessage.update(msg.id, { read: true });
@@ -610,7 +610,7 @@ export default function ChatWindow({
 
   const handleAcceptOffer = (offerId) => {
     const offer = offers.find(o => o.id === offerId);
-    if (!offer || offer.receiverId !== user?.email) {
+    if (!offer || !meIds.includes(offer.receiverId)) {
       toast.error('Solo il destinatario può accettare');
       return;
     }
@@ -619,7 +619,7 @@ export default function ChatWindow({
   
   const handleRejectOffer = (offerId) => {
     const offer = offers.find(o => o.id === offerId);
-    if (!offer || offer.receiverId !== user?.email) {
+    if (!offer || !meIds.includes(offer.receiverId)) {
       toast.error('Solo il destinatario può rifiutare');
       return;
     }
@@ -627,7 +627,7 @@ export default function ChatWindow({
   };
 
   const handleCounterOffer = (offerToCounter) => {
-    if (!offerToCounter || offerToCounter.receiverId !== user?.email) {
+    if (!offerToCounter || !meIds.includes(offerToCounter.receiverId)) {
       toast.error('Solo il destinatario può fare una controproposta');
       return;
     }
@@ -1058,7 +1058,11 @@ export default function ChatWindow({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate text-sm md:text-base">{(listing?.title || chat?.listingTitle) ?? 'Annuncio'}</h3>
           <p className="text-xs text-white/80 truncate flex items-center gap-1">
-            {isSeller ? ct.buyer : ct.seller}: {otherUser?.split('@')[0]}
+            <span className="px-1.5 py-0.5 rounded-full border border-white/30 text-[10px]">
+              {isSeller ? (language==='it'?'Tu: Venditore':language==='de'?'Ich: Verkäufer':language==='en'?'You: Seller':ct.seller) : (language==='it'?'Tu: Acquirente':language==='de'?'Ich: Käufer':language==='en'?'You: Buyer':ct.buyer)}
+            </span>
+            <span className="opacity-70">•</span>
+            {(isSeller ? ct.buyer : ct.seller)}: {otherUser?.split('@')[0]}
             <Circle className="h-2 w-2 fill-green-400 text-green-400" />
           </p>
         </div>
@@ -1158,7 +1162,7 @@ export default function ChatWindow({
 
             {/* Messages */}
             {dayMessages.map((msg) => {
-              const isOwn = msg.senderId === user?.email;
+              const isOwn = meIds.includes(msg.senderId);
               const isSystem = msg.messageType === 'system';
 
               if (isSystem) {
@@ -1191,12 +1195,23 @@ export default function ChatWindow({
                       } ${ (candidateOffer && lastOffer && candidateOffer.id === lastOffer.id) ? `${offerRingClasses[lastOffer.status] || 'ring-2 ring-slate-400'} shadow-md` : ''}`}>
                       {msg.messageType === 'offer' && (
                         <div className={`${(candidateOffer && lastOffer && candidateOffer.id === lastOffer.id) ? (isOwn ? 'text-red-200' : 'text-red-600') : 'text-slate-400'} text-xs font-semibold mb-1`}>
-                          {(() => { const labelType = (linkedOffer?.type === 'counter' || /Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer'; if (language === 'it') { if (labelType === 'counter') return isOwn ? 'Controproposta inviata' : 'Controproposta ricevuta'; return isOwn ? 'Offerta inviata' : 'Offerta ricevuta'; } return labelType === 'counter' ? ct.counterOffer : ct.offer; })()}
+                          {(() => {
+                            const type = (linkedOffer?.type) || ((/Gegenangebot|Controproposta|Counter/i.test(displayText)) ? 'counter' : 'offer');
+                            const youOffer =
+                              language==='it' ? (type==='counter' ? 'La tua controproposta' : 'La tua offerta') :
+                              language==='de' ? (type==='counter' ? 'Dein Gegenangebot' : 'Dein Angebot') :
+                              language==='en' ? (type==='counter' ? 'Your counter-offer' : 'Your offer') :
+                              (type==='counter' ? ct.counterOffer : ct.offer);
+                            const receivedOffer =
+                              language==='it' ? (type==='counter' ? 'Controproposta ricevuta' : 'Offerta ricevuta') :
+                              language==='de' ? (type==='counter' ? 'Erhaltenes Gegenangebot' : 'Erhaltenes Angebot') :
+                              language==='en' ? (type==='counter' ? 'Counter-offer received' : 'Offer received') :
+                              (type==='counter' ? ct.counterOffer : ct.offer);
+                            return isOwn ? youOffer : receivedOffer;
+                          })()}
                         </div>
                       )}
-                      {candidateOffer && lastOffer && candidateOffer.id === lastOffer.id && (
-                        <Badge variant="secondary" className="text-[10px] mr-2">ACTIVE_OFFER_DEBUG</Badge>
-                      )}
+
                       {/* Image */}
                       {msg.imageUrl && (
                         <img 
@@ -1213,7 +1228,7 @@ export default function ChatWindow({
                           <p className="text-[13px] md:text-sm whitespace-pre-wrap break-words hyphens-auto">
                             {translatedMessages[msg.id] || displayText}
                           </p>
-                          {displayText && msg.senderId !== user?.email && msg.messageType !== 'system' && (
+                          {displayText && !meIds.includes(msg.senderId) && msg.messageType !== 'system' && (
                             <button
                               onClick={() => handleTranslateMessage(msg.id, displayText)}
                               disabled={translatingId === msg.id}

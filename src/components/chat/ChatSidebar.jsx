@@ -31,7 +31,8 @@ function formatChatTime(dateStr) {
 }
 
 function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
-  const isSeller = [user?.id, user?.email].includes(chat.sellerId);
+  const meIds = useMemo(() => [user?.id, user?.email].filter(Boolean), [user?.id, user?.email]);
+  const isSeller = meIds.includes(chat.sellerId);
   const otherUser = isSeller ? chat.buyerId : chat.sellerId;
   const unreadCount = isSeller ? chat.unreadSeller : chat.unreadBuyer;
 
@@ -78,9 +79,14 @@ function ChatListItem({ chat, user, selected, onSelect, currentLanguage, t }) {
             <span className="font-semibold text-sm truncate">
               {chat.listingTitle || (t('listing') === 'listing' ? 'Annuncio' : t('listing'))}
             </span>
-            <span className="text-xs text-slate-400 flex-shrink-0 ml-2">
-              {formatChatTime(chat.updatedAt || chat.updated_date)}
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-slate-300 text-slate-600">
+                {isSeller ? (t('seller') || 'Seller') : (t('buyer') || 'Buyer')}
+              </span>
+              <span className="text-xs text-slate-400">
+                {formatChatTime(chat.updatedAt || chat.updated_date)}
+              </span>
+            </div>
           </div>
           <p className="text-xs text-slate-500 truncate mb-1">
             {isSeller ? `${t('buyer') || 'Acquirente'}: ` : `${t('seller') || 'Venditore'}: `}
