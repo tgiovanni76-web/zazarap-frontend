@@ -85,7 +85,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    const title = buildTitle(offer.status, chat?.listingTitle);
+    let templateKey = evtType === 'create' ? 'offerReceived' : 'statusUpdates';
+    if (evtType === 'update') {
+      switch (offer.status) {
+        case 'accepted_reserved': templateKey = 'offerAccepted'; break;
+        case 'rejected': templateKey = 'offerRejected'; break;
+        case 'countered': templateKey = 'counterOffer'; break;
+        case 'withdrawn': templateKey = 'statusUpdates'; break;
+        default: templateKey = 'statusUpdates';
+      }
+    }
+    const templateParams = { listingTitle: chat?.listingTitle || '', amount: offer.amount };
 
     // Decide who to notify (create -> receiver)
     const targetUser = offer.receiverId;
@@ -109,13 +119,11 @@ Deno.serve(async (req) => {
       }
     } catch (_) {}
 
-    const message = offer.message || (offer.amount ? `Importo: € ${offer.amount}` : '');
-
     await base44.asServiceRole.entities.Notification.create({
       userId: targetUser,
       type: 'offer',
-      title,
-      message: safeText(message),
+      templateKey,
+      templateParams,
       linkUrl: `/messages?chatId=${offer.chatId}`,
       relatedId: offer.chatId,
       idempotencyKey,

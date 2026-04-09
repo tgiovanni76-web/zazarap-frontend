@@ -139,8 +139,8 @@ export default function Notifications() {
         </div>
         <div className="flex items-center gap-3">
           <label className="flex items-center gap-2 text-sm text-slate-600">
-            <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} />
-            Seleziona tutto
+            <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} aria-label={t('notifications.selectOne') || t('notifications')} />
+            {t('notifications')}
           </label>
           {unreadCount > 0 && (
             <Button onClick={() => markAllAsRead.mutate()} variant="outline">
@@ -152,13 +152,13 @@ export default function Notifications() {
 
       {selectedIds.size > 0 && (
         <div className="sticky top-16 z-10 bg-white/90 backdrop-blur border rounded-md p-3 mb-4 flex items-center justify-between">
-          <span className="text-sm text-slate-700">{selectedIds.size} selezionate</span>
+          <span className="text-sm text-slate-700">{t('notifications.selectedCount', { count: selectedIds.size }) || selectedIds.size}</span>
           <div className="flex gap-2">
             <Button size="sm" variant="outline" onClick={() => bulkMarkRead.mutate(Array.from(selectedIds))}>
-              <Check className="h-4 w-4 mr-1" /> Segna come letto
+              <Check className="h-4 w-4 mr-1" /> {t('markAsRead')}
             </Button>
             <Button size="sm" variant="destructive" onClick={() => bulkDelete.mutate(Array.from(selectedIds))}>
-              <Trash2 className="h-4 w-4 mr-1" /> Cancella
+              <Trash2 className="h-4 w-4 mr-1" /> {t('delete')}
             </Button>
           </div>
         </div>
@@ -168,24 +168,30 @@ export default function Notifications() {
         {notifications.map((n) => {
           const Icon = typeIcons[n.type] || Bell;
           const colorClass = typeColors[n.type];
+          const mainText = n.templateKey ? t(n.templateKey, n.templateParams || {}) : (n.title || '');
+          const secondaryText = n.templateKey ? [
+            n.templateParams?.listingTitle || null,
+            (n.templateParams?.amount != null) ? `${t('payment.email.amount')}: € ${n.templateParams.amount}` : null,
+            n.templateParams?.snippet || null,
+          ].filter(Boolean).join(' • ') : (n.message || '');
           return (
             <Card key={n.id} className={`transition-all ${!n.read ? 'bg-blue-50 border-blue-200' : ''}`}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                   <div className="pt-1">
-                    <Checkbox checked={selectedIds.has(n.id)} onCheckedChange={() => toggleSelectOne(n.id)} aria-label="Seleziona notifica" />
+                    <Checkbox checked={selectedIds.has(n.id)} onCheckedChange={() => toggleSelectOne(n.id)} aria-label={t('notifications.selectOne') || t('notifications')} />
                   </div>
                   <div className={`mt-1 ${colorClass}`}>
                     <Icon className="h-6 w-6" />
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-1">
-                      <h3 className="font-bold">{n.title}</h3>
+                      <h3 className="font-bold">{mainText || n.title || ''}</h3>
                       {!n.read && (
                         <Badge variant="default" className="bg-blue-600">{t('new')}</Badge>
                       )}
                     </div>
-                    <p className="text-slate-700 mb-2">{n.message}</p>
+                    <p className="text-slate-700 mb-2">{secondaryText}</p>
                     <p className="text-xs text-slate-500">{format(new Date(n.created_date), 'dd/MM/yyyy HH:mm')}</p>
                     <div className="flex gap-2 mt-3">
                       {n.linkUrl && (

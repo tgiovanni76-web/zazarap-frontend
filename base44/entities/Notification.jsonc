@@ -22,11 +22,20 @@
     },
     "title": {
       "type": "string",
-      "description": "Titolo della notifica"
+      "description": "Titolo della notifica (legacy)"
     },
     "message": {
       "type": "string",
-      "description": "Messaggio della notifica"
+      "description": "Messaggio della notifica (legacy)"
+    },
+    "templateKey": {
+      "type": "string",
+      "description": "i18n key usata per renderizzare il testo lato client"
+    },
+    "templateParams": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Parametri per il template i18n (es. {listingTitle, amount, snippet})"
     },
     "linkUrl": {
       "type": "string",
@@ -52,9 +61,7 @@
   },
   "required": [
     "userId",
-    "type",
-    "title",
-    "message"
+    "type"
   ],
   "rls": {
     "create": {

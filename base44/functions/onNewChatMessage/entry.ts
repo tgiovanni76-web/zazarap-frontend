@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
 
     // Create notification for the receiver with strong dedupe + user rate limit
     if (computedReceiver) {
-      const title = chat.listingTitle ? `Nuovo messaggio su "${chat.listingTitle}"` : 'Nuovo messaggio';
+      const templateKey = 'messages';
+      const templateParams = { title: chat.listingTitle || '', snippet: safeText(message.text || message.message || '') };
 
       // Idempotency key ensures single notification per message→receiver
       const idempotencyKey = `msg:${message.id}:${message.chatId}:${computedReceiver}`;
@@ -125,8 +126,8 @@ Deno.serve(async (req) => {
       const note = {
         userId: computedReceiver,
         type: 'message',
-        title,
-        message: safeText(message.text || message.message || ''),
+        templateKey,
+        templateParams,
         linkUrl: `/messages?chatId=${message.chatId}`,
         relatedId: message.chatId,
         idempotencyKey,
