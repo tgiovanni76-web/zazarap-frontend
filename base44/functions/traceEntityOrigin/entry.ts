@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { entity_name, entity_id, window_seconds = 180 } = await req.json();
+    const { entity_name, entity_id, window_seconds = 180, target_timestamp = null, correlate_service_role_id = null, fetch_limit = 3000 } = await req.json();
     if (!entity_name || !entity_id) {
       return Response.json({ error: 'Missing entity_name or entity_id' }, { status: 400 });
     }
@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Entity not found', entity_name, entity_id }, { status: 404 });
     }
 
-    const createdTs = toTs(entity.created_date);
+    const createdTs = toTs(target_timestamp || entity.created_date);
     const startTs = createdTs - window_seconds * 1000;
     const endTs = createdTs + window_seconds * 1000;
 
@@ -41,10 +41,10 @@ Deno.serve(async (req) => {
     let sysLogs = [];
     let perfEvents = [];
     try {
-      sysLogs = await base44.asServiceRole.entities.SystemLog.list('-created_date', 400);
+      sysLogs = await base44.asServiceRole.entities.SystemLog.list('-created_date', fetch_limit);
     } catch (_) {}
     try {
-      perfEvents = await base44.asServiceRole.entities.PerformanceEvent.list('-created_date', 400);
+      perfEvents = await base44.asServiceRole.entities.PerformanceEvent.list('-created_date', fetch_limit);
     } catch (_) {}
 
     const entityIdStr = String(entity_id);
@@ -53,8 +53,13 @@ Deno.serve(async (req) => {
     // Narrow down by time window and occurrence of entity id/name in serialized payload
     const matchLog = (rec) => {
       try {
+        if (correlate_service_role_id && rec?.created_by_id && rec.created_by_id !== correlate_service_role_id) return false;
         const blob = JSON.stringify(rec || {});
-        return inWindow(rec?.created_date) && (blob.includes(entityIdStr) || blob.includes(entityNameStr));
+        return inWindow(rec?.created_date) && (
+          blob.includes(entityIdStr) ||
+          blob.includes(entityNameStr) ||
+          /api\.function\.call/i.test(blob)
+        );
       } catch {
         return false;
       }
