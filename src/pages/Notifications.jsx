@@ -14,13 +14,13 @@ export default function Notifications() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
 
-  // Current user
+  // User
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
 
-  // User notifications
+  // Notifications list
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: ['notifications', user?.email],
     queryFn: () => base44.entities.Notification.filter({ userId: user.email }, '-created_date', 200),
@@ -28,8 +28,10 @@ export default function Notifications() {
     initialData: [],
   });
 
+  const unreadCount = (notifications || []).filter(n => !n.read).length;
+
   // Single-item actions
-  const markAsReadMutation = useMutation({
+  const markAsRead = useMutation({
     mutationFn: (id) => base44.entities.Notification.update(id, { read: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -37,10 +39,10 @@ export default function Notifications() {
     },
   });
 
-  const markAllAsReadMutation = useMutation({
+  const markAllAsRead = useMutation({
     mutationFn: async () => {
-      const unreadNotifications = (notifications || []).filter(n => !n.read);
-      await Promise.all(unreadNotifications.map(n => base44.entities.Notification.update(n.id, { read: true })));
+      const unread = (notifications || []).filter(n => !n.read);
+      await Promise.all(unread.map(n => base44.entities.Notification.update(n.id, { read: true })));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -48,7 +50,7 @@ export default function Notifications() {
     },
   });
 
-  const deleteNotificationMutation = useMutation({
+  const deleteOne = useMutation({
     mutationFn: (id) => base44.entities.Notification.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -56,18 +58,17 @@ export default function Notifications() {
     },
   });
 
-  // Multi-select state & bulk actions
+  // Minimal multi-select state + bulk actions
   const [selectedIds, setSelectedIds] = React.useState(new Set());
   const allSelected = (notifications?.length || 0) > 0 && selectedIds.size === notifications.length;
 
-  const toggleSelect = (id) => {
+  const toggleSelectOne = (id) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
   };
-
   const toggleSelectAll = () => {
     setSelectedIds((prev) => {
       if (allSelected) return new Set();
@@ -86,7 +87,7 @@ export default function Notifications() {
       setSelectedIds(new Set());
       return { previous };
     },
-    onError: (_err, _ids, ctx) => {
+    onError: (_e, _ids, ctx) => {
       if (ctx?.previous) queryClient.setQueryData(['notifications', user?.email], ctx.previous);
     },
     onSettled: () => {
@@ -106,7 +107,7 @@ export default function Notifications() {
       setSelectedIds(new Set());
       return { previous };
     },
-    onError: (_err, _ids, ctx) => {
+    onError: (_e, _ids, ctx) => {
       if (ctx?.previous) queryClient.setQueryData(['notifications', user?.email], ctx.previous);
     },
     onSettled: () => {
@@ -115,16 +116,14 @@ export default function Notifications() {
     },
   });
 
-  // Static maps
+  // Icons/colors
   const typeIcons = { offer: DollarSign, message: MessageSquare, status_update: AlertCircle, reminder: Bell };
   const typeColors = { offer: 'text-green-600', message: 'text-blue-600', status_update: 'text-orange-600', reminder: 'text-purple-600' };
-  const unreadCount = (notifications || []).filter(n => !n.read).length;
 
-  // Loader after hooks
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
       </div>
     );
   }
@@ -144,7 +143,7 @@ export default function Notifications() {
             Seleziona tutto
           </label>
           {unreadCount > 0 && (
-            <Button onClick={() => markAllAsReadMutation.mutate()} variant="outline">
+            <Button onClick={() => markAllAsRead.mutate()} variant="outline">
               {t('markAllRead')}
             </Button>
           )}
@@ -166,47 +165,43 @@ export default function Notifications() {
       )}
 
       <div className="space-y-3">
-        {notifications.map((notification) => {
-          const Icon = typeIcons[notification.type] || Bell;
-          const colorClass = typeColors[notification.type];
+        {notifications.map((n) => {
+          const Icon = typeIcons[n.type] || Bell;
+          const colorClass = typeColors[n.type];
           return (
-            <Card key={notification.id} className={`transition-all ${!notification.read ? 'bg-blue-50 border-blue-200' : ''}`}>
+            <Card key={n.id} className={`transition-all ${!n.read ? 'bg-blue-50 border-blue-200' : ''}`}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                   <div className="pt-1">
-                    <Checkbox
-                      checked={selectedIds.has(notification.id)}
-                      onCheckedChange={() => toggleSelect(notification.id)}
-                      aria-label="Seleziona notifica"
-                    />
+                    <Checkbox checked={selectedIds.has(n.id)} onCheckedChange={() => toggleSelectOne(n.id)} aria-label="Seleziona notifica" />
                   </div>
                   <div className={`mt-1 ${colorClass}`}>
                     <Icon className="h-6 w-6" />
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-1">
-                      <h3 className="font-bold">{notification.title}</h3>
-                      {!notification.read && (
+                      <h3 className="font-bold">{n.title}</h3>
+                      {!n.read && (
                         <Badge variant="default" className="bg-blue-600">{t('new')}</Badge>
                       )}
                     </div>
-                    <p className="text-slate-700 mb-2">{notification.message}</p>
-                    <p className="text-xs text-slate-500">{format(new Date(notification.created_date), 'dd/MM/yyyy HH:mm')}</p>
+                    <p className="text-slate-700 mb-2">{n.message}</p>
+                    <p className="text-xs text-slate-500">{format(new Date(n.created_date), 'dd/MM/yyyy HH:mm')}</p>
                     <div className="flex gap-2 mt-3">
-                      {notification.linkUrl && (
-                        <Link to={notification.linkUrl}>
-                          <Button size="sm" onClick={() => !notification.read && markAsReadMutation.mutate(notification.id)}>
+                      {n.linkUrl && (
+                        <Link to={n.linkUrl}>
+                          <Button size="sm" onClick={() => !n.read && markAsRead.mutate(n.id)}>
                             {t('view')}
                           </Button>
                         </Link>
                       )}
-                      {!notification.read && (
-                        <Button size="sm" variant="outline" onClick={() => markAsReadMutation.mutate(notification.id)}>
+                      {!n.read && (
+                        <Button size="sm" variant="outline" onClick={() => markAsRead.mutate(n.id)}>
                           <CheckCircle className="h-4 w-4 mr-1" />
                           {t('markAsRead')}
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" onClick={() => deleteNotificationMutation.mutate(notification.id)}>
+                      <Button size="sm" variant="ghost" onClick={() => deleteOne.mutate(n.id)}>
                         {t('delete')}
                       </Button>
                     </div>
