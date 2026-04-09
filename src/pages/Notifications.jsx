@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, MessageSquare, DollarSign, AlertCircle, CheckCircle } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Bell, MessageSquare, DollarSign, AlertCircle, CheckCircle, Trash2, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageProvider';
 
@@ -13,26 +14,21 @@ export default function Notifications() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
 
+  // Current user
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
 
+  // User notifications
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: ['notifications', user?.email],
     queryFn: () => base44.entities.Notification.filter({ userId: user.email }, '-created_date', 200),
     enabled: !!user,
+    initialData: [],
   });
 
-  React.useEffect(() => {
-    if (user) {
-      console.log('[Notifications] env', window.location.hostname);
-      console.log('[Notifications] user', user.email);
-      console.log('[Notifications] count', Array.isArray(notifications) ? notifications.length : 'n/a');
-      if (notifications && notifications[0]) console.log('[Notifications] sample', notifications[0]);
-    }
-  }, [user, notifications]);
-
+  // Single-item actions
   const markAsReadMutation = useMutation({
     mutationFn: (id) => base44.entities.Notification.update(id, { read: true }),
     onSuccess: () => {
@@ -43,10 +39,8 @@ export default function Notifications() {
 
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      const unreadNotifications = notifications.filter(n => !n.read);
-      await Promise.all(
-        unreadNotifications.map(n => base44.entities.Notification.update(n.id, { read: true }))
-      );
+      const unreadNotifications = (notifications || []).filter(n => !n.read);
+      await Promise.all(unreadNotifications.map(n => base44.entities.Notification.update(n.id, { read: true })));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -62,6 +56,71 @@ export default function Notifications() {
     },
   });
 
+  // Multi-select state & bulk actions
+  const [selectedIds, setSelectedIds] = React.useState(new Set());
+  const allSelected = (notifications?.length || 0) > 0 && selectedIds.size === notifications.length;
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedIds((prev) => {
+      if (allSelected) return new Set();
+      return new Set((notifications || []).map(n => n.id));
+    });
+  };
+
+  const bulkMarkRead = useMutation({
+    mutationFn: async (ids) => {
+      await Promise.all(ids.map((id) => base44.entities.Notification.update(id, { read: true })));
+    },
+    onMutate: async (ids) => {
+      await queryClient.cancelQueries({ queryKey: ['notifications', user?.email] });
+      const previous = queryClient.getQueryData(['notifications', user?.email]);
+      queryClient.setQueryData(['notifications', user?.email], (old = []) => old.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n)));
+      setSelectedIds(new Set());
+      return { previous };
+    },
+    onError: (_err, _ids, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['notifications', user?.email], ctx.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications', user?.email, 'unread'] });
+    },
+  });
+
+  const bulkDelete = useMutation({
+    mutationFn: async (ids) => {
+      await Promise.all(ids.map((id) => base44.entities.Notification.delete(id)));
+    },
+    onMutate: async (ids) => {
+      await queryClient.cancelQueries({ queryKey: ['notifications', user?.email] });
+      const previous = queryClient.getQueryData(['notifications', user?.email]);
+      queryClient.setQueryData(['notifications', user?.email], (old = []) => old.filter((n) => !ids.includes(n.id)));
+      setSelectedIds(new Set());
+      return { previous };
+    },
+    onError: (_err, _ids, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['notifications', user?.email], ctx.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications', user?.email, 'unread'] });
+    },
+  });
+
+  // Static maps
+  const typeIcons = { offer: DollarSign, message: MessageSquare, status_update: AlertCircle, reminder: Bell };
+  const typeColors = { offer: 'text-green-600', message: 'text-blue-600', status_update: 'text-orange-600', reminder: 'text-purple-600' };
+  const unreadCount = (notifications || []).filter(n => !n.read).length;
+
+  // Loader after hooks
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -69,22 +128,6 @@ export default function Notifications() {
       </div>
     );
   }
-
-  const typeIcons = {
-    offer: DollarSign,
-    message: MessageSquare,
-    status_update: AlertCircle,
-    reminder: Bell
-  };
-
-  const typeColors = {
-    offer: 'text-green-600',
-    message: 'text-blue-600',
-    status_update: 'text-orange-600',
-    reminder: 'text-purple-600'
-  };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <div className="py-8 max-w-4xl mx-auto">
@@ -95,25 +138,48 @@ export default function Notifications() {
             <p className="text-slate-600 mt-1">{unreadCount} {t('unread')}</p>
           )}
         </div>
-        {unreadCount > 0 && (
-          <Button onClick={() => markAllAsReadMutation.mutate()} variant="outline">
-            {t('markAllRead')}
-          </Button>
-        )}
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-sm text-slate-600">
+            <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} />
+            Seleziona tutto
+          </label>
+          {unreadCount > 0 && (
+            <Button onClick={() => markAllAsReadMutation.mutate()} variant="outline">
+              {t('markAllRead')}
+            </Button>
+          )}
+        </div>
       </div>
 
+      {selectedIds.size > 0 && (
+        <div className="sticky top-16 z-10 bg-white/90 backdrop-blur border rounded-md p-3 mb-4 flex items-center justify-between">
+          <span className="text-sm text-slate-700">{selectedIds.size} selezionate</span>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => bulkMarkRead.mutate(Array.from(selectedIds))}>
+              <Check className="h-4 w-4 mr-1" /> Segna come letto
+            </Button>
+            <Button size="sm" variant="destructive" onClick={() => bulkDelete.mutate(Array.from(selectedIds))}>
+              <Trash2 className="h-4 w-4 mr-1" /> Cancella
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
-        {notifications.map(notification => {
+        {notifications.map((notification) => {
           const Icon = typeIcons[notification.type] || Bell;
           const colorClass = typeColors[notification.type];
-          
           return (
-            <Card 
-              key={notification.id}
-              className={`transition-all ${!notification.read ? 'bg-blue-50 border-blue-200' : ''}`}
-            >
+            <Card key={notification.id} className={`transition-all ${!notification.read ? 'bg-blue-50 border-blue-200' : ''}`}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
+                  <div className="pt-1">
+                    <Checkbox
+                      checked={selectedIds.has(notification.id)}
+                      onCheckedChange={() => toggleSelect(notification.id)}
+                      aria-label="Seleziona notifica"
+                    />
+                  </div>
                   <div className={`mt-1 ${colorClass}`}>
                     <Icon className="h-6 w-6" />
                   </div>
@@ -125,35 +191,22 @@ export default function Notifications() {
                       )}
                     </div>
                     <p className="text-slate-700 mb-2">{notification.message}</p>
-                    <p className="text-xs text-slate-500">
-                      {format(new Date(notification.created_date), 'dd/MM/yyyy HH:mm')}
-                    </p>
+                    <p className="text-xs text-slate-500">{format(new Date(notification.created_date), 'dd/MM/yyyy HH:mm')}</p>
                     <div className="flex gap-2 mt-3">
                       {notification.linkUrl && (
                         <Link to={notification.linkUrl}>
-                          <Button 
-                            size="sm" 
-                            onClick={() => !notification.read && markAsReadMutation.mutate(notification.id)}
-                          >
+                          <Button size="sm" onClick={() => !notification.read && markAsReadMutation.mutate(notification.id)}>
                             {t('view')}
                           </Button>
                         </Link>
                       )}
                       {!notification.read && (
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => markAsReadMutation.mutate(notification.id)}
-                        >
+                        <Button size="sm" variant="outline" onClick={() => markAsReadMutation.mutate(notification.id)}>
                           <CheckCircle className="h-4 w-4 mr-1" />
                           {t('markAsRead')}
                         </Button>
                       )}
-                      <Button 
-                        size="sm" 
-                        variant="ghost"
-                        onClick={() => deleteNotificationMutation.mutate(notification.id)}
-                      >
+                      <Button size="sm" variant="ghost" onClick={() => deleteNotificationMutation.mutate(notification.id)}>
                         {t('delete')}
                       </Button>
                     </div>
