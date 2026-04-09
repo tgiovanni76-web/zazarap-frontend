@@ -1,88 +1,36 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
+// Centralized notification creator with hard idempotency and optional rate limits
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Require authenticated user for security (prevents anonymous notification spam)
-    const caller = await base44.auth.me().catch(() => null);
-    if (!caller) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const { userId, type, title, message, linkUrl, relatedId, idempotencyKey, rateLimit = { perSeconds: 60, max: 10 } } = await req.json();
+    if (!userId || !type || !title) return Response.json({ error: 'Missing fields' }, { status: 400 });
+
+    // Hard dedupe by idempotencyKey (if provided)
+    if (idempotencyKey) {
+      const exist = await base44.asServiceRole.entities.Notification.filter({ idempotencyKey }, '-created_date', 1);
+      if (Array.isArray(exist) && exist.length) {
+        return Response.json({ ok: true, skipped: true, reason: 'idempotent_duplicate' });
+      }
     }
 
-    const { userId, type, title, message, actionUrl, metadata } = await req.json();
-
-    // Basic payload validation
-    if (!userId || !title || !message) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+    // Optional per-user rate limit
+    if (rateLimit && rateLimit.perSeconds && rateLimit.max) {
+      const recent = await base44.asServiceRole.entities.Notification.filter({ userId }, '-created_date', Math.max(rateLimit.max * 2, 25));
+      const now = Date.now();
+      const count = (recent || []).filter(n => n?.created_date && (now - new Date(n.created_date).getTime()) < (rateLimit.perSeconds * 1000)).length;
+      if (count >= rateLimit.max) {
+        return Response.json({ ok: true, skipped: true, reason: 'rate_limited' });
+      }
     }
 
-    // Get user preferences
-    const prefs = await base44.asServiceRole.entities.NotificationPreference.filter({
-      userId
-    });
-
-    const userPrefs = prefs[0] || {
-      emailNotifications: true,
-      newOfferOnFavorite: true,
-      messageReplies: true,
-      statusUpdates: true,
-      purchaseNotifications: true,
-      shippingNotifications: true,
-      priceDropNotifications: true
-    };
-
-    // Map notification types to preference keys
-    const prefMapping = {
-      // Legacy types
-      order_shipped: 'shippingNotifications',
-      order_delivered: 'shippingNotifications',
-      order_update: 'statusUpdates',
-      price_drop: 'priceDropNotifications',
-      purchase_complete: 'purchaseNotifications',
-      new_offer: 'newOfferOnFavorite', // legacy naming
-      message_received: 'messageReplies',
-      // App types (entity Notification.type)
-      offer: 'newOfferOnFavorite',
-      message: 'messageReplies',
-      status_update: 'statusUpdates'
-    };
-
-    // Respect user prefs for EMAIL ONLY; in-app notifications are always created
-    const emailAllowed = !!(userPrefs.emailNotifications && (!prefMapping[type] || userPrefs[prefMapping[type]]));
-
-    // Create notification (service role bypasses RLS)
-    const notification = await base44.asServiceRole.entities.Notification.create({
-      userId,
-      type,
-      title,
-      message,
-      linkUrl: actionUrl || '',
-      relatedId: metadata && metadata.chatId ? String(metadata.chatId) : undefined,
-      read: false
-    });
-
-    // Email sending disabled in preview/this build to avoid provider restrictions.
-    // In-app notifications are created above and are sufficient for UX.
-    // if (emailAllowed && type !== 'message') {
-    //   try {
-    //     await base44.integrations.Core.SendEmail({
-    //       to: userId,
-    //       subject: title,
-    //       body: `${message}\n\n${actionUrl ? `Visualizza: ${actionUrl}` : ''}`
-    //     });
-    //   } catch (e) {
-    //     console.log('Email send failed:', e);
-    //   }
-    // }
-
-    return Response.json({
-      success: true,
-      notification
-    });
-
+    const note = await base44.asServiceRole.entities.Notification.create({ userId, type, title, message, linkUrl, relatedId, idempotencyKey, source: 'sendNotification' });
+    return Response.json({ ok: true, note });
   } catch (error) {
-    console.error('Send notification error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

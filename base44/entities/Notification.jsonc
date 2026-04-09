@@ -4,7 +4,7 @@
   "properties": {
     "userId": {
       "type": "string",
-      "description": "Email dell'utente destinatario"
+      "description": "Email o ID dell'utente destinatario"
     },
     "type": {
       "type": "string",
@@ -12,7 +12,11 @@
         "offer",
         "message",
         "status_update",
-        "reminder"
+        "reminder",
+        "shipping_issue",
+        "new_listings",
+        "new_from_followed_seller",
+        "matching_search"
       ],
       "description": "Tipo di notifica"
     },
@@ -36,6 +40,14 @@
     "relatedId": {
       "type": "string",
       "description": "ID dell'entit\u00e0 correlata (chat, listing, etc)"
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "description": "Chiave di deduplica/idempotenza per evitare duplicati (es. msg:<msgId>:<chatId>:<userId>)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Funzione/automazione sorgente (es. onNewChatMessage, onOfferEvent)"
     }
   },
   "required": [
