@@ -49,6 +49,9 @@ Deno.serve(async (req) => {
       price,
       messageType,
       read: false,
+      from_user: true,
+      source: 'user',
+      is_automated: false,
     };
 
     const created = await base44.entities.ChatMessage.create(messageData);

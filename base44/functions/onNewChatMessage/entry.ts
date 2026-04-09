@@ -34,6 +34,44 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, skipped: true, reason: 'missing chatId or senderId' });
     }
 
+    // Anti-loop guards
+    const fromUser = message.from_user;
+    if (fromUser !== true) {
+      return Response.json({ ok: true, skipped: true, reason: 'non-user message' });
+    }
+    const src = (message.source || '').toLowerCase();
+    if (src === 'ai' || src === 'system') {
+      return Response.json({ ok: true, skipped: true, reason: 'ai/system source' });
+    }
+    if (message.is_automated) {
+      return Response.json({ ok: true, skipped: true, reason: 'automated message' });
+    }
+    if (message.processed_by_notify) {
+      return Response.json({ ok: true, skipped: true, reason: 'already processed' });
+    }
+
+    // Soft rate limit per chat: skip if a notify ran in last 20s for same chat
+    try {
+      const recent = await base44.asServiceRole.entities.Notification.filter({ relatedId: message.chatId }, '-created_date', 1);
+      const last = Array.isArray(recent) ? recent[0] : null;
+      if (last?.created_date) {
+        const dt = Date.now() - new Date(last.created_date).getTime();
+        if (dt < 20000) {
+          return Response.json({ ok: true, skipped: true, reason: 'rate_limited_20s' });
+        }
+      }
+    } catch (_) {}
+
+    // Burst fail-safe: block if too many notifications in last 2 minutes
+    try {
+      const recentMany = await base44.asServiceRole.entities.Notification.filter({ relatedId: message.chatId }, '-created_date', 20);
+      const nowMs = Date.now();
+      const burst = (recentMany || []).filter(n => n?.created_date && (nowMs - new Date(n.created_date).getTime()) < 120000).length;
+      if (burst >= 6) {
+        return Response.json({ ok: true, skipped: true, reason: 'burst_block' });
+      }
+    } catch (_) {}
+
     // Fetch chat to determine participants
     let chat = null;
     try {
@@ -69,9 +107,11 @@ Deno.serve(async (req) => {
         relatedId: message.chatId,
       };
       await base44.asServiceRole.entities.Notification.create(note);
-    }
+      // Mark message processed to avoid re-processing
+      try { await base44.asServiceRole.entities.ChatMessage.update(message.id, { processed_by_notify: true }); } catch (_) {}
+      }
 
-    return Response.json({ ok: true });
+      return Response.json({ ok: true });
   } catch (error) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });
   }

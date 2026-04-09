@@ -70,6 +70,25 @@
         "high"
       ],
       "description": "Severit\u00e0 della violazione rilevata"
+    },
+    "from_user": {
+      "type": "boolean",
+      "default": true,
+      "description": "True se scritto da utente reale (non sistema/AI)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Origine del messaggio: 'user', 'AI', 'system', ecc."
+    },
+    "is_automated": {
+      "type": "boolean",
+      "default": false,
+      "description": "True se generato automaticamente"
+    },
+    "processed_by_notify": {
+      "type": "boolean",
+      "default": false,
+      "description": "True se gi\u00e0 processato dall'automazione Notify"
     }
   },
   "required": [
@@ -80,7 +99,17 @@
   ],
   "rls": {
     "create": {
-      "created_by": "{{user.email}}"
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.senderId": "{{user.id}}"
+        },
+        {
+          "data.senderId": "{{user.email}}"
+        }
+      ]
     },
     "read": {
       "$or": [
