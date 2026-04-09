@@ -21,7 +21,10 @@ export default function RecommendationsWidget({ user }) {
 
   const { data: listings = [] } = useQuery({
     queryKey: ['listings'],
-    queryFn: () => base44.entities.Listing.list('-created_date'),
+    queryFn: async () => {
+      const res = await base44.functions.invoke('proxyListings', { action: 'list', sort: '-created_date' });
+      return res.data?.data || [];
+    },
   });
 
   const { data: favorites = [] } = useQuery({

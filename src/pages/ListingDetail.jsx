@@ -44,8 +44,8 @@ export default function ListingDetail() {
   const { data: listing, isLoading } = useQuery({
     queryKey: ['listing', listingId],
     queryFn: async () => {
-      const listings = await base44.entities.Listing.filter({ id: listingId });
-      return listings?.[0] ?? null; // react-query v5: never return undefined
+      const res = await base44.functions.invoke('proxyListings', { action: 'get', id: listingId });
+      return res.data?.data ?? null;
     },
     enabled: !!listingId
   });

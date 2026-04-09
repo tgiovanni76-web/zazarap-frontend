@@ -41,7 +41,10 @@ export default function Marketplace() {
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings', sortBy],
-    queryFn: () => base44.entities.Listing.list(sortBy),
+    queryFn: async () => {
+      const res = await base44.functions.invoke('proxyListings', { action: 'list', sort: sortBy });
+      return res.data?.data || [];
+    },
   });
 
   const { data: user } = useQuery({
