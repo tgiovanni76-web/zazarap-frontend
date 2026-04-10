@@ -1,0 +1,53 @@
+{
+  "name": "IntegrationCache",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Chiave cache (hash di input)"
+    },
+    "data": {
+      "type": "string",
+      "description": "Payload JSON stringificato"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scadenza cache"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tag opzionali per invalidazione mirata"
+    }
+  },
+  "required": [
+    "key",
+    "data",
+    "expiresAt"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
