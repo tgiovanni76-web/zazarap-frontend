@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
+import { toDateFromAny, formatLocalTimeHHmm } from '@/components/utils/time';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, MessageSquare } from 'lucide-react';
@@ -24,7 +25,7 @@ const statusEmoji = {
 
 function formatChatTime(dateStr) {
   if (!dateStr) return '';
-  const date = new Date(dateStr);
+  const date = toDateFromAny(dateStr) || new Date();
   if (isToday(date)) return format(date, 'HH:mm');
   if (isYesterday(date)) return format(date, 'dd/MM');
   return format(date, 'dd/MM');

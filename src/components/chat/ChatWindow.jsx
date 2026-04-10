@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
+import { toDateFromAny, formatLocalTimeHHmm } from '@/components/utils/time';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -222,7 +223,7 @@ const offerRingClasses = {
 const CHAT_WINDOW_BUILD_ID = 'chatwindow-2026-04-05T00:00:00Z';
 
 function formatMessageDate(dateStr, lang = 'de') {
-  const date = new Date(dateStr);
+  const date = toDateFromAny(dateStr) || new Date();
   const ct = chatTranslations[lang] || chatTranslations.de;
   if (isToday(date)) return ct.today;
   if (isYesterday(date)) return ct.yesterday;
@@ -1418,9 +1419,7 @@ export default function ChatWindow({
                       
                       {/* Time & Read Status */}
                       <div className={`flex items-center justify-end gap-1 mt-1 ${isOwn ? 'text-white/70' : 'text-slate-400'}`}>
-                        <span className="text-xs">
-                          {format(new Date(msg.created_date), 'HH:mm')}
-                        </span>
+                        <span className="text-xs">{formatLocalTimeHHmm(msg.created_date)}</span>
                         {isOwn && (
                           msg.read 
                             ? <CheckCheck className="h-3 w-3 text-blue-300" />

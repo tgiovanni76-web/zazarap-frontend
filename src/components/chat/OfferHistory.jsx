@@ -1,5 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
+import { toDateFromAny, formatLocalTimeHHmm } from '@/components/utils/time';
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Check, X, RotateCcw, Clock } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
@@ -72,7 +73,7 @@ export default function OfferHistory({ offers, userEmail, listingPrice, lastOffe
             
             <div className="flex items-center justify-between text-xs text-slate-500">
               <span>{isOwn ? 'Tu' : offer.senderId.split('@')[0]}</span>
-              <span>{format(new Date(offer.created_date), 'dd/MM HH:mm')}</span>
+              <span>{format(toDateFromAny(offer.created_date) || new Date(), 'dd/MM HH:mm')}</span>
             </div>
             
             {offer.message && (
