@@ -11,9 +11,9 @@ export default function FeaturedListings({ listings }) {
   const { t } = useLanguage();
   const now = new Date();
   const featuredListings = listings.filter(l => 
-    l.featured && 
-    l.status === 'active' && 
-    (!l.featuredUntil || new Date(l.featuredUntil) > now)
+    l.featured &&
+    l.status === 'active' &&
+    l.topAdUntil && new Date(l.topAdUntil) > now
   ).slice(0, 6);
 
   if (featuredListings.length === 0) return null;

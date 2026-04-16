@@ -19,6 +19,17 @@ export default function PremiumRequestModal({ open, onClose, listing, user }) {
     if (!user?.email || !listing?.id) return;
     setIsSubmitting(true);
     try {
+      // Verhindere doppelte gleichzeitige "pending"-Anfragen pro Nutzer & Anzeige
+      const existing = await base44.entities.PremiumRequest.filter({
+        listingId: listing.id,
+        requesterEmail: user.email,
+        status: 'pending'
+      });
+      if (existing && existing.length > 0) {
+        toast.info('Es besteht bereits eine offene Anfrage für diese Anzeige.');
+        return;
+      }
+
       await base44.entities.PremiumRequest.create({
         listingId: listing.id,
         requesterEmail: user.email,
