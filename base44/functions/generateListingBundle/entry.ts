@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       const perImage = await Promise.all(
         toAnalyze.map(async (url, index) => {
           const analysis = await invokeCachedLLM(base44, {
-            prompt: `Analysiere dieses Produktbild für einen Online-Marktplatz.\n\nBewerte folgende Aspekte und antworte strikt im JSON-Format:\n1. Bildqualität (Schärfe, Auflösung)\n2. Beleuchtung (zu hell, zu dunkel, optimal)\n3. Komposition und Bildausschnitt\n4. Hintergrund (ablenkend, professionell)\n5. Produktpräsentation\n6. Liste konkreter Verbesserungsvorschläge` ,
+            prompt: `Analysiere dieses Produktbild für einen Online‑Marktplatz. Antworte NUR auf Deutsch.\n\nBewerte folgende Aspekte und antworte strikt im JSON-Format:\n1. Bildqualität (Schärfe, Auflösung)\n2. Beleuchtung (zu hell, zu dunkel, optimal)\n3. Komposition und Bildausschnitt\n4. Hintergrund (ablenkend, professionell)\n5. Produktpräsentation\n6. Liste konkreter Verbesserungsvorschläge` ,
             file_urls: [url],
             response_json_schema: {
               type: 'object',
@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
       // Aggregate issues/suggestions -> tips
       const uniqueIssues = [...new Set((perImage || []).flatMap((x) => x.issues || []))];
       const tipRes = await invokeCachedLLM(base44, {
-        prompt: `Basierend auf dieser Bildanalyse, gib 2-3 konkrete, praktische Tipps für bessere Produktfotos (1-2 Sätze).\n\nDurchschnittliche Qualität: ${imageQualityScore}/100\nAnzahl Bilder: ${eff.images.length}\nHauptprobleme: ${uniqueIssues.slice(0, 3).join(', ')}`,
+        prompt: `Basierend auf dieser Bildanalyse, gib 2–3 konkrete, praktische Tipps für bessere Produktfotos (1–2 Sätze). Antworte NUR auf Deutsch.\n\nDurchschnittliche Qualität: ${imageQualityScore}/100\nAnzahl Bilder: ${eff.images.length}\nHauptprobleme: ${uniqueIssues.slice(0, 3).join(', ')}`,
         response_json_schema: {
           type: 'object',
           properties: { tips: { type: 'string' } }
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
     let imageInsights = '';
     if ((includes.has('description') || includes.has('moderation')) && eff.images.length > 0) {
       const imgDesc = await invokeCachedLLM(base44, {
-        prompt: `Analizza queste immagini di prodotto e descrivi in modo conciso cosa si vede (max 1-2 frasi).`,
+        prompt: `Analysiere diese Produktbilder und beschreibe prägnant, was zu sehen ist (max. 1–2 Sätze). Antworte NUR auf Deutsch.`,
         file_urls: eff.images.slice(0, 2),
         response_json_schema: { type: 'object', properties: { description: { type: 'string' } } },
         ttl_seconds: 600,
@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
       const successfulTitles = (similarSold || []).map((l) => l.title).filter(Boolean).slice(0, 5);
 
       const titlesRes = await invokeCachedLLM(base44, {
-        prompt: `Generiere 5 ansprechende, SEO-optimierte Produkttitel für einen Online-Marktplatz.\n\nProduktdetails:\n- Kategorie: ${eff.category}\n${eff.description ? `- Beschreibung: ${eff.description.substring(0, 200)}` : ''}\n${eff.price ? `- Preis: ${eff.price}€` : ''}\n${eff.keywords ? `- Schlagwörter: ${eff.keywords}` : ''}\n\n${successfulTitles.length > 0 ? `Erfolgreiche Beispiele aus der Kategorie:\n${successfulTitles.map((t, i) => `${i + 1}. ${t}`).join('\n')}` : ''}\n\nAnforderungen:\n- 40-70 Zeichen optimal\n- Wichtigste Infos vorne\n- Suchmaschinenfreundlich\n- Ansprechend und verkaufsfördernd\n- Keine Übertreibungen\n- Keine Emojis\n\nGeneriere 5 verschiedene Titel mit unterschiedlichen Ansätzen (z.B. informativ, emotional, feature-fokussiert).`,
+        prompt: `Generiere 5 ansprechende, SEO-optimierte Produkttitel für einen Online-Marktplatz. Antworte NUR auf Deutsch.\n\nProduktdetails:\n- Kategorie: ${eff.category}\n${eff.description ? `- Beschreibung: ${eff.description.substring(0, 200)}` : ''}\n${eff.price ? `- Preis: ${eff.price}€` : ''}\n${eff.keywords ? `- Schlagwörter: ${eff.keywords}` : ''}\n\n${successfulTitles.length > 0 ? `Erfolgreiche Beispiele aus der Kategorie:\n${successfulTitles.map((t, i) => `${i + 1}. ${t}`).join('\n')}` : ''}\n\nAnforderungen:\n- 40-70 Zeichen optimal\n- Wichtigste Infos vorne\n- Suchmaschinenfreundlich\n- Ansprechend und verkaufsfördernd\n- Keine Übertreibungen\n- Keine Emojis\n\nGeneriere 5 verschiedene Titel mit unterschiedlichen Ansätzen (z.B. informativ, emotional, feature-fokussiert).`,
         response_json_schema: {
           type: 'object',
           properties: {
@@ -201,9 +201,9 @@ Deno.serve(async (req) => {
     let descriptionBundle = null;
     if (includes.has('description')) {
       const avgPrice = marketStats?.avgPrice || eff.price || 0;
-      const pricePosition = eff.price < avgPrice * 0.8 ? 'ottimo affare' : eff.price > avgPrice * 1.2 ? 'premium' : 'competitivo';
+      const pricePosition = eff.price < avgPrice * 0.8 ? 'Schnäppchen' : eff.price > avgPrice * 1.2 ? 'Premium' : 'kompetitiv';
 
-      const prompt = `Sei un copywriter esperto di e-commerce. Crea una descrizione di prodotto PERSUASIVA e DETTAGLIATA.\n\nPRODOTTO:\nTitolo: ${eff.title}\nCategoria: ${eff.category}\nCondizione: ${eff.condition}\nPrezzo: ${eff.price}€ (${pricePosition} - media categoria: ${avgPrice.toFixed(2)}€)\n${eff.features ? `Caratteristiche specifiche: ${eff.features}` : ''}\n${imageInsights ? `Dalle immagini: ${imageInsights}` : ''}\n\nOBIETTIVO:\n1. Catturi l'attenzione nei primi 2 secondi\n2. Evidenzi i benefici chiave\n3. Crei urgenza e desiderio\n4. Anticipi e risolva obiezioni comuni\n5. Includa call-to-action efficace\n\nSTRUTTURA:\n- Hook iniziale accattivante (1 frase)\n- Descrizione dettagliata con benefici\n- Specifiche tecniche (se pertinenti)\n- Condizioni e dettagli d'uso\n- Invito all'azione\n\nTONO:\n- Professionale ma amichevole\n- Onesto e trasparente\n- Entusiasta ma credibile\n- Ottimizzato per conversione\n\nLUNGHEZZA: 150-250 parole\n\nScrivi SOLO la descrizione, senza titoli o formattazione speciale.`;
+      const prompt = `Du bist ein erfahrener E‑Commerce‑Copywriter. Erstelle eine ÜBERZEUGENDE und DETAILLIERTE Produktbeschreibung.\n\nPRODUKT:\nTitel: ${eff.title}\nKategorie: ${eff.category}\nZustand: ${eff.condition}\nPreis: ${eff.price}€ (${pricePosition} – Kategoriemittel: ${avgPrice.toFixed(2)}€)\n${eff.features ? `Besondere Merkmale: ${eff.features}` : ''}\n${imageInsights ? `Aus den Bildern: ${imageInsights}` : ''}\n\nZIEL:\n1. Aufmerksamkeit in den ersten 2 Sekunden\n2. Nutzen statt nur Features hervorheben\n3. Dringlichkeit und Begehrlichkeit erzeugen\n4. Häufige Einwände antizipieren und entkräften\n5. Klare Handlungsaufforderung\n\nSTRUKTUR:\n- Prägnanter Hook (1 Satz)\n- Detaillierte Beschreibung mit Vorteilen\n- Technische Daten (falls relevant)\n- Zustand & Nutzungshinweise\n- Call‑to‑Action\n\nTON:\n- Professionell, freundlich, ehrlich\n- Begeistert, aber glaubwürdig\n- Auf Conversion optimiert\n\nLÄNGE: 150–250 Wörter\n\nAntworte NUR auf Deutsch und gib AUSSCHLIESSLICH den Beschreibungstext ohne Überschrift oder Sonderformatierung aus.`;
 
       const ai = await invokeCachedLLM(base44, {
         prompt,
@@ -247,7 +247,7 @@ Deno.serve(async (req) => {
       const conversionRate = activeCount > 0 ? (categorySales / activeCount) * 100 : 0;
 
       const ai = await invokeCachedLLM(base44, {
-        prompt: `Sei un esperto di pricing per marketplace e-commerce. Suggerisci un prezzo ottimale.\n\nPRODOTTO:\nTitolo: ${eff.title}\nDescrizione: ${eff.description || 'Non fornita'}\nCategoria: ${eff.category}\nCondizione: ${eff.condition}\nQualità immagini: ${imageQualityScore}/10\nNumero immagini: ${eff.images.length}\n\nANALISI DI MERCATO:\n- Annunci attivi categoria: ${activeCount}\n- Prezzo medio: ${avgPrice.toFixed(2)}€\n- Prezzo mediano: ${medianPrice.toFixed(2)}€\n- Range prezzi: ${minPrice.toFixed(2)}€ - ${maxPrice.toFixed(2)}€\n- Tasso conversione: ${conversionRate.toFixed(1)}%\n- Vendite recenti: ${categorySales}\n\nOBIETTIVO:\nSuggerisci 3 prezzi strategici: competitivo, ottimale, premium. Fornisci anche una spiegazione dettagliata e trend/demand.`,
+        prompt: `Du bist Preisexperte für E‑Commerce‑Marktplätze. Schlage einen optimalen Preis vor.\n\nPRODUKT:\nTitel: ${eff.title}\nBeschreibung: ${eff.description || 'Nicht angegeben'}\nKategorie: ${eff.category}\nZustand: ${eff.condition}\nBildqualität: ${imageQualityScore}/10\nAnzahl Bilder: ${eff.images.length}\n\nMARKTANALYSE:\n- Aktive Anzeigen in Kategorie: ${activeCount}\n- Durchschnittspreis: ${avgPrice.toFixed(2)}€\n- Medianpreis: ${medianPrice.toFixed(2)}€\n- Preisspanne: ${minPrice.toFixed(2)}€ – ${maxPrice.toFixed(2)}€\n- Conversion‑Rate: ${conversionRate.toFixed(1)}%\n- Jüngste Verkäufe: ${categorySales}\n\nZIEL:\nSchlage 3 strategische Preise vor: wettbewerbsfähig, optimal, Premium. Gib zudem eine Begründung sowie Trend/Nachfrage an. Antworte NUR auf Deutsch.`,
         response_json_schema: {
           type: 'object',
           properties: {
@@ -318,7 +318,7 @@ Deno.serve(async (req) => {
         .map((l) => ({ id: l.id, title: l.title, category: l.category, price: l.price, city: l.city, description: l.description?.substring(0, 200) }));
 
       const ai = await invokeCachedLLM(base44, {
-        prompt: `Du bist ein Empfehlungsalgorithmus für einen Kleinanzeigen-Marktplatz. Analysiere das Nutzerprofil und wähle die 6 besten Listings aus, die dem Nutzer am ehesten gefallen würden.\n\nNutzerprofil:\n${JSON.stringify(userProfile, null, 2)}\n\nVerfügbare Listings:\n${JSON.stringify(listingsForAI, null, 2)}\n\nBewertungskriterien:\n1. Übereinstimmung mit angesehenen/favorisierten Kategorien (40%)\n2. Relevanz zu Suchbegriffen (30%)\n3. Preisbereich und Stadt (20%)\n4. Aktualität der Interessen (10%)\n\nWICHTIG: NUR aus den bereitgestellten Listings wählen, diversifizieren, GENAU 6 IDs.\nAntwortformat: { "recommendations": [{ "listingId": "...", "score": 0.95, "reason": "..." }] }`,
+        prompt: `Du bist ein Empfehlungsalgorithmus für einen Kleinanzeigen‑Marktplatz. Antworte NUR auf Deutsch. Analysiere das Nutzerprofil und wähle die 6 besten Listings aus, die dem Nutzer am ehesten gefallen würden.\n\nNutzerprofil:\n${JSON.stringify(userProfile, null, 2)}\n\nVerfügbare Listings:\n${JSON.stringify(listingsForAI, null, 2)}\n\nBewertungskriterien:\n1. Übereinstimmung mit angesehenen/favorisierten Kategorien (40%)\n2. Relevanz zu Suchbegriffen (30%)\n3. Preisbereich und Stadt (20%)\n4. Aktualität der Interessen (10%)\n\nWICHTIG: NUR aus den bereitgestellten Listings wählen, diversifizieren, GENAU 6 IDs.\nAntwortformat: { "recommendations": [{ "listingId": "...", "score": 0.95, "reason": "..." }] }`,
         response_json_schema: {
           type: 'object',
           properties: {
@@ -380,7 +380,7 @@ Deno.serve(async (req) => {
     let moderationBundle = null;
     if (includes.has('moderation')) {
       const mod = await invokeCachedLLM(base44, {
-        prompt: `Du bist ein Content-Moderationssystem für einen Kleinanzeigen-Marktplatz. Analysiere den Inhalt (Titel, Beschreibung, Kategorie) und – wenn verfügbar – die beigefügten Bilder.\n\nPrüfe auf: Illegale Inhalte, Betrug, Hassrede/Diskriminierung, sexuelle Inhalte, Gewalt, Spam/Werbung, Kontaktdaten im Text, verbotene Verkäufe.\n\nGib zurück: flagged (bool), severity (low|medium|high|critical), categories (array), reason (kurz), imageIssues (array).`,
+        prompt: `Du bist ein Content‑Moderationssystem für einen Kleinanzeigen‑Marktplatz. Antworte NUR auf Deutsch. Analysiere den Inhalt (Titel, Beschreibung, Kategorie) und – wenn verfügbar – die beigefügten Bilder.\n\nPrüfe auf: Illegale Inhalte, Betrug, Hassrede/Diskriminierung, sexuelle Inhalte, Gewalt, Spam/Werbung, Kontaktdaten im Text, verbotene Verkäufe.\n\nGib zurück: flagged (bool), severity (low|medium|high|critical), categories (array), reason (kurz), imageIssues (array).`,
         file_urls: eff.images.slice(0, 1),
         response_json_schema: {
           type: 'object',
