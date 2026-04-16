@@ -7,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import PremiumRequestModal from '../components/premium/PremiumRequestModal';
 import { ArrowLeft, MapPin, Calendar, Tag, Heart, MessageSquare, Star, ThumbsUp, Flag, Loader2 } from 'lucide-react';
 import ReportListingModal from '../components/ReportListingModal';
 import { format } from 'date-fns';
@@ -35,6 +37,8 @@ export default function ListingDetail() {
   const [isContactingLoading, setIsContactingLoading] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [adminTopAdUntil, setAdminTopAdUntil] = useState('');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -191,6 +195,17 @@ export default function ListingDetail() {
     }
   }, [user, listing, activityTracked]);
 
+  useEffect(() => {
+    if (listing?.topAdUntil) {
+      try {
+        const v = new Date(listing.topAdUntil).toISOString().slice(0,16);
+        setAdminTopAdUntil(v);
+      } catch {}
+    } else {
+      setAdminTopAdUntil('');
+    }
+  }, [listing?.topAdUntil]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -246,9 +261,6 @@ export default function ListingDetail() {
         }} 
       />
       {/* Owner-only premium prompt manager (single listing) */}
-      {isOwner && listing.status === 'active' && (
-        <PremiumPromptManager listings={[listing]} contextProvider={premiumContextProvider} />
-      )}
 
       {listing.images && listing.images.length > 0 && (
         <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -350,11 +362,12 @@ export default function ListingDetail() {
               </button>
             )}
             {!listing.featured && listing.status === 'active' && (
-              <Link to={createPageUrl('PromoteListing') + '?id=' + listingId}>
-                <button className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg">
-                  ⭐ {t('promote')}
-                </button>
-              </Link>
+              <button
+                onClick={() => setShowPremiumModal(true)}
+                className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg"
+              >
+                ⭐ Premium anfragen
+              </button>
             )}
           </>
         ) : (
@@ -481,9 +494,37 @@ export default function ListingDetail() {
         title={listing.title}
       />
 
+      {/* Admin: Feature/TopAd controls */}
+      {user?.role === 'admin' && (
+        <Card className="mb-6">
+          <CardContent className="pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="font-medium">Featured</div>
+              <Button
+                size="sm"
+                onClick={async () => { await base44.entities.Listing.update(listing.id, { featured: !listing.featured }); queryClient.invalidateQueries({ queryKey: ['listing'] }); queryClient.invalidateQueries({ queryKey: ['listings'] }); }}
+                className={listing.featured ? 'bg-green-600 hover:bg-green-700' : ''}
+                variant={listing.featured ? 'default' : 'outline'}
+              >
+                {listing.featured ? 'Aktiv' : 'Inaktiv'}
+              </Button>
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1">Top-Anzeige bis</label>
+              <div className="flex items-center gap-2">
+                <Input type="datetime-local" value={adminTopAdUntil} onChange={(e)=>setAdminTopAdUntil(e.target.value)} />
+                <Button size="sm" onClick={async ()=>{ const iso = adminTopAdUntil ? new Date(adminTopAdUntil).toISOString() : null; await base44.entities.Listing.update(listing.id, { topAdUntil: iso }); queryClient.invalidateQueries({ queryKey: ['listing'] }); queryClient.invalidateQueries({ queryKey: ['listings'] }); }}>Speichern</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <SimilarProducts listingId={listingId} />
 
- 
+      {/* Premium Request Modal */}
+      <PremiumRequestModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} listing={listing} user={user} />
+
       <button 
         onClick={() => navigate(-1)} 
         className="flex items-center gap-2 text-indigo-600 hover:underline mt-6 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded px-2 py-1"

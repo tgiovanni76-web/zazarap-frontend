@@ -1,0 +1,75 @@
+{
+  "name": "PremiumRequest",
+  "type": "object",
+  "properties": {
+    "listingId": {
+      "type": "string",
+      "description": "ID der Anzeige"
+    },
+    "requesterEmail": {
+      "type": "string",
+      "description": "E-Mail des Anfragenden"
+    },
+    "requesterName": {
+      "type": "string",
+      "description": "Name des Anfragenden"
+    },
+    "companyName": {
+      "type": "string",
+      "description": "Unternehmensname (optional)"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefon (optional)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Nachricht/Begr\u00fcndung der Premium-Anfrage"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status der Anfrage"
+    },
+    "adminNotes": {
+      "type": "string",
+      "description": "Interne Admin-Notizen"
+    }
+  },
+  "required": [
+    "listingId",
+    "requesterEmail"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
