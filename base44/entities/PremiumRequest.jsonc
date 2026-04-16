@@ -39,6 +39,10 @@
     "adminNotes": {
       "type": "string",
       "description": "Interne Admin-Notizen"
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "description": "Deterministischer Schl\u00fcssel zur Deduplizierung: pr:<listingId>:<email>:pending"
     }
   },
   "required": [

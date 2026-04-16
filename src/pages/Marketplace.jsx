@@ -43,7 +43,7 @@ export default function Marketplace() {
     queryKey: ['listings', sortBy],
     queryFn: async () => {
       const res = await base44.functions.invoke('proxyListings', { action: 'list', sort: sortBy });
-      return res.data?.data || [];
+      return (res.data?.data || []).map(l => ({ ...l, isFeatured: typeof l.isFeatured === 'boolean' ? l.isFeatured : (l.featured && l.topAdUntil && new Date(l.topAdUntil) > new Date()) }));
     },
   });
 

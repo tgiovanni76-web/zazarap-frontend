@@ -19,29 +19,26 @@ export default function PremiumRequestModal({ open, onClose, listing, user }) {
     if (!user?.email || !listing?.id) return;
     setIsSubmitting(true);
     try {
-      // Verhindere doppelte gleichzeitige "pending"-Anfragen pro Nutzer & Anzeige
-      const existing = await base44.entities.PremiumRequest.filter({
+      const res = await base44.functions.invoke('createPremiumRequestSafe', {
         listingId: listing.id,
-        requesterEmail: user.email,
-        status: 'pending'
-      });
-      if (existing && existing.length > 0) {
-        toast.info('Es besteht bereits eine offene Anfrage für diese Anzeige.');
-        return;
-      }
-
-      await base44.entities.PremiumRequest.create({
-        listingId: listing.id,
-        requesterEmail: user.email,
-        requesterName: user.full_name || user.email,
         companyName: companyName || undefined,
         phone: phone || undefined,
-        message: message || '',
-        status: 'pending'
+        message: message || ''
       });
-      toast.success('Anfrage gesendet – wir melden uns!');
-      onClose?.();
-      setCompanyName(''); setPhone(''); setMessage('');
+      const data = res?.data || {};
+      if (data.status === 'exists') {
+        toast.info('Es besteht bereits eine offene Anfrage für diese Anzeige.');
+      } else if (data.status === 'created') {
+        toast.success('Anfrage gesendet – wir melden uns!');
+        onClose?.();
+        setCompanyName(''); setPhone(''); setMessage('');
+      } else if (data.error) {
+        toast.error('Senden fehlgeschlagen');
+      } else {
+        toast.success('Anfrage gesendet – wir melden uns!');
+        onClose?.();
+        setCompanyName(''); setPhone(''); setMessage('');
+      }
     } catch (e) {
       toast.error('Senden fehlgeschlagen');
     } finally {

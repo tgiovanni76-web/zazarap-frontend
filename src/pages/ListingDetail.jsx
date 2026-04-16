@@ -17,6 +17,7 @@ import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/marketplace/StructuredData';
 import { variantUrl } from '../components/media/variantUrl';
 import { useLanguage } from '../components/LanguageProvider';
+import { isListingFeatured } from '@/lib/featured';
 import PremiumPromptManager from '@/components/premium/PremiumPromptManager';
 import { PremiumReasons } from '@/lib/premium-prompts';
 import SimilarProducts from '../components/marketplace/SimilarProducts';
@@ -84,6 +85,7 @@ export default function ListingDetail() {
   const isFavorite = favorites.some(fav => fav.listing_id === listingId);
   const isLiked = user && likes.some(like => like.user_email === user.email);
   const likesCount = likes.length;
+  const isFeatured = isListingFeatured(listing);
 
   const toggleFavoriteMutation = useMutation({
     mutationFn: async () => {
@@ -361,7 +363,7 @@ export default function ListingDetail() {
                 {markAsSoldMutation.isPending ? 'Wird markiert...' : '✓ Als verkauft markieren'}
               </button>
             )}
-            {!listing.featured && listing.status === 'active' && (
+            {!isFeatured && listing.status === 'active' && (
               <button
                 onClick={() => setShowPremiumModal(true)}
                 className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg"

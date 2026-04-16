@@ -53,6 +53,20 @@ Deno.serve(async (req) => {
         return Response.json({ error: `Unsupported action: ${action}` }, { status: 400 });
     }
 
+    // Normalize featured status consistently
+    const compute = (l) => {
+      if (!l) return l;
+      const until = l.topAdUntil ? new Date(l.topAdUntil) : null;
+      const isFeatured = Boolean(l.featured && until && until > new Date());
+      return { ...l, isFeatured };
+    };
+
+    if (Array.isArray(result)) {
+      result = result.map(compute);
+    } else {
+      result = compute(result);
+    }
+
     return Response.json({ ok: true, data: result });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

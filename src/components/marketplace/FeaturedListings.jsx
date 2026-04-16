@@ -6,22 +6,20 @@ import { Badge } from "@/components/ui/badge";
 import { Star, MapPin } from 'lucide-react';
 import { variantUrl } from '../media/variantUrl';
 import { useLanguage } from '../LanguageProvider';
+import { isListingFeatured } from '@/lib/featured';
 
 export default function FeaturedListings({ listings }) {
   const { t } = useLanguage();
-  const now = new Date();
-  const featuredListings = listings.filter(l => 
-    l.featured &&
-    l.status === 'active' &&
-    l.topAdUntil && new Date(l.topAdUntil) > now
-  ).slice(0, 6);
+  const featuredListings = listings
+    .filter(l => isListingFeatured(l) && l.status === 'active')
+    .slice(0, 6);
 
   if (featuredListings.length === 0) return null;
 
   return (
-    <div className="mb-8">
+    <div className="mb-8" aria-label="Featured Listings">
       <div className="flex items-center gap-2 mb-4">
-        <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+        <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" aria-hidden="true" />
         <h3 className="text-2xl font-bold">{t('featuredListings')}</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
